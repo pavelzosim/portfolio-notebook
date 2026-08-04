@@ -1,0 +1,156 @@
+/* ==========================================================================
+   FILE: 04-atlas-code.css
+   ROLE: Блоки кода (pre.atlas-code-block) и математики (.atlas-math-block).
+         Подсветка синтаксиса Prism.js (low-contrast палитра).
+         Smart-coupling: математика вплотную сливается с кодом.
+   ЗАВИСИМОСТИ: 01-atlas-core.css (системная геометрия блоков)
+   ПОРЯДОК В МОНОЛИТЕ: 4 из 7
+   ========================================================================== */
+
+/* ── СЕКЦИЯ A: УНИКАЛЬНЫЕ ШАПКИ И ГРАНИЦЫ ───────────────────────────────── */
+/* Геометрия (border, padding, position) задана в 01-atlas-core.css.        */
+/* Здесь — только то, что отличает code и math от других блоков.            */
+
+/* Красная левая полоса — фирменный идентификатор кодового блока */
+.atlas-container .content-block pre.atlas-code-block {
+  border-left: 3px solid var(--atlas-crit);
+  overflow-x: auto;
+}
+
+/* Математика: пунктирная рамка вместо сплошной */
+.atlas-container .content-block .atlas-math-block {
+  border-style: dashed;
+  overflow-x: auto;
+}
+
+/* Тексты псевдо-шапок */
+.atlas-container .content-block pre.atlas-code-block::before {
+  content: "[ CODE_LISTING // TRANSPILED_ALGORITHM ]";
+}
+.atlas-container .content-block .atlas-math-block::before {
+  content: "[ MATH_MODEL // МАТЕМАТИЧЕСКИЙ АППАРАТ ]";
+}
+
+/* ── СЕКЦИЯ B: СТАБИЛИЗАЦИЯ ШРИФТОВ ─────────────────────────────────────── */
+/* Защита от системных шрифтов Wix и text-shadow Prism тем.                */
+
+.atlas-container .content-block pre.atlas-code-block,
+.atlas-container .content-block pre.atlas-code-block code {
+  font-size: var(--fs-code);
+  line-height: 1.6;
+  color: var(--atlas-ink-soft);
+  background: transparent;
+  text-shadow: none;
+}
+
+.atlas-container .content-block .atlas-math-block {
+  font-size: var(--fs-code);
+  line-height: 1.6;
+  color: var(--atlas-ink-soft);
+}
+
+/* ── СЕКЦИЯ C: SMART COUPLING — Бесшовное слияние math + code ────────────── */
+/* Когда .atlas-math-block стоит ПРЯМО перед pre.atlas-code-block,         */
+/* нижняя граница math убирается и верхняя граница code становится          */
+/* пунктирной — блоки визуально сливаются в одну единицу.                  */
+
+.atlas-container .content-block .atlas-math-block:has(+ pre.atlas-code-block) {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.atlas-container .content-block .atlas-math-block + pre.atlas-code-block {
+  margin-top: 0;
+  border-top: 1px dashed var(--atlas-border);
+}
+
+/* ── СЕКЦИЯ D: PRISM.JS — Low-contrast синтаксис ────────────────────────── */
+/* Палитра адаптирована под монохромную тему Atlas.                         */
+/* Все фоны токенов обнуляются (Prism темы добавляют цветные подложки).    */
+
+.atlas-container .content-block pre.atlas-code-block code .token {
+  background: transparent;
+  text-shadow: none;
+}
+
+.atlas-container .content-block pre.atlas-code-block code .token.comment    { color: var(--atlas-ink-muted); font-style: italic; }
+.atlas-container .content-block pre.atlas-code-block code .token.punctuation { color: rgba(0, 0, 0, 0.4); }
+.atlas-container .content-block pre.atlas-code-block code .token.number,
+.atlas-container .content-block pre.atlas-code-block code .token.boolean    { color: var(--atlas-warn); }
+.atlas-container .content-block pre.atlas-code-block code .token.string,
+.atlas-container .content-block pre.atlas-code-block code .token.char       { color: var(--atlas-ok); }
+.atlas-container .content-block pre.atlas-code-block code .token.keyword,
+.atlas-container .content-block pre.atlas-code-block code .token.class-name { color: var(--atlas-ink); font-weight: 700; }
+.atlas-container .content-block pre.atlas-code-block code .token.function   { color: var(--atlas-crit); font-weight: 700; }
+.atlas-container .content-block pre.atlas-code-block code .token.operator   { color: var(--atlas-ink); }
+
+/* ── СЕКЦИЯ E: OVERFLOW FIX — Код внутри составных компонентов ──────────── */
+/* Проблема: pre.atlas-code-block внутри .comparison-matrix и              */
+/* .atlas-table-frame имеет overflow:auto на РОДИТЕЛЕ, но сам pre          */
+/* получает белое пространство без переноса — текст уходит за границу.     */
+/*                                                                          */
+/* Решение: явный overflow-x:auto + max-width:100% на pre в любом          */
+/* контексте, плюс word-break для длинных идентификаторов в таблицах.      */
+
+/* pre внутри comparison-matrix — код в ячейках сравнения */
+.atlas-container .comparison-matrix pre.atlas-code-block {
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  /* Сброс margin который core задаёт системным блокам */
+  margin: 8px 0;
+  /* Шапка ::before не нужна внутри comparison-cell — убираем */
+  padding-top: 12px;
+}
+.atlas-container .comparison-matrix pre.atlas-code-block::before {
+  display: none;
+}
+
+/* pre внутри atlas-table-frame (ячейки таблиц td/th) */
+.atlas-container .content-block .atlas-table-frame pre.atlas-code-block,
+.atlas-container .content-block .atlas-table-frame td pre,
+.atlas-container .content-block .atlas-table-frame th pre {
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 4px 0;
+  padding: 6px 8px;
+  border-left: 2px solid var(--atlas-crit);
+  font-size: var(--fs-code);
+  line-height: 1.5;
+}
+.atlas-container .content-block .atlas-table-frame pre.atlas-code-block::before {
+  display: none;
+}
+
+/* atlas-code-inline в ячейках таблиц — предотвращаем растягивание столбца */
+.atlas-container .content-block .atlas-table-frame td .atlas-code-inline,
+.atlas-container .content-block .atlas-table-frame th .atlas-code-inline {
+  display: inline;
+  word-break: break-all;
+  white-space: normal;
+}
+
+/* Глобальный фикс: код внутри любого .comp-col не разрывает layout */
+.atlas-container .comp-col pre,
+.atlas-container .comp-col code,
+.atlas-container .comp-col .atlas-code-block {
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: pre;          /* сохраняем форматирование */
+  word-break: normal;        /* не ломаем внутри слов */
+}
+
+/* Таблицы: длинные слова в td/th переносятся, не разрывают таблицу */
+.atlas-container .content-block .atlas-table-frame td,
+.atlas-container .content-block .atlas-table-frame th {
+  word-break: break-word;    /* перенос по словам если не помещается */
+  overflow-wrap: break-word; /* fallback для старых браузеров */
+  min-width: 0;              /* позволяет flex/grid ужать ячейку */
+}
+
+/* Горизонтальный скролл на самом table-frame если таблица шире контейнера */
+.atlas-container .content-block .atlas-table-frame {
+  overflow-x: auto;
+}
+

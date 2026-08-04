@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-procedural-skeleton-rig-bones-generator">
+  <title>Procedural Skeleton Generation in Houdini — rig_bones_generator · pavelzosim.com</title>
+  <meta name="description" content="A procedural Houdini tool for fast skeleton generation, consistent joint naming, and reusable rig presets. Designed for game-ready skeletons, Apex workflows, and batch animation export.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <style>
+    html, body { margin: 0; padding: 0; background: transparent; }
+
+    /* ── GALLERY ─────────────────────────────────────────────── */
+    .atlas-container .content-block .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px; width: 100%;
+    }
+    .atlas-container .content-block .gallery-grid img {
+      display: block; width: 100%; height: 220px;
+      object-fit: cover; border: 1px solid rgba(0,0,0,.15);
+    }
+    .atlas-container .content-block .gallery-grid--2col { grid-template-columns: repeat(2,1fr); }
+    .atlas-container .content-block .gallery-grid--3col { grid-template-columns: repeat(3,1fr); }
+    .atlas-container .content-block .media-frame:has(.gallery-grid)::before {
+      content: "[ GALLERY // IMAGE_SEQUENCE ]";
+    }
+    .atlas-container .content-block .media-frame > .gallery-grid { margin: 0; width: 100%; }
+    @media (max-width:550px) {
+      .atlas-container .content-block .gallery-grid,
+      .atlas-container .content-block .gallery-grid--2col,
+      .atlas-container .content-block .gallery-grid--3col { grid-template-columns: 1fr; }
+    }
+
+    /* ── REFS ────────────────────────────────────────────────── */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* ── DOWNLOAD BUTTON ─────────────────────────────────────── */
+    /* Архитектура: dither-тень через ::after z-index:0, кнопка z-index:1  */
+    .atlas-container .atlas-download-wrap {
+      position: relative;
+      display: inline-block;
+      margin: 8px 0 24px;
+    }
+    .atlas-container .atlas-download-wrap::after {
+      content: '';
+      position: absolute;
+      top: 4px; left: 4px; right: -4px; bottom: -4px;
+      background-image:
+        linear-gradient(45deg,rgba(0,0,170,.6) 25%,transparent 25%),
+        linear-gradient(-45deg,rgba(0,0,170,.6) 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,rgba(0,0,170,.6) 75%),
+        linear-gradient(-45deg,transparent 75%,rgba(0,0,170,.6) 75%);
+      background-size: 4px 4px;
+      background-position: 0 0, 0 2px, 2px -2px, -2px 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .atlas-container .atlas-download-btn {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 10px 24px;
+      background: #0000AA;
+      color: #fff;
+      border: none;
+      border-radius: 0;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transform: translate(-4px, -4px);
+      transition: transform .05s linear;
+    }
+    .atlas-container .atlas-download-btn:hover { background: #0000CC; }
+    .atlas-container .atlas-download-btn:active { transform: translate(0, 0); }
+    .atlas-container .atlas-download-btn__icon { font-size: 14px; font-weight: 400; }
+    .atlas-container .atlas-download-btn__sub {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: .04em;
+      opacity: .75;
+      margin-left: 4px;
+    }
+
+    /* ── TOC ─────────────────────────────────────────────────── */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+
+  <div id="site-passport"></div>
+
+  <!-- ══ TOC ══════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview — Three Core Problems</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Skeleton Creation Workflow</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-placement"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Joint Placement — Edge vs Point Selection</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-naming"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Joint Naming — Convention & Mirroring</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Hierarchy & Parenting</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Apex Integration</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s05"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">FBX Export & Animation Retargeting</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s06"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Preset-Based Workflow</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+
+    <!-- Download CTA -->
+    <div class="atlas-download-wrap">
+      <a href="https://pavelzosim.gumroad.com/l/houdini-rig-bones"
+         target="_top"
+         class="atlas-download-btn">
+        <span class="atlas-download-btn__icon">↓</span>
+        Download rig_bones_generator
+        <span class="atlas-download-btn__sub">Gumroad</span>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       01: OVERVIEW
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 Overview — Three Core Problems</h2>
+
+    <p>When creating skeletons in Houdini, a large part of the work is repetitive. Each joint must be positioned manually, named according to convention, mirrored for symmetry, and connected into a hierarchy. This process repeats for every new model and quickly becomes a bottleneck.</p>
+
+    <div class="media-frame">
+      <iframe
+        src="https://www.youtube.com/embed/PDVjhwlAMdE"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="media-caption">Video 01: rig_bones_generator — full workflow overview.</div>
+    </div>
+
+    <p>To address this, I developed <span class="atlas-code-inline">rig_bones_generator</span> — a procedural skeleton generation system for Houdini. The goal is to reduce iteration cost and allow reusable skeleton presets for anatomically similar assets: humanoid characters, vehicles with symmetric structure, or any asset type requiring a consistent skeletal layout.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The system focuses on three core problems: <strong>automatic joint naming</strong> based on game industry conventions, <strong>working with different topology types</strong> (clean edge loops vs broken remeshed geometry), and <strong>preparing skeletons for downstream workflows</strong> — Apex rigging and animation export.</p>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_fff1448bc6f94e18b3222ef94d9bbd68~mv2.png/v1/fill/w_438,h_241,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_fff1448bc6f94e18b3222ef94d9bbd68~mv2.png" alt="rig_bones_generator overview">
+      <div class="media-caption">Fig 01: rig_bones_generator node — three output streams: Skeleton, Guides, Weights.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       02: SKELETON CREATION
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 Skeleton Creation Workflow</h2>
+    <p>The first stage covers joint positioning and naming. Two selection modes handle different topology conditions, and naming is fully automated once the bone name and options are set.</p>
+
+    <h3 id="s02-placement">Joint Placement — Edge vs Point Selection</h3>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // EDGE SELECTION — clean topology</div>
+        <div class="comp-body">For clean and predictable topology, joint placement is driven by <strong>edge selection</strong>. The algorithm places joints precisely in the center of the selected edge loop area, maintaining correct deformation and weight distribution. Recommended for production character meshes with consistent edge flow.</div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // POINT SELECTION — broken topology</div>
+        <div class="comp-body">For broken topology or quick concept meshes, <strong>point selection</strong> is used instead. By selecting point groups — including points behind the visible surface — joints can be placed reliably even on remeshed or unstable geometry. Useful for rapid prototyping and scan-based assets.</div>
+      </div>
+    </div>
+
+    <h3 id="s02-naming">Joint Naming — Convention & Mirroring</h3>
+    <p>Joint naming is handled automatically. The naming format follows a standard game industry structure:</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ NAMING_CONVENTION // JOINT FORMAT ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>COMPONENT</th><th>EXAMPLE</th><th>NOTES</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Joint type</td><td><span class="atlas-code-inline">bone_</span></td><td>Prefix identifying the element as a rig bone</td></tr>
+          <tr><td>Body region</td><td><span class="atlas-code-inline">arm_</span></td><td>User-defined name — set once per bone group</td></tr>
+          <tr><td>Side</td><td><span class="atlas-code-inline">l_ / r_</span></td><td>Auto-applied when symmetry mode is enabled</td></tr>
+          <tr><td>Index</td><td><span class="atlas-code-inline">_01 / _02</span></td><td>Auto-generated for chains (spine, tail, fingers)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>For symmetrical bones, selecting <strong>left</strong> or <strong>right</strong> automatically applies side suffixes and generates mirrored joints in a single operation. For chains such as spine or tails, <strong>indexed naming</strong> generates numbered joints automatically — no manual renaming required.</p>
+
+    <p>Additional joints can be inserted by defining start and end joints and applying <strong>resampling</strong> — creating intermediate joints for finer rotational control. Joint orientation can be adjusted when needed, though for models aligned to the <span class="atlas-code-inline">+Z</span> axis default settings are usually sufficient.</p>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--2col">
+        <img src="https://static.wixstatic.com/media/ace175_86a10a6df6b849f08c08aba8012d53f8~mv2.png/v1/fill/w_460,h_549,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_86a10a6df6b849f08c08aba8012d53f8~mv2.png" alt="Joint naming interface">
+        <img src="https://static.wixstatic.com/media/ace175_61ade1641ebc442da182c0d0c838785d~mv2.png/v1/fill/w_256,h_406,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_61ade1641ebc442da182c0d0c838785d~mv2.png" alt="Joint resampling controls">
+      </div>
+      <div class="media-caption">Gallery 02: Joint naming interface (left) — automatic side suffixes and index generation. Resampling controls (right) — intermediate joints for chain segments.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       03: HIERARCHY & PARENTING
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 Hierarchy & Parenting</h2>
+    <p>Once joint positions and names are defined, the skeleton hierarchy is created using the parenting workflow. Parent and child joints are assigned in the <strong>parent joint tab</strong>.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_c232d5e18ae04c70814fe6a2e11d8804~mv2.png/v1/fill/w_925,h_190,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_c232d5e18ae04c70814fe6a2e11d8804~mv2.png" alt="Hierarchy parenting workflow">
+      <div class="media-caption">Fig 03: Parent joint tab — hierarchy assignment for the full skeleton.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Wildcard patterns</strong> can be used in joint names to speed up parenting. This allows entire mirrored joint groups to be connected to a parent in a single operation — avoiding repetitive manual connections for left/right symmetrical limbs. At this stage, the skeleton is already suitable for export to a game engine.</p>
+    </div>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>TECHNIQUE</th><th>EXAMPLE PATTERN</th><th>RESULT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Wildcard side match</td><td><span class="atlas-code-inline">bone_arm_*</span></td><td>Matches bone_arm_l_01, bone_arm_r_01, all arm joints</td></tr>
+          <tr><td>Index range</td><td><span class="atlas-code-inline">bone_spine_0*</span></td><td>Matches all numbered spine segments</td></tr>
+          <tr><td>Exact name</td><td><span class="atlas-code-inline">bone_root</span></td><td>Single joint — root parenting</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       04: APEX INTEGRATION
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Apex Integration</h2>
+    <p>For more advanced rigs, the skeleton can be extended using <strong>Apex</strong> — Houdini's procedural rig-graph system. Apex operates on top of an existing skeleton and uses tags to build rig logic without modifying the underlying joint hierarchy.</p>
+
+    <p>The <span class="atlas-code-inline">rig_bones_generator</span> node outputs three data streams that connect directly to a standard Apex setup:</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ OUTPUT_STREAMS // rig_bones_generator ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>OUTPUT</th><th>TYPE</th><th>APEX ROLE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">Skeleton</span></td><td>Joint hierarchy</td><td>Base structure — joint positions, orientations, hierarchy</td></tr>
+          <tr><td><span class="atlas-code-inline">Guides</span></td><td>Tagged control data</td><td>Apex input — builds IK/FK controls, constraints, rig logic</td></tr>
+          <tr><td><span class="atlas-code-inline">Weights</span></td><td>Bone influence weights</td><td>Skinning data for mesh deformation and FBX export</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_0c1d9654c2c94b68a3a4c98d58d24f4b~mv2.png/v1/fill/w_925,h_723,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_0c1d9654c2c94b68a3a4c98d58d24f4b~mv2.png" alt="Apex integration network">
+      <div class="media-caption">Fig 04: Apex integration — three outputs connected to a standard rig-graph setup. Modular IK/FK construction without modifying the base skeleton.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>All three outputs connect to a standard Apex setup, allowing construction of modular IK/FK rigs without modifying the underlying skeleton. The tag-based approach means rig logic is defined in the Apex graph — the skeleton remains clean and reusable across rigs.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       05: FBX EXPORT & ANIMATION RETARGETING
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s05">05 FBX Export & Animation Retargeting</h2>
+    <p>For export, the <strong>ROP FBX Character Output</strong> node is used. Connecting the <span class="atlas-code-inline">Skeleton</span> and <span class="atlas-code-inline">Weights</span> outputs is sufficient to export a game-ready FBX file — no additional configuration required for standard engines.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_65fb1cfd29a842c4809c370874c8abfd~mv2.png/v1/fill/w_925,h_779,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_65fb1cfd29a842c4809c370874c8abfd~mv2.png" alt="FBX Export and animation retargeting">
+      <div class="media-caption">Fig 05: ROP FBX Character Output — Skeleton + Weights connected for game-ready export. TOP network for batch animation clip baking.</div>
+    </div>
+
+    <h3>Animation Retargeting</h3>
+    <p>Retargeting is handled using Houdini's <strong>MapPoints</strong> workflow. As long as bone names remain consistent — which the <span class="atlas-code-inline">rig_bones_generator</span> enforces by design — animations from external sources such as <strong>Mixamo</strong> can be mapped and reused without manual remapping.</p>
+
+    <p>Using a <strong>TOP network</strong>, multiple animation clips can be baked and exported into a single FBX file. This allows batch processing and keeps all required animations in one asset. Testing in Unity confirms that clip names and frame ranges are preserved correctly.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>WORKFLOW</th><th>NODE</th><th>OUTPUT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Single FBX export</td><td>ROP FBX Character Output</td><td>One FBX: mesh + skeleton + weights</td></tr>
+          <tr><td>Animation retargeting</td><td>MapPoints + external source</td><td>Remapped animation on rig_bones_generator skeleton</td></tr>
+          <tr><td>Batch clip export</td><td>TOP Network</td><td>Single FBX: all clips, correct names and frame ranges</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 05"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       06: PRESET-BASED WORKFLOW
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s06">06 Preset-Based Workflow</h2>
+    <p>Once configured, the <span class="atlas-code-inline">rig_bones_generator</span> node becomes a <strong>reusable preset</strong>. It can be duplicated across different models where only joint positions need to be reassigned. Naming, hierarchy, mirroring, and connections are handled automatically by the existing configuration.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>A single preset can be created for human anatomy, then reused across all humanoid characters in a production. The same approach applies to any asset type requiring consistent skeletal structure — vehicles, creatures, mechanical rigs. The tool is anatomy-agnostic: the preset defines the convention, the geometry defines the positions.</p>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_c9a62cb769c54c1f883e1a4ed040722d~mv2.jpg/v1/fill/w_211,h_304,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_c9a62cb769c54c1f883e1a4ed040722d~mv2.jpg" alt="Humanoid preset result">
+      <div class="media-caption">Fig 06: Humanoid skeleton preset — fully named, mirrored, hierarchically connected. Ready for FBX export or Apex extension.</div>
+    </div>
+
+    <h3>What the Preset Preserves Across Assets</h3>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PRESERVED IN PRESET</th><th>REASSIGNED PER ASSET</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Bone names and naming convention</td><td>Joint world positions</td></tr>
+          <tr><td>Side suffixes and mirroring rules</td><td>Edge / point selection inputs</td></tr>
+          <tr><td>Chain indexing (spine, tail, fingers)</td><td>—</td></tr>
+          <tr><td>Hierarchy and parent assignments</td><td>—</td></tr>
+          <tr><td>Apex output connections</td><td>—</td></tr>
+          <tr><td>Export configuration</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- References -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Apex Rigging System. Houdini 20.5 Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/character/apex.html" class="atlas-ref-link" target="_top">sidefx.com — Apex Rigging System</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">WIKI</span>
+            <span class="atlas-ref-author">tokeru / cgwiki</span> — Houdini Apex Reference. Community Documentation.
+            <br><a href="https://tokeru.com/cgwiki/HoudiniApex.html" class="atlas-ref-link" target="_top">tokeru.com — HoudiniApex</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">FORUM</span>
+            <span class="atlas-ref-author">SideFX Community</span> — Apex Rigging Workflow Discussion. SideFX Forums, 2024.
+            <br><a href="https://www.sidefx.com/forum/topic/97038/?page=1#post-426569" class="atlas-ref-link" target="_top">sidefx.com/forum — Apex Workflow Thread</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — ROP FBX Character Output. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/nodes/out/fbx.html" class="atlas-ref-link" target="_top">sidefx.com — ROP FBX Character Output</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Download CTA — repeat at bottom -->
+    <div style="margin-top: 24px;">
+      <div class="atlas-download-wrap">
+        <a href="https://pavelzosim.gumroad.com/l/houdini-rig-bones"
+           target="_top"
+           class="atlas-download-btn">
+          <span class="atlas-download-btn__icon">↓</span>
+          Download rig_bones_generator
+          <span class="atlas-download-btn__sub">Gumroad · Houdini HDA</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // HOUDINI_RIG_BONES_GENERATOR // 6 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+
+</div><!-- /atlas-container -->
+
+<script>
+var CONFIG = {
+  user: 'pavelzosim', path: '~',
+  command: 'cat houdini_rig_bones_generator.log',
+  project: 'rig_bones_generator', module: 'Houdini HDA / Apex / FBX',
+  version: 'Houdini 20.5', logId: 'RIG_HDA_01', status: 'STABLE',
+  slug: 'procedural-skeleton-houdini',
+  author: 'Pavel Zosim', created: '2024.09.20', modified: null,
+  wordCount: null, title: null, tags: [],
+  tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+};
+var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d) {
+  if (d.author)   CONFIG.author   = d.author;
+  if (d.title) {  CONFIG.title    = d.title;
+    CONFIG.command = 'cat ' + d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'') + '.log';
+  }
+  if (d.created)   CONFIG.created   = d.created;
+  if (d.modified)  CONFIG.modified  = d.modified;
+  if (d.wordCount) CONFIG.wordCount = d.wordCount;
+  if (Array.isArray(d.tags)) CONFIG.tags = d.tags;
+  window.render && window.render();
+}
+(function(){
+  if (!CONFIG.slug) return;
+  fetch(BACKEND_URL + '?slug=' + encodeURIComponent(CONFIG.slug))
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && !d.error) applyData(d); })
+    .catch(e => console.warn('[ATLAS]', e));
+})();
+(function(){
+  function render() {
+    var o = CONFIG, status = (o.status || 'DRAFT').toUpperCase();
+    var rt = o.wordCount ? '~' + Math.ceil(Number(o.wordCount)/200) + ' MIN' : null;
+    var meta =
+      '<div class="passport-meta-item" data-meta="auth">'    + (o.author  || '—') + '</div>' +
+      '<div class="passport-meta-item" data-meta="created">' + (o.created || '—') + '</div>';
+    if (o.modified) meta += '<div class="passport-meta-item" data-meta="modified">' + o.modified + '</div>';
+    if (rt)         meta += '<div class="passport-meta-item" data-meta="read">'     + rt         + '</div>';
+    var tags = Array.isArray(o.tags) && o.tags.length
+      ? '<div class="passport-tags">' + o.tags.map(t =>
+          '<a href="' + o.tagBaseUrl + t.toLowerCase().replace(/\s+/g,'-') + '" class="passport-tag" target="_top">#' + t.toUpperCase() + '</a>'
+        ).join('') + '</div>'
+      : '';
+    document.getElementById('site-passport').innerHTML =
+      '<div class="passport-bp">' +
+        '<div class="passport-title-bar">' +
+          '<div>' + o.user + ' : ' + o.path + ' # ' + o.command + '</div>' +
+          '<div>[ SYS_STATUS: <b>' + status + '</b> ]</div>' +
+        '</div>' +
+        (o.title ? '<div class="passport-main-title">' + o.title.toUpperCase() + '</div>' : '') +
+        '<div class="passport-grid">' +
+          '<div class="passport-cell">' +
+            '<div class="passport-cell-line" data-key="project">' + o.project + '</div>' +
+            '<div class="passport-cell-line" data-key="module">'  + o.module  + '</div>' +
+          '</div>' +
+          '<div class="passport-cell">' +
+            '<div class="passport-cell-line" data-key="version">' + o.version + '</div>' +
+            '<div class="passport-cell-line" data-key="log_id">'  + o.logId   + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="passport-meta">' + meta + '</div>' + tags +
+      '</div>';
+  }
+  window.render = render; render();
+}());
+(function(){
+  fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(c => {
+      document.getElementById('atlas-footer').innerHTML =
+        '<div class="atlas-footer-wrapper">' +
+          '<div class="atlas-footer-block__support-header">' +
+            '<span class="atlas-footer-block__kaomoji">' + c.tagline + '</span>' +
+            '<span>LET\'S STAY IN TOUCH</span>' +
+          '</div>' +
+          '<div class="atlas-footer-block__support-content">' +
+            '<div class="atlas-footer-block__support-text">' + c.support.text + '</div>' +
+            '<div class="atlas-footer-block__support-links">' +
+              c.support.links.map((l,i,a) =>
+                '<a href="' + l.url + '" class="atlas-blueprint-link" target="_top">' + l.text + '</a>' +
+                (i < a.length-1 ? '<span class="atlas-footer-block__support-divider">|</span>' : '')
+              ).join('') +
+            '</div>' +
+          '</div>' +
+          '<div class="atlas-footer-block__matrix-zone">' +
+            c.links.map(g =>
+              '<div class="atlas-footer-block__matrix-column">' +
+                '<span class="atlas-footer-block__column-label">' + g.label + '</span>' +
+                '<div class="atlas-footer-block__column-items">' +
+                  g.items.map(i => '<a href="' + i.url + '" class="atlas-blueprint-link" target="_top">/ ' + i.text + '</a>').join('') +
+                '</div>' +
+              '</div>'
+            ).join('') +
+          '</div>' +
+        '</div>';
+    })
+    .catch(e => console.error('[ATLAS] Footer failed:', e));
+}());
+document.addEventListener('click', function(e) {
+  var a = e.target.closest('.atlas-toc__item a');
+  if (!a) return;
+  var href = a.getAttribute('href');
+  if (!href || href[0] !== '#') return;
+  var dest = document.getElementById(href.slice(1));
+  if (!dest) return;
+  e.preventDefault();
+  dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(function(){ window.scrollBy(0, -8); }, 350);
+});
+</script>
+</body>
+</html>
+

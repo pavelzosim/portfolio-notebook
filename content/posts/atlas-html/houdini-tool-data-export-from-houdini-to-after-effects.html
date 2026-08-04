@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-tool-data-export-from-houdini-to-after-effects">
+  <title>Houdini to After Effects — Data Export Pipeline · pavelzosim.com</title>
+  <meta name="description" content="A structured Houdini→After Effects data export tool. Quaternion-to-Euler conversion, smart truncation, multi-subject batch export. Designed for simulation-driven motion and procedural camera work.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* ── DOWNLOAD BUTTON ─────────────────────────────────────── */
+    /* Архитектура: dither-тень через ::after z-index:0, кнопка z-index:1  */
+    .atlas-container .atlas-download-wrap {
+      position: relative;
+      display: inline-block;
+      margin: 8px 0 24px;
+    }
+    .atlas-container .atlas-download-wrap::after {
+      content: '';
+      position: absolute;
+      top: 4px; left: 4px; right: -4px; bottom: -4px;
+      background-image:
+        linear-gradient(45deg,rgba(0,0,170,.6) 25%,transparent 25%),
+        linear-gradient(-45deg,rgba(0,0,170,.6) 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,rgba(0,0,170,.6) 75%),
+        linear-gradient(-45deg,transparent 75%,rgba(0,0,170,.6) 75%);
+      background-size: 4px 4px;
+      background-position: 0 0, 0 2px, 2px -2px, -2px 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .atlas-container .atlas-download-btn {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 10px 24px;
+      background: #0000AA;
+      color: #fff;
+      border: none;
+      border-radius: 0;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transform: translate(-4px, -4px);
+      transition: transform .05s linear;
+    }
+    .atlas-container .atlas-download-btn:hover { background: #0000CC; }
+    .atlas-container .atlas-download-btn:active { transform: translate(0, 0); }
+    .atlas-container .atlas-download-btn__icon { font-size: 14px; font-weight: 400; }
+    .atlas-container .atlas-download-btn__sub {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: .04em;
+      opacity: .75;
+      margin-left: 4px;
+    }
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <!-- TOC -->
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Problem — Why Ad-Hoc Solutions Break</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Key Technical Solutions</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-gimbal"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Gimbal Lock & Quaternion-to-Euler Conversion</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-truncation"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Smart Truncation</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-batch"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Multi-Subject Batch Export</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Pipeline Architecture</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Design Intent — What This Tool Is Not</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+      <!-- Download CTA -->
+    <div class="atlas-download-wrap">
+      <a href="https://pavelzosim.gumroad.com/l/houdini2aftereffects"
+         target="_top"
+         class="atlas-download-btn">
+        <span class="atlas-download-btn__icon">↓</span>
+        Download houdini2aftereffects
+        <span class="atlas-download-btn__sub">Gumroad</span>
+      </a>
+    </div>
+
+
+
+
+  <!-- ══ 01: PROBLEM ══════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 Problem — Why Ad-Hoc Solutions Break</h2>
+
+    <p>When working with simulations or complex procedural setups, the need to bring motion data into compositing tools is inevitable. Exporting camera paths, point cloud positions, and object transforms manually — or through one-off scripts — creates fragile pipelines that break when the simulation changes.</p>
+
+    <div class="media-frame">
+      <iframe src="https://www.youtube.com/embed/cmY20ZrYQlE"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="media-caption">Video 01: Houdini to After Effects — Data Export Pipeline workflow demonstration.</div>
+    </div>
+
+    <p>I built this tool to provide a <strong>clean, predictable bridge between Houdini and Adobe After Effects</strong> — designed for technical artists and VFX workflows where Houdini handles generation and After Effects handles compositing or presentation.</p>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p>The core problem is not moving data — it's moving data <strong>correctly</strong>. Rotation data from Houdini and After Effects use different conventions. Floating-point precision that is fine in Houdini produces bloated, redundant keyframe data in AE. Manual approaches solve neither problem systematically.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══ 02: SOLUTIONS ════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 Key Technical Solutions</h2>
+
+    <h3 id="s02-gimbal">Gimbal Lock & Quaternion-to-Euler Conversion</h3>
+
+    <p>Houdini stores rotations as quaternions internally. After Effects uses Euler angles with a specific rotation order. A direct conversion without order matching produces <strong>gimbal lock artifacts</strong> — cameras that flip, objects that rotate erratically on paths that are perfectly smooth in Houdini.</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // NAIVE CONVERSION — broken</div>
+        <div class="comp-body">
+          Direct Euler extraction from the transform matrix without rotation order matching. Result: erratic rotation jumps at quaternion singularities. Camera appears to "flip" at certain orientations even though the Houdini path is smooth.
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // ROBUST CONVERSION — correct</div>
+        <div class="comp-body">
+          Quaternion-to-Euler with explicit rotation order matching to After Effects convention (<span class="atlas-code-inline">ZXY</span>). Continuous Euler angle unwrapping prevents sign flips across the 360°→0° boundary. Result: smooth, stable rotation data in AE.
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>ROTATION ISSUE</th><th>ROOT CAUSE</th><th>FIX</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Camera flip at path extremes</td><td>Quaternion singularity in naive Euler extraction</td><td>Explicit rotation order + quaternion intermediate</td></tr>
+          <tr><td>Jump from 359° to 1°</td><td>Unsigned Euler angle — no continuity tracking</td><td>Euler angle unwrapping across frame sequence</td></tr>
+          <tr><td>AE vs Houdini axis mismatch</td><td>Different up-axis conventions (Y-up vs Z-up)</td><td>Coordinate space remapping before export</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s02-truncation">Smart Truncation</h3>
+
+    <p>Houdini's default floating-point precision outputs values like <span class="atlas-code-inline">1.000000000000001</span> where After Effects only needs <span class="atlas-code-inline">1.0</span>. Across hundreds of keyframes for multiple objects, this produces file sizes orders of magnitude larger than necessary — and AE keyframe parsers can choke on excess precision.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>Smart truncation is not simple rounding — it uses <strong>adaptive precision</strong>: values near zero receive fewer decimal places than values representing large world coordinates. The truncation threshold is tunable per export to balance file size against the fidelity required by the compositing shot.</p>
+    </div>
+
+    <h3 id="s02-batch">Multi-Subject Batch Export</h3>
+
+    <p>A single export pass can process multiple cameras and arbitrary point clouds simultaneously. Each subject writes to its own data block within the output file, preserving individual naming and attribute sets. This supports entire simulation frames — dozens of particles mapped as AE nulls — in one operation.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ EXPORT_CAPABILITIES // SUBJECT TYPES ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>SUBJECT TYPE</th><th>DATA EXPORTED</th><th>AE TARGET</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Camera</td><td>Position, Rotation (corrected), FOV, Near/Far clip</td><td>AE Camera layer with matched focal length</td></tr>
+          <tr><td>Point cloud</td><td>Per-point position + optional attributes per frame</td><td>AE Null objects — one per point, parented or independent</td></tr>
+          <tr><td>Custom attributes</td><td>Any Houdini float/vector attribute on point/prim</td><td>AE expression-driven property via keyframe data</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══ 03: ARCHITECTURE ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 Pipeline Architecture</h2>
+
+    <p>The tool is structured as a Houdini Python SOP/ROP. The data flow is strictly one-directional — Houdini generates, the tool packages, After Effects receives. There is no round-trip dependency.</p>
+
+    <div class="atlas-uml-diag">
+      <div class="atlas-uml-diag__widget">
+        <div class="atlas-uml-diag__header">// DATA_FLOW // HOUDINI → AFTER_EFFECTS</div>
+        <div style="padding:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+
+          <div class="atlas-uml-diag__scope" style="flex:1;min-width:130px">
+            <div class="atlas-uml-diag__scope-label">HOUDINI</div>
+            <div class="atlas-uml-diag__node">
+              <div class="atlas-uml-diag__node-title">SOURCE DATA</div>
+              <div class="atlas-uml-diag__node-body">Sim / Camera / Points<br>Houdini attributes</div>
+            </div>
+          </div>
+
+          <div class="atlas-uml-diag__arrow-wrapper" style="flex:0 0 50px">
+            <div class="atlas-uml-diag__arrow-line"></div>
+            <div class="atlas-uml-diag__arrow-head"></div>
+          </div>
+
+          <div class="atlas-uml-diag__scope" style="flex:1;min-width:130px;border-color:var(--atlas-crit)">
+            <div class="atlas-uml-diag__scope-label" style="color:var(--atlas-crit)">TOOL</div>
+            <div class="atlas-uml-diag__node" style="border-color:var(--atlas-crit)">
+              <div class="atlas-uml-diag__node-title" style="color:var(--atlas-crit);border-bottom-color:var(--atlas-crit)">PROCESSOR</div>
+              <div class="atlas-uml-diag__node-body">Quat→Euler fix<br>Truncation<br>Coord remap<br>Batch collect</div>
+            </div>
+          </div>
+
+          <div class="atlas-uml-diag__arrow-wrapper" style="flex:0 0 50px">
+            <div class="atlas-uml-diag__arrow-line"></div>
+            <div class="atlas-uml-diag__arrow-head"></div>
+          </div>
+
+          <div class="atlas-uml-diag__scope" style="flex:1;min-width:130px">
+            <div class="atlas-uml-diag__scope-label">AFTER EFFECTS</div>
+            <div class="atlas-uml-diag__node">
+              <div class="atlas-uml-diag__node-title">OUTPUT FILE</div>
+              <div class="atlas-uml-diag__node-body">Structured keyframe data<br>Importable .jsx / .txt</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="atlas-uml-diag__legend">
+          <span>[→] one-directional flow</span>
+          <span>[■] stateless per-frame</span>
+          <span>[#] no round-trip</span>
+        </div>
+      </div>
+    </div>
+
+    <p>The output file uses a structured keyframe format importable via After Effects script. Each object writes its own block — camera intrinsics, transform per frame, and any additional attributes. The format is human-readable and version-controllable, making it easy to diff changes between simulation iterations.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>STAGE</th><th>OPERATION</th><th>FAILURE MODE WITHOUT IT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Coordinate remap</td><td>Z-up → Y-up, axis reorder</td><td>Everything rotated 90° in AE</td></tr>
+          <tr><td>Quat→Euler</td><td>Explicit ZXY order, unwrap</td><td>Camera flips, rotation jumps</td></tr>
+          <tr><td>Truncation</td><td>Adaptive decimal precision</td><td>10× file size, AE parser slowdown</td></tr>
+          <tr><td>Batch collect</td><td>All subjects in one pass</td><td>Multiple export runs, sync errors</td></tr>
+          <tr><td>Named blocks</td><td>Per-subject ID in output</td><td>Data collision on import</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══ 04: DESIGN INTENT ═════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Design Intent — What This Tool Is Not</h2>
+
+    <p>This is a technical tool for users comfortable working with Houdini and After Effects pipelines. Some customisation may be required depending on the project's specific coordinate conventions or output format requirements.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The focus is on <strong>clarity, predictability, and maintainability</strong> rather than one-click automation. The tool is designed to fit cleanly into existing pipelines — not to replace them. It handles the brittle parts (rotation correctness, data precision) and leaves the creative decisions (timing, compositing, effect layering) entirely to the artist in After Effects.</p>
+    </div>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // WHAT IT HANDLES</div>
+        <div class="comp-body">
+          <ul>
+            <li>Rotation convention mismatches</li>
+            <li>Floating-point precision bloat</li>
+            <li>Multi-object batch collection</li>
+            <li>Simulation-driven motion fidelity</li>
+            <li>Repeatable, version-controllable output</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // WHAT IT DOES NOT DO</div>
+        <div class="comp-body">
+          <ul>
+            <li>Composite or grade footage</li>
+            <li>Replace manual AE keyframe work</li>
+            <li>Handle render output or EXR sequences</li>
+            <li>Provide a Houdini-to-AE round-trip</li>
+            <li>Abstract pipeline decisions from the artist</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- References -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — VEX: Quaternion Functions. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/vex/functions/quaternion.html" class="atlas-ref-link" target="_top">sidefx.com — VEX Quaternion Functions</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Adobe</span> — After Effects: Importing Motion Data. After Effects Developer Documentation.
+            <br><a href="https://helpx.adobe.com/after-effects/using/importing-footage-items.html" class="atlas-ref-link" target="_top">helpx.adobe.com — AE Importing Motion Data</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">PAPER</span>
+            <span class="atlas-ref-author">Shoemake K.</span> — Animating Rotation with Quaternion Curves. SIGGRAPH 1985, ACM.
+            <br><a href="https://dl.acm.org/doi/10.1145/325334.325242" class="atlas-ref-link" target="_top">dl.acm.org — Quaternion Curves SIGGRAPH 1985</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Python HOM: hou.Matrix4. Houdini Python API.
+            <br><a href="https://www.sidefx.com/docs/houdini/hom/hou/Matrix4.html" class="atlas-ref-link" target="_top">sidefx.com — hou.Matrix4 API</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+        <!-- Download CTA — repeat at bottom -->
+    <div style="margin-top: 24px;">
+      <div class="atlas-download-wrap">
+        <a href="https://pavelzosim.gumroad.com/l/houdini2aftereffects"
+           target="_top"
+           class="atlas-download-btn">
+          <span class="atlas-download-btn__icon">↓</span>
+          Download houdini2aftereffects
+          <span class="atlas-download-btn__sub">Gumroad · Houdini HDA</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // HOUDINI_TO_AE_EXPORT // 4 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat houdini_to_after_effects_export.log',project:'H_to_AE_Export',module:'Python / HOM / Keyframe Export',version:'Houdini 20.5',logId:'AE_EXP_01',status:'STABLE',slug:'houdini-tool-data-export-from-houdini-to-after-effects',author:'Pavel Zosim',created:'2024.03.15',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+</body>
+</html>
+

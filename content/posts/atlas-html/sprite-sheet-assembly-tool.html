@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/sprite-sheet-assembly-tool">
+  <title>Sprite Sheet Assembly Tool — Game-Ready PNG Sprite Sheets · pavelzosim.com</title>
+  <meta name="description" content="A free, open-source desktop utility for building game-ready PNG sprite sheets from ordered frames. POT recommendations, grid optimizer, distortion warnings, drag-and-drop reordering, and animation preview.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.5/cdn/atlas-framework.css?v=1.9.5">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* download button */
+    .atlas-container .atlas-download-wrap{position:relative;display:inline-block;margin:8px 0 24px}
+    .atlas-container .atlas-download-wrap::after{content:'';position:absolute;top:4px;left:4px;right:-4px;bottom:-4px;background-image:linear-gradient(45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(-45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(0,0,170,.6) 75%),linear-gradient(-45deg,transparent 75%,rgba(0,0,170,.6) 75%);background-size:4px 4px;background-position:0 0,0 2px,2px -2px,-2px 0;z-index:0;pointer-events:none}
+    .atlas-container .atlas-download-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 24px;background:#0000AA;color:#fff;border:none;border-radius:0;text-decoration:none;white-space:nowrap;cursor:pointer;transform:translate(-4px,-4px);transition:transform .05s linear}
+    .atlas-container .atlas-download-btn:hover{background:#0000CC}
+    .atlas-container .atlas-download-btn:active{transform:translate(0,0)}
+    .atlas-container .atlas-download-btn__icon{font-size:14px;font-weight:400}
+    .atlas-container .atlas-download-btn__sub{font-size:9px;font-weight:400;letter-spacing:.04em;opacity:.75;margin-left:4px}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <!-- TOC + CTA -->
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">What Problem It Solves</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Grid & Canvas Modes</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-exact"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Exact Grid vs POT Rescale</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-pot"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">POT Recommendations & Utilisation</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Naming Convention</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Architecture & Project Structure</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s05"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Installation — Windows & Linux</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s06"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Workflow</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+
+    <div class="atlas-download-wrap">
+      <a href="https://github.com/pavelzosim/sprite-sheet-assembly-tool"
+         target="_top" class="atlas-download-btn">
+        <span class="atlas-download-btn__icon">↓</span>
+        Download on GitHub
+        <span class="atlas-download-btn__sub">Free · MIT License</span>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ══ 01: PROBLEM ══════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 What Problem It Solves</h2>
+
+    <p>Building sprite sheets for game engines is a deceptively messy task. The source frames are correct, but getting them into a correctly ordered, correctly sized, power-of-two-compliant texture atlas without accidentally distorting artwork or wasting GPU memory requires decisions that most general-purpose image tools don't support.</p>
+
+    <div class="media-frame">
+      <iframe src="https://www.youtube.com/embed/w7gfkIkXHYk"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="media-caption">Video 01: Sprite Sheet Assembly Tool — workflow demonstration.</div>
+    </div>
+
+    <p>The Sprite Sheet Assembly Tool is a free, open-source desktop utility that handles the full pipeline from ordered frame sequences to a game-ready PNG — with explicit control over grid layout, canvas mode, and POT memory implications at every step.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The tool is designed around one constraint that game engines impose and image editors ignore: <strong>output order is always left-to-right, top-to-bottom</strong>, and the layout must be predictable by the shader sampling the texture at runtime. Any reordering must happen before export, not after.</p>
+    </div>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ FEATURE_SET // v1.0.0 ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>FEATURE</th><th>DETAIL</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Frame input</td><td>Add whole folder or individual files. Supports PNG, JPG, JPEG.</td></tr>
+          <tr><td>Frame inspection</td><td>Scrollable list with name, dimensions, and thumbnail per frame.</td></tr>
+          <tr><td>Empty frame detection</td><td>Fully transparent source images detected and labelled as intentional <span class="atlas-code-inline">EMPTY FRAME</span> — not silently skipped.</td></tr>
+          <tr><td>Reordering</td><td>Drag-and-drop, move controls, or natural filename sort.</td></tr>
+          <tr><td>Animation preview</td><td>Plays back the ordered sequence with adjustable delay in milliseconds.</td></tr>
+          <tr><td>Grid recommendations</td><td>Nearest-square, POT-optimised, and custom column count — with frame count, cell size, empty slots, and memory utilisation per option.</td></tr>
+          <tr><td>Canvas modes</td><td>Exact Grid (safe default) or POT Rescale with live distortion warnings.</td></tr>
+          <tr><td>Export</td><td>Transparent PNG with standardised filename encoding all layout metadata.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══ 02: GRID & CANVAS MODES ══════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 Grid & Canvas Modes</h2>
+
+    <h3 id="s02-exact">Exact Grid vs POT Rescale</h3>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // EXACT GRID — safe default</div>
+        <div class="comp-body">
+          <p>Keeps raw grid resolution. No rescaling — pixel dimensions are exactly <span class="atlas-code-inline">columns × cell_width</span> by <span class="atlas-code-inline">rows × cell_height</span>.</p>
+          <p>Correct default for modern engines (Unity, Unreal, Godot) that support non-POT textures natively. No distortion risk. No GPU memory inflation from padding.</p>
+          <p><strong>Use when:</strong> engine supports NPOT textures and you want pixel-perfect output.</p>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // POT RESCALE — explicit tradeoffs</div>
+        <div class="comp-body">
+          <p>Rescales output to nearest Power-of-Two dimensions using nearest-neighbour sampling. For an N×N grid, uses width-derived POT side (e.g. 5×5 targeting width 2048 → <span class="atlas-code-inline">2048×2048</span>). Rectangular grids use independent POT width and height.</p>
+          <p>The UI shows separate X/Y scale percentages and a distortion warning when X≠Y scale. Required for older mobile hardware and specific engine texture import settings.</p>
+          <p><strong>Use when:</strong> target platform or engine requires strict POT textures.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>POT Rescale changes artwork dimensions.</strong> Nearest-neighbour is used to preserve hard pixel edges, but any asymmetric scale (X≠Y) distorts the frames. The tool displays explicit X and Y scale percentages and a distortion warning before export — it never silently applies a potentially destructive operation.</p>
+    </div>
+
+    <h3 id="s02-pot">POT Recommendations & Utilisation</h3>
+    <p>The tool computes multiple grid layouts and ranks them by POT canvas area utilisation:</p>
+
+    <div class="atlas-math-block">
+      $$\text{utilisation} = \frac{\text{frame pixel area}}{\text{POT output area}}$$
+    </div>
+
+    <p>Higher utilisation means less transparent GPU texture memory — the frames cover more of the allocated texture space. The nearest-square preset uses <span class="atlas-code-inline">ceil(sqrt(frame count))</span> for both dimensions. For 35 frames this gives a <strong>6×6 grid</strong> — 36 slots, 1 transparent placeholder — which is not the same as a 1024×1024 POT texture. The UI makes this distinction explicit: grid dimensions describe cells, canvas dimensions describe pixels.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>FRAME COUNT</th><th>NEAREST SQUARE</th><th>SLOTS</th><th>EMPTY SLOTS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>16</td><td>4×4</td><td>16</td><td>0 — perfect fit</td></tr>
+          <tr><td>24</td><td>5×5</td><td>25</td><td>1</td></tr>
+          <tr><td>35</td><td>6×6</td><td>36</td><td>1</td></tr>
+          <tr><td>48</td><td>7×7</td><td>49</td><td>1</td></tr>
+          <tr><td>60</td><td>8×8</td><td>64</td><td>4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Empty slots are exported as transparent cells — they remain part of the grid and are highlighted in the UI. Selecting a preset preserves the reserved rows during export. Manually changing the column count returns to automatic row calculation.</p>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══ 03: NAMING CONVENTION ═════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 Naming Convention</h2>
+
+    <p>The export filename encodes all layout metadata needed to reconstruct the sprite sheet parameters without opening the file:</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// Naming format:
+sprite_sheet_&lt;frame-count&gt;f_&lt;columns&gt;x&lt;rows&gt;_&lt;output-width&gt;x&lt;output-height&gt;_&lt;mode&gt;.png
+
+// Examples:
+sprite_sheet_024f_6x4_1024x512_exactgrid.png
+sprite_sheet_035f_6x6_2048x2048_potfit.png
+sprite_sheet_016f_4x4_512x512_exactgrid.png</code></pre>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>SEGMENT</th><th>ENCODES</th><th>EXAMPLE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">024f</span></td><td>Total frame count — what the shader expects to index</td><td>24 frames in sequence</td></tr>
+          <tr><td><span class="atlas-code-inline">6x4</span></td><td>Grid layout — columns × rows used for UV calculation</td><td>6 columns, 4 rows</td></tr>
+          <tr><td><span class="atlas-code-inline">1024x512</span></td><td>Output pixel dimensions — matches the actual file</td><td>1024 wide, 512 tall</td></tr>
+          <tr><td><span class="atlas-code-inline">exactgrid / potfit</span></td><td>Canvas mode — tells you whether rescaling was applied</td><td>No distortion / POT rescaled</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>This convention makes the asset self-documenting. A shader sampling the sprite sheet at runtime needs exactly the frame count and grid dimensions to calculate UV offsets — both are visible in the filename without requiring a sidecar metadata file or database lookup.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══ 04: ARCHITECTURE ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Architecture & Project Structure</h2>
+
+    <p>The tool is structured as a Python desktop application with a clean separation between data logic and UI. The entry point is always <span class="atlas-code-inline">app.py</span> — no other file is a supported entry point.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ PROJECT_STRUCTURE // v1.0.0 ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>FILE / PATH</th><th>ROLE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">app.py</span></td><td>Application conductor — only supported entry point</td></tr>
+          <tr><td><span class="atlas-code-inline">src/bridge.py</span></td><td>UI-to-service coordination layer — decouples UI events from business logic</td></tr>
+          <tr><td><span class="atlas-code-inline">src/frame_service.py</span></td><td>Image discovery, validation, and thumbnail generation</td></tr>
+          <tr><td><span class="atlas-code-inline">src/grid_optimizer.py</span></td><td>Grid layout calculations and Power-of-Two recommendations</td></tr>
+          <tr><td><span class="atlas-code-inline">src/sheet_builder.py</span></td><td>Ordered sprite sheet rendering — composites frames into output PNG</td></tr>
+          <tr><td><span class="atlas-code-inline">ui/</span></td><td>HTML, CSS, and interaction logic for the desktop UI</td></tr>
+          <tr><td><span class="atlas-code-inline">install.py</span></td><td>Cross-platform dependency verification — safe, isolated, audit-first</td></tr>
+          <tr><td><span class="atlas-code-inline">tests/</span></td><td>Core algorithm and export tests</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The grid optimizer and sheet builder are the core algorithmic modules. Frames of different sizes are supported — the largest width and height across all frames defines the shared cell size, and smaller frames are centred within their cells. This means mixed-resolution sequences export correctly without manual padding.</p>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══ 05: INSTALLATION ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s05">05 Installation — Windows & Linux</h2>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // WINDOWS</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// Step 1: install once
+win_install.bat
+
+// Step 2: run anytime
+win_RUN.bat
+
+// Debug mode (keeps console open)
+win_RUN_debug.bat
+
+// Verify dependencies — read-only, no changes
+.venv\Scripts\python.exe install.py --check</code></pre>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // LINUX</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// Step 1: make scripts executable
+chmod +x lnx_install.sh lnx_RUN.sh
+
+// Step 2: install once
+./lnx_install.sh
+
+// Step 3: run anytime
+./lnx_RUN.sh
+
+// Verify — read-only
+.venv/bin/python install.py --check</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <h3>Installation Safety Model</h3>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>GUARANTEE</th><th>DETAIL</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Isolated environment</td><td>All dependencies install into a project-local <span class="atlas-code-inline">.venv</span> — never touches user or system Python</td></tr>
+          <tr><td>Audit before install</td><td>Missing packages listed and confirmed before any <span class="atlas-code-inline">pip install</span> runs</td></tr>
+          <tr><td>Safe default</td><td>Pressing Enter or answering anything except <span class="atlas-code-inline">Y</span>/<span class="atlas-code-inline">Yes</span> cancels safely</td></tr>
+          <tr><td>No silent upgrades</td><td>Installer never upgrades <span class="atlas-code-inline">pip</span> or modifies packages outside <span class="atlas-code-inline">.venv</span></td></tr>
+          <tr><td>Refuses broken envs</td><td>Existing incomplete, linked, or system-site-enabled <span class="atlas-code-inline">.venv</span> directories refused — not overwritten</td></tr>
+          <tr><td>Read-only check</td><td><span class="atlas-code-inline">install.py --check</span> never prompts or installs — safe to run anytime for diagnostics</td></tr>
+          <tr><td>Linux runtime support</td><td>Supports <span class="atlas-code-inline">apt</span>, <span class="atlas-code-inline">dnf</span>, and <span class="atlas-code-inline">pacman</span> for missing Python runtime — asks before every system operation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><span class="atlas-code-inline">install.py --yes</span> is available for deliberate automation pipelines, but still refuses to run outside the project <span class="atlas-code-inline">.venv</span>. The flag bypasses the confirmation prompt — it does not bypass the isolation requirement.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 05"></div>
+  </div>
+
+
+  <!-- ══ 06: WORKFLOW ══════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s06">06 Workflow</h2>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ WORKFLOW // STEP_BY_STEP ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>STEP</th><th>ACTION</th><th>NOTES</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Add Files or Add Folder</td><td>PNG, JPG, JPEG supported. Folder adds all matching files in the directory.</td></tr>
+          <tr><td>2</td><td>Arrange frame order</td><td>Drag-and-drop, move controls, or natural filename sort. First row = top-left cell in output.</td></tr>
+          <tr><td>3</td><td>Preview animation</td><td>Press Play, set frame delay in ms. Verify sequence before committing to export.</td></tr>
+          <tr><td>4</td><td>Select grid layout</td><td>Apply a recommendation or enter custom column count. Review frame count, cell size, empty slots, and POT utilisation.</td></tr>
+          <tr><td>5</td><td>Choose canvas mode</td><td>Exact Grid (no rescale) or POT Rescale. Review RAW → OUTPUT resolution and distortion warning.</td></tr>
+          <tr><td>6</td><td>Save Sprite Sheet</td><td>Choose destination path. Filename is auto-generated with full layout metadata encoded.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>Frames of different sizes are fully supported. The tool calculates the largest width and height across all frames and uses those as the shared cell dimensions — smaller frames are centred. You do not need to pre-pad frames to a uniform size before import.</p>
+    </div>
+
+
+    <!-- References -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">REPO</span>
+            <span class="atlas-ref-author">pavelzosim</span> — Sprite Sheet Assembly Tool. GitHub, 2026. MIT License.
+            <br><a href="https://github.com/pavelzosim/sprite-sheet-assembly-tool" class="atlas-ref-link" target="_top">github.com/pavelzosim/sprite-sheet-assembly-tool</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">Khronos Group</span> — OpenGL ES Texture Specification: Power-of-Two Requirements. Khronos Registry.
+            <br><a href="https://registry.khronos.org/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf" class="atlas-ref-link" target="_top">registry.khronos.org — GL ES 2.0 Spec (PDF)</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="atlas-download-wrap">
+        <a href="https://github.com/pavelzosim/sprite-sheet-assembly-tool"
+           target="_top" class="atlas-download-btn">
+          <span class="atlas-download-btn__icon">↓</span>
+          Download on GitHub
+          <span class="atlas-download-btn__sub">Free · Open Source · MIT</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // SPRITE_SHEET_ASSEMBLY_TOOL // v1.0.0 // 6 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat sprite_sheet_assembly_tool.log',project:'SpriteSheetTool',module:'Python / Qt / Grid Optimizer',version:'v1.0.0',logId:'SPRITE_01',status:'STABLE',slug:'sprite-sheet-assembly-tool',author:'Pavel Zosim',created:'2026.07.14',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>
+

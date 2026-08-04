@@ -1,0 +1,161 @@
+/* ==========================================================================
+   FILE: 01-atlas-core.css
+   ROLE: Ядро фреймворка. CSS-переменные, изоляция от Wix, геометрия
+         системных блоков. Подключается ПЕРВЫМ в сборке.
+   ПОРЯДОК В МОНОЛИТЕ: 1 из 7
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+/* ── СЕКЦИЯ A: RESET — Изоляция от стилей Wix/конструктора ──────────────── */
+/* Единственное место где !important разрешён (подавление CMS-стилей)        */
+
+.atlas-container,
+.atlas-container * {
+  box-sizing: border-box !important;
+}
+
+.atlas-container {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  color: #000000;
+  width: 100%;
+}
+
+/* ── СЕКЦИЯ B: DESIGN TOKENS — Единый источник всех переменных ──────────── */
+/* Все цвета, отступы и размеры шрифтов берутся ТОЛЬКО отсюда.              */
+/* Добавление переменной: только в этот блок.                               */
+
+:root {
+  /* Цветовая схема */
+  --atlas-bg:            rgb(230, 220, 210);
+  --atlas-bg-alt:        rgba(0, 0, 0, 0.02);
+  --atlas-ink:           #000000;
+  --atlas-ink-muted:     rgba(0, 0, 0, 0.5);
+  --atlas-ink-soft:      rgba(0, 0, 0, 0.85);
+  --atlas-crit:          #8b0000;
+  --atlas-warn:          #7a5200;
+  --atlas-ok:            #1a4d1a;
+  --atlas-border:        rgba(0, 0, 0, 0.15);
+  --atlas-border-strong: rgba(0, 0, 0, 0.4);
+
+  /* Отступы */
+  --atlas-space-xs:      8px;
+  --atlas-space-sm:      15px;
+  --atlas-space-md:      25px;
+  --atlas-space-xl:      60px;
+
+  /* Шрифт */
+  --atlas-font-mono:     'JetBrains Mono', 'Courier New', monospace;
+
+  /* ── Типографическая шкала ──────────────────────────────────────────────
+     Правило: менять размеры ТОЛЬКО здесь, не в компонентах.
+     h1-h6 — иерархия заголовков документа
+     body   — базовый текст абзацев
+     code   — блоки кода, ячейки таблиц (td)
+     table-th — заголовки колонок таблиц (th), чуть крупнее td
+     meta   — паспорт, футер, подписи к медиа
+     status — мелкие плашки, бейджи, UML-ромбы                            */
+  --fs-h1:       28px;
+  --fs-h2:       24px;
+  --fs-h3:       20px;
+  --fs-h4:       16px;
+  --fs-h5:       14px;
+  --fs-h6:       12.5px;
+  --fs-body:     12.5px;
+  --fs-code:     12px;
+  --fs-table-th: 13px;
+  --fs-meta:     10px;
+  --fs-status:   9px;
+}
+
+/* ── СЕКЦИЯ C: СИСТЕМНЫЕ БЛОКИ — Общая геометрия контейнеров ───────────── */
+/* Единая рамка, padding и псевдо-шапка для всех блочных компонентов.       */
+/* Каждый компонент ПЕРЕОПРЕДЕЛЯЕТ content шапки в своём файле.             */
+
+.atlas-container .comparison-matrix,
+.atlas-container .atlas-callout,
+.atlas-container .content-block .media-frame,
+.atlas-container .content-block pre.atlas-code-block,
+.atlas-container .content-block .atlas-math-block,
+.atlas-container .content-block .atlas-table-frame {
+  position: relative;
+  background: transparent;
+  border: 1px solid var(--atlas-border);
+  margin: 24px 0;
+  width: 100%;
+  padding: 34px 16px 16px 16px; /* 34px top = 24px шапка + 10px зазор */
+}
+
+.atlas-container .comparison-matrix::before,
+.atlas-container .atlas-callout::before,
+.atlas-container .content-block .media-frame::before,
+.atlas-container .content-block pre.atlas-code-block::before,
+.atlas-container .content-block .atlas-math-block::before,
+.atlas-container .content-block .atlas-table-frame::before {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 24px;
+  line-height: 24px;
+  padding-left: 16px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--atlas-ink-muted);
+  background: rgba(0, 0, 0, 0.015);
+  border-bottom: 1px solid var(--atlas-border);
+  letter-spacing: 0.05em;
+  font-family: var(--atlas-font-mono);
+}
+
+/* ── СЕКЦИЯ D: CALLOUT МОДИФИКАТОРЫ — Семантические варианты ────────────── */
+/* content для базового .atlas-callout::before задан в 06-atlas-callout.css */
+
+.atlas-container .atlas-callout--important {
+  border-left: 4px solid var(--atlas-crit);
+}
+.atlas-container .atlas-callout--important::before {
+  content: "[ IMPORTANT // WARNING ]";
+  color: var(--atlas-crit);
+}
+
+.atlas-container .atlas-callout--warning {
+  border-left: 4px solid var(--atlas-warn);
+}
+.atlas-container .atlas-callout--warning::before {
+  content: "[ WARNING // CAUTION ]";
+  color: var(--atlas-warn);
+}
+
+.atlas-container .atlas-callout--success {
+  border-left: 4px solid var(--atlas-ok);
+}
+.atlas-container .atlas-callout--success::before {
+  content: "[ STATUS // SUCCESS ]";
+  color: var(--atlas-ok);
+}
+
+/* ── PATCH v3.8.0: НОВЫЕ ТОКЕНЫ ──────────────────────────────────────────── */
+/* Добавлены при рефакторинге 09-atlas-shader-panel.css                     */
+/* Запрещено использовать --atlas-accent вместо --atlas-crit в контенте:    */
+/*   --atlas-crit   = #8b0000  — ошибки, маркеры, акценты КОНТЕНТА         */
+/*   --atlas-accent = #0000AA  — UI-элементы: кнопки, слайдеры, switches    */
+
+:root {
+  /* UI-акцент: Volkov Commander Blue */
+  --atlas-accent:   #0000AA;
+  --atlas-accent-h: #0000DD;   /* hover-состояние accent */
+
+  /* Типографика: математические формулы (MathJax) */
+  /* Крупнее --fs-code (12px) но меньше --fs-h3 (20px)                     */
+  /* MathJax рендерит собственные элементы — переменная задаёт             */
+  /* font-size контейнера .atlas-math-block для масштабирования            */
+  --fs-math: 15px;
+
+  /* Dither SVG-паттерн: 4×4px шахматка для теней и OFF-состояний         */
+  --atlas-dither: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="2" height="2" x="0" y="0" fill="black"/><rect width="2" height="2" x="2" y="2" fill="black"/></svg>');
+}
+
+/* Применяем --fs-math к math-блоку */
+.atlas-container .content-block .atlas-math-block {
+  font-size: var(--fs-math);
+}
+

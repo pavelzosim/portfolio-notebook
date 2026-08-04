@@ -1,5 +1,5 @@
 /* ATLAS COMMANDER — functional navigation and dither controls */
-:root{--vc:#0000aa;--vc-hi:#0000dd;--vc-yellow:#ffff55;--dither:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="2" height="2" x="0" y="0" fill="black"/><rect width="2" height="2" x="2" y="2" fill="black"/></svg>')}
+:root{--vc:var(--atlas-accent);--vc-hi:var(--atlas-accent-h);--vc-yellow:#ffff55;--dither:var(--atlas-dither)}
 body{padding-bottom:38px}
 .vc-button{position:relative;isolation:isolate}
 .vc-button::after{content:"";position:absolute;z-index:-1;left:4px;top:4px;width:100%;height:100%;background:var(--dither);pointer-events:none}
@@ -32,4 +32,5 @@ dialog dt,dialog dd{margin:0;padding:6px}dialog dt{color:var(--red);font-weight:
 .dialog-ok{float:right;margin:0 16px 16px;padding:6px 14px;border:1px solid #000066;background:var(--vc);color:#fff;font:10px var(--mono);cursor:pointer}
 .dialog-ok kbd{color:var(--vc-yellow);font:inherit}
 @media(max-width:760px){body{padding-bottom:42px}.shellbar nav{gap:5px;overflow-x:auto;padding-bottom:5px}.shellbar nav a{padding:5px 7px;white-space:nowrap}.shellbar nav kbd{display:inline}.function-bar{height:38px;padding:5px 8px;display:flex;overflow-x:auto}.function-bar .vc-button{flex:0 0 auto}.function-bar .vc-button span{display:none}.command{grid-template-columns:auto 1fr auto}.command output{grid-column:2;text-align:left}.command>kbd{grid-column:3;grid-row:1}}
+
 

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-folder-based-file-importer-tool">
+  <title>Houdini Folder-Based File Importer — Directory-Driven Geometry Import · pavelzosim.com</title>
+  <meta name="description" content="A Houdini HDA that recursively scans a directory, imports geometry files preserving folder hierarchy as group structure, with format filtering, local transform correction, and deterministic batch import.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+
+    /* gallery */
+    .atlas-container .content-block .gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;width:100%}
+    .atlas-container .content-block .gallery-grid img{display:block;width:100%;height:220px;object-fit:cover;border:1px solid rgba(0,0,0,.15)}
+    .atlas-container .content-block .gallery-grid--2col{grid-template-columns:repeat(2,1fr)}
+    .atlas-container .content-block .media-frame:has(.gallery-grid)::before{content:"[ GALLERY // IMAGE_SEQUENCE ]"}
+    .atlas-container .content-block .media-frame>.gallery-grid{margin:0;width:100%}
+    @media(max-width:550px){.atlas-container .content-block .gallery-grid,.atlas-container .content-block .gallery-grid--2col{grid-template-columns:1fr}}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* download button */
+    .atlas-container .atlas-download-wrap{position:relative;display:inline-block;margin:8px 0 24px}
+    .atlas-container .atlas-download-wrap::after{content:'';position:absolute;top:4px;left:4px;right:-4px;bottom:-4px;background-image:linear-gradient(45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(-45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(0,0,170,.6) 75%),linear-gradient(-45deg,transparent 75%,rgba(0,0,170,.6) 75%);background-size:4px 4px;background-position:0 0,0 2px,2px -2px,-2px 0;z-index:0;pointer-events:none}
+    .atlas-container .atlas-download-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 24px;background:#0000AA;color:#fff;border:none;border-radius:0;text-decoration:none;white-space:nowrap;cursor:pointer;transform:translate(-4px,-4px);transition:transform .05s linear}
+    .atlas-container .atlas-download-btn:hover{background:#0000CC}
+    .atlas-container .atlas-download-btn:active{transform:translate(0,0)}
+    .atlas-container .atlas-download-btn__icon{font-size:14px;font-weight:400}
+    .atlas-container .atlas-download-btn__sub{font-size:9px;font-weight:400;letter-spacing:.04em;opacity:.75;margin-left:4px}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <!-- TOC -->
+  <div class="content-block">
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Editorial note:</strong> the original post was written as marketing copy. This version adds the technical detail that was missing: why the File Merge SOP bottlenecks at scale, how Python's <span class="atlas-code-inline">os.walk</span> traversal maps to Houdini geometry groups, what local transform correction means in practice, and a breakdown of the performance delta. Sections 02, 03, 04 and all code examples are additions beyond the original text.</p>
+    </div>
+
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">The Problem — File Merge SOP at Scale</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">How the Tool Works — Directory Traversal</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-code"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Python Implementation Pattern</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-groups"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Folder → Group Mapping</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Local Transform Correction</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Performance Comparison</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s05"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Pipeline Position & Use Cases</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+
+    <div class="atlas-download-wrap">
+      <a href="https://pavelzosim.gumroad.com/l/houdini-folder-based-file-importer-tool"
+         target="_top" class="atlas-download-btn">
+        <span class="atlas-download-btn__icon">↓</span>
+        Download Folder-Based File Importer
+        <span class="atlas-download-btn__sub">Gumroad · HDA</span>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ══ 01: THE PROBLEM ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 The Problem — File Merge SOP at Scale</h2>
+
+    <p>Houdini's built-in <strong>File Merge SOP</strong> handles geometry import through a manually configured file list or a single glob pattern. This works well for a handful of files in a flat directory. It breaks down in three specific ways as asset sets grow:</p>
+
+    <div class="media-frame">
+      <iframe src="https://www.youtube.com/embed/92G4UQyA0g8"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="media-caption">Video 01: Folder-Based File Importer — full workflow demonstration.</div>
+    </div>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ FILE_MERGE_SOP // LIMITATIONS AT SCALE ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>SCENARIO</th><th>FILE MERGE SOP BEHAVIOUR</th><th>COST</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>50+ files across nested folders</td>
+            <td>Requires manual path entry or one glob per folder depth. No recursive traversal.</td>
+            <td>Engineer manually builds file list — error-prone, not repeatable</td>
+          </tr>
+          <tr>
+            <td>Mixed format directory (OBJ + FBX + USD)</td>
+            <td>Single glob pattern matches all extensions — imports unwanted files.</td>
+            <td>Downstream nodes receive unexpected geometry types</td>
+          </tr>
+          <tr>
+            <td>Folder structure encodes asset grouping</td>
+            <td>Folder hierarchy is discarded — all geometry merged into one flat stream.</td>
+            <td>Group information lost — manual re-grouping required downstream</td>
+          </tr>
+          <tr>
+            <td>Asset set changes between shots</td>
+            <td>File list must be manually updated each time directory contents change.</td>
+            <td>Re-entry work each iteration — pipeline not reproducible</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p>The core issue is that File Merge SOP treats the filesystem as a flat list. Real production asset sets are <strong>hierarchical by design</strong> — folder structure encodes LOD level, asset category, variant, or department. Discarding that structure at import forces manual reconstruction downstream.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══ 02: HOW IT WORKS ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 How the Tool Works — Directory Traversal</h2>
+
+    <p>The tool uses Python's <span class="atlas-code-inline">os.walk</span> to recursively traverse a root directory. For each subdirectory, it collects geometry files matching a configurable format filter, imports them via Houdini's Python SOP API, and writes primitive group attributes preserving the folder name as the group identifier.</p>
+
+    <h3 id="s02-code">Python Implementation Pattern</h3>
+
+    <pre class="atlas-code-block"><code class="language-python">import os
+import hou
+
+node    = hou.pwd()
+geo     = node.geometry()
+
+root_dir    = node.parm('root_directory').eval()
+formats     = node.parm('file_formats').eval().split()   # e.g. ['.obj', '.fbx']
+merge_geo   = hou.Geometry()
+
+for dirpath, dirnames, filenames in os.walk(root_dir):
+    # Derive group name from folder path relative to root
+    rel_path   = os.path.relpath(dirpath, root_dir)
+    # Sanitize: replace path separators and spaces with underscores
+    group_name = rel_path.replace(os.sep, '_').replace(' ', '_').replace('.', '')
+    if group_name == '':
+        group_name = 'root'
+
+    for fname in sorted(filenames):
+        ext = os.path.splitext(fname)[1].lower()
+        if ext not in formats:
+            continue   # format filter — skip unwanted extensions
+
+        fpath = os.path.join(dirpath, fname)
+
+        # Import geometry file into temporary geometry object
+        file_geo = hou.Geometry()
+        file_geo.loadFromFile(fpath)
+
+        # Tag all imported primitives with folder-derived group attribute
+        grp = file_geo.findPrimGroup(group_name)
+        if grp is None:
+            grp = file_geo.createPrimGroup(group_name)
+        for prim in file_geo.prims():
+            grp.add(prim)
+
+        # Also write string attribute for downstream material / LOD logic
+        s_attr = file_geo.findPrimAttrib('folder_group')
+        if s_attr is None:
+            s_attr = file_geo.addAttrib(
+                hou.attribType.Prim, 'folder_group', '')
+        for prim in file_geo.prims():
+            prim.setAttribValue('folder_group', group_name)
+
+        merge_geo.merge(file_geo)
+
+geo.merge(merge_geo)</code></pre>
+
+    <h3 id="s02-groups">Folder → Group Mapping</h3>
+    <p>The folder hierarchy maps directly to Houdini primitive groups. A directory structure like the one below produces distinct, addressable groups in the merged geometry:</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // DIRECTORY STRUCTURE</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">assets/
+  vehicles/
+    car_body.obj
+    car_wheels.obj
+  environment/
+    road.obj
+    barriers.obj</code></pre>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // HOUDINI GROUPS GENERATED</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">Primitive groups:
+  vehicles       → car_body + car_wheels prims
+  environment    → road + barriers prims
+
+String attribute 'folder_group':
+  "vehicles"     → per-prim on car geometry
+  "environment"  → per-prim on env geometry</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>Both a <strong>primitive group</strong> and a <strong>string attribute</strong> are written for each folder. The group enables fast SOP-level selection and partition operations. The string attribute enables downstream VEX logic — LOD switching, material assignment, instancing rules — that needs to query the folder origin per-primitive without group overhead.</p>
+    </div>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PARAMETER</th><th>TYPE</th><th>FUNCTION</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Root Directory</td><td>String / path</td><td>Top-level folder to scan — all subdirectories traversed recursively</td></tr>
+          <tr><td>File Formats</td><td>Space-separated string</td><td>Whitelist of extensions to import: <span class="atlas-code-inline">.obj .fbx .usd .abc</span></td></tr>
+          <tr><td>Group Naming</td><td>Enum</td><td>Folder name only / relative path / full path as group identifier</td></tr>
+          <tr><td>Transform Correction</td><td>Bool + vector</td><td>Apply local rotation/scale fix per imported file before merge</td></tr>
+          <tr><td>Sort Order</td><td>Enum</td><td>Alphabetical / modification time — controls merge order for determinism</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══ 03: LOCAL TRANSFORM CORRECTION ═══════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 Local Transform Correction</h2>
+
+    <p>A common issue with multi-source geometry imports is <strong>axis orientation mismatch</strong>. OBJ files from different DCCs use different up-axis conventions — Maya exports Y-up, Blender exports Z-up by default, 3ds Max uses Z-up. FBX carries transform metadata but it is frequently ignored or misread by Houdini's importer depending on version and export settings.</p>
+
+    <p>The result is that geometries arrive with correct topology but wrong local rotation or scale. In a flat import this must be corrected after the merge — which is ambiguous when multiple sources with different conventions are merged into one geometry stream.</p>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--2col">
+        <img src="https://static.wixstatic.com/media/ace175_bc35226019e342bd9607a80107a8ec96~mv2.png/v1/fill/w_1110,h_521,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_bc35226019e342bd9607a80107a8ec96~mv2.png"
+             alt="Original local rotation orientation">
+        <img src="https://static.wixstatic.com/media/ace175_d6f99b0746ae4916b446d45f962ba239~mv2.png/v1/fill/w_1110,h_528,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_d6f99b0746ae4916b446d45f962ba239~mv2.png"
+             alt="Corrected local scale and orientation">
+      </div>
+      <div class="media-caption">Gallery 03: Local rotation correction — before (left) and after (right). Per-file transform applied before merge preserves correct orientation per asset source.</div>
+    </div>
+
+    <p>The tool applies transform correction <strong>per imported file</strong>, before merging into the combined geometry stream. This means different files in the same import batch can receive different corrections — a Y-up OBJ and a Z-up FBX in the same directory both arrive correctly oriented without post-merge ambiguity.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>SOURCE DCC</th><th>DEFAULT EXPORT</th><th>CORRECTION NEEDED FOR HOUDINI (Y-UP)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Maya</td><td>Y-up</td><td>None — matches Houdini default</td></tr>
+          <tr><td>Blender</td><td>Z-up (default)</td><td>Rotate −90° around X</td></tr>
+          <tr><td>3ds Max</td><td>Z-up</td><td>Rotate −90° around X</td></tr>
+          <tr><td>Unreal Engine FBX</td><td>Z-up, scale ×100</td><td>Rotate −90° around X + scale ×0.01</td></tr>
+          <tr><td>Unity FBX</td><td>Y-up, Left-handed</td><td>Negate X axis</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══ 04: PERFORMANCE ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Performance Comparison</h2>
+
+    <p>In a representative test — 3 OBJ files totalling <strong>1,387,781 polygons</strong> — the tool was benchmarked against the equivalent manual File Merge SOP setup:</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ PERFORMANCE_BENCHMARK // 3 OBJ · 1,387,781 POLYGONS ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>METHOD</th><th>EXECUTION TIME</th><th>MANUAL STEPS REQUIRED</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Folder-Based File Importer</td>
+            <td><strong>2.396 s</strong></td>
+            <td>Set root directory + format filter. Zero per-file configuration.</td>
+          </tr>
+          <tr>
+            <td>File Merge SOP (manual)</td>
+            <td>2.625 s</td>
+            <td>Manually select each file, configure merge order, set up grouping nodes separately.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_3d61c0fcd42f44d1a7755eb718ec1883~mv2.png/v1/fill/w_517,h_63,al_c,lg_1,q_85,enc_auto/ace175_3d61c0fcd42f44d1a7755eb718ec1883~mv2.png"
+           alt="Performance benchmark result">
+      <div class="media-caption">Fig 04: Benchmark output — 2.396 s (Folder Importer) vs 2.625 s (File Merge SOP) on identical geometry.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The 9% execution time difference is not the primary benefit — the actual gain is <strong>zero manual file selection</strong> and <strong>automatic group preservation</strong>. As file counts scale from 3 to 300, the manual approach grows linearly in setup time while the tool's setup cost remains constant: one root directory path.</p>
+    </div>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // FILE MERGE SOP</div>
+        <div class="comp-body">
+          <ul>
+            <li>Manual file selection — one entry per file</li>
+            <li>Single glob pattern — no per-folder filtering</li>
+            <li>No recursive subfolder traversal</li>
+            <li>No format whitelist — matches all extensions</li>
+            <li>No group output — flat merged geometry</li>
+            <li>Must be reconfigured when directory changes</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // FOLDER-BASED IMPORTER</div>
+        <div class="comp-body">
+          <ul>
+            <li>Automatic recursive directory scan</li>
+            <li>Format whitelist — import only required extensions</li>
+            <li>Folder hierarchy → primitive groups + string attributes</li>
+            <li>Per-file local transform correction before merge</li>
+            <li>Deterministic — same directory always produces same output</li>
+            <li>Recooks automatically when directory contents change</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══ 05: PIPELINE POSITION ═════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s05">05 Pipeline Position & Use Cases</h2>
+
+    <p>The tool sits at the <strong>ingestion stage</strong> of a Houdini pipeline — immediately after receiving external assets, before any procedural processing. Its output is a single merged geometry stream with group and attribute metadata intact, ready for any downstream SOP network.</p>
+
+    <div class="atlas-uml-diag">
+      <div class="atlas-uml-diag__widget">
+        <div class="atlas-uml-diag__header">// PIPELINE_POSITION // INGESTION STAGE</div>
+        <div style="padding:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+
+          <div class="atlas-uml-diag__node" style="flex:1;min-width:110px">
+            <div class="atlas-uml-diag__node-title">EXTERNAL ASSETS</div>
+            <div class="atlas-uml-diag__node-body">OBJ / FBX / USD<br>Nested directories</div>
+          </div>
+
+          <div class="atlas-uml-diag__arrow-wrapper" style="flex:0 0 40px">
+            <div class="atlas-uml-diag__arrow-line"></div>
+            <div class="atlas-uml-diag__arrow-head"></div>
+          </div>
+
+          <div class="atlas-uml-diag__node" style="flex:1;min-width:110px;border-color:var(--atlas-crit)">
+            <div class="atlas-uml-diag__node-title" style="color:var(--atlas-crit);border-bottom-color:var(--atlas-crit)">FOLDER IMPORTER</div>
+            <div class="atlas-uml-diag__node-body">Scan · Filter<br>Group · Correct<br>Merge</div>
+          </div>
+
+          <div class="atlas-uml-diag__arrow-wrapper" style="flex:0 0 40px">
+            <div class="atlas-uml-diag__arrow-line"></div>
+            <div class="atlas-uml-diag__arrow-head"></div>
+          </div>
+
+          <div class="atlas-uml-diag__node" style="flex:1;min-width:110px">
+            <div class="atlas-uml-diag__node-title">DOWNSTREAM SOPs</div>
+            <div class="atlas-uml-diag__node-body">Material assign<br>LOD processing<br>Simulation / Export</div>
+          </div>
+
+        </div>
+        <div class="atlas-uml-diag__legend">
+          <span>[→] one-directional</span>
+          <span>[#] deterministic — recooks on directory change</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>USE CASE</th><th>BENEFIT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Game asset batch import (characters, props, environments)</td><td>Folder-per-category becomes Houdini group — LOD and variant selection without additional grouping nodes</td></tr>
+          <tr><td>Scan / photogrammetry multi-piece imports</td><td>Format filter excludes texture files and metadata — only mesh geometry imported</td></tr>
+          <tr><td>Client deliverable integration</td><td>Deterministic output regardless of who prepared the directory — same structure always produces same Houdini groups</td></tr>
+          <tr><td>Iterative asset updates</td><td>Replacing files in the directory automatically recooks the import — no manual node reconfiguration</td></tr>
+          <tr><td>Multi-department asset assembly</td><td>Department folder name becomes group attribute — downstream partition or split-by-attribute works immediately</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- References -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Python</span> — os.walk: Directory Tree Generator. Python 3 Standard Library.
+            <br><a href="https://docs.python.org/3/library/os.html#os.walk" class="atlas-ref-link" target="_top">docs.python.org — os.walk</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Python HOM: hou.Geometry.loadFromFile. Houdini Python API.
+            <br><a href="https://www.sidefx.com/docs/houdini/hom/hou/Geometry.html#loadFromFile" class="atlas-ref-link" target="_top">sidefx.com — hou.Geometry.loadFromFile</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — File SOP: Geometry Import. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/nodes/sop/file.html" class="atlas-ref-link" target="_top">sidefx.com — File SOP</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Python HOM: hou.Geometry Groups. Houdini Python API.
+            <br><a href="https://www.sidefx.com/docs/houdini/hom/hou/PrimGroup.html" class="atlas-ref-link" target="_top">sidefx.com — hou.PrimGroup</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="atlas-download-wrap">
+        <a href="https://pavelzosim.gumroad.com/l/houdini-folder-based-file-importer-tool"
+           target="_top" class="atlas-download-btn">
+          <span class="atlas-download-btn__icon">↓</span>
+          Download Folder-Based File Importer
+          <span class="atlas-download-btn__sub">Gumroad · HDA</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // FOLDER_BASED_FILE_IMPORTER // 5 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat houdini_folder_file_importer.log',project:'FolderImporter_HDA',module:'Python / HOM / Houdini SOP',version:'Houdini 20.5',logId:'FOLD_HDA_01',status:'STABLE',slug:'houdini-tool-folder-based-file-importer',author:'Pavel Zosim',created:'2024.07.20',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</body>
+</html>
+
+

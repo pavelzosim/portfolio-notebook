@@ -1,0 +1,131 @@
+/* ==========================================================================
+   FILE: 06-atlas-callout.css
+   ROLE: Информационные блоки (.atlas-callout) и матрица сравнения
+         (.comparison-matrix). Семантические варианты через модификаторы.
+   ЗАВИСИМОСТИ: 01-atlas-core.css (геометрия и модификаторы --important/
+                --warning/--success уже там)
+   ПОРЯДОК В МОНОЛИТЕ: 6 из 7
+   ========================================================================== */
+
+/* ── СЕКЦИЯ A: CALLOUT — Базовый и NOTE-вариант ─────────────────────────── */
+/* Геометрия (border, padding, position, ::before position/height/size)    */
+/* задана в 01-atlas-core.css через общий список системных блоков.         */
+/* Здесь: фон, дефолтный content шапки, вариант --note и --quote.          */
+
+/* Фон — нейтральный alt, не чистый белый */
+.atlas-container .atlas-callout {
+  background: var(--atlas-bg-alt);
+}
+
+/* Дефолтная шапка (переопределяет заглушку core.css если там была) */
+.atlas-container .atlas-callout::before {
+  content: "[ INFO // DOCUMENTATION ]";
+}
+
+/* NOTE: нейтральная системная заметка */
+.atlas-container .atlas-callout--note::before {
+  content: "[ SYSTEM_NOTE ]";
+}
+
+/* QUOTE: цитата с левой полосой */
+.atlas-container .atlas-callout--quote {
+  border-left: 4px solid var(--atlas-ink-muted);
+}
+.atlas-container .atlas-callout--quote::before {
+  content: "[ REFERENCE_POINT ]";
+}
+
+/* Параграф внутри callout — изолированный сброс отступов */
+.atlas-container .atlas-callout p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--atlas-ink-soft);
+}
+
+/* ── СЕКЦИЯ B: COMPARISON MATRIX — Двухколоночное сравнение ─────────────── */
+/* Геометрия (border, position, padding-top под шапку) задана здесь,       */
+/* а не в core, потому что .comparison-matrix имеет display:grid           */
+/* и нестандартные отступы отличные от остальных системных блоков.          */
+/*                                                                           */
+/* ИСПРАВЛЕНИЕ: padding-top унифицирован с core (34px) вместо 24px.        */
+/* Если нужно вернуть 24px — убрать блок из core и задать здесь явно.      */
+
+.atlas-container .comparison-matrix {
+  margin: 24px;
+  max-width: calc(100% - 48px);
+  border: 1px solid var(--atlas-border);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 34px; /* Синхронизировано с core: 24px шапка + 10px зазор */
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* Псевдо-шапка матрицы */
+.atlas-container .comparison-matrix::before {
+  content: "[ COMPARISON // DATA_MATRIX ]";
+}
+
+/* Колонки */
+.atlas-container .comp-col {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.atlas-container .comp-col:first-child {
+  border-right: 1px dashed var(--atlas-border);
+}
+
+/* Заголовок колонки */
+.atlas-container .comp-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--atlas-ink);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
+/* Тело колонки */
+.atlas-container .comp-body {
+  font-size: var(--fs-code);
+  line-height: 1.5;
+  color: var(--atlas-ink-soft);
+}
+
+/* ── OVERFLOW FIX (v3.8.1) — comparison-matrix scroll ───────────────────── */
+/* .comparison-matrix — display:grid 1fr 1fr.                               */
+/* Если содержимое ячейки (pre, длинная строка) шире 1fr,                  */
+/* grid не ужимает её ниже min-content без явного min-width: 0.             */
+
+.atlas-container .comparison-matrix {
+  overflow-x: auto;    /* если вся матрица не помещается — скролл */
+}
+
+.atlas-container .comp-col {
+  min-width: 0;        /* критично: разрешает grid ужать колонку */
+  overflow: hidden;    /* контент не вылезает за границу ячейки */
+}
+
+/* pre внутри comp-col: скролл по коду, не разрыв layout */
+.atlas-container .comp-col pre,
+.atlas-container .comp-col pre.atlas-code-block {
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  /* Шапку ::before внутри comparison скрываем — дублирует comp-label */
+  padding-top: 12px;
+}
+.atlas-container .comp-col pre.atlas-code-block::before {
+  display: none;
+}
+
+/* Длинные слова в .comp-body (имена функций, URLs) */
+.atlas-container .comp-body {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+

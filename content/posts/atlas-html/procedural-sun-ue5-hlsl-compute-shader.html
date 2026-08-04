@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procedural Sun — UE5 HLSL Compute Shader</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.5/cdn/atlas-framework.css?v=1.9.5">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders"/>
+
+<script>
+(function() {
+  'use strict';
+
+  function atlasTOC(opts) {
+    opts = opts || {};
+    var targetSel = opts.target  || '#atlas-toc';
+    var scopeSel  = opts.scope   || '.content-block';
+    var levels    = opts.levels  || ['h2', 'h3', 'h4'];
+    
+    var target = document.querySelector(targetSel);
+    if (!target) return;
+
+    /* Собираем все заголовки нужных уровней внутри scope,
+       исключая те что внутри самого TOC-контейнера          */
+    var selector = levels.map(function(l) {
+      return scopeSel + ' ' + l + ':not(' + targetSel + ' ' + l + ')';
+    }).join(', ');
+
+    var headings = Array.from(document.querySelectorAll(selector));
+    if (!headings.length) return;
+
+    /* Утилита: текст → slug для id */
+    function toSlug(text) {
+      return text.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .substring(0, 60);
+    }
+
+    /* Счётчик для уникальности id */
+    var slugCount = {};
+
+    /* Назначаем id каждому заголовку */
+    headings.forEach(function(h) {
+      var base = 'atlas-' + h.tagName.toLowerCase() + '-' + toSlug(h.textContent);
+      var slug = base;
+      if (slugCount[base] !== undefined) {
+        slugCount[base]++;
+        slug = base + '-' + slugCount[base];
+      } else {
+        slugCount[base] = 0;
+      }
+      if (!h.id) h.id = slug;
+    });
+
+    /* Номера для H2 — автоинкремент */
+    var h2count = 0;
+
+    /* Строим HTML */
+    var items = headings.map(function(h) {
+      var level = h.tagName.toLowerCase(); // h2 / h3 / h4
+      var text  = h.textContent.trim();
+      var href  = '#' + h.id;
+
+      var num;
+      if (level === 'h2') {
+        h2count++;
+        num = (h2count < 10 ? '0' : '') + h2count;
+      } else if (level === 'h3') {
+        num = '—';
+      } else {
+        num = '·';
+      }
+
+      return [
+        '<li class="atlas-toc__item atlas-toc__item--' + level + '">',
+          '<a href="' + href + '" target="_self">',
+            '<span class="atlas-toc__num">' + num + '</span>',
+            '<span class="atlas-toc__row">',
+              '<span class="atlas-toc__title">' + text + '</span>',
+              '<span class="atlas-toc__dots"></span>',
+            '</span>',
+          '</a>',
+        '</li>'
+      ].join('');
+    }).join('');
+
+    target.innerHTML =
+      '<div class="atlas-toc">' +
+        '<ul class="atlas-toc__list">' + items + '</ul>' +
+      '</div>';
+
+    /* Плавный скролл к якорю */
+    target.querySelectorAll('.atlas-toc__item a').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        var href = a.getAttribute('href');
+        if (!href || href[0] !== '#') return;
+        var dest = document.getElementById(href.slice(1));
+        if (!dest) return;
+        e.preventDefault();
+        dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        /* Небольшой офсет чтобы заголовок не прятался за шапку */
+        setTimeout(function() { window.scrollBy(0, -8); }, 350);
+      });
+    });
+  }
+
+  /* Авто-запуск после DOMContentLoaded */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { atlasTOC(); });
+  } else {
+    atlasTOC();
+  }
+
+  /* Экспорт для ручного вызова с параметрами */
+  window.atlasTOC = atlasTOC;
+
+}());
+</script>
+
+  <style>
+    /* ── BUTTON SHADOW FIX: тень смещена на блок, не на текст ──────── */
+    .atlas-container .atlas-btn {
+      position: relative;
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 5px 18px;
+      border: none;
+      border-radius: 0;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      color: #ffffff;
+      background: #0000AA;
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      outline: none;
+      user-select: none;
+      vertical-align: middle;
+      /* Тень — на БЛОКЕ, смещение 4px вправо + 4px вниз, как в NC/VC */
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+      /* Dithering через ::after — только на hover */
+    }
+    .atlas-container .atlas-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(0,0,170,.55) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0,0,170,.55) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0,0,170,.55) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0,0,170,.55) 75%);
+      background-size: 4px 4px;
+      background-position: 0 0, 0 2px, 2px -2px, -2px 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.1s;
+    }
+    .atlas-container .atlas-btn:hover::after { opacity: 1; }
+    .atlas-container .atlas-btn:active {
+      background: #00008B;
+      /* При нажатии тень убирается — эффект вдавливания */
+      box-shadow: 1px 1px 0 rgba(0,0,0,.4);
+      transform: translate(3px, 3px);
+    }
+    .atlas-container .atlas-btn--active {
+      background: #00008B;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,.25), 4px 4px 0 rgba(0,0,0,.55);
+    }
+    .atlas-container .atlas-btn--danger { background: #8b0000; }
+    .atlas-container .atlas-btn--ok    { background: #1a4d1a; }
+    .atlas-container .atlas-btn--sm    { font-size: 9px; padding: 3px 12px; letter-spacing: .08em; }
+
+    /* Dialog: NC Ok/Cancel — рамка, без заливки, тень тоже */
+    .atlas-container .atlas-btn--dialog {
+      background: rgba(200,200,200,.12);
+      color: #000;
+      border: 1px solid rgba(0,0,0,.6);
+      box-shadow: 4px 4px 0 rgba(0,0,0,.35);
+    }
+    .atlas-container .atlas-btn--dialog::after { display: none; }
+    .atlas-container .atlas-btn--dialog:hover  { background: rgba(0,0,170,.08); }
+    .atlas-container .atlas-btn--dialog:active {
+      box-shadow: 1px 1px 0 rgba(0,0,0,.3);
+      transform: translate(3px, 3px);
+    }
+
+    /* Ghost: без тени */
+    .atlas-container .atlas-btn--ghost {
+      background: transparent;
+      color: #8b0000;
+      border: 1px solid rgba(0,0,0,.3);
+      box-shadow: none;
+    }
+    .atlas-container .atlas-btn--ghost::after { display: none; }
+    .atlas-container .atlas-btn--ghost:hover  { background: rgba(0,0,0,.04); }
+    .atlas-container .atlas-btn--ghost:active { transform: translateY(1px); }
+
+    /* Bracket: без заливки и без тени */
+    .atlas-container .atlas-btn--bracket {
+      background: transparent; color: #000;
+      border: none; border-radius: 0;
+      padding: 4px 8px; letter-spacing: .04em;
+      font-weight: 700; box-shadow: none;
+      -webkit-appearance: none; appearance: none;
+    }
+    .atlas-container .atlas-btn--bracket::before {
+      content: '['; margin-right: 3px;
+      color: rgba(0,0,0,.45); font-weight: 400;
+    }
+    .atlas-container .atlas-btn--bracket::after {
+      content: ']'; position: static;
+      background-image: none; pointer-events: auto;
+      opacity: 1; transition: none;
+      margin-left: 3px; color: rgba(0,0,0,.45);
+      font-weight: 400; inset: auto;
+    }
+    .atlas-container .atlas-btn--bracket:hover,
+    .atlas-container .atlas-btn--bracket:hover::before,
+    .atlas-container .atlas-btn--bracket:hover::after { color: #8b0000; }
+    .atlas-container .atlas-btn--bracket:active { transform: none; box-shadow: none; }
+
+    /* Btn group */
+    .atlas-container .atlas-btn-group { display: inline-flex; }
+    .atlas-container .atlas-btn-group .atlas-btn + .atlas-btn {
+      border-left: 1px solid rgba(255,255,255,.2);
+    }
+
+    /* ── GALLERY FIX ────────────────────────────────────────────── */
+    .atlas-container .content-block .media-frame:has(.gallery-grid)::before {
+      content: "[ GALLERY // IMAGE_SEQUENCE ]";
+    }
+    .atlas-container .content-block .media-frame > .gallery-grid { margin: 0; width: 100%; }
+    .atlas-container .content-block .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px; width: 100%;
+    }
+    .atlas-container .content-block .gallery-grid img {
+      display: block; width: 100%; height: 220px;
+      object-fit: cover; border: 1px solid rgba(0,0,0,.15);
+    }
+
+    /* ── REFERENCES ─────────────────────────────────────────────── */
+    .atlas-container .content-block .atlas-refs {
+      position: relative; border: 1px solid rgba(0,0,0,.15);
+      padding: 34px 16px 16px; margin: 24px 0; width: 100%;
+    }
+    .atlas-container .content-block .atlas-refs::before {
+      content: "[ REFERENCES // ИСТОЧНИКИ ]";
+      position: absolute; top: 0; left: 0; right: 0; height: 24px;
+      line-height: 24px; padding-left: 16px;
+      font-size: 9px; font-weight: 700; color: rgba(0,0,0,.45);
+      background: rgba(0,0,0,.015); border-bottom: 1px solid rgba(0,0,0,.12);
+      letter-spacing: .06em; font-family: 'JetBrains Mono', monospace;
+    }
+    .atlas-container .content-block .atlas-ref-list {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .atlas-container .content-block .atlas-ref-item {
+      display: grid; grid-template-columns: 28px 1fr;
+      align-items: baseline; font-size: 12px; line-height: 1.6;
+      color: rgba(0,0,0,.85); padding: 8px 0;
+      border-bottom: 1px dashed rgba(0,0,0,.12);
+    }
+    .atlas-container .content-block .atlas-ref-item:last-child { border-bottom: none; }
+    .atlas-container .content-block .atlas-ref-num {
+      font-size: 9px; font-weight: 700; color: #8b0000; letter-spacing: .04em;
+    }
+    .atlas-container .content-block .atlas-ref-tag {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      color: rgba(0,0,0,.45); border: 1px solid rgba(0,0,0,.2);
+      padding: 0 5px; margin-right: 6px; vertical-align: middle;
+    }
+    .atlas-container .content-block .atlas-ref-author { color: rgba(0,0,0,.5); }
+    .atlas-container .content-block .atlas-ref-link {
+      display: inline-block; margin-top: 2px; font-size: 10px;
+      color: #8b0000; text-decoration: none;
+      border-bottom: 1px solid rgba(139,0,0,.2); transition: border-color .15s;
+    }
+    .atlas-container .content-block .atlas-ref-link::before { content: '→ '; font-weight: 700; }
+    .atlas-container .content-block .atlas-ref-link:hover { border-bottom-color: #8b0000; }
+
+    /* ── atlas-param: инлайн параметр (не было в системе) ──────── */
+    .atlas-container .atlas-param {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: #000;
+      font-weight: 700;
+    }
+
+    /* ── Interactive frame для WebGL шейдера ────────────────────── */
+    .atlas-interactive-frame {
+      margin: 24px 0;
+      border: 1px solid rgba(0,0,0,.15);
+      position: relative;
+    }
+    .atlas-interactive-frame::before {
+      content: "[ INTERACTIVE // LIVE_SHADER_PREVIEW ]";
+      display: block; height: 24px; line-height: 24px;
+      padding-left: 16px; font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; font-weight: 700; color: rgba(0,0,0,.45);
+      background: rgba(0,0,0,.015); border-bottom: 1px solid rgba(0,0,0,.12);
+      letter-spacing: .06em;
+    }
+  </style>
+</head>
+<body>
+
+<div class="atlas-container">
+  <div id="site-passport"></div> 
+  <!-- ══════════════════════════════════════════════════════════════
+       01: OVERVIEW
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+        <div id="atlas-toc"></div>
+    <h2>01 Physical-Based Sun on Unreal Engine</h2>
+    <p>This post covers an ongoing R&amp;D project: a <strong>no-texture, physically-based sun surface plugin</strong> for Unreal Engine 5.7. The goal was not to make "a nice-looking sun" — it was to build a system where every visual parameter is grounded in <span class="atlas-code-inline">solar_physics</span> and expressible as math, not painted by hand.</p>
+    <p>I am documenting this process in real-time. As the project progresses, this report will be updated to reflect the evolving C++ architecture and the math driving the solar photosphere.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_ca6589de87f445ed80b88a7ce666e7b0~mv2.png/v1/fill/w_925,h_853,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_ca6589de87f445ed80b88a7ce666e7b0~mv2.png" alt="Unreal RAW alpha footage">
+      <div class="media-caption">Fig 01: Unreal RAW alpha footage — photosphere surface with granulation and sunspots.</div>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_8e3b8e68379949f7bcec8a4be710a738~mv2.png/v1/fill/w_2425,h_794,al_c,q_90/ace175_8e3b8e68379949f7bcec8a4be710a738~mv2.webp" alt="Houdini Prototype">
+      <div class="media-caption">Fig 02: Houdini Prototype — Biot-Savart magnetic field simulation used as reference for the GPU compute shader.</div>
+    </div>
+
+    <h3>Why Not Use Textures?</h3>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>The short answer:</strong> "Textures lie." A tiled noise texture can look like solar granulation — but it won't <em>behave</em> like it. It won't flow around sunspots, won't respond to a magnetic field map, won't darken physically at the limb. The moment you ask it to do anything beyond "look similar," you hit a wall.</p>
+    </div>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // THE TEXTURE WALL (STATIC)</div>
+        <div class="comp-body">
+          <div>• Locked resolution and bit-depth</div>
+          <div>• No awareness of magnetic topology</div>
+          <div>• Static spectral response</div>
+          <div>• High <span class="atlas-param">VRAM</span> footprint</div>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // THE PROCEDURAL BET (DYNAMIC)</div>
+        <div class="comp-body">
+          <div>• Infinite detail (<span class="atlas-param">ALU</span>-bound)</div>
+          <div>• Responsive to <span class="atlas-param">magnetic_field_maps</span></div>
+          <div>• Blackbody-driven color curves</div>
+          <div>• Zero <span class="atlas-param">VRAM</span> overhead — runtime generation</div>
+        </div>
+      </div>
+    </div>
+
+    <p>Procedural generation from first principles costs more in ALU, but gives you a system with actual degrees of freedom. Change the temperature range — the color responds via a blackbody curve. Change the spot seed — the magnetic topology changes, and so does the chromosphere above it, and the corona loops above that.</p>
+    <p>That's the architectural bet: <strong>pay the compute cost upfront, gain full physical controllability downstream.</strong></p>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       02: PLUGIN ARCHITECTURE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>02 Plugin Architecture: UE5 HLSL Compute Shaders</h2>
+    <p>The system is split across three layers: a C++ ownership layer, a GPU compute pipeline, and an HLSL material library. Data flows strictly downward — the CPU dispatches, the GPU executes, the material assembles.</p>
+
+    <!-- CPU Layer -->
+    <div class="atlas-uml-diag__widget" style="border: none; padding: 0;">
+      <div class="atlas-uml-diag__scope" style="padding: var(--atlas-space-sm); margin-bottom: var(--atlas-space-md);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:var(--fs-h6);font-weight:700;text-transform:uppercase;margin-bottom:15px;">
+          [ 1. CPU LAYER // C++ Architecture ]
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;">
+
+          <div class="atlas-uml-diag__node">
+            <div class="atlas-uml-diag__node-title">SunTextureManager</div>
+            <div class="atlas-uml-diag__node-body">
+              UWorldSubsystem<br>
+              BlackbodyLUT_RGBA<br>
+              BFieldRT_R16F
+            </div>
+          </div>
+
+          <div class="atlas-uml-diag__node">
+            <div class="atlas-uml-diag__node-title">SunTextureHelper</div>
+            <div class="atlas-uml-diag__node-body">
+              BlackbodyToLinearRGB()<br>
+              BakeLUT_Analytic()
+            </div>
+          </div>
+
+          <div style="grid-column:1/-1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:var(--fs-meta);color:var(--atlas-ink-muted);text-transform:uppercase;letter-spacing:.15em;margin:5px 0;">
+            // Data Flux: Ownership &amp; Lifecycle //
+          </div>
+
+          <div class="atlas-uml-diag__node atlas-uml-diag__node--dashed" style="grid-column:1/-1;">
+            <div class="atlas-uml-diag__node-title">FSunTextureParams</div>
+            <div class="atlas-uml-diag__node-body">
+              Single_Source_Of_Truth<br>
+              Seed · Radii · Octaves
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div style="display:flex;flex-direction:column;align-items:center;margin:-15px 0 var(--atlas-space-md) 0;">
+        <div style="width:1px;height:40px;background:var(--atlas-border-strong);"></div>
+        <div style="font-size:9px;color:var(--atlas-ink);margin-top:-4px;">▼</div>
+      </div>
+
+      <!-- GPU Layer -->
+      <div class="atlas-uml-diag__scope" style="padding:var(--atlas-space-sm);margin-bottom:var(--atlas-space-md);border-color:var(--atlas-crit);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:var(--fs-h6);font-weight:700;text-transform:uppercase;margin-bottom:15px;color:var(--atlas-crit);">
+          [ 2. GPU LAYER // Compute Pipeline ]
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;">
+
+          <div class="atlas-uml-diag__node" style="border-color:var(--atlas-crit);">
+            <div class="atlas-uml-diag__node-title" style="color:var(--atlas-crit);border-bottom-color:var(--atlas-crit);">CPU_Dispatcher</div>
+            <div class="atlas-uml-diag__node-body">
+              GenerateSpotPositions()<br>
+              Apply_Hales_Law()
+            </div>
+          </div>
+
+          <div class="atlas-uml-diag__node" style="border-color:var(--atlas-crit);">
+            <div class="atlas-uml-diag__node-title" style="color:var(--atlas-crit);border-bottom-color:var(--atlas-crit);">FSunBFieldCSParams</div>
+            <div class="atlas-uml-diag__node-body">
+              Uniform_Buffer<br>
+              SpotData_Array[8]
+            </div>
+          </div>
+
+          <div style="grid-column:1/-1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:var(--fs-meta);color:var(--atlas-crit);text-transform:uppercase;letter-spacing:.15em;margin:5px 0;opacity:.8;">
+            // Execution: Kernel Dispatch //
+          </div>
+
+          <div class="atlas-uml-diag__node" style="grid-column:1/-1;border-color:var(--atlas-crit);">
+            <div class="atlas-uml-diag__node-title" style="color:var(--atlas-crit);border-bottom-color:var(--atlas-crit);">SunBFieldCompute_USF</div>
+            <div class="atlas-uml-diag__node-body">
+              R_Magnetic_Bz — Magnetic Pressure<br>
+              GB_FlowVectors — Plasma Velocity
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div style="display:flex;flex-direction:column;align-items:center;margin:-15px 0 var(--atlas-space-md) 0;">
+        <div style="width:1px;height:40px;background:var(--atlas-border-strong);"></div>
+        <div style="font-size:9px;color:var(--atlas-ink);margin-top:-4px;">▼</div>
+      </div>
+
+      <!-- HLSL Layer -->
+      <div class="atlas-uml-diag__scope" style="padding:var(--atlas-space-sm);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:var(--fs-h6);font-weight:700;text-transform:uppercase;margin-bottom:15px;">
+          [ 3. HLSL MATERIAL LIBRARY // Final Assembly ]
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;">
+
+          <div class="atlas-uml-diag__node" style="grid-column:1/-1;">
+            <div class="atlas-uml-diag__node-title">Material_Graph</div>
+            <div class="atlas-uml-diag__node-body">Custom_Node → #include SunMaster_USH</div>
+          </div>
+
+          <div class="atlas-uml-diag__node">
+            <div class="atlas-uml-diag__node-title">SunMaster_USH</div>
+            <div class="atlas-uml-diag__node-body">
+              Canonical_Entry_Point<br>
+              Module Linker
+            </div>
+          </div>
+
+          <div class="atlas-uml-diag__node">
+            <div class="atlas-uml-diag__node-title">Modules (16 .ush)</div>
+            <div class="atlas-uml-diag__node-body">
+              SunMath_Projection<br>
+              SunMagnetic_Flow<br>
+              Granulation_V08<br>
+              SunBlackbody · SunLimb…
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       03: GEOMETRIC LAYERING
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>03 Geometric Layering</h2>
+    <p>The solar body is simulated using three concentric spherical meshes. This cross-section illustrates how the volumes are nested to provide the necessary spatial depth for the photosphere and atmospheric effects.</p>
+
+    <div style="margin:var(--atlas-space-md) 0;padding:var(--atlas-space-sm);border:1px solid var(--atlas-border);background:var(--atlas-bg-alt);">
+
+      <div style="display:flex;justify-content:center;margin-bottom:var(--atlas-space-md);border-bottom:1px dashed var(--atlas-border);padding-bottom:var(--atlas-space-md);">
+        <svg viewBox="0 0 220 140" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:500px;width:100%;height:auto;">
+          <circle cx="110" cy="70" r="60" stroke="var(--atlas-ink)" stroke-width="0.5" opacity="0.2"/>
+          <circle cx="110" cy="70" r="38" stroke="var(--atlas-ink)" stroke-width="0.5" stroke-dasharray="3 2" opacity="0.5"/>
+          <path d="M110 70 L145 70 A35 35 0 1 0 75 70 L110 70" fill="var(--atlas-bg)" stroke="var(--atlas-ink)" stroke-width="1.2"/>
+          <circle cx="110" cy="70" r="35" stroke="var(--atlas-ink)" stroke-width="0.5" opacity="0.3"/>
+          <line x1="145" y1="70" x2="180" y2="45" stroke="var(--atlas-ink)" stroke-width="0.5"/>
+          <text x="183" y="43" font-family="JetBrains Mono" font-size="5" font-weight="700" fill="var(--atlas-ink)">PHOTOSPHERE</text>
+          <line x1="140" y1="95" x2="170" y2="115" stroke="var(--atlas-ink)" stroke-width="0.5"/>
+          <text x="173" y="118" font-family="JetBrains Mono" font-size="5" font-weight="700" fill="var(--atlas-ink)">CORONA</text>
+        </svg>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:var(--atlas-space-sm);margin-bottom:var(--atlas-space-md);">
+        <div style="border-left:2px solid var(--atlas-ink);padding-left:15px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:var(--fs-code);text-transform:uppercase;display:block;margin-bottom:4px;">Photosphere</span>
+          <span style="font-size:var(--fs-body);color:var(--atlas-ink-soft);display:block;line-height:1.4;">Base radius ×1.0. Primary surface where granular noise is calculated.</span>
+        </div>
+        <div style="border-left:2px solid var(--atlas-crit);padding-left:15px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:var(--fs-code);text-transform:uppercase;display:block;margin-bottom:4px;color:var(--atlas-crit);">Chromosphere</span>
+          <span style="font-size:var(--fs-body);color:var(--atlas-ink-soft);display:block;line-height:1.4;">Scale ×1.005–1.015. Transition layer for spicules and limb darkening logic.</span>
+        </div>
+        <div style="border-left:2px solid var(--atlas-ink);padding-left:15px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:var(--fs-code);text-transform:uppercase;display:block;margin-bottom:4px;">Corona</span>
+          <span style="font-size:var(--fs-body);color:var(--atlas-ink-soft);display:block;line-height:1.4;">Scale ×1.5–3.0. Extended volume for volumetric prominences and solar wind.</span>
+        </div>
+      </div>
+
+      <div style="height:1px;background:var(--atlas-border);margin-bottom:var(--atlas-space-sm);"></div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:var(--fs-status);background:var(--atlas-ink);color:var(--atlas-bg);padding:2px 6px;text-transform:uppercase;flex-shrink:0;margin-top:1px;">SYNC_STAMP</div>
+        <div style="font-size:var(--fs-code);line-height:1.5;color:var(--atlas-ink-soft);">All three layers share the same <span class="atlas-code-inline">BFieldRT</span> (Magnetic Field Render Target). Sunspots, spicules, and coronal loops are spatially synchronized at zero extra cost.</div>
+      </div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       04: UV CONTRACT
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>04 The HLSL Layer Stack: UV Contract</h2>
+    <p>Spatial synchronization across all three atmospheric shells is maintained via a Canonical UV Derivation. This ensures that magnetic field data aligns perfectly between the photosphere and the outer corona.</p>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>Critical Pitfall: UV Sliding</strong></p>
+      <p>Using <span class="atlas-code-inline">normalize(WorldPos)</span> fixes UVs in World Space. When the actor rotates, all surface patterns "slide" instead of rotating with the mesh.</p>
+      <p style="margin-top:8px;"><strong>Fix:</strong> derive the local direction vector as <span class="atlas-code-inline">(WorldPos - ActorPos)</span> before normalizing. This keeps UVs object-relative.</p>
+    </div>
+
+    <div class="media-frame">
+      <div class="gallery-grid">
+        <img src="https://static.wixstatic.com/media/ace175_a63af9e570774334a9ae507d24f4daac~mv2.png/v1/fill/w_925,h_391,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_a63af9e570774334a9ae507d24f4daac~mv2.png" alt="HLSL Module reroute">
+        <img src="https://static.wixstatic.com/media/ace175_ba56c2c458ac4ef48324dde09fb1ec4b~mv2.png/v1/fill/w_925,h_371,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_ba56c2c458ac4ef48324dde09fb1ec4b~mv2.png" alt="HLSL Module structure">
+      </div>
+      <div class="media-caption">Gallery 04: Modular HLSL system — material graph reroute node and .ush include structure.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       05: PHOTOSPHERE — GRANULATION
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>05 Layer 1: Photosphere — Granulation</h2>
+    <p>Hot plasma rises through the solar interior and forms convective cells — granules. Cell centers are bright and hot; boundaries are dark and cool — descending, spent plasma. Mathematically this is inverted Voronoi F1 with domain warping:</p>
+
+    <div class="atlas-math-block">
+      $$G(p) = \left(1 - \text{VoronoiF1}(p')\right)^k, \quad p' = p + \text{CurlNoise}(p \cdot s_1 + t \cdot t_1) \cdot I_{\text{warp}}$$
+    </div>
+
+    <p>The exponent <span class="atlas-code-inline">k ∈ [2, 4]</span> shapes cell interiors — wider flat tops, sharp dark boundaries. The Curl Noise warp (<span class="atlas-code-inline">SunFlow.ush</span>) ensures cells deform and push each other organically instead of simply blinking in and out.</p>
+
+    <h4>Physical Brightness Mapping</h4>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>REGION</th><th>BRIGHTNESS</th><th>PHYSICS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Intergranular lane</td><td>0.72</td><td>Descending plasma, cool</td></tr>
+          <tr><td>Mean photosphere</td><td>1.00</td><td>Reference baseline</td></tr>
+          <tr><td>Hot granule center</td><td>1.12</td><td>Ascending plasma, peak heat</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Live Shader Preview</h4>
+
+    <div class="atlas-interactive-frame">
+      <iframe
+        src="https://pavelzosim.github.io/sun-shader-granulation/"
+        style="width:100%;height:500px;border:none;display:block;margin:0;padding:0;overflow:hidden;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <h4>HLSL Implementation</h4>
+
+    <pre class="atlas-code-block"><code class="language-hlsl">// SunGranulation.ush — Granulation_V08
+// Inverted Voronoi F1 + domain warp via curl noise
+
+float2 warpedUV = SunUV + CurlNoise(SunUV * WarpScale + Time * WarpSpeed) * WarpIntensity;
+float2 voronoi  = VoronoiF1F2(warpedUV * GranuleScale);
+float  F1       = voronoi.x;
+float  F2       = voronoi.y;
+
+// Invert F1: bright centers, dark boundaries
+float cell   = pow(saturate(1.0 - F1), GranuleExponent);
+
+// Intergranular lane glow: F2-F1 peaks between cells
+float lane   = saturate((F2 - F1) * 3.5);
+float bright = lerp(0.78, 1.12, cell) + lane * 0.05;
+// bright ∈ [0.78..1.12] → feeds temperature pipeline downstream</code></pre>
+
+      <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_f2cf467c7fce415b951e96e11994d3d1~mv2.png/v1/fill/w_925,h_523,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_f2cf467c7fce415b951e96e11994d3d1~mv2.png" alt="Unreal RAW alpha footage">
+      <div class="media-caption">Fig 05: Procedural sun surface simulation using UE5 HLSL Compute Shaders and Niagara.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 05"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       06: SUNSPOTS — MAGNETIC SUPPRESSION
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>06 Layer 2: Sunspots — Magnetic Suppression</h2>
+    <p>Sunspots are regions where concentrated magnetic flux suppresses convection. Temperature drops from ~5800K at the photosphere to ~3800K in the umbra — dark not because they are painted dark, but because they radiate less energy per unit area.</p>
+
+    <p>Spot positions are generated on CPU (<span class="atlas-code-inline">GenerateSpotPositions()</span>) with a deterministic RNG from a seed. Each spot is stored as <span class="atlas-code-inline">FVector4f(U, V, Radius, Polarity)</span>. Polarity alternates following Hale's Polarity Law.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Hale's Law implementation:</strong> spot pairs in each active region are assigned opposite magnetic polarities. The leading polarity in each hemisphere is consistent within a solar cycle and reverses each cycle (~11 years). In the shader this is a simple <span class="atlas-code-inline">sign()</span> alternation on the spot index.</p>
+    </div>
+
+    <p>In the compute shader, each pixel accumulates magnetic field contributions from all spots using a Biot-Savart approximation:</p>
+
+    <div class="atlas-math-block">
+      $$B_z(p) = \sum_{i=0}^{N-1} \text{Polarity}_i \cdot \frac{R_i^2}{(|p - c_i|^2 + R_i^2)^{3/2}}$$
+    </div>
+
+    <pre class="atlas-code-block"><code class="language-hlsl">// SunBFieldCompute.usf — GPU Kernel
+// Accumulate Bz from all spot dipoles
+
+float Bz = 0.0;
+for (int i = 0; i < SpotCount; i++)
+{
+    float2 delta  = UV - SpotData[i].xy;          // UV distance to spot center
+    float  r2     = dot(delta, delta);
+    float  R2     = SpotData[i].z * SpotData[i].z; // spot radius²
+    float  polarity = SpotData[i].w;               // +1 or -1 (Hale's Law)
+
+    Bz += polarity * R2 / pow(r2 + R2, 1.5);
+}
+// Write to R16F render target — sampled by material layer stack
+RWMagneticField[DispatchID.xy] = saturate(Bz * FieldStrength);</code></pre>
+
+    <div class="media-frame">
+      <div class="gallery-grid">
+        <img src="https://static.wixstatic.com/media/ace175_77af88790c7e4d699c6b77010eb041ea~mv2.png" alt="HLSL Module reroute">
+        <img src="https://static.wixstatic.com/media/ace175_ff42ee5c4e2246c3a87b4cf704168d9c~mv2.png" alt="Procedural sun surface simulation using UE5 HLSL Compute Shaders and Niagara">
+        <img src="https://static.wixstatic.com/media/ace175_5fbc7e8778fe4744b2a4c3f81b543dd9~mv2.png/v1/fill/w_2984,h_1430,al_c,q_90/ace175_5fbc7e8778fe4744b2a4c3f81b543dd9~mv2.webp" alt="HLSL Module structure">
+      </div>
+      <div class="media-caption">Gallery 05: Modular HLSL system — Debuging visuals.</div>
+    </div>
+
+        <div class="atlas-section-break" data-index="// § 06"></div>
+
+
+      <h4>Live Shader Preview</h4>
+
+    <div class="atlas-interactive-frame">
+      <iframe
+        src="https://pavelzosim.github.io/sun-shader-magnetic/"
+        style="width:100%;height:500px;border:none;display:block;margin:0;padding:0;overflow:hidden;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+
+    <h3>Sunspot Fibril Structure</h3>
+    <p>The penumbra is not a uniform grey ring. It's made of <strong>fibrils</strong> — dark filaments of plasma aligned along magnetic field lines that splay outward from the umbral core. Three independent fibril layers are composited via a Z-buffer winner approach:</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// 3 independent fibril layers, composited via Z-buffer.
+// Each layer has a different angular offset — strands interleave.
+// Waviness: sin(Bz * waveFreq) — buckle frequency is higher near the umbra,
+// where field lines are denser. Physically correct, not hand-tuned.
+
+[unroll]
+for (int li = 0; li < 3; li++)
+{
+    float lSectorF = (angle + float(li) * 0.31) * (FibrilFreq / SUN_TWO_PI);
+    float lAngleID = floor(lSectorF);
+
+    // 5 independent randoms per strand: phase, drift, depth, waviness, erosion
+    float lr1 = frac(sin(lAngleID * 12.9898 + lSeed) * 43758.5453);
+    float lr2 = frac(sin(lAngleID * 78.233  + lSeed) * 43758.5453);
+    // ...
+}
+
+// Z-buffer winner: highest strand surface wins — produces hard occlusion
+// between tubes instead of blurred sum. Makes them read as "spaghetti".</code></pre>
+
+    <div class="atlas-section-break" data-index="// § 06"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       07: TEMPERATURE PIPELINE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>07 Layer 3: Temperature Pipeline</h2>
+    <p>This is where physics becomes color. Every surface region — granule center, intergranular lane, umbra, penumbra, facula — carries a temperature value in Kelvin. The pipeline in <span class="atlas-code-inline">SunTemperature.ush</span> maps that value to a physically grounded radiance output.</p>
+
+    <h3>Granule → Spot → Facula Compositing</h3>
+    <p>Three passes composite in order: granulation sets the base temperature field, sunspot darkening suppresses it inside spot regions, faculae brighten the exterior ring. Each pass is a <span class="atlas-code-inline">lerp()</span> gated by a mask:</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PASS</th><th>INPUT MASK</th><th>OPERATION</th><th>TEMPERATURE RANGE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1. Granulation</td><td>VoronoiF1 brightness</td><td>lerp(MinT, MaxT, bright)</td><td>5500K – 6200K</td></tr>
+          <tr><td>2. Spot darkening</td><td>SpotDarkening [0..1]</td><td>lerp(tGran, MinT, spot)</td><td>down to ~3800K (umbra)</td></tr>
+          <tr><td>3. Faculae boost</td><td>SpotExterior > 0</td><td>lerp(tBase, FaculaeT, mask)</td><td>up to ~6400K</td></tr>
+          <tr><td>4. Clamp</td><td>—</td><td>clamp(finalT, MinT, MaxT)</td><td>hard physical bounds</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Blackbody LUT Sampling</h3>
+    <p>Temperature maps to color via a 256×1 <span class="atlas-code-inline">BlackbodyLUT</span> sampled at <span class="atlas-code-inline">(T − MinT) / (MaxT − MinT)</span>. The LUT is baked on CPU at startup using an analytic blackbody curve (<span class="atlas-code-inline">BlackbodyToLinearRGB</span> in <span class="atlas-code-inline">SunTextureHelper.cpp</span>), normalized to linear working space — no sRGB conversion problems, no gamma drift.</p>
+
+    <h3>Stefan-Boltzmann Radiance Weighting</h3>
+    <p>Before cinematic grade, each pixel's brightness is weighted by its temperature raised to the fourth power — matching the physical relationship between temperature and total radiated power:</p>
+
+<div class="atlas-math-block">
+  $$\omega = \left( \frac{T}{T_{\max}} \right)^4$$
+</div>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ STEFAN-BOLTZMANN WEIGHTS // SOLAR FEATURES ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>SOLAR FEATURE</th><th>TEMPERATURE</th><th>WEIGHT w</th><th>VISUAL RESULT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Umbra</td><td>~3800K</td><td>≈ 0.14</td><td>Physically dark</td></tr>
+          <tr><td>Mean photosphere</td><td>~5778K</td><td>≈ 0.57</td><td>Reference baseline</td></tr>
+          <tr><td>Hot granule</td><td>~6200K</td><td>1.00</td><td>Peak brightness</td></tr>
+          <tr><td>Faculae</td><td>~6400K</td><td>≈ 1.13</td><td>Slightly brighter</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The umbra at weight 0.14 is not manually darkened — it emerges directly from the T⁴ law. The same formula that makes a tungsten filament dim when it cools makes a sunspot dark. No artistic override required.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 07"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       08: LIMB DARKENING
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>08 Layer 4: Limb Darkening</h2>
+    <p>The solar disc appears darker at the edges because at oblique viewing angles we look through a greater column of photospheric plasma — deeper, hotter layers are hidden. This is not an artistic choice. It is a direct consequence of photospheric opacity.</p>
+    <p>The viewing angle cosine <span class="atlas-code-inline">μ = dot(N_world, -V_world)</span> drives two physical models selectable per quality preset:</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // QUADRATIC — Neckel &amp; Labs 1994</div>
+        <div class="comp-body">Fast, one shader ALU pass. Good for background / mid-distance suns.</div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // CLARET 4-TERM — V-Band accurate</div>
+        <div class="comp-body">Physically accurate for solar V-band close-ups. Four coefficients, four MADs.</div>
+      </div>
+    </div>
+
+<div class="atlas-math-block">
+  $$\\frac{I(\\mu)}{I(1)} = 0.294 + 0.884\\mu - 0.178\\mu^2 \\quad \\text{(Quadratic)}$$
+</div>
+
+<div class="atlas-math-block">
+  $$\\frac{I(\\mu)}{I(1)} = 1 - \\sum_{k=1}^{4} a_k\\left(1 - \\mu^{k/2}\\right), \\quad a = [0.4361,\\; 0.2860,\\; 0.1567,\\; {-0.0885}]$$
+</div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>UE ACES Fix — limbFloor parameter</strong></p>
+      <p>UE's ACES tonemapper has an aggressive toe curve that converts subtle limb darkening into a hard black crust at the disc edge. The fix is a <span class="atlas-code-inline">limbFloor</span> parameter that prevents <span class="atlas-code-inline">I(μ)</span> from dropping below a minimum value — an artistic override that restores control without breaking the physics in the bright range.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 08"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       09: POM ON A SPHERE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>09 Layer 5: Parallax Occlusion Mapping on a Sphere</h2>
+    <p>POM on a sphere requires latitude-corrected tangent space. A flat TBN doesn't account for the fact that a UV step at the equator covers different physical area than the same step near the poles — which causes POM to stretch at the poles and compress at the equator.</p>
+
+    <h3>Latitude-Corrected TBN</h3>
+    <p>The corrected tangent frame in <span class="atlas-code-inline">SunProjection.ush</span> derives <span class="atlas-code-inline">T</span> and <span class="atlas-code-inline">B</span> analytically from the sphere's local position vector, then projects the view vector into that frame:</p>
+
+    <pre class="atlas-code-block"><code class="language-c">float  sinTheta = max(length(P.xy), 0.05);   // guard against pole singularity
+float3 T        = float3(-P.y, P.x, 0) / sinTheta;  // dP/dU — latitude-scaled
+float3 B        = cross(P, normalize(T));             // dP/dV — unit
+
+// View vector must be in LOCAL space before projection:
+float3 V_local  = mul(float4(V_world, 0), WorldToLocal).xyz;
+float2 dir;
+dir.x   = dot(V_local, T);
+dir.y   = dot(V_local, B);
+float2 offset = dir * HeightScale;</code></pre>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Pole singularity:</strong> the <span class="atlas-code-inline">max(..., 0.05)</span> clamp limits the singularity to a ~3° polar cap. At any reasonable camera distance this cap is visually invisible — the alternative (per-vertex TBN baked in Houdini) costs an extra vertex stream with no perceptible quality gain outside of extreme close-ups.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 09"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       10: CHROMOSPHERE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>10 Layer 6: Chromosphere</h2>
+    <p>The chromosphere is a thin shell of hot plasma above the photosphere, visible primarily at the limb during eclipses. On the disc center it's hidden behind the optically thick photosphere — only at the limb, where we look tangentially through the shell, does it become visible.</p>
+
+    <h3>Fresnel Limb Gate</h3>
+    <p>Fresnel opacity gates the chromosphere off the disc center and opens it fully at the limb:</p>
+
+<div class="atlas-math-block">
+  $$\\text{opacity} = (1 - \\mu)^k, \\quad k \\approx 3$$
+</div>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>CONDITION</th><th>μ VALUE</th><th>OPACITY</th><th>VISUAL RESULT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Disc center</td><td>μ = 1</td><td>0.00</td><td>Chromosphere invisible — photosphere visible</td></tr>
+          <tr><td>Mid-disc</td><td>μ = 0.5</td><td>≈ 0.13</td><td>Faint bleed, active regions only</td></tr>
+          <tr><td>Limb</td><td>μ = 0</td><td>1.00</td><td>Full chromosphere emission</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Temperature-Driven Color</h3>
+    <p>Unlike the photosphere which stays in the 5500–6400K range, the chromosphere spans a much wider temperature range depending on activity level. Colors are computed analytically to support up to 50,000K — a LUT at that range would require impractical resolution:</p>
+
+    <ul>
+      <li><strong>Quiet chromosphere (~8,000K)</strong> — H-alpha orange-red, visible as the pink ring during total solar eclipses</li>
+      <li><strong>Active regions (~50,000K)</strong> — EUV blue-white, corresponding to extreme ultraviolet emission from superheated plasma in flare regions</li>
+    </ul>
+
+    <p>Spicules are flow-aligned anisotropic FBM, oriented by <span class="atlas-code-inline">BFieldRT.gb</span> flow vectors. World Position Offset extrudes them along the vertex normal — no additional mesh geometry required.</p>
+
+    <div class="atlas-section-break" data-index="// § 10"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       11: CORONA
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>11 Layer 7: Corona</h2>
+    <p>The K-corona — the inner white corona visible during total eclipses — is not thermal emission. It's Thomson scattering of photosphere light off free electrons in the coronal plasma. The color is approximately the photosphere's spectral distribution — white — not a blackbody curve at coronal temperatures.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// K-corona: scattered photosphere light, not temperature emission.
+// ThomsonScatterFactor encodes electron column density along the view ray.
+float3 ScatteredColor = SunColor * ThomsonScatterFactor;</code></pre>
+
+    <h3>Magnetic Synchronization</h3>
+    <p>Coronal loops are gated by <span class="atlas-code-inline">BFieldRT.r</span> (Bz magnitude) — they only appear above active regions where the magnetic field is strong enough to confine plasma along closed field lines. Since photosphere spots, chromosphere plages, and coronal loops all sample the same <span class="atlas-code-inline">BFieldRT</span>, spatial alignment is guaranteed with zero additional synchronization cost.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Streamers</strong> are multi-layer FBM noise with flow-aligned anisotropy — the same flow vectors from <span class="atlas-code-inline">BFieldRT.gb</span> that drive chromospheric spicules. Three parallax depth layers provide visual depth without raymarching cost: the parallax offset fakes the volumetric feel of a thick streamer belt.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 11"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       12: CINEMATIC GRADE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>12 Cinematic Grade</h2>
+    <p>Physical blackbody output for a real sun at 5778K is perceptually nearly white — correct physics, poor cinematics. A grade module (<span class="atlas-code-inline">SunGrade.ush</span>) sits between the LUT sample and the final compositor, operating entirely in linear space to preserve HDR fidelity.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ CINEMATIC_PRESETS // SUNGRADE.USH ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PRESET</th><th>CHARACTER</th><th>USE CASE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">PresetGolden</span></td><td>Warm cinematic sun</td><td>Realistic daytime, hero shots</td></tr>
+          <tr><td><span class="atlas-code-inline">PresetTealOrange</span></td><td>Split-tone grade</td><td>Cinematic contrast, stylized</td></tr>
+          <tr><td><span class="atlas-code-inline">PresetBlueGiant</span></td><td>Cold sci-fi star</td><td>O/B-type star simulation</td></tr>
+          <tr><td><span class="atlas-code-inline">PresetPhysical</span></td><td>Unmodified physics output</td><td>Scientific visualization</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 12"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       13: NIAGARA PROMINENCES
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>13 Niagara: Solar Prominences</h2>
+    <p>A separate Niagara emitter system handles solar prominences — large magnetic plasma arcs above the chromosphere. The core challenge was GPU-stable particle pairing: prominences require particle pairs (arc start / arc end), and maintaining stable pairs across frames on the GPU is a non-trivial synchronization problem.</p>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--2col">
+        <img src="https://static.wixstatic.com/media/ace175_b1152c1cb0cb4a418c3909663b2d970b~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_b1152c1cb0cb4a418c3909663b2d970b~mv2.webp" alt="Solar prominence arc 1">
+        <img src="https://static.wixstatic.com/media/ace175_ba8b96f230df4aa9875250d0fd3435b6~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_ba8b96f230df4aa9875250d0fd3435b6~mv2.webp" alt="Solar prominence arc 2">
+      </div>
+      <div class="media-caption">Fig 13: Niagara solar prominences — GPU particle pairing via adapted Gale-Shapley algorithm.</div>
+    </div>
+
+    <h3>Gale-Shapley Stable Matching on GPU</h3>
+    <p>The solution uses an adapted Gale-Shapley stable matching algorithm across three Generic Simulation Stages:</p>
+
+    <ul>
+      <li><strong>FillGrid</strong> — populate a <span class="atlas-code-inline">NeighborGrid3D</span> with particle positions</li>
+      <li><strong>FindAndPropose</strong> — each particle proposes to its nearest neighbor</li>
+      <li><strong>ValidateAndPair</strong> — validate mutual proposals, write stable pairs via <span class="atlas-code-inline">InterlockedMin / InterlockedMax</span></li>
+    </ul>
+
+    <h3>Compiler-Level Issues Encountered</h3>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>ISSUE</th><th>SYMPTOM</th><th>FIX</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">[unroll]</span> on dynamic-bound loops</td><td>DXC compiler hang in UE 5.7</td><td>Removed, replaced with explicit fixed-count loops</td></tr>
+          <tr><td><span class="atlas-code-inline">AttributeReader</span> timing</td><td>Returns T-1 frame data</td><td>Explicit one-frame delay in ValidateAndPair stage</td></tr>
+          <tr><td><span class="atlas-code-inline">RWBuffer</span> write collisions</td><td>Unstable pairs under contention</td><td>Lane ordering via InterlockedMin / InterlockedMax</td></tr>
+          <tr><td><span class="atlas-code-inline">NeighborGrid3D</span> fill failure</td><td>Grid silently empty on GPU</td><td>Explicit SimulationToUnit matrix recalibration</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Arc geometry is shaped via a sine-envelope lift along interpolated surface normals, with a shared <span class="atlas-code-inline">RibbonID</span> per pair for the ribbon renderer.</p>
+
+    <div class="atlas-section-break" data-index="// § 13"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       14: CURRENT STATUS
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2>14 Current Status</h2>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">✓ DONE</div>
+        <div class="comp-body">
+          <ul>
+            <li>Photosphere: granulation, sunspots (umbra / penumbra / fibrils), temperature pipeline, limb darkening, POM, cinematic grade</li>
+            <li>Chromosphere: spicules, plages, Fresnel limb opacity, WPO extrusion</li>
+            <li>Corona: K-corona, streamers, coronal loops, Bz synchronization</li>
+            <li>Compute shader: BField RT, spot generation, RDG dispatch pipeline</li>
+            <li>C++ plugin: Blueprint API, WorldSubsystem lifecycle, editor subsystem</li>
+          </ul>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">⟳ IN PROGRESS</div>
+        <div class="comp-body">
+          <ul>
+            <li>Niagara prominences: pairing algorithm stable, arc ribbon renderer in progress</li>
+            <li>Houdini reference simulation: separate post — VEX magnetic field sim used as ground truth for the HLSL approximations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       EOF + REFS
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">PAPER</span>
+            <span class="atlas-ref-author">Nordlund Å., Stein R.F., Asplund M.</span> — Solar Surface Convection. Living Reviews in Solar Physics, 2009.
+            <br><a href="https://link.springer.com/article/10.12942/lrsp-2009-2" class="atlas-ref-link" target="_top">link.springer.com/article/10.12942/lrsp-2009-2</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Epic Games</span> — Render Dependency Graph (RDG). Unreal Engine 5 Developer Documentation.
+            <br><a href="https://docs.unrealengine.com/5.0/en-US/render-dependency-graph-in-unreal-engine/" class="atlas-ref-link" target="_top">docs.unrealengine.com — Render Dependency Graph</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">PAPER</span>
+            <span class="atlas-ref-author">Hale G.E. et al.</span> — The Magnetic Polarity of Sun-Spots. Astrophysical Journal, 49, 1919.
+            <br><a href="https://ui.adsabs.harvard.edu/abs/1919ApJ....49..153H" class="atlas-ref-link" target="_top">ui.adsabs.harvard.edu — Hale 1919</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">CODE</span>
+            <span class="atlas-ref-author">pavelzosim</span> — Sun Shader Granulation — Live WebGL Preview. GitHub Pages, 2026.
+            <br><a href="https://pavelzosim.github.io/sun-shader-granulation/" class="atlas-ref-link" target="_top">pavelzosim.github.io/sun-shader-granulation</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[05]</span>
+          <div>
+            <span class="atlas-ref-tag">PAPER</span>
+            <span class="atlas-ref-author">Neckel H., Labs D.</span> — Solar limb darkening 1986–1990. Solar Physics, 153, 1994.
+            <br><a href="https://link.springer.com/article/10.1007/BF00712494" class="atlas-ref-link" target="_top">link.springer.com — Neckel &amp; Labs 1994</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[06]</span>
+          <div>
+            <span class="atlas-ref-tag">PAPER</span>
+            <span class="atlas-ref-author">Claret A.</span> — A new non-linear limb-darkening law for LTE stellar atmosphere models. A&amp;A, 363, 2000.
+            <br><a href="https://ui.adsabs.harvard.edu/abs/2000A%26A...363.1081C" class="atlas-ref-link" target="_top">ui.adsabs.harvard.edu — Claret 2000</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[07]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Epic Games</span> — Niagara Simulation Stages. Unreal Engine 5 Documentation.
+            <br><a href="https://docs.unrealengine.com/5.0/en-US/niagara-simulation-stages-in-unreal-engine/" class="atlas-ref-link" target="_top">docs.unrealengine.com — Niagara Simulation Stages</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // SOL_RND_01 // SECTIONS 01–14 // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+
+</div><!-- /atlas-container -->
+
+
+<script>
+var CONFIG = {
+  user: 'pavelzosim', path: '~', command: 'cat procedural_sun_ue5_compute_shader.log',
+  project: 'SunShaderPlugin', module: 'Compute Shader & Niagara',
+  version: 'UE 5.7', logId: 'SOL_RND_01', status: 'Mid-Dev',
+  slug: 'procedural-sun-ue5-hlsl-compute-shaders',
+  author: 'Pavel Zosim', created: '2026.04.10', modified: null,
+  wordCount: null, title: null, tags: [],
+  tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+};
+
+var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
+
+function applyData(d) {
+  if (d.author)    CONFIG.author    = d.author;
+  if (d.title) {
+    CONFIG.title   = d.title;
+    CONFIG.command = 'cat ' + d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'') + '.log';
+  }
+  if (d.created)   CONFIG.created   = d.created;
+  if (d.modified)  CONFIG.modified  = d.modified;
+  if (d.wordCount) CONFIG.wordCount = d.wordCount;
+  if (Array.isArray(d.tags)) CONFIG.tags = d.tags;
+  window.render && window.render();
+}
+
+(function(){
+  if (!CONFIG.slug) return;
+  fetch(BACKEND_URL + '?slug=' + encodeURIComponent(CONFIG.slug))
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && !d.error) applyData(d); })
+    .catch(e => console.warn('[ATLAS] Passport fetch failed', e));
+})();
+
+(function(){
+  function render() {
+    var o = CONFIG;
+    var status = (o.status || 'DRAFT').toUpperCase();
+    var rt = o.wordCount ? '~' + Math.ceil(Number(o.wordCount)/200) + ' MIN' : null;
+    var meta = '<div class="passport-meta-item" data-meta="auth">'     + (o.author  || '—') + '</div>' +
+               '<div class="passport-meta-item" data-meta="created">'  + (o.created || '—') + '</div>';
+    if (o.modified) meta += '<div class="passport-meta-item" data-meta="modified">' + o.modified + '</div>';
+    if (rt)         meta += '<div class="passport-meta-item" data-meta="read">'     + rt         + '</div>';
+    var tags = Array.isArray(o.tags) && o.tags.length
+      ? '<div class="passport-tags">' + o.tags.map(t =>
+          '<a href="' + o.tagBaseUrl + t.toLowerCase().replace(/\s+/g,'-') + '" class="passport-tag" target="_top">#' + t.toUpperCase() + '</a>'
+        ).join('') + '</div>'
+      : '';
+    document.getElementById('site-passport').innerHTML =
+      '<div class="passport-bp">' +
+        '<div class="passport-title-bar">' +
+          '<div>' + o.user + ' : ' + o.path + ' # ' + o.command + '</div>' +
+          '<div>[ SYS_STATUS: <b>' + status + '</b> ]</div>' +
+        '</div>' +
+        (o.title ? '<div class="passport-main-title">' + o.title.toUpperCase() + '</div>' : '') +
+        '<div class="passport-grid">' +
+          '<div class="passport-cell">' +
+            '<div class="passport-cell-line" data-key="project">' + o.project + '</div>' +
+            '<div class="passport-cell-line" data-key="module">'  + o.module  + '</div>' +
+          '</div>' +
+          '<div class="passport-cell">' +
+            '<div class="passport-cell-line" data-key="version">' + o.version + '</div>' +
+            '<div class="passport-cell-line" data-key="log_id">'  + o.logId   + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="passport-meta">' + meta + '</div>' + tags +
+      '</div>';
+  }
+  window.render = render;
+  render();
+}());
+
+(function(){
+  fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(c => {
+      document.getElementById('atlas-footer').innerHTML =
+        '<div class="atlas-footer-wrapper">' +
+          '<div class="atlas-footer-block__support-header">' +
+            '<span class="atlas-footer-block__kaomoji">' + c.tagline + '</span>' +
+            '<span>LET\'S STAY IN TOUCH</span>' +
+          '</div>' +
+          '<div class="atlas-footer-block__support-content">' +
+            '<div class="atlas-footer-block__support-text">' + c.support.text + '</div>' +
+            '<div class="atlas-footer-block__support-links">' +
+              c.support.links.map((l,i,a) =>
+                '<a href="' + l.url + '" class="atlas-blueprint-link">' + l.text + '</a>' +
+                (i < a.length-1 ? '<span class="atlas-footer-block__support-divider">|</span>' : '')
+              ).join('') +
+            '</div>' +
+          '</div>' +
+          '<div class="atlas-footer-block__matrix-zone">' +
+            c.links.map(g =>
+              '<div class="atlas-footer-block__matrix-column">' +
+                '<span class="atlas-footer-block__column-label">' + g.label + '</span>' +
+                '<div class="atlas-footer-block__column-items">' +
+                  g.items.map(i => '<a href="' + i.url + '" class="atlas-blueprint-link">/ ' + i.text + '</a>').join('') +
+                '</div>' +
+              '</div>'
+            ).join('') +
+          '</div>' +
+        '</div>';
+    })
+    .catch(e => console.error('[ATLAS] Footer failed:', e));
+}());
+</script>
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-glsl.min.js"></script>
+
+</body>
+</html>
+

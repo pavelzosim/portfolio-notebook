@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-material-path-manager-tool">
+  <title>Houdini Material Path Manager — shop_materialpath from String Attributes · pavelzosim.com</title>
+  <meta name="description" content="A Houdini utility that converts raw string attributes from FBX/USD imports into valid shop_materialpath assignments. Handles illegal characters, path normalization, and batch reassignment across geometry hierarchies.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* download button */
+    .atlas-container .atlas-download-wrap{position:relative;display:inline-block;margin:8px 0 24px}
+    .atlas-container .atlas-download-wrap::after{content:'';position:absolute;top:4px;left:4px;right:-4px;bottom:-4px;background-image:linear-gradient(45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(-45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(0,0,170,.6) 75%),linear-gradient(-45deg,transparent 75%,rgba(0,0,170,.6) 75%);background-size:4px 4px;background-position:0 0,0 2px,2px -2px,-2px 0;z-index:0;pointer-events:none}
+    .atlas-container .atlas-download-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 24px;background:#0000AA;color:#fff;border:none;border-radius:0;text-decoration:none;white-space:nowrap;cursor:pointer;transform:translate(-4px,-4px);transition:transform .05s linear}
+    .atlas-container .atlas-download-btn:hover{background:#0000CC}
+    .atlas-container .atlas-download-btn:active{transform:translate(0,0)}
+    .atlas-container .atlas-download-btn__icon{font-size:14px;font-weight:400}
+    .atlas-container .atlas-download-btn__sub{font-size:9px;font-weight:400;letter-spacing:.04em;opacity:.75;margin-left:4px}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <!-- TOC -->
+  <div class="content-block">
+
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">The Problem — shop_materialpath and FBX Import</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s01-why"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Why shop_materialpath Breaks on Import</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">How shop_materialpath Works in Houdini</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">What the Tool Does — String → Valid Path</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-sanitize"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Sanitization Pipeline</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-vex"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">VEX Implementation Pattern</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Use Cases & Pipeline Fit</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+
+    <div class="atlas-download-wrap">
+      <a href="https://pavelzosim.gumroad.com/l/houdini-material-path-manager-tool?discount=FLUGGAENKOECCHICEBOLSEN"
+         target="_top" class="atlas-download-btn">
+        <span class="atlas-download-btn__icon">↓</span>
+        Download Material Path Manager
+        <span class="atlas-download-btn__sub">Gumroad · HDA</span>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ══ 01: THE PROBLEM ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 The Problem — shop_materialpath and FBX Import</h2>
+
+    <p>Houdini uses the primitive string attribute <span class="atlas-code-inline">shop_materialpath</span> to assign materials to geometry. When you import an FBX file — from a DCC tool, a game engine export, a scan pipeline, or a client asset — Houdini's FBX importer reads the material names embedded in the file and stores them as string attributes on primitives.</p>
+
+    <p>The problem is that FBX material names are arbitrary strings. They come from whatever naming convention the source application used. They frequently contain characters that are illegal in Houdini operator paths, spaces that break path resolution, or prefixes from the originating software that have no meaning in a Houdini scene.</p>
+
+    <div class="media-frame">
+      <iframe src="https://www.youtube.com/embed/n_h78ddRw3k"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="media-caption">Video 01: Material Path Manager — workflow demonstration.</div>
+    </div>
+
+    <h3 id="s01-why">Why shop_materialpath Breaks on Import</h3>
+
+    <p>When Houdini's FBX importer reads material data, it typically stores the raw material name from the FBX into a primitive string attribute — often called <span class="atlas-code-inline">material_name</span>, <span class="atlas-code-inline">fbx_material</span>, or a custom attribute depending on importer settings. This is <strong>not</strong> <span class="atlas-code-inline">shop_materialpath</span> yet. It is raw text.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ COMMON FAILURE MODES // FBX → Houdini ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>RAW FBX STRING</th><th>PROBLEM</th><th>HOUDINI RESULT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">M_Body Paint 01</span></td><td>Space in name</td><td>Path resolution fails — Houdini cannot find the material</td></tr>
+          <tr><td><span class="atlas-code-inline">Material#12</span></td><td>Hash is special character</td><td>Houdini interprets # as operator flag — path corrupt</td></tr>
+          <tr><td><span class="atlas-code-inline">MI_Chassis_LOD0</span></td><td>Engine-specific prefix / suffix</td><td>No matching material in Houdini scene — silent miss</td></tr>
+          <tr><td><span class="atlas-code-inline">/Game/Assets/Mat_Door</span></td><td>UE4-style asset path</td><td>Leading slash resolves as absolute path — wrong context</td></tr>
+          <tr><td><span class="atlas-code-inline">lambert1</span></td><td>Maya default placeholder</td><td>Maps to nothing — assigned geometry has no material</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p>The silent failure mode is the most dangerous: Houdini accepts an invalid <span class="atlas-code-inline">shop_materialpath</span> without error. The geometry renders with no material, or with a fallback grey, and the problem only surfaces at render time — sometimes hours into a farm job.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══ 02: HOW shop_materialpath WORKS ══════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 How shop_materialpath Works in Houdini</h2>
+
+    <p><span class="atlas-code-inline">shop_materialpath</span> is a primitive-level string attribute that Houdini's rendering engine reads per-primitive to resolve material assignment. It must contain a <strong>valid operator path</strong> — the same format as paths in the Houdini scene graph.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PATH FORM</th><th>EXAMPLE</th><th>RESOLVES TO</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Absolute</td><td><span class="atlas-code-inline">/mat/body_paint</span></td><td>Material at exact node path in scene</td></tr>
+          <tr><td>Relative</td><td><span class="atlas-code-inline">../mat/body_paint</span></td><td>Relative to current SOP context — fragile across hierarchy</td></tr>
+          <tr><td>Named (flat)</td><td><span class="atlas-code-inline">body_paint</span></td><td>Resolved by Houdini against the material context — less predictable</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The safest and most portable form for production is an <strong>absolute path</strong> pointing into a <span class="atlas-code-inline">/mat</span> network. This form is unambiguous regardless of where the geometry node lives in the scene hierarchy, and it survives file references, HDAs, and subnet context changes.</p>
+
+    <p>The path must satisfy Houdini operator naming rules:</p>
+    <ul>
+      <li>Only alphanumeric characters, underscores, and forward slashes</li>
+      <li>No spaces — use underscore as word separator</li>
+      <li>No special characters: <span class="atlas-code-inline"># @ ! % ( )</span> etc.</li>
+      <li>Must begin with <span class="atlas-code-inline">/</span> for absolute paths</li>
+      <li>Each path segment must not start with a digit</li>
+    </ul>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══ 03: WHAT THE TOOL DOES ════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 What the Tool Does — String → Valid Path</h2>
+
+    <p>The tool reads a specified string attribute from geometry primitives and generates a valid <span class="atlas-code-inline">shop_materialpath</span> from it. The transformation pipeline runs in order: strip, sanitize, prefix, deduplicate.</p>
+
+    <h3 id="s03-sanitize">Sanitization Pipeline</h3>
+
+    <div class="atlas-uml-diag">
+      <div class="atlas-uml-diag__widget">
+        <div class="atlas-uml-diag__header">// STRING → VALID shop_materialpath</div>
+        <div style="padding:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="atlas-uml-diag__node" style="flex:1;min-width:100px">
+            <div class="atlas-uml-diag__node-title">RAW STRING</div>
+            <div class="atlas-uml-diag__node-body">M_Body Paint #01</div>
+          </div>
+          <div class="atlas-uml-diag__arrow-wrapper" style="flex:0 0 40px">
+            <div class="atlas-uml-diag__arrow-line"></div>
+            <div class="atlas-uml-diag__arrow-head"></div>
+          </div>
+          <div class="atlas-uml-diag__node" style="flex:1;min-width:100px;border-color:var(--atlas-warn)">
+            <div class="atlas-uml-diag__node-title" style="color:var(--atlas-warn);border-bottom-color:var(--atlas-warn)">STRIP PREFIX</div>
+            <div class="atlas-uml-diag__node-body">Body Paint #01</div>
+          </div>
+          <div class="atlas-uml-diag__arrow-wrapper" style="flex:0 0 40px">
+            <div class="atlas-uml-diag__arrow-line"></div>
+            <div class="atlas-uml-diag__arrow-head"></div>
+          </div>
+          <div class="atlas-uml-diag__node" style="flex:1;min-width:100px;border-color:var(--atlas-crit)">
+            <div class="atlas-uml-diag__node-title" style="color:var(--atlas-crit);border-bottom-color:var(--atlas-crit)">SANITIZE</div>
+            <div class="atlas-uml-diag__node-body">body_paint_01</div>
+          </div>
+          <div class="atlas-uml-diag__arrow-wrapper" style="flex:0 0 40px">
+            <div class="atlas-uml-diag__arrow-line"></div>
+            <div class="atlas-uml-diag__arrow-head"></div>
+          </div>
+          <div class="atlas-uml-diag__node" style="flex:1;min-width:100px;border-color:var(--atlas-ok)">
+            <div class="atlas-uml-diag__node-title" style="color:var(--atlas-ok);border-bottom-color:var(--atlas-ok)">PREFIX PATH</div>
+            <div class="atlas-uml-diag__node-body">/mat/body_paint_01</div>
+          </div>
+        </div>
+        <div class="atlas-uml-diag__legend">
+          <span>[→] sequential transform</span>
+          <span>[#] idempotent — same input → same output</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>STEP</th><th>OPERATION</th><th>EXAMPLE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1. Strip prefix</td><td>Remove configurable engine prefixes: <span class="atlas-code-inline">M_</span>, <span class="atlas-code-inline">MI_</span>, <span class="atlas-code-inline">mat_</span></td><td><span class="atlas-code-inline">M_Body Paint</span> → <span class="atlas-code-inline">Body Paint</span></td></tr>
+          <tr><td>2. Lowercase</td><td>Normalize case — prevents duplicates from case variation</td><td><span class="atlas-code-inline">Body Paint</span> → <span class="atlas-code-inline">body paint</span></td></tr>
+          <tr><td>3. Replace illegal chars</td><td>Spaces → underscore. Strip <span class="atlas-code-inline"># @ ! % ( )</span> and other special chars</td><td><span class="atlas-code-inline">body paint #01</span> → <span class="atlas-code-inline">body_paint_01</span></td></tr>
+          <tr><td>4. Validate segment start</td><td>If segment starts with digit, prepend underscore</td><td><span class="atlas-code-inline">3d_asset</span> → <span class="atlas-code-inline">_3d_asset</span></td></tr>
+          <tr><td>5. Prepend path prefix</td><td>Add configurable root: <span class="atlas-code-inline">/mat/</span></td><td><span class="atlas-code-inline">body_paint_01</span> → <span class="atlas-code-inline">/mat/body_paint_01</span></td></tr>
+          <tr><td>6. Write attribute</td><td>Set <span class="atlas-code-inline">shop_materialpath</span> on primitive</td><td>All primitives with matching source attribute updated</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s03-vex">VEX Implementation Pattern</h3>
+    <p>The core logic can be expressed as a VEX wrangle — the tool wraps this into an HDA interface with configurable parameters for source attribute name, prefix stripping rules, and path root:</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// VEX Attribute Wrangle (Primitives) — core sanitization pattern
+// Source attribute: configurable — typically 'material_name' from FBX import
+string srcAttr  = "material_name"; // read from HDA parameter
+string pathRoot = "/mat/";         // configurable root prefix
+
+// Read raw string from source attribute
+string raw = prim(0, srcAttr, @primnum);
+
+// Step 1: strip known engine prefixes (configurable list)
+string prefixes[] = { "M_", "MI_", "mat_", "M_Inst_" };
+foreach (string p; prefixes) {
+    if (startswith(raw, p))
+        raw = substring(raw, len(p), len(raw) - len(p));
+}
+
+// Step 2: lowercase — prevents silent duplicates from case variation
+raw = tolower(raw);
+
+// Step 3: replace illegal characters
+// Space → underscore
+raw = re_replace(" ", "_", raw);
+// Strip any char that is NOT alphanumeric, underscore, or slash
+raw = re_replace("[^a-z0-9_/]", "", raw);
+// Collapse multiple underscores from repeated replacements
+raw = re_replace("_+", "_", raw);
+
+// Step 4: validate path segment start — cannot begin with digit
+if (re_match("[0-9]", substring(raw, 0, 1)))
+    raw = "_" + raw;
+
+// Step 5: build final valid path
+string matpath = pathRoot + raw;
+
+// Step 6: write to shop_materialpath
+s@shop_materialpath = matpath;</code></pre>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Idempotency:</strong> running the tool twice on the same geometry produces identical output. The sanitization is deterministic — the same input string always produces the same <span class="atlas-code-inline">shop_materialpath</span>. This makes it safe to include in automated pipelines and re-cook without side effects.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══ 04: USE CASES ════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Use Cases & Pipeline Fit</h2>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ USE_CASES // PIPELINE CONTEXTS ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>CONTEXT</th><th>PROBLEM SOLVED</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>FBX import from Unity / Unreal</td><td>Engine-prefixed material names (<span class="atlas-code-inline">MI_</span>, <span class="atlas-code-inline">M_</span>) converted to valid Houdini paths automatically</td></tr>
+          <tr><td>Scan / photogrammetry assets</td><td>Auto-generated names with spaces and special chars sanitized without manual intervention</td></tr>
+          <tr><td>Client asset integration</td><td>Unpredictable third-party naming conventions normalized to a consistent internal path scheme</td></tr>
+          <tr><td>Procedural geometry pipelines</td><td>VEX-generated string attributes converted to material assignments — no separate wrangle needed</td></tr>
+          <tr><td>Batch LOD processing</td><td>Multiple LOD meshes with shared material names all receive consistent paths in one pass</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The tool is not a material creation tool — it assumes materials already exist at the target paths in your Houdini scene or are created separately. Its role is strictly <strong>path normalization and attribute assignment</strong>. It fits cleanly between the import stage and the material authoring stage in any Houdini-based pipeline.</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // WITHOUT THE TOOL</div>
+        <div class="comp-body">
+          Import FBX → inspect raw material strings → manually create a VEX wrangle per project → debug illegal characters → fix silently-failing paths at render time → repeat for every new asset source.
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // WITH THE TOOL</div>
+        <div class="comp-body">
+          Import FBX → connect HDA → specify source attribute and path root → all primitives receive valid <span class="atlas-code-inline">shop_materialpath</span> in one cook. Configuration saved in the HDA — reusable across all assets in the project.
+        </div>
+      </div>
+    </div>
+
+
+    <!-- References -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Geometry Attributes: shop_materialpath. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/rendering/materialassign.html" class="atlas-ref-link" target="_top">sidefx.com — Material Assignment</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — VEX String Functions: re_replace, re_match, tolower. Houdini VEX Reference.
+            <br><a href="https://www.sidefx.com/docs/houdini/vex/functions/re_replace.html" class="atlas-ref-link" target="_top">sidefx.com — VEX re_replace</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — FBX Import: Material Handling. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/io/fbx.html" class="atlas-ref-link" target="_top">sidefx.com — FBX I/O</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Operator Naming Conventions. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/ref/panes/network.html" class="atlas-ref-link" target="_top">sidefx.com — Network Editor / Node Naming</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="atlas-download-wrap">
+        <a href="https://pavelzosim.gumroad.com/l/houdini-material-path-manager-tool?discount=FLUGGAENKOECCHICEBOLSEN"
+           target="_top" class="atlas-download-btn">
+          <span class="atlas-download-btn__icon">↓</span>
+          Download Material Path Manager
+          <span class="atlas-download-btn__sub">Gumroad · HDA</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // MATERIAL_PATH_MANAGER // 4 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat houdini_material_path_manager.log',project:'MaterialPathManager_HDA',module:'VEX / Python / Houdini SOP',version:'Houdini 20.5',logId:'MAT_HDA_01',status:'STABLE',slug:'houdini-tool-material-path-manager',author:'Pavel Zosim',created:'2024.05.01',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</body>
+</html>
+
+

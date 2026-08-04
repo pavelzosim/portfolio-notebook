@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/from-file-to-pixel-part-04">
+  <title>From File to Pixel · Part 04: The Shader — pavelzosim.com</title>
+  <meta name="description" content="The complete journey from shader file to pixel: compilation pipeline, GPU instancing patterns, HLSL/GLSL/MSL cross-language reference, and compute shader architecture across platforms.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+    .pbadge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border:1px solid;vertical-align:middle;margin-right:6px}
+    .pbadge--pc{color:#5BA8D8;border-color:#1A4060}
+    .pbadge--console{color:#9A7ED8;border-color:#3A2870}
+    .pbadge--mobile{color:#D8A83A;border-color:#5A3C0A}
+    .pbadge--vr{color:#3ABCB0;border-color:#0A3530}
+    .pbadge--all{color:rgba(0,0,0,.5);border-color:rgba(0,0,0,.2)}
+
+    /* compilation pipeline flow */
+    .compile-flow{display:flex;flex-direction:column;gap:0;border:1px solid rgba(0,0,0,.15);margin:16px 0;overflow:hidden}
+    .cf-step{display:grid;grid-template-columns:32px 160px 1fr;align-items:center;gap:0;border-bottom:1px dashed rgba(0,0,0,.1);padding:0}
+    .cf-step:last-child{border-bottom:none}
+    .cf-num{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:#8b0000;padding:9px 10px;border-right:1px solid rgba(0,0,0,.1);align-self:stretch;display:flex;align-items:center}
+    .cf-stage{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#000;padding:9px 12px;border-right:1px dashed rgba(0,0,0,.1)}
+    .cf-desc{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(0,0,0,.6);padding:9px 14px;line-height:1.5}
+    .cf-step--warn .cf-desc{color:var(--atlas-warn)}
+    .cf-step--crit .cf-stage{color:#8b0000}
+
+    /* series nav */
+    .atlas-container .atlas-series-nav{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 0;margin:32px 0 0;width:100%}
+    .atlas-container .atlas-series-nav::before{content:"[ SERIES // FROM_FILE_TO_PIXEL ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .atlas-series-nav__parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .atlas-series-nav__part{display:grid;grid-template-columns:36px 1fr auto;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);padding:8px 16px;transition:background .1s}
+    .atlas-container .atlas-series-nav__part:last-child{border-bottom:none}
+    .atlas-container .atlas-series-nav__part:hover{background:rgba(0,0,0,.02)}
+    .atlas-container .atlas-series-nav__part a{display:contents;text-decoration:none;color:inherit}
+    .atlas-container .atlas-series-nav__part:hover .atlas-series-nav__num,
+    .atlas-container .atlas-series-nav__part:hover .atlas-series-nav__title{color:#8b0000}
+    .atlas-container .atlas-series-nav__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);letter-spacing:.04em;transition:color .1s}
+    .atlas-container .atlas-series-nav__title{font-size:12px;font-weight:700;color:#000;transition:color .1s}
+    .atlas-container .atlas-series-nav__part--current{background:rgba(139,0,0,.03);border-left:2px solid #8b0000}
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__num,
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__title{color:#8b0000}
+    .atlas-container .atlas-series-nav__part--soon .atlas-series-nav__title{color:rgba(0,0,0,.35)}
+    .atlas-container .atlas-series-nav__status{font-size:9px;font-weight:700;padding:1px 6px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+    .atlas-container .atlas-series-nav__status--live{color:var(--atlas-ok);border-color:var(--atlas-ok)}
+    .atlas-container .atlas-series-nav__status--soon{color:var(--atlas-ink-muted);border-color:var(--atlas-border)}
+    .atlas-container .atlas-series-nav__status--current{color:var(--atlas-crit);border-color:var(--atlas-crit)}
+    .atlas-container .atlas-part-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-top:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .atlas-part-nav__btn{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);text-decoration:none;transition:background .12s,border-color .12s}
+    .atlas-container .atlas-part-nav__btn:hover{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.3)}
+    .atlas-container .atlas-part-nav__btn--next{text-align:right}
+    .atlas-container .atlas-part-nav__direction{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.35);text-transform:uppercase}
+    .atlas-container .atlas-part-nav__label{font-size:12px;font-weight:700;color:#000}
+    .atlas-container .atlas-part-nav__sub{font-size:10px;color:rgba(0,0,0,.4)}
+    .atlas-container .atlas-part-nav__btn:hover .atlas-part-nav__label{color:#8b0000}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s07"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">From File to Pixel — Compilation Pipeline</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s07-stages"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Compilation Stages: Source → ISA</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s07-variants"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Shader Variants — Combinatorial Explosion</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s08"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">GPU Instancing Patterns</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s08-srp"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">SRP Batcher · GPU Instancing · DrawMeshInstanced · DOTS</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s09"><span class="atlas-toc__num">09</span><span class="atlas-toc__row"><span class="atlas-toc__title">HLSL / GLSL / MSL — Cross-Language Reference</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s09-syntax"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Syntax Equivalence Table</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s09-precision"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Precision Qualifiers Across Languages</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s10"><span class="atlas-toc__num">10</span><span class="atlas-toc__row"><span class="atlas-toc__title">Compute Shaders</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s10-model"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Execution Model · Thread Groups · Shared Memory</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s10-patterns"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Common Patterns: Reduction · Prefix Sum · Tiled</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       07: FROM FILE TO PIXEL — COMPILATION PIPELINE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s07">07 From File to Pixel — Compilation Pipeline</h2>
+    <p>A shader file is text. A pixel on screen is the result of running compiled machine code on a GPU. Between those two points lies a compilation pipeline with 6–8 stages, each with its own failure modes, performance implications, and platform differences. Understanding this pipeline is the prerequisite for diagnosing shader stutter, variant bloat, and cross-platform discrepancies.</p>
+
+    <h3 id="s07-stages">Compilation Stages: Source → ISA</h3>
+
+    <div class="compile-flow">
+      <div class="cf-step">
+        <span class="cf-num">1</span>
+        <span class="cf-stage">Source (HLSL/GLSL/MSL)</span>
+        <span class="cf-desc">Text file on disk. Preprocessor expands #include, #define, #if. Variant keywords selected. Output: expanded source.</span>
+      </div>
+      <div class="cf-step">
+        <span class="cf-num">2</span>
+        <span class="cf-stage">Frontend Compiler</span>
+        <span class="cf-desc">DXC (HLSL→DXIL/SPIR-V), glslang (GLSL→SPIR-V), Metal compiler (MSL→AIR). Parses, type-checks, produces IR. Happens at build time or on first use.</span>
+      </div>
+      <div class="cf-step">
+        <span class="cf-num">3</span>
+        <span class="cf-stage">IR / Bytecode</span>
+        <span class="cf-desc">DXIL (DX12), SPIR-V (Vulkan/OpenGL), AIR (Metal). Platform-independent intermediate representation. Stored in shader bundle / cache. Inspectable with spirv-dis, dxc /Fc.</span>
+      </div>
+      <div class="cf-step cf-step--warn">
+        <span class="cf-num">4</span>
+        <span class="cf-stage">Backend / Driver JIT</span>
+        <span class="cf-desc">Driver compiles IR → GPU ISA (machine code). NVIDIA: PTX → SASS. AMD: SPIR-V → GCN/RDNA ISA. Apple: AIR → GPU binary. This is the stutter source on first draw — always warm your PSO cache.</span>
+      </div>
+      <div class="cf-step">
+        <span class="cf-num">5</span>
+        <span class="cf-stage">PSO Creation</span>
+        <span class="cf-desc">Pipeline State Object bundles compiled shaders + render state (blend, depth, raster). DX12: ID3D12PipelineState. Vulkan: VkPipeline. Metal: MTLRenderPipelineState. Creation is expensive — do it at load time, never mid-frame.</span>
+      </div>
+      <div class="cf-step">
+        <span class="cf-num">6</span>
+        <span class="cf-stage">PSO Cache</span>
+        <span class="cf-desc">Serialized compiled GPU binaries. DX12: ID3D12PipelineLibrary. Vulkan: VkPipelineCache. Metal: MTLBinaryArchive. Load on startup → zero JIT stutter on first draw. Ship in build or generate on first run.</span>
+      </div>
+      <div class="cf-step cf-step--crit">
+        <span class="cf-num">7</span>
+        <span class="cf-stage">Execution</span>
+        <span class="cf-desc">Compiled ISA runs on SM/CU. Registers allocated. Warps scheduled. Fragment output written through ROPs to framebuffer. This is the pixel.</span>
+      </div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>Shader stutter = PSO created mid-frame.</strong> Always create PSOs during loading screens or scene transitions, never in response to a runtime condition. Use async PSO compilation (DX12 <span class="atlas-code-inline">CreatePipelineState</span> with <span class="atlas-code-inline">D3D12_PIPELINE_STATE_FLAG_NONE</span>, Vulkan <span class="atlas-code-inline">VK_PIPELINE_CREATE_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT</span>) to fall back to a simpler variant while the real PSO compiles in a background thread.</p>
+    </div>
+
+    <h3 id="s07-variants">Shader Variants — Combinatorial Explosion</h3>
+
+    <p>Every <span class="atlas-code-inline">#pragma multi_compile A B C</span> multiplies your total shader count. Three such pragmas with 3 keywords each produce 27 variants. Five pragmas produce 243. Unity compiles all variants unless you strip them explicitly — this is why shader compilation takes minutes on large projects.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ VARIANT_CONTROL // shader_feature vs multi_compile ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PRAGMA</th><th>COMPILED WHEN</th><th>STRIPPED WHEN</th><th>USE CASE</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="atlas-code-inline">multi_compile A B</span></td>
+            <td>Always — all variants</td>
+            <td>Never automatically</td>
+            <td>Global keywords that change at runtime (fog, shadows, instancing). Must always exist.</td>
+          </tr>
+          <tr>
+            <td><span class="atlas-code-inline">shader_feature A B</span></td>
+            <td>Only if material uses keyword</td>
+            <td>If no material in build uses it</td>
+            <td>Per-material toggles (normal map, emission). Safe to use liberally.</td>
+          </tr>
+          <tr>
+            <td><span class="atlas-code-inline">multi_compile_local A B</span></td>
+            <td>Per-shader scope only</td>
+            <td>Never automatically</td>
+            <td>Reduces keyword namespace pollution. Use when keyword is shader-specific.</td>
+          </tr>
+          <tr>
+            <td><span class="atlas-code-inline">shader_feature_local A B</span></td>
+            <td>Per-material, local scope</td>
+            <td>If no material uses it</td>
+            <td>Best choice for optional per-material features in URP/HDRP.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <pre class="atlas-code-block"><code class="language-c">// Unity — IPreprocessShaders: strip variants at build time
+// Runs in Editor before build — removes unused variants from build output
+class MyShaderStripper : IPreprocessShaders
+{
+    public int callbackOrder => 0;
+
+    public void OnProcessShader(
+        Shader shader,
+        ShaderSnippetData snippet,
+        IList&lt;ShaderCompilerData&gt; data)
+    {
+        // Strip all variants that have _EXPENSIVE_FEATURE_ON
+        // unless the current build target needs them
+        for (int i = data.Count - 1; i >= 0; i--)
+        {
+            if (data[i].shaderKeywordSet.IsEnabled(
+                new ShaderKeyword("_EXPENSIVE_FEATURE_ON"))
+                && !NeedsExpensiveFeature(snippet))
+            {
+                data.RemoveAt(i); // stripped — not compiled into build
+            }
+        }
+    }
+}
+
+// ── DXC: compile HLSL → SPIR-V from command line ─────────
+// dxc -spirv -T vs_6_5 -E vert shader.hlsl -Fo shader.vert.spv
+// dxc -spirv -T ps_6_5 -E frag shader.hlsl -Fo shader.frag.spv
+// Add -Od for debug info, -O3 for release optimization</code></pre>
+
+    <div class="atlas-section-break" data-index="// § 07"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       08: GPU INSTANCING PATTERNS
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s08">08 GPU Instancing Patterns</h2>
+    <p>Instancing is the primary mechanism for rendering thousands of identical (or near-identical) meshes with minimal CPU overhead. The right pattern depends on whether data is static or dynamic, how frequently transforms update, and whether you're in a legacy or modern pipeline.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ INSTANCING_PATTERNS // UNITY ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PATTERN</th><th>API</th><th>CPU COST</th><th>DYNAMIC DATA</th><th>BEST FOR</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>SRP Batcher</td><td>Automatic (CBUFFER)</td><td>Very low</td><td>Per-material only</td><td>Static/semi-static scene objects with varying materials</td></tr>
+          <tr><td>GPU Instancing</td><td><span class="atlas-code-inline">UNITY_INSTANCING_*</span> macros</td><td>Low</td><td>Per-instance via instanced properties</td><td>Medium counts (&lt;1K), per-instance color/scale</td></tr>
+          <tr><td>DrawMeshInstanced</td><td>C# API, managed array</td><td>Medium (GC risk)</td><td>Yes — upload array per frame</td><td>Dynamic objects, runtime spawned</td></tr>
+          <tr><td>DrawMeshInstancedIndirect</td><td>ComputeBuffer args</td><td>Near-zero</td><td>GPU-driven (compute writes args)</td><td>GPU culling pipelines, &gt;10K instances</td></tr>
+          <tr><td>DOTS / Entities Graphics</td><td>ECS + BRG</td><td>Minimal (Burst)</td><td>Yes — NativeArray/chunk data</td><td>Massive counts, physics-driven, procedural</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s08-srp">Pattern Details</h3>
+
+    <h4>SRP Batcher — automatic, zero shader changes</h4>
+    <p>The SRP Batcher is not instancing — it batches <strong>SetPass calls</strong>, not draw calls. Each object still gets its own draw call, but the GPU state (shader + material) is cached. It activates automatically when your shader wraps per-material properties in <span class="atlas-code-inline">CBUFFER_START(UnityPerMaterial)</span>.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// SRP Batcher compatible shader — ONE requirement
+CBUFFER_START(UnityPerMaterial)
+    float4 _BaseColor;
+    float  _Roughness;
+    float  _Metallic;
+    // ALL per-material properties must be inside this CBUFFER
+    // SRP Batcher caches this block between draws — no re-upload
+CBUFFER_END
+
+// Per-object built-in data is automatically in UnityPerDraw CBUFFER
+// (unity_ObjectToWorld, unity_WorldToObject, etc.)
+// Both must be CBUFFERed — then Batcher activates</code></pre>
+
+    <h4>GPU Instancing — per-instance varying data</h4>
+    <pre class="atlas-code-block"><code class="language-c">// Shader — declare instanced property
+UNITY_INSTANCING_BUFFER_START(InstanceProps)
+    UNITY_DEFINE_INSTANCED_PROP(float4, _Color)
+    UNITY_DEFINE_INSTANCED_PROP(float,  _Scale)
+UNITY_INSTANCING_BUFFER_END(InstanceProps)
+
+Varyings vert(Attributes input, UNITY_VERTEX_INPUT_INSTANCE_ID)
+{
+    UNITY_SETUP_INSTANCE_ID(input);
+    float4 color = UNITY_ACCESS_INSTANCED_PROP(InstanceProps, _Color);
+    // use color in vertex or pass to fragment via Varyings
+    ...
+}
+
+// C# — set per-instance data via MaterialPropertyBlock
+var block = new MaterialPropertyBlock();
+for (int i = 0; i &lt; count; i++) {
+    block.SetColor("_Color", colors[i]);
+    renderer.SetPropertyBlock(block, i); // per-instance block
+}</code></pre>
+
+    <h4>DrawMeshInstancedIndirect — GPU-driven, zero CPU per instance</h4>
+    <pre class="atlas-code-block"><code class="language-c">// C# — setup indirect args buffer
+// Args: [indexCount, instanceCount, startIndex, baseVertex, startInstance]
+uint[] args = new uint[] { mesh.GetIndexCount(0), 0, 0, 0, 0 };
+argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint),
+    ComputeBufferType.IndirectArguments);
+argsBuffer.SetData(args);
+
+// Compute shader writes instance count after GPU culling:
+// RWBuffer&lt;uint&gt; _ArgsBuffer; → _ArgsBuffer[1] = visibleCount;
+
+// C# — draw call (zero per-instance CPU work)
+Graphics.DrawMeshInstancedIndirect(
+    mesh, 0, material, bounds, argsBuffer);
+
+// HLSL shader — read instance data from StructuredBuffer
+StructuredBuffer&lt;float4x4&gt; _InstanceMatrices;
+
+Varyings vert(Attributes input, uint instanceID : SV_InstanceID)
+{
+    float4x4 mat = _InstanceMatrices[instanceID];
+    output.posCS = mul(mat, float4(input.posOS, 1.0));
+    ...
+}</code></pre>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>When to use which:</strong> Static scene objects with material variety → SRP Batcher. Hundreds of objects with per-instance color/scale → GPU Instancing. Thousands of runtime objects → DrawMeshInstancedIndirect with compute culling. Tens of thousands with physics → DOTS Entities Graphics.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 08"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       09: HLSL / GLSL / MSL CROSS-LANGUAGE REFERENCE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s09">09 HLSL / GLSL / MSL — Cross-Language Reference</h2>
+    <p>All three shader languages express the same GPU concepts — vertex transformation, texture sampling, compute dispatch — with different syntax and slightly different semantics. If you know one, the others are an afternoon of pattern matching. The table below is that pattern match.</p>
+
+    <h3 id="s09-syntax">Syntax Equivalence</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ SYNTAX_EQUIVALENCE // HLSL · GLSL · MSL ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>CONCEPT</th><th>HLSL (DX12/Unity)</th><th>GLSL (Vulkan/GL)</th><th>MSL (Metal/Apple)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Float 2/3/4 vector</td><td>float2/3/4</td><td>vec2/3/4</td><td>float2/3/4</td></tr>
+          <tr><td>Int vector</td><td>int2/3/4</td><td>ivec2/3/4</td><td>int2/3/4</td></tr>
+          <tr><td>Matrix 4×4</td><td>float4x4</td><td>mat4</td><td>float4x4</td></tr>
+          <tr><td>Matrix multiply</td><td>mul(mat, vec)</td><td>mat * vec</td><td>mat * vec</td></tr>
+          <tr><td>Texture 2D type</td><td>Texture2D&lt;T&gt;</td><td>sampler2D / texture2D</td><td>texture2d&lt;T&gt;</td></tr>
+          <tr><td>Sample texture</td><td>tex.Sample(samp, uv)</td><td>texture(sampler2D, uv)</td><td>tex.sample(samp, uv)</td></tr>
+          <tr><td>Sample explicit LOD</td><td>tex.SampleLevel(s,uv,lod)</td><td>textureLod(s,uv,lod)</td><td>tex.sample(s,uv,level(lod))</td></tr>
+          <tr><td>Vertex position out</td><td>SV_POSITION semantic</td><td>gl_Position built-in</td><td>[[position]] attribute</td></tr>
+          <tr><td>Fragment color out</td><td>: SV_Target</td><td>layout(location=0) out</td><td>[[color(0)]] return</td></tr>
+          <tr><td>Instance ID</td><td>SV_InstanceID</td><td>gl_InstanceIndex</td><td>[[instance_id]]</td></tr>
+          <tr><td>Vertex ID</td><td>SV_VertexID</td><td>gl_VertexIndex</td><td>[[vertex_id]]</td></tr>
+          <tr><td>Clip position</td><td>SV_POSITION</td><td>gl_Position</td><td>[[position]]</td></tr>
+          <tr><td>Saturate (clamp 0–1)</td><td>saturate(x)</td><td>clamp(x,0.0,1.0)</td><td>saturate(x)</td></tr>
+          <tr><td>Fused multiply-add</td><td>mad(a,b,c)</td><td>fma(a,b,c)</td><td>fma(a,b,c)</td></tr>
+          <tr><td>Partial derivative ∂/∂x</td><td>ddx(x)</td><td>dFdx(x)</td><td>dfdx(x)</td></tr>
+          <tr><td>Partial derivative ∂/∂y</td><td>ddy(x)</td><td>dFdy(x)</td><td>dfdy(x)</td></tr>
+          <tr><td>Atomics (shared mem)</td><td>InterlockedAdd(dst, val)</td><td>atomicAdd(dst, val)</td><td>atomic_fetch_add_explicit()</td></tr>
+          <tr><td>Group memory barrier</td><td>GroupMemoryBarrierWithGroupSync()</td><td>barrier() + memoryBarrierShared()</td><td>threadgroup_barrier(mem_flags::mem_threadgroup)</td></tr>
+          <tr><td>Discard fragment</td><td>discard / clip(val)</td><td>discard</td><td>discard_fragment()</td></tr>
+          <tr><td>Constant buffer</td><td>cbuffer / CBUFFER_START</td><td>layout(std140) uniform Block {}</td><td>constant T& [[buffer(N)]]</td></tr>
+          <tr><td>Compute thread ID</td><td>SV_DispatchThreadID</td><td>gl_GlobalInvocationID</td><td>[[thread_position_in_grid]]</td></tr>
+          <tr><td>Group thread ID</td><td>SV_GroupThreadID</td><td>gl_LocalInvocationID</td><td>[[thread_position_in_threadgroup]]</td></tr>
+          <tr><td>Group shared memory</td><td>groupshared T var[]</td><td>shared T var[]</td><td>threadgroup T var[]</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s09-precision">Precision Qualifiers Across Languages</h3>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PRECISION</th><th>HLSL</th><th>GLSL / Vulkan</th><th>MSL</th><th>MOBILE IMPACT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>32-bit float</td><td>float</td><td>highp float</td><td>float</td><td>Full cost — use for positions, world-space</td></tr>
+          <tr><td>16-bit float</td><td>half / min16float</td><td>mediump float</td><td>half</td><td><strong>2× faster ALU on Adreno/Mali</strong> — use for colors, normals, UVs</td></tr>
+          <tr><td>10-bit float</td><td>min10float (DX only)</td><td>lowp float</td><td>—</td><td>Rare; useful for 0–1 values on very low-end</td></tr>
+          <tr><td>16-bit int</td><td>min16int</td><td>mediump int</td><td>short</td><td>Fast on mobile; use for indices, flags</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--warning">
+      <p><strong>Precision on desktop vs mobile:</strong> On PC and console, <span class="atlas-code-inline">half</span> and <span class="atlas-code-inline">float</span> compile to the same 32-bit operations — the hint is ignored. On Mali/Adreno/Apple GPU, <span class="atlas-code-inline">half</span> genuinely executes at 16-bit precision with 2× throughput. This makes mobile-targeted shaders meaningfully faster when written with <span class="atlas-code-inline">half</span> for non-position data — but you must verify that 16-bit precision is sufficient for the calculation.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 09"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       10: COMPUTE SHADERS
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s10">10 Compute Shaders</h2>
+    <p>Compute shaders run outside the graphics pipeline — no vertex stage, no rasterization, no fixed render targets. They dispatch arbitrary parallel workloads on the GPU: particle simulation, physics, GPU culling, procedural generation, post-processing. Every modern GPU supports them. They are the primary tool for GPU-driven rendering.</p>
+
+    <h3 id="s10-model">Execution Model · Thread Groups · Shared Memory</h3>
+
+    <p>A compute dispatch is a 3D grid of <strong>thread groups</strong>. Each thread group is a 3D block of <strong>threads</strong>. The total thread count is <span class="atlas-code-inline">groups.x × groups.y × groups.z × numthreads.x × numthreads.y × numthreads.z</span>.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>CONCEPT</th><th>HLSL</th><th>GLSL</th><th>MSL</th><th>HARDWARE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Thread group size</td><td>[numthreads(X,Y,Z)]</td><td>layout(local_size_x=X,...)</td><td>kernel void f([[ ... ]])</td><td>Must be ≤ 1024 total threads</td></tr>
+          <tr><td>Global thread ID</td><td>SV_DispatchThreadID</td><td>gl_GlobalInvocationID</td><td>[[thread_position_in_grid]]</td><td>gid = groupID * groupSize + localID</td></tr>
+          <tr><td>Local thread ID</td><td>SV_GroupThreadID</td><td>gl_LocalInvocationID</td><td>[[thread_position_in_threadgroup]]</td><td>0..numthreads-1 per group</td></tr>
+          <tr><td>Group index</td><td>SV_GroupIndex</td><td>gl_LocalInvocationIndex</td><td>[[thread_index_in_threadgroup]]</td><td>Flattened: z*XY + y*X + x</td></tr>
+          <tr><td>Shared memory</td><td>groupshared T[]</td><td>shared T[]</td><td>threadgroup T[]</td><td>On-chip SRAM — 32–100 KB</td></tr>
+          <tr><td>Sync barrier</td><td>GroupMemoryBarrierWithGroupSync()</td><td>barrier()</td><td>threadgroup_barrier()</td><td>All threads in group reach barrier</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Thread Group Size Selection</h4>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>WORKLOAD</th><th>RECOMMENDED SIZE</th><th>REASON</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1D data (particles, bones)</td><td>[256, 1, 1]</td><td>Maps to NVIDIA warp×8 or AMD wave×4. Good occupancy.</td></tr>
+          <tr><td>2D image / texture</td><td>[8, 8, 1]</td><td>64 threads — one NVIDIA warp. Matches 2D cache locality.</td></tr>
+          <tr><td>2D with shared memory</td><td>[16, 16, 1]</td><td>256 threads. Good for tiled algorithms (blur, lighting).</td></tr>
+          <tr><td>Wave-level reduction</td><td>[32, 1, 1] or [64, 1, 1]</td><td>Match wave size exactly — one wave, no cross-wave sync.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s10-patterns">Common Patterns</h3>
+
+    <h4>Pattern 1: Parallel Reduction (sum / max / min)</h4>
+    <pre class="atlas-code-block"><code class="language-c">// HLSL — parallel reduction using wave intrinsics (DXC SM6.0+)
+// Step 1: each thread reduces its element
+// Step 2: wave intrinsic reduces across the wave in one instruction
+// Step 3: one thread per wave writes to groupshared
+// Step 4: first wave reduces groupshared values
+
+RWBuffer&lt;float&gt; _Input;
+RWBuffer&lt;float&gt; _Output;
+groupshared float gs_waveResults[32]; // max 32 waves per group
+
+[numthreads(256, 1, 1)]
+void CSReduce(uint tid : SV_DispatchThreadID,
+              uint lid : SV_GroupIndex,
+              uint3 gid : SV_GroupID)
+{
+    float val = (tid &lt; _Count) ? _Input[tid] : 0.0f;
+
+    // Wave-level reduction — one hardware instruction on NVIDIA/AMD
+    val = WaveActiveSum(val); // sum across all active lanes in wave
+
+    // One thread per wave writes to groupshared
+    if (WaveIsFirstLane())
+        gs_waveResults[lid / WaveGetLaneCount()] = val;
+
+    GroupMemoryBarrierWithGroupSync(); // wait for all waves
+
+    // First wave reduces the per-wave results
+    if (lid &lt; WaveGetLaneCount()) {
+        float waveVal = (lid &lt; ceil(256.0/WaveGetLaneCount()))
+                        ? gs_waveResults[lid] : 0.0f;
+        waveVal = WaveActiveSum(waveVal);
+        if (lid == 0) _Output[gid.x] = waveVal;
+    }
+}</code></pre>
+
+    <h4>Pattern 2: Tiled Algorithm (screen-space lighting)</h4>
+    <pre class="atlas-code-block"><code class="language-c">// HLSL — Tiled Forward lighting: cull lights per tile in compute
+// Classic approach: 16×16 tile = 256 threads = one dispatch per frame
+
+#define TILE_SIZE 16
+#define MAX_LIGHTS_PER_TILE 256
+
+groupshared uint  gs_minDepth;
+groupshared uint  gs_maxDepth;
+groupshared uint  gs_lightCount;
+groupshared uint  gs_lightIndices[MAX_LIGHTS_PER_TILE];
+
+[numthreads(TILE_SIZE, TILE_SIZE, 1)]
+void CSLightCull(
+    uint2 gid  : SV_GroupID,
+    uint2 tid  : SV_DispatchThreadID,
+    uint  lid  : SV_GroupIndex)
+{
+    // Step 1: init tile depth range in groupshared
+    if (lid == 0) {
+        gs_minDepth  = 0x7F7FFFFF; // max float as uint
+        gs_maxDepth  = 0;
+        gs_lightCount = 0;
+    }
+    GroupMemoryBarrierWithGroupSync();
+
+    // Step 2: each thread contributes its pixel's depth
+    float depth = _DepthBuffer[tid].r;
+    uint  uDepth = asuint(depth);
+    InterlockedMin(gs_minDepth, uDepth);
+    InterlockedMax(gs_maxDepth, uDepth);
+    GroupMemoryBarrierWithGroupSync();
+
+    // Step 3: distribute light culling across threads
+    // Each thread tests one light against tile frustum
+    for (uint i = lid; i &lt; _LightCount; i += TILE_SIZE * TILE_SIZE)
+    {
+        if (LightIntersectsTile(_Lights[i], gid, gs_minDepth, gs_maxDepth))
+        {
+            uint idx;
+            InterlockedAdd(gs_lightCount, 1, idx);
+            if (idx &lt; MAX_LIGHTS_PER_TILE)
+                gs_lightIndices[idx] = i;
+        }
+    }
+    GroupMemoryBarrierWithGroupSync();
+
+    // Step 4: write tile light list to global buffer
+    uint tileIdx = gid.y * _TilesX + gid.x;
+    _TileLightCounts[tileIdx] = gs_lightCount;
+    for (uint j = lid; j &lt; gs_lightCount; j += TILE_SIZE * TILE_SIZE)
+        _TileLightIndices[tileIdx * MAX_LIGHTS_PER_TILE + j] = gs_lightIndices[j];
+}</code></pre>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Key compute rules:</strong> always synchronise shared memory writes with <span class="atlas-code-inline">GroupMemoryBarrierWithGroupSync()</span> before reading in another thread. Use wave intrinsics (<span class="atlas-code-inline">WaveActiveSum</span>, <span class="atlas-code-inline">WaveActiveBallot</span>) instead of groupshared when operating within a single wave — they're hardware instructions with no sync cost. On mobile, prefer smaller workgroup sizes (64–128) to stay within tile SRAM budget.</p>
+    </div>
+
+
+    <!-- REFERENCES -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">Microsoft</span> — HLSL Shader Model 6.x: Wave Intrinsics. Microsoft Learn.
+            <br><a href="https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/hlsl-shader-model-6-0-features-for-direct3d-12" class="atlas-ref-link" target="_top">learn.microsoft.com — HLSL SM6 Wave Intrinsics</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">Khronos Group</span> — GLSL Compute Shaders. OpenGL Shading Language 4.60 Specification.
+            <br><a href="https://www.khronos.org/opengl/wiki/Compute_Shader" class="atlas-ref-link" target="_top">khronos.org — Compute Shader Wiki</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Apple</span> — Metal Shading Language Specification. Apple Developer Documentation.
+            <br><a href="https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf" class="atlas-ref-link" target="_top">developer.apple.com — MSL Specification (PDF)</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Unity Technologies</span> — GPU Instancing in Unity. Unity Manual.
+            <br><a href="https://docs.unity3d.com/Manual/GPUInstancing.html" class="atlas-ref-link" target="_top">docs.unity3d.com — GPU Instancing</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[05]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Unity Technologies</span> — SRP Batcher: Speeding up your rendering. Unity Blog.
+            <br><a href="https://blog.unity.com/engine-platform/srp-batcher-speed-up-your-rendering" class="atlas-ref-link" target="_top">blog.unity.com — SRP Batcher</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[06]</span>
+          <div>
+            <span class="atlas-ref-tag">TALK</span>
+            <span class="atlas-ref-author">Wihlidal G.</span> — Optimizing the Graphics Pipeline with Compute. GDC 2016.
+            <br><a href="https://www.gdcvault.com/play/1023109/Optimizing-the-Graphics-Pipeline-With" class="atlas-ref-link" target="_top">gdcvault.com — Graphics Pipeline Compute GDC 2016</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[07]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">AMD / GPUOpen</span> — RDNA Compute Shader Occupancy. GPUOpen.
+            <br><a href="https://gpuopen.com/learn/rdna-performance-guide/" class="atlas-ref-link" target="_top">gpuopen.com — RDNA Performance Guide</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 10"></div>
+  </div>
+
+
+  <!-- ══ SERIES NAV ════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-series-nav">
+      <ul class="atlas-series-nav__parts">
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-01" target="_top">
+            <span class="atlas-series-nav__num">01</span>
+            <span class="atlas-series-nav__title">The Machine — GPU Execution Model · Memory Hierarchy</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-02" target="_top">
+            <span class="atlas-series-nav__num">02</span>
+            <span class="atlas-series-nav__title">The Pipeline — Render Stages · Buffer Taxonomy</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-03" target="_top">
+            <span class="atlas-series-nav__num">03</span>
+            <span class="atlas-series-nav__title">The Data — Alignment · Packing · CPU→GPU Flow</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--current">
+          <span class="atlas-series-nav__num">04</span>
+          <span class="atlas-series-nav__title">The Shader — File→Pixel · Instancing · HLSL/GLSL/MSL · Compute</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--current">CURRENT</span>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--soon">
+          <span class="atlas-series-nav__num">05</span>
+          <span class="atlas-series-nav__title">The Engine — Forward/Deferred · URP · HDRP · Unreal · Debug Tools</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--soon">SOON</span>
+        </li>
+      </ul>
+      <div class="atlas-part-nav">
+        <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-03" target="_top" class="atlas-part-nav__btn">
+          <span class="atlas-part-nav__direction">← Prev</span>
+          <span class="atlas-part-nav__label">Part 03: The Data</span>
+          <span class="atlas-part-nav__sub">Alignment · Packing · CPU→GPU Flow</span>
+        </a>
+        <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-05" target="_top" class="atlas-part-nav__btn atlas-part-nav__btn--next">
+          <span class="atlas-part-nav__direction">Next →</span>
+          <span class="atlas-part-nav__label">Part 05: The Engine</span>
+          <span class="atlas-part-nav__sub">Forward/Deferred · URP · HDRP · Unreal</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// FROM_FILE_TO_PIXEL // PART 04 OF 05 // CHAPTERS 07–10 // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat shader_compilation_instancing_compute.log',project:'From File to Pixel',module:'Part 04 — The Shader',version:'v1.0',logId:'FTFP_P04',status:'LIVE',slug:'from-file-to-pixel-part-04',author:'Pavel Zosim',created:'2025.03.29',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</body>
+</html>
+

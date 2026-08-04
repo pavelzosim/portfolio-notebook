@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/procedural-modeling-tire-generator">
+  <title>Procedural Tire Generator — Houdini · pavelzosim.com</title>
+  <meta name="description" content="A procedural tire generator in Houdini driven by real-world automotive dimensions: width, aspect ratio, rim diameter. Stable tread tiling, SVG sidewall export, dual UV mapping, VEX unit conversion.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+
+    /* gallery */
+    .atlas-container .content-block .gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;width:100%}
+    .atlas-container .content-block .gallery-grid img{display:block;width:100%;height:220px;object-fit:cover;border:1px solid rgba(0,0,0,.15)}
+    .atlas-container .content-block .gallery-grid--2col{grid-template-columns:repeat(2,1fr)}
+    .atlas-container .content-block .media-frame:has(.gallery-grid)::before{content:"[ GALLERY // IMAGE_SEQUENCE ]"}
+    .atlas-container .content-block .media-frame>.gallery-grid{margin:0;width:100%}
+    @media(max-width:550px){.atlas-container .content-block .gallery-grid,.atlas-container .content-block .gallery-grid--2col{grid-template-columns:1fr}}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* download button */
+    .atlas-container .atlas-download-wrap{position:relative;display:inline-block;margin:8px 0 24px}
+    .atlas-container .atlas-download-wrap::after{content:'';position:absolute;top:4px;left:4px;right:-4px;bottom:-4px;background-image:linear-gradient(45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(-45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(0,0,170,.6) 75%),linear-gradient(-45deg,transparent 75%,rgba(0,0,170,.6) 75%);background-size:4px 4px;background-position:0 0,0 2px,2px -2px,-2px 0;z-index:0;pointer-events:none}
+    .atlas-container .atlas-download-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 24px;background:#0000AA;color:#fff;border:none;border-radius:0;text-decoration:none;white-space:nowrap;cursor:pointer;transform:translate(-4px,-4px);transition:transform .05s linear}
+    .atlas-container .atlas-download-btn:hover{background:#0000CC}
+    .atlas-container .atlas-download-btn:active{transform:translate(0,0)}
+    .atlas-container .atlas-download-btn__icon{font-size:14px;font-weight:400}
+    .atlas-container .atlas-download-btn__sub{font-size:9px;font-weight:400;letter-spacing:.04em;opacity:.75;margin-left:4px}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <!-- TOC -->
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">System Philosophy & Dual Workflow</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Scaling & Physical Consistency</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-vex"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">VEX Unit Conversion</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Pattern Tiling & Angular Correction</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Preparing for Extrusion</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s05"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Radial Polygon Displacement</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s06"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">UV Mapping Strategy</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s07"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Sidewall Markings & SVG Export</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s08"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">Tread Pattern Creation</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══ 01: OVERVIEW ═════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 System Philosophy & Dual Workflow</h2>
+
+    <p>This procedural tire generator is built around real-world automotive dimensions. The focus is not on handcrafted geometry but on procedural logic that remains stable regardless of tread complexity. Instead of modeling the entire tire at once, the system is based on a <strong>repeating tread segment</strong> distributed procedurally across the surface.</p>
+
+    <div class="media-frame">
+      <iframe src="https://www.youtube.com/embed/6cHgWhs3Gz0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="media-caption">Video 01: Procedural Tire System — full workflow demonstration.</div>
+    </div>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // PRODUCTION MODE — precise</div>
+        <div class="comp-body">Stable topology, supports clean subdivision for high-poly renders. Tread geometry recalculates correctly across all tire sizes without artifacts. Designed for final asset delivery.</div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // EXPLORATION MODE — fast</div>
+        <div class="comp-body">Decoupled tread elements for rapid design iteration. Tread patterns can be swapped, modified, and tested without affecting the underlying tire profile. Designed for concept and variant testing.</div>
+      </div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>Manual tire modeling does not scale. Variation across different tire sizes is error-prone and labour-intensive. A procedural system reduces rework, enforces consistency, and allows quick preset switching — while keeping the underlying architecture unchanged.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══ 02: SCALING ══════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 Scaling & Physical Consistency</h2>
+
+    <p>The goal is to generate a flexible and physically accurate tire model based on standard tire measurements. The system accounts for both symmetrical and asymmetrical tread designs.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_a9a1803f63574df98a21a3fd75615b85~mv2.png/v1/fill/w_925,h_578,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_a9a1803f63574df98a21a3fd75615b85~mv2.png" alt="Tire Generator Overview">
+      <div class="media-caption">Fig 02: Tire generator overview — physically consistent scaling from real-world spec inputs.</div>
+    </div>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ KEY_PARAMETERS // PHYSICAL INPUTS ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PARAMETER</th><th>UNIT</th><th>ROLE IN SYSTEM</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Tire Width</td><td>mm</td><td>Master scale — controls tread and sidewall surface width</td></tr>
+          <tr><td>Aspect Ratio</td><td>%</td><td>Drives vertical displacement of the sidewall (sidewall height / width)</td></tr>
+          <tr><td>Wheel Diameter</td><td>inches</td><td>Dictates the central aperture — inner rim radius</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The internal logic creates a cascading dependency: <span class="atlas-code-inline">Tire Width</span> acts as the master scale, <span class="atlas-code-inline">Aspect Ratio</span> drives sidewall vertical displacement, and <span class="atlas-code-inline">Wheel Diameter</span> defines the rim aperture. All three are converted to meters before any geometry is generated.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_82a3230c7c444f5195cf41a697b2f69b~mv2.gif" alt="Dynamic scaling animation">
+      <div class="media-caption">Fig 02b: Dynamic scaling — all geometry updates instantly when any input parameter changes.</div>
+    </div>
+
+    <h3 id="s02-vex">VEX Unit Conversion</h3>
+    <p>The core of the system relies on strict unit conversion. Since Houdini operates in meters, normalising diverse input units (mm, inches, %) is critical to maintaining predictable scale across all downstream operations:</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// Input parameters — from HDA interface
+float tireWidth    = chf('tire_width');          // mm
+float aspectRatio  = chf('aspect_ratio') * 0.01; // % to decimal
+float wheelDiameter = chf('wheel_diameter');      // inches
+
+// Unit normalisation — all values to meters
+f@tireWidth      = tireWidth / 1000;
+// sidewall height: convert mm→inches (*0.03937), then scale by aspect,
+// then convert inches→meters (/37.37 accounts for circumference factor)
+f@sidewallHeight = (tireWidth * 0.03937 * aspectRatio) / 37.37;
+f@wheelDiameter  = wheelDiameter / 39.37;</code></pre>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══ 03: PATTERN TILING ═══════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 Pattern Tiling & Angular Correction</h2>
+
+    <p>Once the tire profile is defined, the tread pattern is tiled. The minimum division for tread sections is set to 32 to ensure proper meshing. The tile itself is represented by a curve spanning from the outer circle to the inner circle of the tire.</p>
+
+    <p>To avoid point overlaps or misalignments along the tile length, each section is adjusted by calculating the angle <span class="atlas-code-inline">θ</span> for every spline section point. These corrections ensure a seamless, closed-loop cylinder without manual vertex tweaking.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_08aed83cd49c478284db9e87ee9b4a7d~mv2.gif" alt="Tread tiling and angular correction">
+      <div class="media-caption">Fig 03: Seamless tread tiling — angular correction prevents point overlap at tile boundaries.</div>
+    </div>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>CONSTRAINT</th><th>SOLUTION</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Minimum tread divisions</td><td>32 — ensures clean polygon topology for subdivision</td></tr>
+          <tr><td>Tile representation</td><td>Curve from outer radius to inner radius — single repeating unit</td></tr>
+          <tr><td>Point alignment</td><td>Per-point θ correction — prevents overlap at tiling seams</td></tr>
+          <tr><td>Loop closure</td><td>Seamless closed cylinder — no manual vertex correction required</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══ 04: EXTRUSION PREP ════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Preparing for Extrusion</h2>
+
+    <p>After generating the base tire shape, the geometry requires vertical and horizontal division for controlled extrusion. Standard Houdini tools proved inadequate here due to variations in polygon sizes and orientations — which led to the development of a custom subdivision tool.</p>
+
+    <p>This custom approach ensures uniform splitting by:</p>
+    <ul>
+      <li>Calculating edge weights and iteratively dividing groups</li>
+      <li>Maintaining consistent polygon edge lengths across the topology</li>
+      <li>Preserving circular radii to prevent geometric distortion during processing</li>
+    </ul>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_22ed8a1f9cd542c1ab7f2836ceb24d3f~mv2.gif" alt="Uniform subdivision tool">
+      <div class="media-caption">Fig 04: Custom tool for uniform polygon division — consistent edge lengths across varying topology.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══ 05: DISPLACEMENT ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s05">05 Radial Polygon Displacement</h2>
+
+    <p>For final tread height and shape, a dedicated radial displacement tool is used. It supports grouping of edge loops for both symmetrical and asymmetrical tread patterns. Soft selection ensures smooth transitions between displaced areas — providing high precision without hard polygon breaks at pattern boundaries.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_ae599551827448bf8933df9ab3be98f2~mv2.gif" alt="Radial displacement with soft selection">
+      <div class="media-caption">Fig 05: Radial displacement — soft selection for smooth tread depth transitions.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>Asymmetrical tread designs — where inner and outer pattern depth differ — are handled by separate group assignments. Each group can receive independent displacement values while the underlying parametric logic keeps the result seamless across the full circumference.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 05"></div>
+  </div>
+
+
+  <!-- ══ 06: UV MAPPING ════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s06">06 UV Mapping Strategy</h2>
+
+    <p>To support both complex tread patterns and sidewall branding, a dual UV mapping approach is employed:</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ UV_STRATEGY // DUAL APPROACH ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>UV TYPE</th><th>COVERAGE</th><th>PURPOSE</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pattern-Based UVs</strong></td>
+            <td>Tread + Sidewall quadrants</td>
+            <td>Dedicated mapping per surface area — essential for high-fidelity texturing and baking</td>
+          </tr>
+          <tr>
+            <td><strong>Cylindrical UVs</strong></td>
+            <td>Full circumference wrap</td>
+            <td>Seamless wrapping along the circular profile — minimises seams in game engines</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--2col">
+        <img src="https://static.wixstatic.com/media/ace175_23b668e3ff8d4009b988e04d60a34b15~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_23b668e3ff8d4009b988e04d60a34b15~mv2.webp" alt="Pattern-Based UVs">
+        <img src="https://static.wixstatic.com/media/ace175_321495aedb6e4c1792ffebc95777cc67~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_321495aedb6e4c1792ffebc95777cc67~mv2.webp" alt="Cylindrical UVs">
+      </div>
+      <div class="media-caption">Gallery 06: Pattern-based UVs (left) vs Cylindrical UVs (right) — dual setup for baking and real-time.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 06"></div>
+  </div>
+
+
+  <!-- ══ 07: SVG EXPORT ════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s07">07 Sidewall Markings & SVG Export</h2>
+
+    <p>To allow detailed sidewall customisation, I built an SVG export tool that converts geometry into splines and generates editable vector tiles. These can be edited in external software (Illustrator, Inkscape) and re-applied to the tire model.</p>
+
+    <p>The utility extends beyond tire branding — it functions as a <strong>general-purpose geometry-to-vector converter</strong>, reusable for any hard-surface asset requiring vector-based surface markings.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_9e043f574d0648738df33b0b18e6bb32~mv2.gif" alt="SVG export workflow">
+      <div class="media-caption">Fig 07: Procedural geometry → SVG conversion — editable vector tiles for sidewall branding.</div>
+    </div>
+
+    <p>The core Python logic handles coordinate space transformation and SVG path generation:</p>
+
+    <pre class="atlas-code-block"><code class="language-python"># Define SVG dimensions — maintain aspect ratio from bounding box
+width  = maxsize if size.x() > size.y() else maxsize * size.x() / size.y()
+height = maxsize * size.y() / size.x() if size.x() > size.y() else maxsize
+
+# Transform: Houdini world space → SVG pixel space
+# Y is flipped: SVG origin top-left, Houdini origin bottom-left
+def transform_points(points):
+    return [hou.Vector2(
+        (p.x() - minv.x()) / size.x() * width,
+        (1.0 - (p.y() - minv.y()) / size.y()) * height
+    ) for p in points]
+
+# Write SVG — one <path> per polygon primitive
+with open(filename, 'w') as fp:
+    fp.write('<svg width="{}px" height="{}px" version="1.1">\n'.format(width, height))
+    for prim in geo.iterPrims():
+        if prim.type() == hou.primType.Polygon:
+            pts = transform_points([v.point().position() for v in prim.vertices()])
+            fp.write('<path d="M{} {}{}"/>\n'.format(
+                pts[0].x(), pts[0].y(),
+                ' '.join(f'L{p.x()} {p.y()}' for p in pts[1:])
+            ))
+    fp.write('</svg>')</code></pre>
+
+    <div class="atlas-section-break" data-index="// § 07"></div>
+  </div>
+
+
+  <!-- ══ 08: TREAD PATTERN ═════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s08">08 Tread Pattern Creation</h2>
+
+    <p>The tread pattern workflow balances creative freedom with procedural stability. Artists use standard modelling operations — extrusion, deletion, displacement — while the system handles the complex backend math automatically.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>AUTOMATED CONSTRAINT</th><th>WHAT IT PREVENTS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Seamless tiling</td><td>Pattern loop artifacts at circumference seam</td></tr>
+          <tr><td>Height adjustment</td><td>Non-uniform extrusion depth across different tire sizes</td></tr>
+          <tr><td>Surface alignment</td><td>Pattern lifting off the curved surface — eliminates manual vertex snapping</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>By abstracting the technical work — math, snapping, looping — the artist focuses purely on tread design. The procedural system guarantees that any tread pattern will tile correctly, sit flush on the surface, and scale consistently regardless of the target tire specification.</p>
+
+
+    <!-- References -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">ETRTO / TRA</span> — Tire and Rim Standards: Nomenclature and Markings. European Tire and Rim Technical Organisation.
+            <br><a href="https://www.etrto.org/publications/available/standards-manual/" class="atlas-ref-link" target="_top">etrto.org — Tire Standards Manual</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — VEX Language Reference. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/vex/lang.html" class="atlas-ref-link" target="_top">sidefx.com — VEX Language Reference</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">W3C</span> — SVG 1.1 Specification: Paths. World Wide Web Consortium.
+            <br><a href="https://www.w3.org/TR/SVG11/paths.html" class="atlas-ref-link" target="_top">w3.org — SVG 1.1 Path Specification</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Python HOM: hou.Geometry. Houdini Python API Reference.
+            <br><a href="https://www.sidefx.com/docs/houdini/hom/hou/Geometry.html" class="atlas-ref-link" target="_top">sidefx.com — hou.Geometry API</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // PROCEDURAL_TIRE_GENERATOR // 8 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat procedural_tire_generator.log',project:'TireGenerator_HDA',module:'VEX / Python / Houdini SOP',version:'Houdini 20.5',logId:'TIRE_HDA_01',status:'STABLE',slug:'procedural-modeling-tire-generator',author:'Pavel Zosim',created:'2024.06.10',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+</html>
+

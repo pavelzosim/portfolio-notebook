@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO: canonical указывает поисковикам на оригинальную страницу Wix,
+       а не на iframe. Это предотвращает дублирование контента в индексе. -->
+  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx">
+
+  <title>Houdini Procedural Explosion VFX — pavelzosim.com</title>
+  <meta name="description" content="Layer-based procedural explosion system in Houdini. Two-HDA pipeline: deterministic point animation, Pyro simulation, VAT export, Six Point Lighting for real-time engines.">
+
+  <!-- noindex: iframe-контент не должен индексироваться отдельно от страницы.
+       follow: ссылки внутри iframe всё равно могут передавать вес. -->
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+
+  <!-- Atlas Framework — версионированный CDN для стабильного кэша на проде -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.5/cdn/atlas-framework.css?v=1.9.5">
+
+  <!-- Prism syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+
+  <style>
+    html, body { margin: 0; padding: 0; background: transparent; }
+
+    /* ── GALLERY FIX ─────────────────────────────────────────── */
+    .atlas-container .content-block .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px; width: 100%;
+    }
+    .atlas-container .content-block .gallery-grid img {
+      display: block; width: 100%; height: 220px;
+      object-fit: cover; border: 1px solid rgba(0,0,0,.15);
+    }
+    .atlas-container .content-block .gallery-grid--2col { grid-template-columns: repeat(2, 1fr); }
+    .atlas-container .content-block .gallery-grid--3col { grid-template-columns: repeat(3, 1fr); }
+    .atlas-container .content-block .gallery-grid--tall img { height: 280px; }
+    .atlas-container .content-block .media-frame:has(.gallery-grid)::before {
+      content: "[ GALLERY // IMAGE_SEQUENCE ]";
+    }
+    .atlas-container .content-block .media-frame > .gallery-grid { margin: 0; width: 100%; }
+    @media (max-width: 550px) {
+      .atlas-container .content-block .gallery-grid,
+      .atlas-container .content-block .gallery-grid--2col,
+      .atlas-container .content-block .gallery-grid--3col { grid-template-columns: 1fr; }
+    }
+
+    /* ── REFS ────────────────────────────────────────────────── */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* ── TOC ─────────────────────────────────────────────────── */
+    .atlas-container .content-block .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-container .content-block .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-container .content-block .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-container .content-block .atlas-toc__item:hover .atlas-toc__num,
+    .atlas-container .content-block .atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-container .content-block .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-container .content-block .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-container .content-block .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-container .content-block .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-container .content-block .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-container .content-block .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+
+  <div id="site-passport"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       TOC
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Breakdown — System Philosophy</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Before Opening Houdini: Scale and Reference</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">HDA Architecture: The Pipeline</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-layers"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Layer-Based Organization</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">HDA 1: Initial Mesh and Velocity</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s04-shape"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Tab 1: Initial Shape</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s04-burst"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Tab 2: Burst Animation</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s04-layers"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Tab 3: Layers</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s05"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">HDA 2: Rasterization and Pyro</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s05-pyro"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Pyro Setup / Rasterize / Smoke Sim</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s06"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">R&D & Validation: Pipeline Tests</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s07"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Export: The Engine Doesn't Matter</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s08"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">Camera Setup</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s09"><span class="atlas-toc__num">09</span><span class="atlas-toc__row"><span class="atlas-toc__title">Motion Vectors — Frame Blending</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s10"><span class="atlas-toc__num">10</span><span class="atlas-toc__row"><span class="atlas-toc__title">Six Point Lighting — Real-Time Integration</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       01: BREAKDOWN
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 Breakdown — System Philosophy</h2>
+    <p>This Houdini procedural explosion VFX setup is built as a <strong>deterministic, layer-based system</strong> designed for simulation accuracy and export flexibility.</p>
+
+    <p>What I find genuinely interesting in VFX work is not any single effect — it's the patterns underneath. Most effects, when you look closely enough, share the same structural logic. Find that logic, build a system around it, and you get something <strong>reusable, predictable, and fast to iterate</strong>.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_e79a0f3079454426b23898a2fbd5798c~mv2.gif" alt="Unity Explosion VFX">
+      <div class="media-caption">Fig 01: Unity Explosion VFX — real-time playback from VAT export.</div>
+    </div>
+
+    <p>This breakdown is about that process — using a procedural explosion as the example. Not because explosions are unique, but because they're a <strong>good stress test</strong>: clear physical reference, multiple simultaneous layers, and they need to work across very different rendering contexts. Getting all of that into one coherent system requires thinking about architecture first and aesthetics second.</p>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p>The techniques covered here — <em>layered point animation, velocity field construction, Pyro sourcing, VAT export, Six Point Lighting</em> — are not explosion-specific. The same approach applies to any effect where <strong>organic behavior and pipeline reusability</strong> both matter. One tool. Predictable behavior. Any engine.</p>
+    </div>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--3col">
+        <img src="https://static.wixstatic.com/media/ace175_c4ab47faa0f148e58d134ab2bae1be2d~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_c4ab47faa0f148e58d134ab2bae1be2d~mv2.webp" alt="VFX Process 01">
+        <img src="https://static.wixstatic.com/media/ace175_1aa7fdab08f74aff9da2d7ce2d17290b~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_1aa7fdab08f74aff9da2d7ce2d17290b~mv2.webp" alt="VFX Process 02">
+        <img src="https://static.wixstatic.com/media/ace175_d1beb31604c2475397a204159f772cd6~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_d1beb31604c2475397a204159f772cd6~mv2.webp" alt="VFX Process 03">
+      </div>
+      <div class="media-caption">Gallery 01: Simulation stages — burst expansion, layer composition, final look.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       02: SCALE AND REFERENCE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 Before Opening Houdini: Scale and Reference</h2>
+
+    <p>The first thing I do before touching any node is establish <strong>ground truth</strong> — physically correct scene scale and a solid visual reference.</p>
+
+    <p>Scale matters more than most people realize. In Houdini's geometry context (SOPs), units are dimensionless — one unit can mean anything. But the moment you move into simulation (DOPs), everything changes. Pyro, RBD, and FLIP solvers operate on MKS units: meters, kilograms, seconds. Gravity, viscosity, density, buoyancy — all calculated against real physical values.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The industry standard is simple: <strong>1 unit = 1 meter</strong>. Break that convention and your simulation misbehaves before you've changed a single solver parameter.</p>
+    </div>
+
+    <p>For reference, I used real footage of a 122mm high-explosive artillery shell detonation. Any VFX effect is a combination of static shape and animation. Break it into layers and you get: flame, smoke, debris, displaced ground, shockwave, crater. There's an impact, a detonation, an active expansion phase, and a decay.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PHASE</th><th>TIMING</th><th>CHARACTER</th><th>LAYERS ACTIVE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Impact</td><td>F0</td><td>Sharp collision, debris ejection</td><td>Debris, crater mask</td></tr>
+          <tr><td>Detonation</td><td>F0–F3</td><td>Explosive pressure wave origin</td><td>Main burst, shockwave</td></tr>
+          <tr><td>Expansion</td><td>F3–F20</td><td>Spherical outward growth</td><td>All layers + pump</td></tr>
+          <tr><td>Dissipation</td><td>F20+</td><td>Slow rise, density decay</td><td>Curl, pump column</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>These patterns — extracted from reference — became the architecture of the tool.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_05bc778e26364531977b3e02374a2b64~mv2.png/v1/fill/w_1598,h_1080,fp_0.50_0.50,q_90/ace175_05bc778e26364531977b3e02374a2b64~mv2.webp" alt="VFX Architecture Reference">
+      <div class="media-caption">Fig 02: Reference analysis — phase extraction becomes HDA architecture.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       03: HDA ARCHITECTURE
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 HDA Architecture: The Pipeline</h2>
+
+    <p>I built the system as two connected HDAs to separate geometry generation from heavy simulation data. This creates a clean, debuggable workflow.</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // HDA 1 — Initial Mesh Setup</div>
+        <div class="comp-body">Generates velocity and prepares all point data for simulation. <strong>No simulation runs here.</strong> Everything is deterministic and procedural — recalculates in seconds when any parameter changes.</div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // HDA 2 — Simulation</div>
+        <div class="comp-body">Takes the output of HDA 1, rasterizes it into VDB volumes, and runs the Pyro solver. A Python script reads the layer count from HDA 1 and auto-configures the interface on the fly.</div>
+      </div>
+    </div>
+
+    <h3 id="s03-layers">Layer-Based Organization</h3>
+    <p>At a high level, an explosion is smoke, fire, and fragments. Each layer is independent and operates on its own geometry, velocity field, and timing:</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ LAYER_STACK // EXPLOSION_HDA_01 ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>LAYER</th><th>TYPE</th><th>GEOMETRY</th><th>FUNCTION</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Layer 1</td><td>Main Burst</td><td>Sphere scale (1,1,1)</td><td>Primary expansion — symmetric force origin</td></tr>
+          <tr><td>Layer 2</td><td>Curl Noise</td><td>Sphere + curl field</td><td>Divergence-free rotation — organic billowing</td></tr>
+          <tr><td>Layer 3</td><td>Shockwave</td><td>Flattened disc (large X/Z, small Y)</td><td>Horizontal atmospheric pressure wave</td></tr>
+          <tr><td>Layer 4</td><td>Pump</td><td>Vertical column (small X/Z, large Y)</td><td>Rising impulse — mushroom column formation</td></tr>
+          <tr><td>Debris</td><td>Fragment</td><td>Scattered points per fragment</td><td>Geometry fragments with Curl trajectory + spin</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="media-frame">
+      <video width="100%" autoplay loop muted playsinline>
+        <source src="https://video.wixstatic.com/video/ace175_fa47f18380d74ee3b60d98eeb75f138b/1080p/mp4/file.mp4" type="video/mp4">
+      </video>
+      <div class="media-caption">Fig 03: Layered simulation logic — all layers composited in real-time.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The graph stays closed — only essential parameters are exposed, grouped into a clean, intuitive interface. The Python auto-configuration means adding a new layer in HDA 1 automatically propagates the interface change to HDA 2.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       04: HDA 1 — INITIAL MESH
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 HDA 1: Initial Mesh and Velocity</h2>
+
+    <p>Everything starts with two objects: a <strong>sphere</strong> defines the shape and scale of the explosion, and a <strong>point</strong> defines the direction. These are the two inputs to the first HDA. From there, the configuration is managed via three primary tabs.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_26c0c85cb43d44c9a71605f8afdbce48~mv2.png/v1/fill/w_925,h_1278,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_26c0c85cb43d44c9a71605f8afdbce48~mv2.png" alt="Initial Mesh Setup UI">
+      <div class="media-caption">Fig 04: HDA 1 — Initial Mesh Setup Interface. Three-tab structure.</div>
+    </div>
+
+    <h3 id="s04-shape">Tab 1: Initial Shape</h3>
+    <p>This tab controls the base geometry from which velocity is calculated. A <strong>turbulent Perlin noise</strong> is applied to the sphere, creating the characteristic spikes radiating from the epicenter visible in the first frames of any real explosion.</p>
+
+    <p>The noise is masked through the <strong>dot product of the mesh normals</strong>: near the ground, the shape automatically smooths out. This is physically correct — the blast wave flattens as it meets surface resistance.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_e5185711f95e49319658a66c14977ade~mv2.png/v1/fill/w_438,h_454,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/ace175_e5185711f95e49319658a66c14977ade~mv2.png" alt="Initial Shape Noise Masking">
+      <div class="media-caption">Fig 04a: Perlin noise masked by normal dot product — ground contact smooths automatically.</div>
+    </div>
+
+    <p>A separate parameter — <strong>Point Direction Interpolation (Bias)</strong> — interpolates between the original point position and the reference direction point (second input). At Bias = 0, the explosion is symmetric. Offset it and you get a directional blast matching the shell's angle of entry. <strong>No manual geometry editing required.</strong></p>
+
+    <div class="media-frame">
+      <video width="100%" autoplay loop muted playsinline>
+        <source src="https://video.wixstatic.com/video/ace175_28ef94526f7b4881861ff1d7261cb803/1080p/mp4/file.mp4" type="video/mp4">
+      </video>
+      <div class="media-caption">Fig 04b: Bias interpolation — symmetric vs. directional blast.</div>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_4a5027676b3e47e68c8d93e376ec2c52~mv2.png/v1/fill/w_925,h_711,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_4a5027676b3e47e68c8d93e376ec2c52~mv2.png" alt="Bias Interpolation">
+      <div class="media-caption">Fig 04c: Flow Noise layer can be enabled on top for additional organic variation.</div>
+    </div>
+
+    <h3 id="s04-burst">Tab 2: Burst Animation</h3>
+    <p>This tab controls how the explosion lives in time.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PARAMETER</th><th>FUNCTION</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">Burst Duration</span></td><td>Total length of the burst phase in frames</td></tr>
+          <tr><td><span class="atlas-code-inline">Min Life / Max Life</span></td><td>Randomized per-point lifetime range — organic dissolution, no hard cutoff</td></tr>
+          <tr><td><span class="atlas-code-inline">Burst Time Remap</span></td><td>Curve remapping animation time progress — main tool for "character" of the blast</td></tr>
+          <tr><td><span class="atlas-code-inline">Death Rate</span></td><td>Separate decay curve, independent of duration — full temporal shape control</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_e9fd2556018549358c1462613d182ecb~mv2.png/v1/fill/w_925,h_821,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_e9fd2556018549358c1462613d182ecb~mv2.png" alt="Burst Animation Interface">
+      <div class="media-caption">Fig 04d: Burst Animation tab — dual curve control for temporal shape.</div>
+    </div>
+
+    <h3 id="s04-layers">Tab 3: Layers</h3>
+    <p>This is where the core logic lives. The current setup has 4 layers, each independent.</p>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--2col gallery-grid--tall">
+        <img src="https://static.wixstatic.com/media/ace175_cf0e26d58c9147f19c3b9aadf92aecc3~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_cf0e26d58c9147f19c3b9aadf92aecc3~mv2.webp" alt="Layer 1 — Main Burst">
+        <img src="https://static.wixstatic.com/media/ace175_81a0e202cd5a4cb5905711f1939b85b2~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_81a0e202cd5a4cb5905711f1939b85b2~mv2.webp" alt="Layer 2 — Curl">
+        <img src="https://static.wixstatic.com/media/ace175_faacefcb508646ee9f0d1102104f1703~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_faacefcb508646ee9f0d1102104f1703~mv2.webp" alt="Layer 3 — Shockwave">
+        <img src="https://static.wixstatic.com/media/ace175_f53f1c0a1fe5479c9d4b5d05c12f41f0~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_f53f1c0a1fe5479c9d4b5d05c12f41f0~mv2.webp" alt="Layer 4 — Pump">
+      </div>
+      <div class="media-caption">Gallery 04: Four independent layers — Main Burst / Curl / Shockwave / Pump.</div>
+    </div>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ LAYER_PARAMETERS // SETUP NOTES ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>LAYER</th><th>SCALE</th><th>KEY SETUP</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1 — Main Burst</td><td>(1,1,1)</td><td>Two independent Jitter passes — large-scale spread + fine detail = two-level point distribution</td></tr>
+          <tr><td>2 — Curl Noise</td><td>(1,1,1)</td><td>Divergence-free animated Curl Noise — only rotation in velocity field, no sources/sinks → organic billowing</td></tr>
+          <tr><td>3 — Shockwave</td><td>Large X/Z, compressed Y, -90° rot</td><td>Sphere → flat disc → horizontal outward pressure wave</td></tr>
+          <tr><td>4 — Pump</td><td>Small X/Z, extended Y</td><td>"Layer is Pump" ON + 2-frame Time Shift delay → vertical mushroom column impulse</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The debris section is separate from the main layers. Points scatter per fragment, additional vertical velocity is added, Curl Noise controls trajectory variation, and a Spinning Force range drives per-fragment random rotation.</p>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--2col">
+        <img src="https://static.wixstatic.com/media/ace175_756a762d4a3048eb9d7343fec66370f8~mv2.png/v1/fill/w_777,h_558,al_c,q_90,enc_avif,quality_auto/ace175_756a762d4a3048eb9d7343fec66370f8~mv2.png" alt="Debris system">
+        <img src="https://static.wixstatic.com/media/ace175_9827fc5cd1b74f0ab61e07699814059d~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_9827fc5cd1b74f0ab61e07699814059d~mv2.webp" alt="Debris details 1">
+      </div>
+      <div class="media-caption">Gallery 04b: Debris system — fragment scatter with Curl trajectory and spin.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>No simulation has run yet.</strong> All of this is deterministic and procedural — recalculates in seconds when any parameter changes. HDA 1 output: point cloud layers with velocity and animation, pump layer, debris points with trails, and a crater mask.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       05: HDA 2 — RASTERIZATION AND PYRO
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s05">05 HDA 2: Rasterization and Pyro</h2>
+
+    <p>The second HDA receives the data from the first. On initialization, a Python script reads the layer count and types from HDA 1 and auto-configures the interface — the designer gets a ready-made interface that matches whatever was set up upstream.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_69034cad321c47968a79a852651c01b1~mv2.png/v1/fill/w_925,h_586,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_69034cad321c47968a79a852651c01b1~mv2.png" alt="se_simulation DOP network">
+      <div class="media-caption">Fig 05: se_simulation DOP network — LAYERS / DEBRIS / PUMP / SIM branches auto-built by Python.</div>
+    </div>
+
+    <p>The system programmatically builds the DOP network, ensuring simulation setup is always in sync with geometry sourcing:</p>
+
+    <pre class="atlas-code-block"><code class="language-python"># =============================================================================
+# DOP NODE CREATION — auto-builds Volume Source nodes from HDA 1 layer config
+# =============================================================================
+
+def create_dop_volume_source_nodes():
+    """Creates and configures all Volume Source nodes in the DOP network."""
+    log("\n--- Updating DOP Volume Source Nodes ---")
+    node = hou.pwd()
+
+    try:
+        dop_network = node.node("sim_explosion")
+        if not dop_network:
+            log("DOP Network 'sim_explosion' not found.", "ERROR")
+            return
+
+        merge_node  = dop_network.node("merge1")
+        switch_node = dop_network.node("switch1")  # may be None
+
+        _configure_smoke_object(dop_network)
+
+        # Iterate DOP_CONFIGS — one entry per layer type (burst/debris/pump)
+        for config in DOP_CONFIGS:
+            config_func = globals()[config["config_func"]]
+            _create_or_update_dop_sources(
+                parent_node    = node,
+                dop_network    = dop_network,
+                merge_node     = merge_node,
+                switch_node    = switch_node,
+                count_parm_name= config["count_parm"],
+                source_prefix  = config["source_prefix"],
+                null_prefix    = config["null_prefix"],
+                config_func    = config_func
+            )
+
+        dop_network.layoutChildren()
+
+    except Exception as e:
+        log(f"Error in create_dop_volume_source_nodes: {e}", "ERROR")
+        import traceback
+        traceback.print_exc()</code></pre>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Dynamic Synchronization:</strong> Change the layer count in HDA 1 — HDA 2 interface updates automatically on next cook. No manual DOP network editing required.</p>
+    </div>
+
+    <h3 id="s05-pyro">Tab 1: Pyro Setup — Noise per Layer</h3>
+    <p>Per-layer noise settings for density and temperature — type, frequency, detail. This is where the character of the smoke is defined: how lumpy, how uniform, how the edges behave.</p>
+
+    <p>For the main burst layer: <strong>Alligator noise</strong> — it produces the characteristic bumpy structure close to how real smoke behaves at cloud boundaries. The Debris layer has a separate Velocity tab with optional Curl Noise for additional swirl along fragment trajectories.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_10e328f46e864793a16572d8970a41cd~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_10e328f46e864793a16572d8970a41cd~mv2.webp" alt="Pyro Setup Interface">
+      <div class="media-caption">Fig 05a: Pyro Setup tab — per-layer noise configuration.</div>
+    </div>
+
+    <h3>Tab 2: Rasterize Attributes</h3>
+    <p>Controls how the point cloud is converted into a VDB volume. Each layer has a <strong>Particle Scale</strong> — the influence radius of each point during rasterization.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>Too large and you lose detail. Too small and you get discretization artifacts. The debris layer uses a small particle scale by design — fragments are point sources, leaving a minimal volumetric trail.</p>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_25b17a7b4d664563a8d39be6ad7fa2ed~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_25b17a7b4d664563a8d39be6ad7fa2ed~mv2.webp" alt="Rasterize Attributes Interface">
+      <div class="media-caption">Fig 05b: Rasterize Attributes — particle scale per layer.</div>
+    </div>
+
+    <h3>Tab 3: Smoke Simulation</h3>
+    <p>Pyro solver settings. <strong>Voxel Size</strong> balances detail against simulation time. Per-layer multipliers for Density, Temperature, and Velocity determine the weight of each layer in the final simulation. The shockwave and curl layers get a higher velocity multiplier to amplify their influence on smoke behavior.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_b45de5f9b6dd4e6a9644352cd47abd23~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_b45de5f9b6dd4e6a9644352cd47abd23~mv2.webp" alt="Smoke Simulation Settings">
+      <div class="media-caption">Fig 05c: Smoke Simulation tab — voxel size and per-layer multipliers.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 05"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       06: R&D VALIDATION
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s06">06 R&D & Validation: Pipeline Tests</h2>
+
+    <p>Verification is critical in a procedural pipeline. Before locking the HDA logic, I ran iterative tests to validate velocity field behavior, layer blending, and rendering fidelity in Arnold.</p>
+
+    <h3>1. Initial Mesh Velocity & Noise</h3>
+    <p>Validating procedural noise distribution before rasterization. This test ensures the velocity vectors match the desired explosive expansion patterns — if they don't, fixing it here costs seconds, not hours of sim cache.</p>
+
+    <div class="media-frame">
+      <video width="100%" autoplay loop muted playsinline>
+        <source src="https://video.wixstatic.com/video/ace175_1bb5019a7304413194371bdc13aa75d4/1080p/mp4/file.mp4" type="video/mp4">
+      </video>
+      <div class="media-caption">Fig 06a: Initial Mesh Velocity Trail Noise — procedural validation pass.</div>
+    </div>
+
+    <h3>2. Volume Layers Blend</h3>
+    <p>Testing the interaction between independent layers (Burst, Curl, Shockwave, Pump). The system must handle volume density blending at the boundaries to prevent clipping or artifacting.</p>
+
+    <div class="media-frame">
+      <video width="100%" autoplay loop muted playsinline>
+        <source src="https://video.wixstatic.com/video/ace175_5ac6ffd9990a44b38b5b5bd7cd932aa9/1080p/mp4/file.mp4" type="video/mp4">
+      </video>
+      <div class="media-caption">Fig 06b: Volume Layers Blend — system coherence test.</div>
+    </div>
+
+    <h3>3. Arnold Render Test</h3>
+    <p>Final validation. Using a 1 Camera AA pass, we verify that the VDB volumes generated by the simulation hold up to light absorption, scattering, and motion blur in the renderer.</p>
+
+    <div class="media-frame">
+      <video width="100%" autoplay loop muted playsinline>
+        <source src="https://video.wixstatic.com/video/ace175_6e761ff83afe4cf9b9d0974334a11858/1080p/mp4/file.mp4" type="video/mp4">
+      </video>
+      <div class="media-caption">Fig 06c: Arnold Render — look development verification pass.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 06"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       07: EXPORT
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s07">07 Export: The Engine Doesn't Matter</h2>
+
+    <p>After simulation, the output is exported in whatever format the pipeline requires. The engine doesn't matter because all the physics and shape were determined at the point animation stage — by the time you export, it's data, not logic.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ EXPORT_FORMATS // OUTPUT_TARGETS ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>FORMAT</th><th>TARGET</th><th>USE CASE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">VDB</span></td><td>Cinematic renderer</td><td>Karma, Arnold, Mantra — full volumetric rendering</td></tr>
+          <tr><td><span class="atlas-code-inline">Vector Fields</span></td><td>Game engine</td><td>Real-time particle simulation — drives GPU particles in UE/Unity</td></tr>
+          <tr><td><span class="atlas-code-inline">VAT</span></td><td>Game engine</td><td>Playback in Unity/Unreal without runtime simulation — flipbook-based</td></tr>
+          <tr><td><span class="atlas-code-inline">Mesh / Cache</span></td><td>Any</td><td>Static or animated geometry — debris, crater, displaced ground</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The same setup delivers cinematic renders and real-time game effects. The fundamentals are always the same. Only the output format changes.</p>
+
+    <div class="atlas-section-break" data-index="// § 07"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       08: CAMERA SETUP
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s08">08 Camera Setup</h2>
+
+    <p>Camera configuration is often overlooked but it directly affects both render time and export quality — and the setup is completely different depending on your target.</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // CINEMATIC RENDERING</div>
+        <div class="comp-body">Camera frustum culling clips simulation that extends beyond frame — saves meaningful sim and render time on large explosions. Check whether out-of-frame geometry contributes to shadows before enabling. Culling shadow casters breaks lighting in hard-to-diagnose ways.</div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // GAME ENGINE (VAT / FLIPBOOK)</div>
+        <div class="comp-body">
+          <strong>Orthographic projection mandatory</strong> — perspective introduces distortion that breaks VAT reconstruction in-engine.<br>
+          <strong>Power-of-two resolution</strong> (512 / 1024 / 2048) — non-POT causes mip sampling issues.<br>
+          <strong>Max 16–81 frames</strong> depending on platform memory budget.
+        </div>
+      </div>
+    </div>
+
+    <div class="media-frame">
+      <div class="gallery-grid gallery-grid--2col">
+        <img src="https://static.wixstatic.com/media/ace175_63f2ad9ba2c44398a5e41e7bc55e4f56~mv2.png/v1/fill/w_820,h_583,al_c,lg_1,q_90,enc_avif,quality_auto/ace175_63f2ad9ba2c44398a5e41e7bc55e4f56~mv2.png" alt="VAT Orthographic Camera Setup 01">
+        <img src="https://static.wixstatic.com/media/ace175_104198e83c764954926f2c51e40d6586~mv2.png/v1/fill/w_753,h_766,al_c,q_90,enc_avif,quality_auto/ace175_104198e83c764954926f2c51e40d6586~mv2.png" alt="VAT Orthographic Camera Setup 02">
+      </div>
+      <div class="media-caption">Gallery 08: Houdini VAT export orthographic camera configuration.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p>Getting the camera wrong at this stage means redoing the render. Lock it down <strong>before</strong> the simulation cache is written.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 08"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       09: MOTION VECTORS
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s09">09 Motion Vectors — Frame Blending</h2>
+
+    <p>Motion Vector texture stores the per-pixel direction and magnitude of movement between frames. In a game engine, the shader uses this data to interpolate between flipbook frames at runtime — effectively faking in-between frames that were never rendered.</p>
+
+    <p>Without Motion Vectors, a flipbook plays as a hard cut between frames — stutter is clearly visible, especially at low frame counts. With Motion Vectors enabled, the engine blends between frames based on actual movement direction, so 16 or 24 rendered frames can look as smooth as 60. This directly reduces texture memory and render time without sacrificing perceived quality.</p>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>Motion Vector Influence:</strong> keep it low — typically between <span class="atlas-code-inline">0.0005</span> and <span class="atlas-code-inline">0.001</span>. Too high and the interpolation overshoots, causing the effect to smear or swim. Find the minimum value that eliminates stutter and stop there.</p>
+    </div>
+
+    <div class="media-frame">
+      <img src="https://i.ytimg.com/vi/ZvJuTKn3Bnc/maxresdefault.jpg" alt="Motion Vector Frame Blending Comparison">
+      <div class="media-caption">Fig 09: Frame Blending — standard flipbook stutter vs. Motion Vector interpolation.</div>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 09"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       10: SIX POINT LIGHTING
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s10">10 Six Point Lighting — Real-Time Integration</h2>
+
+    <p>Standard sprite or flipbook effects are lit as flat surfaces — they receive light from one direction and ignore everything else. This looks fine in a static scene but breaks the moment a dynamic light source moves, or the effect is placed near colored environment lighting.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_0e89ed50f5cb472eb3eea876da84882f~mv2.jpg/v1/fill/w_925,h_520,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_0e89ed50f5cb472eb3eea876da84882f~mv2.jpg" alt="Six Point Lighting comparison">
+      <div class="media-caption">Fig 10a: Six Point Lighting — flat billboard vs. dynamic environment response.</div>
+    </div>
+
+    <p><strong>Six Point Lighting</strong> solves this. During the Houdini render, six separate cameras capture the volume from six directions — Top, Left, Right, Bottom, Back, Front. The resulting two textures (TLR and BBF) store baked illumination for each voxel from all six axes.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>TEXTURE</th><th>CHANNELS</th><th>DIRECTIONS BAKED</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">TLR map</span></td><td>RGB</td><td>Top / Left / Right</td></tr>
+          <tr><td><span class="atlas-code-inline">BBF map</span></td><td>RGB</td><td>Bottom / Back / Front</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>In-engine, the shader reconstructs approximate volumetric lighting by blending these six samples based on the current light direction. The explosion responds correctly to any light in the scene — a muzzle flash nearby, rotating sunlight, colored fill from an environment — without any volumetric rendering, without runtime simulation.</p>
+
+    <div class="media-frame">
+      <img src="https://static.wixstatic.com/media/ace175_ddaadc1f45314abdb224f333fde21ba7~mv2.png/v1/fill/w_925,h_505,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_ddaadc1f45314abdb224f333fde21ba7~mv2.png" alt="Houdini 6-point Lighting Preparation">
+      <div class="media-caption">Fig 10b: Houdini — Six Point Lighting render preparation, six-camera rig setup.</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>This is the key difference between a VFX asset that integrates into a scene and one that sits on top of it. Six Point Lighting is what makes a flipbook explosion feel like it belongs in the world rather than being composited over it.</p>
+    </div>
+
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Pyro Solver. Houdini Documentation.
+            <br><a href="https://www.sidefx.com/docs/houdini/nodes/dop/pyrosolver.html" class="atlas-ref-link" target="_top">sidefx.com — Pyro Solver</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">SideFX</span> — Vertex Animation Textures (VAT). Houdini Labs Documentation.
+            <br><a href="https://www.sidefx.com/tutorials/vertex-animation-textures/" class="atlas-ref-link" target="_top">sidefx.com — VAT Tutorials</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">TALK</span>
+            <span class="atlas-ref-author">Klemen Lozar</span> — Six Point Lighting for Real-Time VFX. GDC Presentation.
+            <br><a href="https://www.youtube.com/watch?v=ZvJuTKn3Bnc" class="atlas-ref-link" target="_top">youtube.com — Six Point Lighting GDC</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">PAPER</span>
+            <span class="atlas-ref-author">Bridson R.</span> — Fluid Simulation for Computer Graphics. SIGGRAPH Course, 2007.
+            <br><a href="https://dl.acm.org/doi/10.1145/1281500.1281681" class="atlas-ref-link" target="_top">dl.acm.org — Fluid Simulation Course</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // HOUDINI_EXPLOSION_VFX // 10 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+
+</div><!-- /atlas-container -->
+
+<script>
+var CONFIG = {
+  user: 'pavelzosim', path: '~',
+  command: 'cat houdini_procedural_explosion_vfx.log',
+  project: 'ProceduralSimExp', module: 'Pyro / VAT / Six Point Lighting',
+  version: 'Houdini 20.5', logId: 'VFX_EXP_01', status: 'STABLE',
+  slug: 'houdini-procedural-explosion-vfx',
+  author: 'Pavel Zosim', created: '2024.11.15', modified: null,
+  wordCount: null, title: null, tags: [],
+  tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+};
+
+var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
+
+function applyData(d) {
+  if (d.author)   CONFIG.author   = d.author;
+  if (d.title) {
+    CONFIG.title   = d.title;
+    CONFIG.command = 'cat ' + d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'') + '.log';
+  }
+  if (d.created)   CONFIG.created   = d.created;
+  if (d.modified)  CONFIG.modified  = d.modified;
+  if (d.wordCount) CONFIG.wordCount = d.wordCount;
+  if (Array.isArray(d.tags)) CONFIG.tags = d.tags;
+  window.render && window.render();
+}
+
+(function(){
+  if (!CONFIG.slug) return;
+  fetch(BACKEND_URL + '?slug=' + encodeURIComponent(CONFIG.slug))
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && !d.error) applyData(d); })
+    .catch(e => console.warn('[ATLAS] Passport fetch failed', e));
+})();
+
+(function(){
+  function render() {
+    var o = CONFIG;
+    var status = (o.status || 'DRAFT').toUpperCase();
+    var rt = o.wordCount ? '~' + Math.ceil(Number(o.wordCount)/200) + ' MIN' : null;
+    var meta =
+      '<div class="passport-meta-item" data-meta="auth">'    + (o.author  || '—') + '</div>' +
+      '<div class="passport-meta-item" data-meta="created">' + (o.created || '—') + '</div>';
+    if (o.modified) meta += '<div class="passport-meta-item" data-meta="modified">' + o.modified + '</div>';
+    if (rt)         meta += '<div class="passport-meta-item" data-meta="read">'     + rt         + '</div>';
+    var tags = Array.isArray(o.tags) && o.tags.length
+      ? '<div class="passport-tags">' + o.tags.map(t =>
+          '<a href="' + o.tagBaseUrl + t.toLowerCase().replace(/\s+/g,'-') + '" class="passport-tag" target="_top">#' + t.toUpperCase() + '</a>'
+        ).join('') + '</div>'
+      : '';
+    document.getElementById('site-passport').innerHTML =
+      '<div class="passport-bp">' +
+        '<div class="passport-title-bar">' +
+          '<div>' + o.user + ' : ' + o.path + ' # ' + o.command + '</div>' +
+          '<div>[ SYS_STATUS: <b>' + status + '</b> ]</div>' +
+        '</div>' +
+        (o.title ? '<div class="passport-main-title">' + o.title.toUpperCase() + '</div>' : '') +
+        '<div class="passport-grid">' +
+          '<div class="passport-cell">' +
+            '<div class="passport-cell-line" data-key="project">' + o.project + '</div>' +
+            '<div class="passport-cell-line" data-key="module">'  + o.module  + '</div>' +
+          '</div>' +
+          '<div class="passport-cell">' +
+            '<div class="passport-cell-line" data-key="version">' + o.version + '</div>' +
+            '<div class="passport-cell-line" data-key="log_id">'  + o.logId   + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="passport-meta">' + meta + '</div>' + tags +
+      '</div>';
+  }
+  window.render = render;
+  render();
+}());
+
+(function(){
+  fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(c => {
+      document.getElementById('atlas-footer').innerHTML =
+        '<div class="atlas-footer-wrapper">' +
+          '<div class="atlas-footer-block__support-header">' +
+            '<span class="atlas-footer-block__kaomoji">' + c.tagline + '</span>' +
+            '<span>LET\'S STAY IN TOUCH</span>' +
+          '</div>' +
+          '<div class="atlas-footer-block__support-content">' +
+            '<div class="atlas-footer-block__support-text">' + c.support.text + '</div>' +
+            '<div class="atlas-footer-block__support-links">' +
+              c.support.links.map((l,i,a) =>
+                '<a href="' + l.url + '" class="atlas-blueprint-link" target="_top">' + l.text + '</a>' +
+                (i < a.length-1 ? '<span class="atlas-footer-block__support-divider">|</span>' : '')
+              ).join('') +
+            '</div>' +
+          '</div>' +
+          '<div class="atlas-footer-block__matrix-zone">' +
+            c.links.map(g =>
+              '<div class="atlas-footer-block__matrix-column">' +
+                '<span class="atlas-footer-block__column-label">' + g.label + '</span>' +
+                '<div class="atlas-footer-block__column-items">' +
+                  g.items.map(i => '<a href="' + i.url + '" class="atlas-blueprint-link" target="_top">/ ' + i.text + '</a>').join('') +
+                '</div>' +
+              '</div>'
+            ).join('') +
+          '</div>' +
+        '</div>';
+    })
+    .catch(e => console.error('[ATLAS] Footer failed:', e));
+}());
+
+/* TOC smooth scroll */
+document.addEventListener('click', function(e) {
+  var a = e.target.closest('.atlas-toc__item a');
+  if (!a) return;
+  var href = a.getAttribute('href');
+  if (!href || href[0] !== '#') return;
+  var dest = document.getElementById(href.slice(1));
+  if (!dest) return;
+  e.preventDefault();
+  dest.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(function(){ window.scrollBy(0, -8); }, 350);
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+</body>
+</html>
+

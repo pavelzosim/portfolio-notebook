@@ -1,0 +1,117 @@
+/* ==========================================================================
+   FILE: 07-atlas-media.css
+   ROLE: Медиа-контейнеры (.media-frame) и галерейная сетка (.gallery-grid).
+         Поддержка img, video, iframe (16:9 авто-пропорции для YouTube/Vimeo).
+         Галерея автоматически активируется когда .gallery-grid
+         является прямым потомком .media-frame.
+   ЗАВИСИМОСТИ: 01-atlas-core.css (геометрия .media-frame)
+   ПОРЯДОК В МОНОЛИТЕ: 7 из 7 (последний)
+   ========================================================================== */
+
+/* ── СЕКЦИЯ A: MEDIA FRAME — Инженерный визуальный контейнер ────────────── */
+/* Геометрия (border, padding, ::before) задана в 01-atlas-core.css.        */
+
+.atlas-container .content-block .media-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Псевдо-шапка: одиночный медиа-ассет */
+.atlas-container .content-block .media-frame::before {
+  content: "[ MEDIA_ASSET // VISUAL_DATA ]";
+}
+
+/* Когда внутри .media-frame находится .gallery-grid — шапка переключается */
+.atlas-container .content-block .media-frame:has(.gallery-grid)::before {
+  content: "[ GALLERY // IMAGE_SEQUENCE ]";
+}
+
+/* Одиночные медиа-элементы (не в галерее) */
+.atlas-container .content-block .media-frame > img,
+.atlas-container .content-block .media-frame > video,
+.atlas-container .content-block .media-frame > iframe {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--atlas-border);
+  margin: 0 auto;
+}
+
+/* iframe (YouTube, Vimeo): авто-пропорция 16:9 */
+.atlas-container .content-block .media-frame > iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* Подпись — всегда по всей ширине, ниже контента */
+.atlas-container .content-block .media-caption {
+  font-family: var(--atlas-font-mono);
+  font-size: var(--fs-status);
+  color: var(--atlas-ink-muted);
+  margin-top: 12px;
+  text-align: center;
+  width: 100%;
+  align-self: center;
+}
+
+/* ── СЕКЦИЯ B: GALLERY GRID — Адаптивная сетка внутри media-frame ────────── */
+/* Используется ВНУТРИ .media-frame для галерей.                             */
+/* Auto-fit: 1 фото = full width, 2 = 2 col, 3+ = 2–3 col авто.            */
+/* Отдельное использование за пределами .media-frame тоже поддерживается.  */
+
+.atlas-container .content-block .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+  width: 100%;
+}
+
+/* Изображения внутри сетки: заполняют ячейку, сохраняют пропорции */
+.atlas-container .content-block .gallery-grid img {
+  display: block;
+  width: 100%;
+  height: 180px;           /* Фиксированная высота — все ячейки одного роста */
+  object-fit: cover;       /* Обрезаем без искажения */
+  border: 1px solid var(--atlas-border);
+}
+
+/* Когда .gallery-grid — прямой потомок .media-frame: убираем лишние отступы */
+.atlas-container .content-block .media-frame > .gallery-grid {
+  margin: 0;
+}
+
+/* Модификатор: высокие превью (портреты, иллюстрации) */
+.atlas-container .content-block .gallery-grid--tall img {
+  height: 260px;
+}
+
+/* Модификатор: маленькие миниатюры (спрайты, иконки, текстуры) */
+.atlas-container .content-block .gallery-grid--thumb img {
+  height: 100px;
+}
+
+/* Модификатор: принудительно 3 колонки независимо от ширины */
+.atlas-container .content-block .gallery-grid--3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Модификатор: принудительно 2 колонки */
+.atlas-container .content-block .gallery-grid--2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ── СЕКЦИЯ C: АДАПТИВНОСТЬ ──────────────────────────────────────────────── */
+
+@media (max-width: 550px) {
+  .atlas-container .content-block .gallery-grid,
+  .atlas-container .content-block .gallery-grid--3col,
+  .atlas-container .content-block .gallery-grid--2col {
+    grid-template-columns: 1fr;
+  }
+  .atlas-container .content-block .gallery-grid img {
+    height: 200px;
+  }
+}
+

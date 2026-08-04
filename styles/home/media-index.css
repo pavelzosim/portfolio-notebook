@@ -20,3 +20,5 @@ main{background:rgba(238,231,223,.95)}
   .project-index>a>.project-id{grid-column:2}.project-index>a>strong{grid-column:3}.project-index>a>span:not(.project-id){grid-column:3}.project-index>a>small{grid-column:2/4}.project-index>a>i{grid-column:4;grid-row:1/4}
 }
 
+
+

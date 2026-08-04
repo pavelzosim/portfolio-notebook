@@ -1,0 +1,294 @@
+/* ==========================================================================
+   FILE: 08-atlas-interactive.css
+   ROLE: Кнопки (.atlas-btn + модификаторы) и блок референсов (.atlas-refs).
+         Кнопки вдохновлены эстетикой Volkov/Norton Commander:
+         синяя заливка #0000AA, dithering-оверлей на hover, угловые рамки.
+   ЗАВИСИМОСТИ: 01-atlas-core.css (переменные --atlas-*)
+   ПОРЯДОК В МОНОЛИТЕ: 8 из 8 (последний)
+   ========================================================================== */
+
+/* ── СЕКЦИЯ A: КНОПКИ — База ─────────────────────────────────────────────── */
+/* Volkov Commander palette: #0000AA fill, white text, dithering on hover.  */
+/* Dithering реализован через CSS gradient pattern (4px шахматная сетка).  */
+/* Семантика: используй .atlas-btn как <button> или <a class="atlas-btn">   */
+
+.atlas-container .atlas-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  position: relative;
+  display: inline-block;
+  font-family: var(--atlas-font-mono);
+  font-size: var(--fs-code);        /* 12px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 6px 16px;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  background-color: #0000AA;        /* Volkov Commander синий */
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  outline: none;
+  transition: background-color 0.1s;
+  user-select: none;
+  vertical-align: middle;
+}
+
+/* Dithering overlay — видим только на hover, через CSS pattern 4×4px */
+.atlas-container .atlas-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(45deg, rgba(0,0,170,.5) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0,0,170,.5) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0,0,170,.5) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0,0,170,.5) 75%);
+  background-size: 4px 4px;
+  background-position: 0 0, 0 2px, 2px -2px, -2px 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.atlas-container .atlas-btn:hover::after {
+  opacity: 1;
+}
+
+.atlas-container .atlas-btn:active {
+  background-color: #00008B;
+  transform: translateY(1px);
+}
+
+/* ── СЕКЦИЯ B: КНОПКИ — Семантические модификаторы ──────────────────────── */
+
+/* Активное/выбранное состояние (например: выбранный таб, текущий фильтр) */
+.atlas-container .atlas-btn--active {
+  background-color: #00008B;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Деструктивное действие (удаление, сброс) */
+.atlas-container .atlas-btn--danger {
+  background-color: var(--atlas-crit);
+}
+.atlas-container .atlas-btn--danger:active {
+  background-color: #6a0000;
+}
+
+/* Подтверждение, успех */
+.atlas-container .atlas-btn--ok {
+  background-color: var(--atlas-ok);
+}
+.atlas-container .atlas-btn--ok:active {
+  background-color: #123912;
+}
+
+/* Ghost: прозрачный фон, рамка, бордовый текст — для вторичных действий */
+.atlas-container .atlas-btn--ghost {
+  border-radius: 0;
+  background: transparent;
+  color: var(--atlas-crit);
+  border: 1px solid var(--atlas-border);
+}
+.atlas-container .atlas-btn--ghost::after {
+  display: none; /* Dithering не нужен для ghost */
+}
+.atlas-container .atlas-btn--ghost:hover {
+  background: var(--atlas-bg-alt);
+}
+.atlas-container .atlas-btn--ghost:active {
+  transform: translateY(1px);
+}
+
+/* ── СЕКЦИЯ C: КНОПКИ — Структурный модификатор --bracket ───────────────── */
+/* Текстовые кнопки-ссылки в стиле [ACTION]. Без заливки, скобки через CSS. */
+/* HTML: <button class="atlas-btn atlas-btn--bracket">Read More</button>     */
+
+.atlas-container .atlas-btn--bracket {
+  border-radius: 0;
+  background: transparent;
+  color: var(--atlas-ink);
+  border: none;
+  padding: 4px 8px;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+}
+
+/* Скобки генерируются через ::before и перезаписывают dithering ::after */
+.atlas-container .atlas-btn--bracket::before {
+  content: '[';
+  margin-right: 3px;
+  color: var(--atlas-ink-muted);
+  font-weight: 400;
+}
+.atlas-container .atlas-btn--bracket::after {
+  content: ']';
+  /* Переопределяем dithering-стили из базовой кнопки */
+  position: static;
+  background-image: none;
+  background-size: auto;
+  background-position: 0 0;
+  pointer-events: auto;
+  opacity: 1;
+  transition: none;
+  margin-left: 3px;
+  color: var(--atlas-ink-muted);
+  font-weight: 400;
+  inset: auto;
+}
+
+.atlas-container .atlas-btn--bracket:hover {
+  color: var(--atlas-crit);
+}
+.atlas-container .atlas-btn--bracket:hover::before,
+.atlas-container .atlas-btn--bracket:hover::after {
+  color: var(--atlas-crit);
+}
+.atlas-container .atlas-btn--bracket:active {
+  transform: translateY(1px);
+}
+
+/* ── СЕКЦИЯ D: КНОПКИ — Размерный модификатор ───────────────────────────── */
+
+/* Малый: для строк таблиц, мета-зон */
+.atlas-container .atlas-btn--sm {
+  font-size: var(--fs-status);     /* 9px */
+  padding: 3px 10px;
+  letter-spacing: 0.08em;
+}
+
+/* ── СЕКЦИЯ E: ГРУППА КНОПОК ─────────────────────────────────────────────── */
+/* HTML: <div class="atlas-btn-group"><button class="atlas-btn">A</button>... */
+
+.atlas-container .atlas-btn-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Разделитель между кнопками в группе */
+.atlas-container .atlas-btn-group .atlas-btn + .atlas-btn {
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ── СЕКЦИЯ F: REFERENCE BLOCK ───────────────────────────────────────────── */
+/* Блок библиографических ссылок и источников в конце статьи.               */
+/* Структура:                                                                */
+/*   .atlas-refs                                                             */
+/*     > ul.atlas-ref-list                                                  */
+/*       > li.atlas-ref-item                                                */
+/*           .atlas-ref-num   — порядковый номер [01]                       */
+/*           .atlas-ref-body                                                */
+/*             .atlas-ref-tag — тип: [PAPER] [DOCS] [CODE] [VIDEO]         */
+/*             .atlas-ref-author — авторы                                   */
+/*             .atlas-ref-title — название (опционально)                    */
+/*             a.atlas-ref-link — URL с автопрефиксом →                     */
+
+/* Геометрия блока — в стиле системных блоков, но без core-списка */
+.atlas-container .content-block .atlas-refs {
+  position: relative;
+  border: 1px solid var(--atlas-border);
+  padding: 34px 16px 16px 16px;
+  margin: 24px 0;
+  width: 100%;
+}
+
+.atlas-container .content-block .atlas-refs::before {
+  content: "[ REFERENCES // ИСТОЧНИКИ ]";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 24px;
+  line-height: 24px;
+  padding-left: 16px;
+  font-size: var(--fs-status);
+  font-weight: 700;
+  color: var(--atlas-ink-muted);
+  background: rgba(0, 0, 0, 0.015);
+  border-bottom: 1px solid var(--atlas-border);
+  letter-spacing: 0.05em;
+  font-family: var(--atlas-font-mono);
+}
+
+/* Список */
+.atlas-container .content-block .atlas-ref-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Строка: номер + тело */
+.atlas-container .content-block .atlas-ref-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 0;
+  align-items: baseline;
+  font-size: var(--fs-code);
+  line-height: 1.55;
+  color: var(--atlas-ink-soft);
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--atlas-border);
+}
+.atlas-container .content-block .atlas-ref-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Номер */
+.atlas-container .content-block .atlas-ref-num {
+  font-size: var(--fs-status);
+  font-weight: 700;
+  color: var(--atlas-crit);
+  letter-spacing: 0.04em;
+  padding-top: 2px;
+}
+
+/* Тело */
+.atlas-container .content-block .atlas-ref-body {
+  font-size: var(--fs-code);
+}
+
+/* Тег типа источника: [PAPER] [DOCS] [CODE] [VIDEO] [TALK] */
+.atlas-container .content-block .atlas-ref-tag {
+  display: inline-block;
+  font-size: var(--fs-status);
+  font-weight: 700;
+  color: var(--atlas-ink-muted);
+  border: 1px solid var(--atlas-border);
+  padding: 0 5px;
+  margin-right: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.04em;
+}
+
+/* Авторы */
+.atlas-container .content-block .atlas-ref-author {
+  color: var(--atlas-ink-muted);
+  font-size: var(--fs-code);
+}
+
+/* URL-ссылка с автопрефиксом → */
+.atlas-container .content-block .atlas-ref-link {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: var(--fs-meta);
+  color: var(--atlas-crit);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(139, 0, 0, 0.25);
+  transition: border-color 0.15s;
+}
+.atlas-container .content-block .atlas-ref-link::before {
+  content: '→ ';
+  font-weight: 700;
+}
+.atlas-container .content-block .atlas-ref-link:hover {
+  border-bottom-color: var(--atlas-crit);
+}
+
+

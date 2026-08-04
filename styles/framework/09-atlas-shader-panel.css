@@ -1,0 +1,438 @@
+/* ==========================================================================
+   FILE: 09-atlas-shader-panel.css
+   ROLE: Интерактивная панель управления параметрами шейдера (.atlas-shader-panel).
+         Стиль: Volkov/Norton Commander — DOS-терминал, пиксельная эстетика.
+         Используется внутри постов рядом с интерактивными WebGL/iframe блоками.
+
+   НОВАЯ ПЕРЕМЕННАЯ: --atlas-accent (#0000AA) — UI-акцент (кнопки, слайдеры,
+         переключатели). НЕ путать с --atlas-crit (#8b0000) — это семантика
+         ошибок, предупреждений и маркеров в контенте.
+
+   ЗАВИСИМОСТИ: 01-atlas-core.css (--atlas-*, --fs-*, --atlas-font-mono)
+   ПОРЯДОК В МОНОЛИТЕ: 9 из 9
+   ========================================================================== */
+
+/* ── СЕКЦИЯ A: НОВЫЕ ТОКЕНЫ — Добавить в 01-atlas-core.css :root ─────────
+   --atlas-accent:   #0000AA   Volkov Commander blue — UI кнопки, слайдеры
+   --atlas-accent-h: #0000DD   Hover-состояние accent
+   --fs-math:        14px      MathJax формулы (крупнее кода, но меньше h3)
+   Здесь продублированы как fallback если core ещё не обновлён.           */
+
+:root {
+  --atlas-accent:   #0000AA;
+  --atlas-accent-h: #0000DD;
+  --fs-math:        14px;
+  /* Dither-паттерн: 4×4px шахматка, чёрная — для теней и OFF-состояний */
+  --atlas-dither: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="2" height="2" x="0" y="0" fill="black"/><rect width="2" height="2" x="2" y="2" fill="black"/></svg>');
+}
+
+/* ── СЕКЦИЯ B: ПАНЕЛЬ — Контейнер и тень ─────────────────────────────────
+   .atlas-shader-panel — корневой элемент панели.
+   Тень: 8px solid black — строгий пиксельный сдвиг, без blur, без radius.
+   HTML: <div class="atlas-shader-panel"> ... </div>                       */
+
+.atlas-container .atlas-shader-panel {
+  font-family: var(--atlas-font-mono);
+  font-size: var(--fs-body);
+  color: var(--atlas-ink-soft);
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+
+  background: var(--atlas-bg);
+  border: 2px solid var(--atlas-ink);
+  /* Пиксельная тень: смещение 8px вправо + 8px вниз, без blur */
+  box-shadow: 8px 8px 0 0 var(--atlas-ink);
+  /* Компенсируем тень — иначе правый и нижний край обрезается */
+  margin-bottom: 12px;
+  margin-right: 8px;
+}
+
+/* ── СЕКЦИЯ C: ШАПКА ПАНЕЛИ ─────────────────────────────────────────────── */
+
+.atlas-container .atlas-shader-panel__header {
+  background: var(--atlas-ink);
+  color: var(--atlas-bg);
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--atlas-ink);
+}
+
+.atlas-container .atlas-shader-panel__title {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--atlas-bg);
+}
+
+/* Статус: мигающий квадратный диод + метка ACTIVE/IDLE */
+.atlas-container .atlas-shader-panel__status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-status);
+  font-weight: 700;
+  color: var(--atlas-bg);
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+}
+
+/* Диод: строгий квадрат, никаких border-radius */
+.atlas-container .atlas-shader-panel__led {
+  width: 7px;
+  height: 7px;
+  background: var(--atlas-bg);
+  border-radius: 0;
+  flex-shrink: 0;
+  animation: atlas-led-pulse 2s infinite steps(2, end);
+}
+
+@keyframes atlas-led-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── СЕКЦИЯ D: ТЕЛО ПАНЕЛИ ───────────────────────────────────────────────── */
+
+.atlas-container .atlas-shader-panel__body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Блок параметров внутри панели */
+.atlas-container .atlas-shader-panel__block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Заголовок блока параметров */
+.atlas-container .atlas-shader-panel__block-title {
+  font-size: var(--fs-status);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--atlas-ink-muted);
+  border-bottom: 1px solid var(--atlas-border);
+  padding-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.atlas-container .atlas-shader-panel__block-hint {
+  font-weight: 400;
+  color: var(--atlas-ink-muted);
+  font-size: var(--fs-status);
+  letter-spacing: 0.04em;
+}
+
+/* ── СЕКЦИЯ E: УПРАВЛЯЮЩАЯ СЕТКА (3 колонки: prefix | label | control) ─── */
+
+.atlas-container .atlas-sp-grid {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  column-gap: 8px;
+  row-gap: 10px;
+  align-items: center;
+}
+
+/* Префикс: val_ / bool_ / col_ */
+.atlas-container .atlas-sp-prefix {
+  font-size: var(--fs-status);
+  color: var(--atlas-ink-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Имя параметра */
+.atlas-container .atlas-sp-label {
+  font-size: var(--fs-code);
+  font-weight: 700;
+  color: var(--atlas-ink);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Числовое значение (выводится через JS) */
+.atlas-container .atlas-sp-value {
+  font-size: var(--fs-code);
+  font-weight: 700;
+  color: var(--atlas-accent);
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Слайдер занимает всю строку — grid-column: 1/-1 */
+.atlas-container .atlas-sp-row-full {
+  grid-column: 1 / -1;
+}
+
+/* ── СЕКЦИЯ F: СЛАЙДЕР — Инженерная шкала без стандартных контролов ─────── */
+
+.atlas-container .atlas-sp-slider-wrap {
+  position: relative;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+/* Центральная ось прибора */
+.atlas-container .atlas-sp-slider-wrap::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: var(--atlas-ink);
+  z-index: 0;
+}
+
+/* Засечки измерительной шкалы: повторяющийся градиент */
+.atlas-container .atlas-sp-slider-wrap::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 7px;
+  margin-top: -3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--atlas-ink) 0,
+    var(--atlas-ink) 1px,
+    transparent 1px,
+    transparent 10%
+  );
+  z-index: 0;
+  opacity: 0.2;
+}
+
+.atlas-container .atlas-sp-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 100%;
+  width: 100%;
+  outline: none;
+  cursor: ew-resize;
+  position: relative;
+  z-index: 1;
+}
+
+/* Маркер-ползунок: строгий прямоугольник, цвет --atlas-accent */
+.atlas-container .atlas-sp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 6px;
+  height: 18px;
+  background: var(--atlas-accent);
+  border: 1px solid var(--atlas-ink);
+  border-radius: 0;
+  box-shadow: none;
+  cursor: ew-resize;
+  transition: transform 0.1s;
+}
+.atlas-container .atlas-sp-slider::-moz-range-thumb {
+  width: 6px;
+  height: 18px;
+  background: var(--atlas-accent);
+  border: 1px solid var(--atlas-ink);
+  border-radius: 0;
+  box-shadow: none;
+  cursor: ew-resize;
+  transition: transform 0.1s;
+}
+.atlas-container .atlas-sp-slider::-webkit-slider-thumb:hover { transform: scaleY(1.25); }
+.atlas-container .atlas-sp-slider::-moz-range-thumb:hover     { transform: scaleY(1.25); }
+
+/* ── СЕКЦИЯ G: ПЕРЕКЛЮЧАТЕЛЬ BOOLEAN ────────────────────────────────────── */
+
+/* Обёртка: скрытый input + видимый switch-статус */
+.atlas-container .atlas-sp-switch {
+  position: relative;
+  width: 56px;
+  height: 20px;
+  cursor: pointer;
+  display: block;
+  flex-shrink: 0;
+}
+
+.atlas-container .atlas-sp-switch input {
+  opacity: 0;
+  width: 0; height: 0;
+  position: absolute;
+}
+
+/* OFF-состояние: dither-паттерн = "выключено", текст OFF */
+.atlas-container .atlas-sp-switch__track {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--atlas-ink);
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-status);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+
+  /* Dither-фон = выключено */
+  background: var(--atlas-dither) repeat;
+  background-size: 4px 4px;
+  background-color: var(--atlas-bg);
+}
+.atlas-container .atlas-sp-switch__track::after {
+  content: 'OFF';
+  color: var(--atlas-ink-muted);
+  background: var(--atlas-bg);
+  padding: 0 3px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ON-состояние: сплошной accent, текст ON */
+.atlas-container .atlas-sp-switch input:checked + .atlas-sp-switch__track {
+  background: var(--atlas-accent);
+  background-image: none;
+}
+.atlas-container .atlas-sp-switch input:checked + .atlas-sp-switch__track::after {
+  content: 'ON';
+  color: #ffffff;
+  background: transparent;
+}
+
+/* ── СЕКЦИЯ H: КНОПКИ ПАНЕЛИ — dither-тень под блоком ───────────────────── */
+/* Архитектура: .atlas-sp-btn-wrap — позиционирует dither-тень.             */
+/* .atlas-sp-btn — сама кнопка, смещена translate(-4px,-4px) над тенью.    */
+/* :active — кнопка опускается на 0,0 — эффект физического нажатия.        */
+
+.atlas-container .atlas-sp-actions {
+  display: flex;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+/* Обёртка — содержит dither-тень позади кнопки */
+.atlas-container .atlas-sp-btn-wrap {
+  flex: 1;
+  position: relative;
+  display: inline-block;
+  /* КРИТИЧНО: overflow никогда не hidden — тень должна вылезать за блок */
+}
+
+/* Тень = ::after на обёртке, z-index: 0 — строго ПОД кнопкой.
+   Архитектура: тень и кнопка в одном stacking context,
+   z-index решает порядок без конфликта с background родителя.     */
+.atlas-container .atlas-sp-btn-wrap::after {
+  content: '';
+  position: absolute;
+  /* Смещение тени: 4px вправо + 4px вниз от позиции кнопки */
+  top: 4px; left: 4px;
+  right: -4px; bottom: -4px;
+  /* Dither-паттерн: 4×4px шахматка */
+  background-image:
+    linear-gradient(45deg, rgba(0,0,0,.75) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0,0,0,.75) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0,0,0,.75) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0,0,0,.75) 75%);
+  background-size: 4px 4px;
+  background-position: 0 0, 0 2px, 2px -2px, -2px 0;
+  z-index: 0;   /* ПОД кнопкой */
+  pointer-events: none;
+}
+
+/* Сама кнопка — z-index: 1, всегда поверх тени */
+.atlas-container .atlas-sp-btn {
+  width: 100%;
+  position: relative;
+  z-index: 1;   /* НАД ::after тенью */
+  background: var(--atlas-bg);
+  border: 1px solid var(--atlas-ink);
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  color: var(--atlas-ink);
+  font-family: var(--atlas-font-mono);
+  font-size: var(--fs-code);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* Кнопка смещена вверх-влево — тень выглядывает снизу-справа */
+  transform: translate(-4px, -4px);
+  transition: transform 0.05s linear;
+  white-space: nowrap;
+}
+
+/* Нажатие: кнопка "проваливается" на тень */
+.atlas-container .atlas-sp-btn:active {
+  transform: translate(0, 0);
+}
+
+/* Модификатор: синяя акцентная кнопка (EXECUTE, PRIMARY) */
+.atlas-container .atlas-sp-btn--accent {
+  background: var(--atlas-accent);
+  color: #ffffff;
+  border-color: var(--atlas-ink);
+}
+.atlas-container .atlas-sp-btn--accent:hover {
+  background: var(--atlas-accent-h);
+}
+
+/* Модификатор: деструктивная (FLUSH, RESET) — сохраняет светлый фон */
+.atlas-container .atlas-sp-btn--reset {
+  color: var(--atlas-ink-soft);
+}
+.atlas-container .atlas-sp-btn--reset:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Иконка-символ внутри кнопки */
+.atlas-container .atlas-sp-btn__icon {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* ── СЕКЦИЯ I: ФУТЕР ПАНЕЛИ ──────────────────────────────────────────────── */
+
+.atlas-container .atlas-shader-panel__footer {
+  border-top: 2px solid var(--atlas-ink);
+  background: rgba(0, 0, 0, 0.03);
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-status);
+}
+
+.atlas-container .atlas-shader-panel__footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.atlas-container .atlas-shader-panel__footer-col--right {
+  text-align: right;
+}
+
+.atlas-container .atlas-sp-meta-line {
+  color: var(--atlas-ink-soft);
+  font-weight: 700;
+}
+
+.atlas-container .atlas-sp-meta-key {
+  color: var(--atlas-ink-muted);
+  font-weight: 400;
+  margin-right: 4px;
+}
+

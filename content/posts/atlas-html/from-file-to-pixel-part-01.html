@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/from-file-to-pixel-part-01">
+  <title>From File to Pixel · Part 01: The Machine — pavelzosim.com</title>
+  <meta name="description" content="GPU Execution Model and Memory Hierarchy. SIMT, warps, wavefronts, occupancy, register pressure. VRAM vs unified memory vs TBDR tile SRAM — across PC, Console, Mobile, and VR.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html, body { margin: 0; padding: 0; background: transparent; }
+
+    /* platform badges */
+    .pbadge {
+      display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; padding: 1px 6px; border: 1px solid;
+      vertical-align: middle; margin-right: 6px;
+    }
+    .pbadge--pc      { color: #5BA8D8; border-color: #1A4060; }
+    .pbadge--console { color: #9A7ED8; border-color: #3A2870; }
+    .pbadge--mobile  { color: #D8A83A; border-color: #5A3C0A; }
+    .pbadge--vr      { color: #3ABCB0; border-color: #0A3530; }
+    .pbadge--all     { color: rgba(0,0,0,.5); border-color: rgba(0,0,0,.2); }
+
+    /* memory bars */
+    .mem-bars { display: flex; flex-direction: column; gap: 5px; margin: 12px 0; }
+    .mb-row   { display: grid; grid-template-columns: 160px 1fr 130px; gap: 8px; align-items: center; }
+    .mb-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #000; }
+    .mb-track { height: 5px; background: rgba(0,0,0,.08); }
+    .mb-fill  { height: 100%; }
+    .mb-val   { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(0,0,0,.45); text-align: right; }
+
+    /* series nav */
+    .atlas-container .atlas-series-nav{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 0;margin:32px 0 0;width:100%}
+    .atlas-container .atlas-series-nav::before{content:"[ SERIES // FROM_FILE_TO_PIXEL ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .atlas-series-nav__parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .atlas-series-nav__part{display:grid;grid-template-columns:36px 1fr auto;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);padding:8px 16px;transition:background .1s}
+    .atlas-container .atlas-series-nav__part:last-child{border-bottom:none}
+    .atlas-container .atlas-series-nav__part:hover{background:rgba(0,0,0,.02)}
+    .atlas-container .atlas-series-nav__part a{display:contents;text-decoration:none;color:inherit}
+    .atlas-container .atlas-series-nav__part:hover .atlas-series-nav__num,
+    .atlas-container .atlas-series-nav__part:hover .atlas-series-nav__title{color:#8b0000}
+    .atlas-container .atlas-series-nav__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);letter-spacing:.04em;transition:color .1s}
+    .atlas-container .atlas-series-nav__title{font-size:12px;font-weight:700;color:#000;transition:color .1s}
+    .atlas-container .atlas-series-nav__sub{font-size:10px;color:rgba(0,0,0,.4);font-weight:400;white-space:nowrap;padding-left:12px}
+    .atlas-container .atlas-series-nav__part--current{background:rgba(139,0,0,.03);border-left:2px solid #8b0000}
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__num,
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__title{color:#8b0000}
+    .atlas-container .atlas-series-nav__part--soon .atlas-series-nav__title{color:rgba(0,0,0,.35)}
+    .atlas-container .atlas-series-nav__status{font-size:9px;font-weight:700;padding:1px 6px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+    .atlas-container .atlas-series-nav__status--live{color:var(--atlas-ok);border-color:var(--atlas-ok)}
+    .atlas-container .atlas-series-nav__status--soon{color:var(--atlas-ink-muted);border-color:var(--atlas-border)}
+    .atlas-container .atlas-series-nav__status--current{color:var(--atlas-crit);border-color:var(--atlas-crit)}
+    .atlas-container .atlas-part-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-top:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .atlas-part-nav__btn{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);text-decoration:none;transition:background .12s,border-color .12s}
+    .atlas-container .atlas-part-nav__btn:hover{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.3)}
+    .atlas-container .atlas-part-nav__btn--next{text-align:right}
+    .atlas-container .atlas-part-nav__direction{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.35);text-transform:uppercase}
+    .atlas-container .atlas-part-nav__label{font-size:12px;font-weight:700;color:#000}
+    .atlas-container .atlas-part-nav__sub{font-size:10px;color:rgba(0,0,0,.4)}
+    .atlas-container .atlas-part-nav__btn:hover .atlas-part-nav__label{color:#8b0000}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <!-- ══ TOC ══════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-toc" style="position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%">
+      <style>
+        .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+        .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+        .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+        .atlas-toc__item:last-child{border-bottom:none}
+        .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+        .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+        .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+        .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+        .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+        .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+        .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+        .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+        .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+      </style>
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">GPU Execution Model</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s01-foundation"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">SIMT, Warps, Wavefronts — Universal Foundation</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s01-platforms"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Platform Differences: PC / Console / Mobile / VR</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s01-table"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Execution Model Comparison Table</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Memory Hierarchy</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-hierarchy"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Universal Hierarchy: Registers → VRAM → PCIe</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-platforms"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Platform Memory Models: Discrete / Unified / TBDR</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-table"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Memory Comparison Table</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       01: GPU EXECUTION MODEL
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 GPU Execution Model</h2>
+    <p>Understanding what a GPU actually is — at the hardware level — is the prerequisite for every performance decision in shader code. The execution model explains why divergence is expensive, why occupancy matters, and why the same code behaves differently on different platforms.</p>
+
+    <h3 id="s01-foundation">SIMT, Warps, Wavefronts — Universal Foundation</h3>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>A GPU is not a fast CPU. It is a <strong>massively parallel SIMT machine</strong> — Single Instruction, Multiple Threads. Instead of one powerful core executing a sequence of instructions, a GPU runs thousands of lightweight threads simultaneously, all executing the same instruction stream on different data.</p>
+    </div>
+
+    <p>The execution unit is called a <strong>Streaming Multiprocessor (SM)</strong> on NVIDIA, a <strong>Compute Unit (CU)</strong> on AMD, and a <strong>Shader Core</strong> on mobile/Apple GPUs. Each SM/CU executes threads in groups called <strong>warps</strong> (NVIDIA, 32 threads) or <strong>wavefronts</strong> (AMD, 64 or 32 threads). All threads in a warp execute the same instruction at the same clock cycle — on different data.</p>
+
+    <h4>Warp Divergence</h4>
+    <p>This has one critical consequence: <strong>branching is expensive when threads disagree</strong>. If half a warp takes the <span class="atlas-code-inline">if</span> path and half takes <span class="atlas-code-inline">else</span>, the hardware executes both paths sequentially with inactive threads masked. You pay for both branches.</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // DIVERGENT — expensive</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// Half the warp sits idle on each branch
+if (instanceID % 2 == 0) {
+    color = expensiveFunc(); // even active
+} else {
+    color = cheapFunc();     // odd active
+}
+// Cost: expensiveFunc + cheapFunc</code></pre>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // COHERENT — preferred</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// All threads take the same branch
+// → sort draws by type, batch by material
+// Or: branchless select
+float t = (float)(instanceID % 2);
+color = lerp(cheapFunc(),
+             expensiveFunc(), t);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <h4>Occupancy</h4>
+    <p>Each SM has a fixed register pool (~65 536 × 32-bit on NVIDIA Ampere). The number of threads that can be active simultaneously is determined by register usage per thread. Low occupancy means the GPU cannot hide memory latency by switching to another warp while one waits for data.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>REGISTERS/THREAD</th><th>ACTIVE WARPS (NVIDIA SM)</th><th>OCCUPANCY</th><th>LATENCY HIDING</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>16</td><td>128</td><td><span style="color:var(--atlas-ok);font-weight:700">100%</span></td><td>Excellent</td></tr>
+          <tr><td>32</td><td>64</td><td><span style="color:var(--atlas-warn);font-weight:700">50%</span></td><td>Good</td></tr>
+          <tr><td>64</td><td>32</td><td><span style="color:var(--atlas-warn);font-weight:700">25%</span></td><td>Marginal</td></tr>
+          <tr><td>96+</td><td>16</td><td><span style="color:var(--atlas-crit);font-weight:700">12%</span></td><td>Poor — latency visible</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Occupancy is not always the bottleneck.</strong> A shader with high instruction-level parallelism (ILP) can hide latency at 25% occupancy. Always measure with NSight / RGP / Snapdragon Profiler before reducing register count at the cost of code clarity.</p>
+    </div>
+
+    <h3 id="s01-platforms">Platform Differences</h3>
+
+    <h4><span class="pbadge pbadge--pc">PC</span> NVIDIA vs AMD — warp size differences</h4>
+    <p><strong>NVIDIA Turing+:</strong> Warp = 32 threads. Independent Thread Scheduling — each thread has its own program counter. Divergent warps can interleave execution, reducing stalls. SM count: 84 (RTX 4090) at ~2.5 GHz.</p>
+    <p><strong>AMD RDNA 2/3:</strong> Wavefront = 64 threads by default (wave64), but wave32 is selectable per-shader at compile time. Wave32 gives better occupancy for small workgroups but halves SIMD utilisation per wavefront. For compute shaders doing bitwise reductions with <span class="atlas-code-inline">WaveActiveBitOr()</span>, the wave size directly affects the reduction algorithm.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// HLSL DXC — force wave32 on AMD (DX12/Vulkan)
+[WaveSize(32)]
+[numthreads(32, 1, 1)]
+void CSReduce(uint3 tid : SV_DispatchThreadID) { ... }
+
+// Query wave size at runtime
+uint lane = WaveGetLaneIndex(); // 0..WaveGetLaneCount()-1</code></pre>
+
+    <h4><span class="pbadge pbadge--console">Console</span> PS5 / Xbox — RDNA 2, ACE queues</h4>
+    <p>Both consoles use AMD RDNA 2 CUs with wave64. PS5: 36 CUs at 2.23 GHz. Xbox Series X: 52 CUs at 1.825 GHz. The key console advantage is <strong>Asynchronous Compute Engines (ACE)</strong> — dedicated hardware queues that run compute workloads in parallel with the main graphics queue, filling CUs that would otherwise idle during bandwidth-limited raster passes.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// PS5 PSSL — async compute dispatch
+// Main queue: rendering G-Buffer
+// ACE queue (simultaneously): particle simulation
+// No CPU involvement after initial submission
+sce::Gnmx::ComputeContext asyncCtx;
+asyncCtx.dispatch(particles.groupsX, 1, 1);</code></pre>
+
+    <h4><span class="pbadge pbadge--mobile">Mobile</span> Mali / Adreno / Apple — smaller, power-constrained</h4>
+    <p><strong>ARM Mali Valhall:</strong> Uses SIMD width of 16. Divergence in small SIMDs is proportionally more expensive than on desktop. <strong>Qualcomm Adreno:</strong> SP clusters with 128 ALUs per SP, natively accelerates <span class="atlas-code-inline">mediump</span> arithmetic. <strong>Apple A/M-series:</strong> 32-thread SIMD groups; <span class="atlas-code-inline">half</span> in MSL is genuinely faster, not a hint — the compiler promotes to float16 on ALUs.</p>
+
+    <div class="atlas-callout atlas-callout--warning">
+      <p><strong>Mobile rule:</strong> avoid divergence more aggressively than on desktop. With fewer ALUs and tighter thermal budgets, divergence cost is disproportionately high. Prefer branchless arithmetic and uniform control flow.</p>
+    </div>
+
+    <h4><span class="pbadge pbadge--vr">VR / XR</span> Two eyes — doubled thread count, halved time budget</h4>
+    <p>VR does not change the GPU execution model — warps still execute the same way. What changes is the <strong>time budget</strong>: at 90 Hz you have 11.1 ms per frame total, at 120 Hz just 8.3 ms. Every occupancy and divergence concern is amplified.</p>
+
+    <h3 id="s01-table">Execution Model — Platform Comparison</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ EXECUTION_MODEL // PLATFORM_MATRIX ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PLATFORM</th><th>UNIT</th><th>WARP/WAVE</th><th>ALU WIDTH</th><th>KEY CONCERN</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>PC NVIDIA</td><td>SM</td><td>32 threads</td><td>32 FP32/SM</td><td>Register pressure, L2 reuse</td></tr>
+          <tr><td>PC AMD RDNA 3</td><td>CU</td><td>64 (wave64) / 32</td><td>64 FP32/CU</td><td>Wave size selection, occupancy</td></tr>
+          <tr><td>PS5</td><td>CU (RDNA2)</td><td>64</td><td>64 FP32/CU</td><td>ACE async queues, unified memory</td></tr>
+          <tr><td>Xbox Series X</td><td>CU (RDNA2)</td><td>64</td><td>64 FP32/CU</td><td>Same as PS5, 52 CUs vs 36</td></tr>
+          <tr><td>Mali Valhall</td><td>Shader Core</td><td>16</td><td>16 FP32</td><td>Divergence cost, mediump precision</td></tr>
+          <tr><td>Adreno 7xx</td><td>SP cluster</td><td>128</td><td>128 FP32</td><td>Native mediump ALU speed</td></tr>
+          <tr><td>Apple A17/M3</td><td>GPU Core</td><td>32</td><td>32 FP32</td><td>Unified memory, half precision</td></tr>
+          <tr><td>VR (Quest 3)</td><td>Adreno 740</td><td>128</td><td>128 FP32</td><td>11ms/frame hard deadline</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       02: MEMORY HIERARCHY
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 Memory Hierarchy</h2>
+    <p>Every GPU architecture organises memory in the same conceptual hierarchy. The physics is identical: SRAM is fast and small, DRAM is slow and large. Your job as a shader engineer is to keep hot data as high in this hierarchy as possible — every step down costs an order of magnitude in latency.</p>
+
+    <h3 id="s02-hierarchy">Universal Hierarchy: Registers → VRAM → PCIe</h3>
+
+    <div class="mem-bars">
+      <div class="mb-row">
+        <div class="mb-label">Registers</div>
+        <div class="mb-track"><div class="mb-fill" style="width:100%;background:#8b0000"></div></div>
+        <div class="mb-val">~20 TB/s · 1 cycle</div>
+      </div>
+      <div class="mb-row">
+        <div class="mb-label">Shared / Tile Mem</div>
+        <div class="mb-track"><div class="mb-fill" style="width:82%;background:#7a5200"></div></div>
+        <div class="mb-val">~10 TB/s · 20 cy</div>
+      </div>
+      <div class="mb-row">
+        <div class="mb-label">L1 / Tex Cache</div>
+        <div class="mb-track"><div class="mb-fill" style="width:65%;background:#1a4d1a"></div></div>
+        <div class="mb-val">~5 TB/s · 30 cy</div>
+      </div>
+      <div class="mb-row">
+        <div class="mb-label">L2 Cache</div>
+        <div class="mb-track"><div class="mb-fill" style="width:45%;background:#1A4060"></div></div>
+        <div class="mb-val">~4 TB/s · 100 cy</div>
+      </div>
+      <div class="mb-row">
+        <div class="mb-label">VRAM / GDDR6X</div>
+        <div class="mb-track"><div class="mb-fill" style="width:28%;background:#3A2870"></div></div>
+        <div class="mb-val">~1 TB/s · 400 cy</div>
+      </div>
+      <div class="mb-row">
+        <div class="mb-label">System RAM (PCIe)</div>
+        <div class="mb-track"><div class="mb-fill" style="width:5%;background:rgba(0,0,0,.3)"></div></div>
+        <div class="mb-val">~16 GB/s · huge</div>
+      </div>
+    </div>
+
+    <p><strong>Registers</strong> are private per-thread. Every local variable in your shader becomes a register — or spills to L1 if you run out. <strong>Shared / Group memory</strong> is explicitly managed on-chip SRAM, shared between threads in the same workgroup. <strong>L1</strong> is the texture cache (2D-spatial) + general data cache. <strong>L2</strong> is shared across all SMs. <strong>VRAM</strong> is where your buffers and textures live permanently. <strong>System RAM</strong> connects via PCIe — the bottleneck for streaming data.</p>
+
+    <h3 id="s02-platforms">Platform Memory Models</h3>
+
+    <h4><span class="pbadge pbadge--pc">PC</span> Discrete GPU — separate VRAM, PCIe bottleneck</h4>
+    <p>VRAM is physically separate from system RAM. Every resource must be <strong>uploaded across PCIe</strong> before the GPU can use it. PCIe 4.0 x16 delivers ~32 GB/s theoretical, ~16–24 GB/s practical. GDDR6X VRAM delivers ~1 TB/s. This 56× gap is the primary architecture constraint for streaming and instancing.</p>
+    <p><strong>NVIDIA Ada Lovelace (RTX 40xx)</strong> expanded L2 to 96 MB — large enough to hold G-Buffer attachments in cache, significantly reducing VRAM bandwidth in deferred pipelines. <strong>RDNA 3</strong> uses Infinity Cache (up to 96 MB on 7900 XTX) as L3-equivalent.</p>
+    <p><strong>Resizable BAR (ReBAR) / Smart Access Memory (SAM):</strong> when enabled, the entire VRAM is mapped into CPU address space. CPU can write directly to any VRAM address — eliminates the staging buffer pattern for per-frame data.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// Without ReBAR: two-copy upload
+memcpy(stagingBuffer.mappedPtr, data, size); // CPU RAM
+vkCmdCopyBuffer(cmd, staging, deviceLocal, ...); // staging → VRAM via DMA
+
+// With ReBAR: one copy, direct to VRAM
+memcpy(barMappedVRAM, data, size); // CPU writes directly into VRAM</code></pre>
+
+    <h4><span class="pbadge pbadge--console">Console</span> PS5 / Xbox — unified 448–560 GB/s, no PCIe</h4>
+    <p>CPU and GPU share one physical GDDR6 pool. There is no PCIe bus, no staging buffer, no upload pass. An allocation made by the CPU is immediately accessible by the GPU at the same address. The only synchronisation needed is a timeline fence.</p>
+    <p>PS5 splits its 16 GB pool: <strong>5.5 GB at 448 GB/s</strong> (fast, GPU-preferred) and 3.5 GB slower for CPU-heavy data. Xbox Series X: 10 GB at 560 GB/s + 6 GB at 336 GB/s. Allocating the wrong pool type is a common console-specific performance bug.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// PS5 GNM — allocate from fast GPU pool ("garlic")
+sce::Gnm::SizeAlign sa = sce::Gnm::computeDataBufferSizeAlign(count, stride);
+void* ptr = garlic.allocate(sa); // fast GDDR6 pool
+// CPU writes, GPU reads — same pointer, no copy
+memcpy(ptr, instanceData, size);</code></pre>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>On console, the "how do I minimise uploads?" question disappears — there is no PCIe. The bottleneck shifts to GPU execution and memory bandwidth within the unified pool. Tight packing and cache-friendly access patterns matter more than upload size.</p>
+    </div>
+
+    <h4><span class="pbadge pbadge--mobile">Mobile</span> Shared system RAM + on-chip tile SRAM — TBDR</h4>
+    <p>Mobile GPUs have <strong>no dedicated VRAM</strong>. They share LPDDR5 system RAM with the CPU — typically 51–77 GB/s bandwidth vs 1 TB/s on desktop discrete. Every VRAM access is an LPDDR5 access.</p>
+    <p>The architectural response is <strong>Tile-Based Deferred Rendering (TBDR)</strong>. The screen is divided into tiles (~16×16 px). Each tile is rendered entirely within fast <strong>on-chip tile SRAM</strong> (~256 KB–1 MB) before being written to system memory. Depth, stencil, and intermediate colour data never leave the chip during tile rendering. This makes framebuffer reads within a render pass <strong>free</strong> — and framebuffer breaks between passes <strong>catastrophically expensive</strong>.</p>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>The single most important mobile performance rule:</strong> design your render passes so that intermediate attachments (depth, G-Buffer components) stay on-chip and are never stored to system RAM unless explicitly needed downstream. A single unexpected <span class="atlas-code-inline">storeOp = STORE</span> on depth adds measurable frame time.</p>
+    </div>
+
+    <h4><span class="pbadge pbadge--vr">VR / XR</span> PC VR vs standalone — two very different memory models</h4>
+    <p><strong>PC VR (PCVR):</strong> Same discrete VRAM model as desktop — the headset is a display, not a compute target. Eye textures (~2064×2096 per eye on Quest Link) multiply VRAM pressure: two render targets, two depth buffers, two full G-Buffers if deferred. Use Single-Pass Instanced rendering to halve draw calls.</p>
+    <p><strong>Standalone VR (Quest 3):</strong> Adreno 740 with LPDDR5 shared memory. Full TBDR architecture applies. 11 ms/frame at 90 Hz. Eye textures stored in shared LPDDR5 — framebuffer breaks between eyes require two LPDDR5 writes instead of zero if Single-Pass Instanced is used correctly.</p>
+
+    <h3 id="s02-table">Memory Comparison</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ MEMORY_MODEL // PLATFORM_COMPARISON ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PLATFORM</th><th>MODEL</th><th>BANDWIDTH</th><th>TILE SRAM</th><th>KEY RULE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>PC NVIDIA</td><td>Discrete VRAM</td><td>~1 TB/s GDDR6X</td><td>No</td><td>Staging buffers; minimise PCIe; use ReBAR if available</td></tr>
+          <tr><td>PC AMD</td><td>Discrete + Infinity Cache</td><td>~432–960 GB/s</td><td>No</td><td>Same as NVIDIA; Infinity Cache reduces effective VRAM BW requirement</td></tr>
+          <tr><td>PS5</td><td>Unified GDDR6</td><td>448 GB/s (fast pool)</td><td>No</td><td>Allocate from correct pool; no upload needed — fence only</td></tr>
+          <tr><td>Xbox Series X</td><td>Unified GDDR6</td><td>560 GB/s (fast 10 GB)</td><td>No</td><td>Same; fast pool for GPU resources, slow pool for CPU data</td></tr>
+          <tr><td>Mali Valhall</td><td>Shared LPDDR5 + Tile</td><td>51–68 GB/s total</td><td>~1 MB</td><td>DONT_CARE storeOp depth; design passes to avoid tile flush</td></tr>
+          <tr><td>Adreno 7xx</td><td>Shared LPDDR5 + Tile</td><td>~77 GB/s total</td><td>~1 MB</td><td>Same; binning cost — minimise overdraw in vertex-heavy scenes</td></tr>
+          <tr><td>Apple A17/M3</td><td>Unified HBM/LPDDR + Tile</td><td>100–300 GB/s</td><td>~1 MB</td><td>Tile Shaders (Metal); subpass equivalent for free G-Buffer reads</td></tr>
+          <tr><td>Quest 3 (XR)</td><td>Shared LPDDR5 + Tile</td><td>~77 GB/s</td><td>~1 MB</td><td>Single-Pass Instanced; DONT_CARE depth; 11ms hard limit</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+
+   <!-- REFERENCES -->
+<div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">NVIDIA</span> — CUDA Programming Guide: Warps and Thread Blocks. CUDA C++ Programming Guide, v12.x.
+            <br><a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html" class="atlas-ref-link" target="_blank" rel="noopener">docs.nvidia.com — SIMT Architecture</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">AMD</span> — RDNA 3 Architecture Whitepaper. AMD Technical Documentation, 2022.
+            <br><a href="https://gpuopen.com/amd-gpu-architecture-programming-documentation/" class="atlas-ref-link" target="_blank" rel="noopener">gpuopen.com — RDNA3 ISA Reference</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">ARM</span> — Mali GPU Valhall Architecture. ARM Developer Documentation.
+            <br><a href="https://developer.arm.com/documentation/101863/0703/Mali-GPU-pipelines/Mali-Valhall-architecture" class="atlas-ref-link" target="_blank" rel="noopener">developer.arm.com — Mali Valhall Architecture</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Qualcomm</span> — Adreno GPU Architecture Best Practices. Snapdragon Developer Documentation.
+            <br><a href="https://docs.qualcomm.com/bundle/publicresource/topics/80-78185-2/gpu.html" class="atlas-ref-link" target="_blank" rel="noopener">docs.qualcomm.com — Adreno GPU SDK</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[05]</span>
+          <div>
+            <span class="atlas-ref-tag">TALK</span>
+            <span class="atlas-ref-author">Mark Cerny</span> — Road to PS5. PlayStation Technical Deep Dive (IGN Archive), 2020.
+            <br><a href="https://www.youtube.com/watch?v=fqi09JnJHOo" class="atlas-ref-link" target="_blank" rel="noopener">youtube.com — Road to PS5 Technical Deep Dive</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[06]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Vulkan Working Group</span> — Vulkan Memory Management Best Practices. Khronos Group.
+            <br><a href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMemoryProperties.html" class="atlas-ref-link" target="_blank" rel="noopener">registry.khronos.org — VkPhysicalDeviceMemoryProperties</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[07]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Apple</span> — Choosing a Resource Storage Mode for Apple GPUs. Metal Developer Guide.
+            <br><a href="https://developer.apple.com/documentation/metal/choosing-a-resource-storage-mode-for-apple-gpus" class="atlas-ref-link" target="_blank" rel="noopener">developer.apple.com — Apple GPU Storage Modes</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+  <!-- ══ SERIES NAV ════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-series-nav">
+      <ul class="atlas-series-nav__parts">
+        <li class="atlas-series-nav__part atlas-series-nav__part--current">
+          <span class="atlas-series-nav__num">01</span>
+          <span class="atlas-series-nav__title">The Machine — GPU Execution Model · Memory Hierarchy</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--current">CURRENT</span>
+        </li>
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-02" target="_top">
+            <span class="atlas-series-nav__num">02</span>
+            <span class="atlas-series-nav__title">The Pipeline — Render Stages · Buffer Taxonomy</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-03" target="_top">
+            <span class="atlas-series-nav__num">03</span>
+            <span class="atlas-series-nav__title">The Data — Alignment · Packing · CPU→GPU Flow</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--soon">
+          <span class="atlas-series-nav__num">04</span>
+          <span class="atlas-series-nav__title">The Shader — File→Pixel · Instancing · HLSL/GLSL/MSL · Compute</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--soon">SOON</span>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--soon">
+          <span class="atlas-series-nav__num">05</span>
+          <span class="atlas-series-nav__title">The Engine — Forward/Deferred · URP · HDRP · Unreal · Debug Tools</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--soon">SOON</span>
+        </li>
+      </ul>
+      <div class="atlas-part-nav">
+        <div></div>
+        <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-02" target="_top" class="atlas-part-nav__btn atlas-part-nav__btn--next">
+          <span class="atlas-part-nav__direction">Next →</span>
+          <span class="atlas-part-nav__label">Part 02: The Pipeline</span>
+          <span class="atlas-part-nav__sub">Render Stages · Buffer Taxonomy</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// FROM_FILE_TO_PIXEL // PART 01 OF 05 // CHAPTERS 01–02 // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG = {
+  user: 'pavelzosim', path: '~', command: 'cat gpu_execution_memory_hierarchy.log',
+  project: 'From File to Pixel', module: 'Part 01 — The Machine',
+  version: 'v1.0', logId: 'FTFP_P01', status: 'LIVE',
+  slug: 'from-file-to-pixel-part-01',
+  author: 'Pavel Zosim', created: '2025.03.08', modified: null,
+  wordCount: null, title: null, tags: [],
+  tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+};
+var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d) {
+  if (d.author) CONFIG.author = d.author;
+  if (d.title) { CONFIG.title = d.title; CONFIG.command = 'cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_')+'.log'; }
+  if (d.created) CONFIG.created = d.created;
+  if (d.modified) CONFIG.modified = d.modified;
+  if (d.wordCount) CONFIG.wordCount = d.wordCount;
+  if (Array.isArray(d.tags)) CONFIG.tags = d.tags;
+  window.render && window.render();
+}
+(function(){ if (!CONFIG.slug) return;
+  fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug))
+    .then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);})
+    .catch(e=>console.warn('[ATLAS]',e));
+})();
+(function(){
+  function render(){
+    var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();
+    var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;
+    var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div>'+
+             '<div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';
+    if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';
+    if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';
+    var tags=Array.isArray(o.tags)&&o.tags.length
+      ?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';
+    document.getElementById('site-passport').innerHTML=
+      '<div class="passport-bp">'+
+        '<div class="passport-title-bar">'+
+          '<div>'+o.user+' : '+o.path+' # '+o.command+'</div>'+
+          '<div>[ SYS_STATUS: <b>'+status+'</b> ]</div>'+
+        '</div>'+
+        (o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+
+        '<div class="passport-grid">'+
+          '<div class="passport-cell">'+
+            '<div class="passport-cell-line" data-key="project">'+o.project+'</div>'+
+            '<div class="passport-cell-line" data-key="module">'+o.module+'</div>'+
+          '</div>'+
+          '<div class="passport-cell">'+
+            '<div class="passport-cell-line" data-key="version">'+o.version+'</div>'+
+            '<div class="passport-cell-line" data-key="log_id">'+o.logId+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="passport-meta">'+meta+'</div>'+tags+
+      '</div>';
+  }
+  window.render=render; render();
+}());
+(function(){
+  fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now())
+    .then(r=>r.json()).then(c=>{
+      document.getElementById('atlas-footer').innerHTML=
+        '<div class="atlas-footer-wrapper">'+
+          '<div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div>'+
+          '<div class="atlas-footer-block__support-content">'+
+            '<div class="atlas-footer-block__support-text">'+c.support.text+'</div>'+
+            '<div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div>'+
+          '</div>'+
+          '<div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div>'+
+        '</div>';
+    }).catch(e=>console.error('[ATLAS] Footer failed:',e));
+}());
+document.addEventListener('click',function(e){
+  var a=e.target.closest('.atlas-toc__item a');
+  if(!a)return;
+  var href=a.getAttribute('href');
+  if(!href||href[0]!=='#')return;
+  var dest=document.getElementById(href.slice(1));
+  if(!dest)return;
+  e.preventDefault();
+  dest.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(function(){window.scrollBy(0,-8);},350);
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</body>
+</html>
+

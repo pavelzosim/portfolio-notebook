@@ -1,0 +1,195 @@
+/* ==========================================================================
+   FILE: 05-atlas-tables.css
+   ROLE: Таблицы данных (.atlas-table-frame) и UML-диаграммы (.atlas-uml-diag).
+         Два стиля таблиц: прозрачный (default) и с чёрной шапкой (--solid).
+   ЗАВИСИМОСТИ: 01-atlas-core.css (системная геометрия .atlas-table-frame)
+   ПОРЯДОК В МОНОЛИТЕ: 5 из 7
+   ========================================================================== */
+
+/* ── СЕКЦИЯ A: ТАБЛИЦА — Дефолтный прозрачный стиль ────────────────────── */
+/* Геометрия и рамка .atlas-table-frame задана в 01-atlas-core.css.        */
+/* Здесь: шапка, внутренняя таблица, зебра.                                */
+
+/* Псевдо-шапка по умолчанию */
+.atlas-container .content-block .atlas-table-frame::before {
+  content: "[ DATA_TABLE // ДАННЫЕ И СПЕЦИФИКАЦИИ ]";
+}
+
+/* Внутренняя таблица */
+.atlas-container .content-block .atlas-table-frame .atlas-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: var(--fs-code);
+  line-height: 1.5;
+  color: var(--atlas-ink-soft);
+}
+
+.atlas-container .content-block .atlas-table-frame .atlas-table thead th {
+  text-align: left;
+  padding: 10px;
+  font-weight: 700;
+  color: var(--atlas-ink);
+  border-bottom: 2px solid var(--atlas-border-strong);
+}
+.atlas-container .content-block .atlas-table-frame .atlas-table tbody td {
+  padding: 10px;
+  border-bottom: 1px solid var(--atlas-border);
+}
+
+/* Зебра: чётные строки получают лёгкий фон */
+.atlas-container .content-block .atlas-table-frame .atlas-table tbody tr:nth-child(even) {
+  background: var(--atlas-bg-alt);
+}
+
+/* ── СЕКЦИЯ B: ТАБЛИЦА — Модификатор --solid (чёрная инженерная шапка) ─── */
+/* Отличия от дефолта:                                                      */
+/*   1. Псевдо-шапка core скрыта, заголовок вставляется в HTML             */
+/*   2. .atlas-table-header-solid растягивается от края до края            */
+/*   ИСПРАВЛЕНИЕ: margin рассчитан от реального padding-top = 34px         */
+/*   (не 16px как в оригинале)                                              */
+
+.atlas-container .content-block .atlas-table-frame--solid {
+  padding-top: 0; /* Убираем зазор: шапка HTML занимает его сама */
+}
+.atlas-container .content-block .atlas-table-frame--solid::before {
+  display: none; /* Псевдо-шапка core не нужна — есть HTML-элемент */
+}
+
+/* HTML-элемент заголовка: <div class="atlas-table-header-solid">TITLE</div> */
+.atlas-container .content-block .atlas-table-header-solid {
+  display: block;
+  background: var(--atlas-ink);
+  color: var(--atlas-bg);
+  padding: 6px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  /* Растягиваем вплотную к рамке блока (padding у .atlas-table-frame = 16px по бокам) */
+  margin: 0 -16px 16px -16px;
+  border-bottom: 1px solid var(--atlas-ink);
+}
+
+/* Для --solid таблица получает собственную видимую рамку */
+.atlas-container .content-block .atlas-table-frame--solid .atlas-table {
+  border: 1px solid var(--atlas-border);
+}
+
+/* ── СЕКЦИЯ C: UML-ДИАГРАММЫ — Изолированный namespace ─────────────────── */
+/* ВАЖНО: все правила обёрнуты в .atlas-container для изоляции от Wix.     */
+/* CSS-переменные ссылаются на --atlas-* из 01-atlas-core.css.             */
+/* Жёстко заданные цвета в оригинале заменены на переменные.               */
+
+/* Корневой элемент диаграммы */
+.atlas-container .atlas-uml-diag {
+  font-family: var(--atlas-font-mono);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Виджет-обёртка */
+.atlas-container .atlas-uml-diag__widget {
+  border: 2px solid var(--atlas-ink);
+  background: var(--atlas-bg);
+}
+.atlas-container .atlas-uml-diag__header {
+  background: var(--atlas-ink);
+  color: var(--atlas-bg);
+  padding: 4px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+/* Зоны (Scope) */
+.atlas-container .atlas-uml-diag__scope {
+  border: 1px dashed var(--atlas-ink);
+  padding: 10px;
+  margin-bottom: 15px;
+}
+.atlas-container .atlas-uml-diag__scope-label {
+  font-size: 8px;
+  color: var(--atlas-ink-muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+/* Узлы — базовый прямоугольник */
+.atlas-container .atlas-uml-diag__node {
+  border: 1px solid var(--atlas-ink);
+  background: var(--atlas-bg);
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+}
+.atlas-container .atlas-uml-diag__node--dashed {
+  border-style: dashed;
+}
+.atlas-container .atlas-uml-diag__node-title {
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--atlas-ink);
+  text-align: center;
+}
+.atlas-container .atlas-uml-diag__node-body {
+  padding: 6px 10px;
+  font-size: 9px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+/* Логика: Decision — инженерный ромб (rotate 45deg + фиксированный размер) */
+.atlas-container .atlas-uml-diag__node--decision {
+  transform: rotate(45deg);
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border: 1px solid var(--atlas-ink);
+  background: var(--atlas-bg);
+}
+.atlas-container .atlas-uml-diag__node--decision span {
+  transform: rotate(-45deg);
+  display: block;
+  font-size: var(--fs-status);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Стрелки: горизонтальная линия + треугольный наконечник */
+.atlas-container .atlas-uml-diag__arrow-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 0 -2px;
+}
+.atlas-container .atlas-uml-diag__arrow-line {
+  flex: 1;
+  height: 1px;
+  background: var(--atlas-crit);
+}
+.atlas-container .atlas-uml-diag__arrow-head {
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--atlas-crit);
+}
+
+/* Легенда */
+.atlas-container .atlas-uml-diag__legend {
+  border-top: 1px solid var(--atlas-ink);
+  padding: 8px;
+  font-size: 9px;
+  display: flex;
+  gap: 15px;
+  color: var(--atlas-ink-muted);
+}
+
+

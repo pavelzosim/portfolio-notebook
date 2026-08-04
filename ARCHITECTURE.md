@@ -2,16 +2,17 @@
 
 ## Styles
 
-`styles/atlas.css` is the only orchestration file. Its import order is intentional:
+`styles/atlas.css` is the only orchestration file. It loads the original Atlas framework first, followed by homepage composition styles.
 
-1. `core.css` — tokens, reset, document shell, typography foundations
-2. `commander.css` — command bar, keyboard UI, dialog, search states
-3. `media-index.css` — note and project preview records
-4. `profile.css` — profile facts, introduction, dotted-paper treatment
-5. `navigation.css` — quiet primary navigation and active states
-6. `content.css` — resource cards, reel, contacts, responsive refinements
+1. `framework/01–10` — canonical Atlas tokens, typography, headers, code, tables, callouts, media, interactive controls, shader panels, and TOC
+2. `home/core.css` — document shell and homepage layout
+3. `home/commander.css` — command bar, keyboard UI, dialog, search states
+4. `home/media-index.css` — note and project preview records
+5. `home/profile.css` — profile facts, introduction, dotted-paper treatment
+6. `home/navigation.css` — quiet primary navigation and active states
+7. `home/content.css` — resource cards, reel, contacts, responsive refinements
 
-Modules may depend on tokens established by `core.css`, but they should not import one another. New modules are registered only in `atlas.css`.
+Homepage modules consume the original `--atlas-*` tokens. They should not import one another; new modules are registered only in `atlas.css`.
 
 `home.css` remains as a compatibility shim for existing Wix embeds and cached URLs.
 

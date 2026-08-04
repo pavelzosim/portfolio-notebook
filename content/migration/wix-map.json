@@ -1,22 +1,168 @@
 {
   "source": "https://www.pavelzosim.com",
   "generated": "2026-08-04",
-  "policy": "Preserve the original slug, source URL, dates, categories, tags, media order, captions, alt text, embeds, and downloads.",
+  "policy": "Use canonical Atlas HTML before any Wix scrape. Preserve source URL, dates, categories, tags, media order, captions, alt text, embeds, and downloads.",
   "posts": [
-    {"slug":"from-file-to-pixel-part-01","kind":"article","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/from-file-to-pixel-part-01"},
-    {"slug":"procedural-sun-ue5-hlsl-compute-shaders","kind":"rnd-log","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders"},
-    {"slug":"houdini-procedural-explosion-vfx","kind":"breakdown","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx"},
-    {"slug":"procedural-interior-design-pipeline-houdini-usd","kind":"case-study","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd"},
-    {"slug":"sprite-sheet-assembly-tool","kind":"tool","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/sprite-sheet-assembly-tool"},
-    {"slug":"folder-structure-cli-tool","kind":"tool","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/folder-structure-cli-tool"},
-    {"slug":"houdini-tool-folder-based-file-importer","kind":"tool","status":"migrated-draft","target":"../posts/2024-12-18-folder-based-file-importer.md","sourceUrl":"https://www.pavelzosim.com/post/houdini-tool-folder-based-file-importer"},
-    {"slug":"jackpressed-powerful-image-compression-resizing-tool","kind":"tool","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/jackpressed-powerful-image-compression-resizing-tool"},
-    {"slug":"low-poly-dumpster-3d-model","kind":"asset","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/low-poly-dumpster-3d-model"},
-    {"slug":"modular-market-shelf-3d-model","kind":"asset","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/modular-market-shelf-3d-model"},
-    {"slug":"procedural-modeling-tire-generator","kind":"breakdown","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/procedural-modeling-tire-generator"},
-    {"slug":"technical-art-compute-shaders-in-unity-introduction","kind":"lesson","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction"},
-    {"slug":"technical-art-cg-shaders-a-unified-guide-to-shaders","kind":"guide","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders"},
-    {"slug":"csharp-variables-lesson-1-part-1","kind":"lesson","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-1"},
-    {"slug":"c-for-beginners-lessons-1-variables-part-3","kind":"lesson","status":"inventory","sourceUrl":"https://www.pavelzosim.com/post/c-for-beginners-lessons-1-variables-part-3"}
+    {
+      "slug": "c-for-beginners-lessons-1-variables-part-3",
+      "kind": "lesson",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/c-for-beginners-lessons-1-variables-part-3"
+    },
+    {
+      "slug": "csharp-variables-lesson-1-part-1",
+      "kind": "lesson",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-1"
+    },
+    {
+      "slug": "folder-structure-cli-tool",
+      "kind": "tool",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/folder-structure-cli-tool"
+    },
+    {
+      "slug": "from-file-to-pixel-part-01",
+      "kind": "article",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-01",
+      "atlasSource": "../posts/atlas-html/from-file-to-pixel-part-01.html"
+    },
+    {
+      "slug": "from-file-to-pixel-part-02",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-02",
+      "atlasSource": "../posts/atlas-html/from-file-to-pixel-part-02.html"
+    },
+    {
+      "slug": "from-file-to-pixel-part-03",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-03",
+      "atlasSource": "../posts/atlas-html/from-file-to-pixel-part-03.html"
+    },
+    {
+      "slug": "from-file-to-pixel-part-04",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-04",
+      "atlasSource": "../posts/atlas-html/from-file-to-pixel-part-04.html"
+    },
+    {
+      "slug": "from-file-to-pixel-part-05",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-05",
+      "atlasSource": "../posts/atlas-html/from-file-to-pixel-part-05.html"
+    },
+    {
+      "slug": "houdini-folder-based-file-importer-tool",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-folder-based-file-importer-tool",
+      "atlasSource": "../posts/atlas-html/houdini-folder-based-file-importer-tool.html"
+    },
+    {
+      "slug": "houdini-material-path-manager-tool",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-material-path-manager-tool",
+      "atlasSource": "../posts/atlas-html/houdini-material-path-manager-tool.html"
+    },
+    {
+      "slug": "houdini-procedural-explosion-vfx",
+      "kind": "breakdown",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx",
+      "atlasSource": "../posts/atlas-html/houdini-procedural-explosion-vfx.html"
+    },
+    {
+      "slug": "houdini-procedural-skeleton-rig-bones-generator",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-procedural-skeleton-rig-bones-generator",
+      "atlasSource": "../posts/atlas-html/houdini_rig_bones_generator.html"
+    },
+    {
+      "slug": "houdini-tool-data-export-from-houdini-to-after-effects",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-tool-data-export-from-houdini-to-after-effects",
+      "atlasSource": "../posts/atlas-html/houdini-tool-data-export-from-houdini-to-after-effects.html"
+    },
+    {
+      "slug": "houdini-tool-folder-based-file-importer",
+      "kind": "tool",
+      "status": "source-alias",
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-tool-folder-based-file-importer",
+      "atlasSource": "../posts/atlas-html/houdini-folder-based-file-importer-tool.html",
+      "canonicalSourceUrl": "https://www.pavelzosim.com/post/houdini-folder-based-file-importer-tool"
+    },
+    {
+      "slug": "jackpressed-powerful-image-compression-resizing-tool",
+      "kind": "tool",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/jackpressed-powerful-image-compression-resizing-tool"
+    },
+    {
+      "slug": "low-poly-dumpster-3d-model",
+      "kind": "asset",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/low-poly-dumpster-3d-model"
+    },
+    {
+      "slug": "modular-market-shelf-3d-model",
+      "kind": "asset",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/modular-market-shelf-3d-model"
+    },
+    {
+      "slug": "procedural-interior-design-pipeline-houdini-usd",
+      "kind": "case-study",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd"
+    },
+    {
+      "slug": "procedural-modeling-tire-generator",
+      "kind": "breakdown",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/procedural-modeling-tire-generator",
+      "atlasSource": "../posts/atlas-html/procedural-modeling-tire-generator.html"
+    },
+    {
+      "slug": "procedural-sun-ue5-hlsl-compute-shaders",
+      "kind": "rnd-log",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders",
+      "atlasSource": "../posts/atlas-html/procedural-sun-ue5-hlsl-compute-shader.html"
+    },
+    {
+      "slug": "sprite-sheet-assembly-tool",
+      "kind": "tool",
+      "status": "atlas-html-source",
+      "sourceUrl": "https://www.pavelzosim.com/post/sprite-sheet-assembly-tool",
+      "atlasSource": "../posts/atlas-html/sprite-sheet-assembly-tool.html"
+    },
+    {
+      "slug": "technical-art-cg-shaders-a-unified-guide-to-shaders",
+      "kind": "guide",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders"
+    },
+    {
+      "slug": "technical-art-compute-shaders-in-unity-introduction",
+      "kind": "lesson",
+      "status": "inventory",
+      "sourceUrl": "https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction"
+    },
+    {
+      "slug": "unity-shaderlab-cheatsheet",
+      "kind": "atlas-post",
+      "status": "atlas-html-source",
+      "sourceUrl": null,
+      "atlasSource": "../posts/atlas-html/unity-shaderlab-cheatsheet.html"
+    }
   ]
 }
+

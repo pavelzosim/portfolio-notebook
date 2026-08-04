@@ -1,0 +1,286 @@
+/* ==========================================================================
+   FILE: 02-atlas-typography.css
+   ROLE: Типографика. Раздача базовых стилей h1-h6, p, ul/ol на теги
+         внутри .atlas-container. Классы-компоненты (.atlas-h1, .atlas-body
+         и т.д.). Контентные заголовки .content-block. Списки CAD-стиля.
+   ЗАВИСИМОСТИ: 01-atlas-core.css (переменные --fs-*, --atlas-*)
+   ПОРЯДОК В МОНОЛИТЕ: 2 из 7
+   ========================================================================== */
+
+/* ── СЕКЦИЯ A: ГЛОБАЛЬНАЯ РАЗДАЧА — Базовые теги внутри контейнера ──────── */
+/* Единственный источник font-size для тегов. Компоненты НЕ дублируют это.  */
+
+.atlas-container {
+  font-family: var(--atlas-font-mono);
+  color: var(--atlas-ink);
+  font-size: var(--fs-body);
+}
+
+/* Заголовки по тегам */
+.atlas-container h1, .atlas-container .atlas-h1 { font-size: var(--fs-h1); font-weight: 700; margin-bottom: 16px; }
+.atlas-container h2, .atlas-container .atlas-h2 { font-size: var(--fs-h2); font-weight: 700; margin-bottom: 14px; }
+.atlas-container h3, .atlas-container .atlas-h3 { font-size: var(--fs-h3); font-weight: 700; margin-bottom: 12px; }
+.atlas-container h4, .atlas-container .atlas-h4 { font-size: var(--fs-h4); font-weight: 700; margin-bottom: 10px; }
+.atlas-container h5, .atlas-container .atlas-h5 { font-size: var(--fs-h5); font-weight: 700; margin-bottom: 8px; }
+.atlas-container h6, .atlas-container .atlas-h6 { font-size: var(--fs-h6); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
+
+/* Параграфы, списки */
+.atlas-container p,
+.atlas-container ul,
+.atlas-container ol {
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+
+/* Таблицы */
+.atlas-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--atlas-font-mono);
+  font-size: var(--fs-code);
+}
+.atlas-container table th { font-size: var(--fs-table-th); }
+.atlas-container table td { font-size: var(--fs-code); }
+
+/* Мета-уровень: паспорт, футер, подписи */
+.atlas-container #site-passport,
+.atlas-container #atlas-footer,
+.atlas-container .media-caption {
+  font-size: var(--fs-meta);
+}
+
+/* Плашки STATUS и UML-ромбы */
+.atlas-container .atlas-callout::before,
+.atlas-container .atlas-uml-diag__node--decision span {
+  font-size: var(--fs-status);
+}
+
+/* ── СЕКЦИЯ B: УТИЛИТАРНЫЕ КЛАССЫ ТИПОГРАФИКИ ───────────────────────────── */
+/* Используются напрямую в HTML (class="atlas-h1"), не через теги.          */
+
+.atlas-container .atlas-h1 {
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--atlas-ink);
+  margin: 0 0 var(--atlas-space-sm) 0;
+  letter-spacing: -0.01em;
+}
+
+.atlas-container .atlas-title {
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--atlas-ink);
+  margin: 0 0 var(--atlas-space-xs) 0;
+}
+
+.atlas-container .atlas-body {
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--atlas-ink-soft);
+  margin: 0 0 var(--atlas-space-sm) 0;
+}
+
+.atlas-container .atlas-meta {
+  font-size: var(--fs-meta);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--atlas-ink-muted);
+  letter-spacing: 0.05em;
+}
+
+.atlas-container .atlas-code-inline {
+  font-size: var(--fs-code);
+  color: var(--atlas-crit);
+  background: var(--atlas-bg-alt);
+  padding: 2px 4px;
+  border: 1px solid var(--atlas-border);
+}
+
+/* ── СЕКЦИЯ C: КОНТЕНТНЫЙ БЛОК — Заголовки и разделители ───────────────── */
+/* ВАЖНО: h2/h3/h4 внутри .content-block — это КОНТЕНТНЫЕ заголовки        */
+/* (малые, с префиксами). Они НЕ конфликтуют с семантическими h2=24px      */
+/* потому что применяются только глубоко внутри .content-block.            */
+/* Если нужен семантический h2 в контенте — выноси его за .content-block.  */
+
+.atlas-container .content-block {
+  margin: 32px 0;
+  counter-reset: l1-counter;
+}
+
+.atlas-container .content-block h2,
+.atlas-container .content-block h3,
+.atlas-container .content-block h4 {
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+/* H2: Главный раздел контента (13px с красным префиксом ») */
+.atlas-container .content-block h2 {
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  color: var(--atlas-ink);
+}
+.atlas-container .content-block h2::before {
+  content: "» ";
+  color: var(--atlas-crit);
+  margin-right: 8px;
+  font-weight: 400;
+}
+
+/* H3: Подраздел контента (12px с серым префиксом >) */
+.atlas-container .content-block h3 {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--atlas-ink-soft);
+  margin-top: 24px;
+}
+.atlas-container .content-block h3::before {
+  content: "> ";
+  color: var(--atlas-ink-muted);
+  margin-right: 8px;
+  font-weight: 400;
+}
+
+/* H4: Микро-заголовок (meta-size, с префиксом +) */
+.atlas-container .content-block h4 {
+  font-size: var(--fs-meta);
+  letter-spacing: 0.05em;
+  color: var(--atlas-ink-muted);
+  margin-top: 16px;
+}
+.atlas-container .content-block h4::before {
+  content: "+ ";
+  color: var(--atlas-ink-muted);
+  margin-right: 8px;
+  font-weight: 400;
+}
+
+/* Параграф внутри контентного блока */
+.atlas-container .content-block p {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--atlas-ink-soft);
+  margin: 0 0 16px 0;
+  text-align: justify;
+}
+
+/* ── СЕКЦИЯ D: РАЗДЕЛИТЕЛИ СЕКЦИЙ ───────────────────────────────────────── */
+
+/* Горизонтальный разделитель с нумерованным индексом (data-index="§ 02") */
+.atlas-container .atlas-section-break {
+  position: relative;
+  display: block;
+  height: 1px;
+  background: var(--atlas-border);
+  margin: 4rem 0;
+}
+.atlas-container .atlas-section-break::before {
+  content: attr(data-index);
+  position: absolute;
+  top: -9px;
+  left: 24px;
+  background: var(--atlas-bg);
+  padding: 0 0.6rem;
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  color: var(--atlas-crit);
+}
+
+/* Финальный EOF-разделитель в конце статьи */
+.atlas-container .atlas-eof-divider {
+  display: flex;
+  align-items: center;
+  margin: 5.5rem 0 2rem 0;
+  font-size: var(--fs-meta);
+  color: var(--atlas-ink-muted);
+  letter-spacing: 0.12em;
+  width: 100%;
+}
+.atlas-container .atlas-eof-divider__line {
+  flex: 1;
+  border-bottom: 1px dashed var(--atlas-border);
+}
+.atlas-container .atlas-eof-divider__meta {
+  padding: 0 1.2rem;
+  font-weight: 700;
+}
+
+/* ── СЕКЦИЯ E: CAD-СПИСКИ — Двухуровневая система маркировки ─────────────── */
+/* Уровень 1: сплошная вертикальная ось + маркер "+"                        */
+/* Уровень 2: пунктирная ось + маркер "▪"                                   */
+
+.atlas-container .content-block ul,
+.atlas-container .content-block ol {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+}
+
+/* Уровень 1 */
+.atlas-container .content-block > ul,
+.atlas-container .content-block > ol {
+  margin-left: 24px;
+  padding-left: 14px;
+  border-left: 1px solid var(--atlas-border);
+}
+
+.atlas-container .content-block > ul > li,
+.atlas-container .content-block > ol > li {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--atlas-ink-soft);
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 8px;
+}
+
+.atlas-container .content-block > ul > li::before,
+.atlas-container .content-block > ol > li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--atlas-crit);
+  font-weight: 700;
+}
+
+/* Уровень 2 */
+.atlas-container .content-block ul ul,
+.atlas-container .content-block ol ul,
+.atlas-container .content-block ul ol,
+.atlas-container .content-block ol ol {
+  margin-left: 14px;
+  margin-top: 8px;
+  padding-left: 14px;
+  border-left: 1px dashed var(--atlas-border);
+}
+
+.atlas-container .content-block ul ul > li,
+.atlas-container .content-block ul ol > li {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--atlas-ink-soft);
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+}
+
+.atlas-container .content-block ul ul > li::before,
+.atlas-container .content-block ul ol > li::before {
+  content: "▪";
+  position: absolute;
+  left: 0;
+  color: var(--atlas-ink-muted);
+  font-size: 9px;
+}
+
+

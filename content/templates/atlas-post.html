@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATLAS FRAMEWORK: Component Map</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.4/cdn/atlas-framework.css">
+</head>
+<body>
+
+<div class="map-wrapper">
+  <div class="atlas-container">
+	<div id="site-passport"></div>
+
+    	<div class="content-block">
+
+    	<div class="atlas-section-break" data-index="// SECTION_END"></div>	
+	    </div>  <!-- End .content-block -->
+
+
+
+
+
+      <div class="atlas-eof-divider">
+        <span class="atlas-eof-divider__line"></span>
+        <span class="atlas-eof-divider__meta">// END OF CONTENT // EOF</span>
+        <span class="atlas-eof-divider__line"></span>
+      </div>
+
+<div id="atlas-footer"></div>
+
+	</div> <!-- End .atlas-container -->
+</div>
+
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   ПАСПОРТ: Логика
+   ─────────────────────────────────────────────────────────────── */
+var CONFIG = {
+  user: 'pavelzosim', path: '~', command: 'cat unity_shaderlab_cheatsheet.log',
+  project: 'SunShaderPlugin', module: 'Compute Shader & Niagara', version: 'UE 5.7', logId: 'SOL_RND_01', status: 'Mid-Dev',
+  slug: 'procedural-sun-ue5-hlsl-compute-shaders',
+  author: '...', created: '----.--.--', modified: null, wordCount: null, title: null, tags: [],
+  tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+};
+
+var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
+
+function applyData(d) {
+  if (d.author) CONFIG.author = d.author;
+  if (d.title) {
+    CONFIG.title = d.title;
+    CONFIG.command = 'cat ' + d.title.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/(^_|_$)/g, '') + '.log';
+  }
+  if (d.created) CONFIG.created = d.created;
+  if (d.modified) CONFIG.modified = d.modified;
+  if (d.project) CONFIG.project = d.project;
+  if (d.module) CONFIG.module = d.module;
+  if (d.version) CONFIG.version = d.version;
+  if (d.logId) CONFIG.logId = d.logId;
+  if (d.status) CONFIG.status = d.status;
+  if (d.wordCount) CONFIG.wordCount = d.wordCount;
+  if (Array.isArray(d.tags)) CONFIG.tags = d.tags;
+  window.render && window.render();
+}
+
+(function () {
+  var slug = CONFIG.slug || '';
+  if (!slug) return;
+  fetch(BACKEND_URL + '?slug=' + encodeURIComponent(slug))
+    .then(r => r.ok ? r.json() : null)
+    .then(data => { if (data && !data.error) applyData(data); })
+    .catch(err => console.warn('[ATLAS] Passport fetch failed', err));
+})();
+
+(function () {
+  function render() {
+    var o = CONFIG;
+    var status = (o.status || 'DRAFT').toUpperCase();
+    var rt = o.readTime || (o.wordCount ? '~' + Math.ceil(Number(o.wordCount) / 200) + ' MIN' : null);
+    var metaHTML = '<div class="passport-meta-item" data-meta="auth">' + (o.author || '—') + '</div>' +
+                   '<div class="passport-meta-item" data-meta="created">' + (o.created || '—') + '</div>';
+    if (o.modified) metaHTML += '<div class="passport-meta-item" data-meta="modified">' + o.modified + '</div>';
+    if (rt) metaHTML += '<div class="passport-meta-item" data-meta="read">' + rt + '</div>';
+
+    var tagsHTML = '';
+    if (Array.isArray(o.tags) && o.tags.length) {
+      tagsHTML = '<div class="passport-tags">' + o.tags.map(tg => 
+        '<a href="' + o.tagBaseUrl + tg.toLowerCase().replace(/\s+/g, '-') + '" class="passport-tag" target="_top">#' + tg.toUpperCase() + '</a>'
+      ).join('') + '</div>';
+    }
+
+    document.getElementById('site-passport').innerHTML =
+      '<div class="passport-bp">' +
+        '<div class="passport-title-bar">' +
+          '<div>' + o.user + ' : ' + o.path + ' # ' + o.command + '</div>' +
+          '<div>[ SYS_STATUS: <b>' + status + '</b> ]</div>' +
+        '</div>' +
+        (o.title ? '<div class="passport-main-title">' + o.title.toUpperCase() + '</div>' : '') +
+        '<div class="passport-grid">' +
+          '<div class="passport-cell"><div class="passport-cell-line" data-key="project">' + o.project + '</div><div class="passport-cell-line" data-key="module">' + o.module + '</div></div>' +
+          '<div class="passport-cell"><div class="passport-cell-line" data-key="version">' + o.version + '</div><div class="passport-cell-line" data-key="log_id">' + o.logId + '</div></div>' +
+        '</div>' +
+        '<div class="passport-meta">' + metaHTML + '</div>' + tagsHTML +
+      '</div>';
+  }
+  window.render = render;
+  render();
+}());
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ФУТЕР: Нативный рендер (без CSS-патчей)
+   ─────────────────────────────────────────────────────────────── */
+(function() {
+  var FOOTER_CONFIG_URL = 'https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t=' + Date.now();
+  
+  fetch(FOOTER_CONFIG_URL)
+    .then(r => r.json())
+    .then(c => {
+      var footer = document.getElementById('atlas-footer');
+      // Создаем структуру, соответствующую atlas-framework.css
+      footer.innerHTML = `
+        <div class="atlas-footer-wrapper">
+          <div class="atlas-footer-block__support-header">
+            <span class="atlas-footer-block__kaomoji">${c.tagline}</span>
+            <span>LET'S STAY IN TOUCH</span>
+          </div>
+          
+          <div class="atlas-footer-block__support-content">
+            <div class="atlas-footer-block__support-text">${c.support.text}</div>
+            <div class="atlas-footer-block__support-links">
+              ${c.support.links.map((l, idx, arr) => `
+                <a href="${l.url}" class="atlas-blueprint-link">${l.text}</a>
+                ${idx < arr.length - 1 ? '<span class="atlas-footer-block__support-divider">|</span>' : ''}
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="atlas-footer-block__matrix-zone">
+            ${c.links.map(g => `
+              <div class="atlas-footer-block__matrix-column">
+                <span class="atlas-footer-block__column-label">${g.label}</span>
+                <div class="atlas-footer-block__column-items">
+                  ${g.items.map(i => `<a href="${i.url}" class="atlas-blueprint-link">/ ${i.text}</a>`).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    })
+    .catch(e => console.error('[ATLAS] Footer component failed to render:', e));
+})();
+</script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+
+</body>
+</html>
+

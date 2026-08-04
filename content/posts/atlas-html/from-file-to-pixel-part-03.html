@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/from-file-to-pixel-part-03">
+  <title>From File to Pixel · Part 03: The Data — pavelzosim.com</title>
+  <meta name="description" content="Memory alignment, struct packing, and CPU→GPU data flow. Why std140 padding wastes memory, how C# NativeArray eliminates GC, and the right upload pattern for each platform.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+
+    .pbadge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border:1px solid;vertical-align:middle;margin-right:6px}
+    .pbadge--pc{color:#5BA8D8;border-color:#1A4060}
+    .pbadge--console{color:#9A7ED8;border-color:#3A2870}
+    .pbadge--mobile{color:#D8A83A;border-color:#5A3C0A}
+    .pbadge--all{color:rgba(0,0,0,.5);border-color:rgba(0,0,0,.2)}
+
+    /* alignment diagram */
+    .align-row{display:flex;align-items:center;margin-bottom:3px;font-family:'JetBrains Mono',monospace;font-size:10px}
+    .align-field{display:flex;align-items:center;justify-content:center;height:24px;border:1px solid rgba(0,0,0,.25);font-size:9px;font-weight:700;letter-spacing:.04em;box-sizing:border-box}
+    .align-field--data{background:rgba(0,0,0,.06);color:#000}
+    .align-field--pad{background:repeating-linear-gradient(45deg,rgba(139,0,0,.08),rgba(139,0,0,.08) 2px,transparent 2px,transparent 6px);color:#8b0000;border-color:rgba(139,0,0,.3)}
+    .align-label{width:140px;flex-shrink:0;color:rgba(0,0,0,.55);padding-right:8px;font-size:9px}
+    .align-bytes{margin-left:8px;color:rgba(0,0,0,.35);font-size:9px;white-space:nowrap}
+
+    /* series nav */
+    .atlas-container .atlas-series-nav{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 0;margin:32px 0 0;width:100%}
+    .atlas-container .atlas-series-nav::before{content:"[ SERIES // FROM_FILE_TO_PIXEL ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .atlas-series-nav__parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .atlas-series-nav__part{display:grid;grid-template-columns:36px 1fr auto;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);padding:8px 16px;transition:background .1s}
+    .atlas-container .atlas-series-nav__part:last-child{border-bottom:none}
+    .atlas-container .atlas-series-nav__part:hover{background:rgba(0,0,0,.02)}
+    .atlas-container .atlas-series-nav__part a{display:contents;text-decoration:none;color:inherit}
+    .atlas-container .atlas-series-nav__part:hover .n,.atlas-container .atlas-series-nav__part:hover .t{color:#8b0000}
+    .atlas-container .atlas-series-nav__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);letter-spacing:.04em;transition:color .1s}
+    .atlas-container .atlas-series-nav__title{font-size:12px;font-weight:700;color:#000;transition:color .1s}
+    .atlas-container .atlas-series-nav__part--current{background:rgba(139,0,0,.03);border-left:2px solid #8b0000}
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__num,
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__title{color:#8b0000}
+    .atlas-container .atlas-series-nav__part--soon .atlas-series-nav__title{color:rgba(0,0,0,.35)}
+    .atlas-container .atlas-series-nav__status{font-size:9px;font-weight:700;padding:1px 6px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+    .atlas-container .atlas-series-nav__status--live{color:var(--atlas-ok);border-color:var(--atlas-ok)}
+    .atlas-container .atlas-series-nav__status--soon{color:var(--atlas-ink-muted);border-color:var(--atlas-border)}
+    .atlas-container .atlas-series-nav__status--current{color:var(--atlas-crit);border-color:var(--atlas-crit)}
+    .atlas-container .atlas-part-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-top:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .atlas-part-nav__btn{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);text-decoration:none;transition:background .12s,border-color .12s}
+    .atlas-container .atlas-part-nav__btn:hover{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.3)}
+    .atlas-container .atlas-part-nav__btn--next{text-align:right}
+    .atlas-container .atlas-part-nav__direction{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.35);text-transform:uppercase}
+    .atlas-container .atlas-part-nav__label{font-size:12px;font-weight:700;color:#000}
+    .atlas-container .atlas-part-nav__sub{font-size:10px;color:rgba(0,0,0,.4)}
+    .atlas-container .atlas-part-nav__btn:hover .atlas-part-nav__label{color:#8b0000}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s05"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Memory Alignment & Struct Packing</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s05-rules"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">std140 / std430 / cbuffer — Packing Rules</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s05-visual"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Visual Layout — Waste vs Packed</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s05-csharp"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">C# → HLSL Struct Mapping</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s05-table"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Type Size Reference Table</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s06"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">CPU→GPU Data Flow</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s06-patterns"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Upload Patterns — Static / Dynamic / Streaming</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s06-gc"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">GC Starvation — ComputeBuffer vs NativeArray</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s06-platforms"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Platform Upload Differences</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s06-table"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Upload Strategy Decision Matrix</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       05: MEMORY ALIGNMENT & STRUCT PACKING
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s05">05 Memory Alignment & Struct Packing</h2>
+
+    <p>When you write a struct in C# and send it to a GPU buffer, the bytes on both sides must match exactly. The problem is that the GPU and the CPU follow different layout rules. A struct that looks like 20 bytes in C# can silently become 32 bytes in HLSL — and your shader reads garbage from the wrong offset, with no error, no warning, no crash.</p>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p>Struct packing is <strong>the most common silent data corruption bug</strong> in GPU programming. It produces no exceptions. The shader simply reads the wrong memory. Everything compiles, nothing crashes, the output just looks wrong — or subtly wrong in ways that only appear in specific conditions.</p>
+    </div>
+
+    <h3 id="s05-rules">std140 / std430 / cbuffer — Packing Rules</h3>
+
+    <p>Three dominant layout rules govern how GPU compilers arrange struct members in memory:</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ PACKING_RULES // std140 · std430 · HLSL cbuffer ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>LAYOUT</th><th>API</th><th>KEY RULE</th><th>STRUCT ALIGNMENT</th><th>ARRAY STRIDE</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>std140</strong></td>
+            <td>GL / Vulkan UBO</td>
+            <td><span class="atlas-code-inline">vec3</span> rounds up to <span class="atlas-code-inline">vec4</span> (16 B). Arrays: each element padded to 16 B regardless of type.</td>
+            <td>16 bytes</td>
+            <td>16 bytes minimum</td>
+          </tr>
+          <tr>
+            <td><strong>std430</strong></td>
+            <td>Vulkan SSBO / GL SSBO</td>
+            <td>Tighter packing. <span class="atlas-code-inline">vec3</span> still 12 B but aligns to 16 B. Arrays use natural element stride.</td>
+            <td>4 bytes (scalar)</td>
+            <td>Natural element size</td>
+          </tr>
+          <tr>
+            <td><strong>HLSL cbuffer</strong></td>
+            <td>DX11/DX12/Unity</td>
+            <td>Members pack into 16-byte rows. No member spans a 16-byte boundary. <span class="atlas-code-inline">float3</span> + <span class="atlas-code-inline">float</span> can pack into 16 B. Arrays: each element 16-byte aligned.</td>
+            <td>16 bytes (cbuffer)</td>
+            <td>16 bytes (arrays)</td>
+          </tr>
+          <tr>
+            <td><strong>scalar</strong></td>
+            <td>DXC / GLSL 450</td>
+            <td>Natural C-style packing. Opt-in via <span class="atlas-code-inline">[[vk::ext_scalar_block_layout]]</span> or <span class="atlas-code-inline">#pragma pack_matrix</span>. Matches C# struct layout exactly.</td>
+            <td>Natural (4 B)</td>
+            <td>Natural element size</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s05-visual">Visual Layout — Waste vs Packed</h3>
+    <p>The most common offender: putting a <span class="atlas-code-inline">float</span> after a <span class="atlas-code-inline">float3</span> in HLSL saves 4 bytes. Putting the <span class="atlas-code-inline">float3</span> after anything that would push it across a 16-byte boundary wastes the entire gap.</p>
+
+    <div style="background:var(--atlas-bg-alt);border:1px solid var(--atlas-border);padding:16px;margin:12px 0">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.4);text-transform:uppercase;margin-bottom:12px">// std140 WASTE — naive struct order</div>
+
+      <div class="align-row">
+        <div class="align-label">float time</div>
+        <div style="display:flex;flex:1">
+          <div class="align-field align-field--data" style="width:25%">time</div>
+          <div class="align-field align-field--pad" style="width:75%">padding ×12 B</div>
+        </div>
+        <div class="align-bytes">16 B used, 12 wasted</div>
+      </div>
+      <div class="align-row">
+        <div class="align-label">vec3 lightDir</div>
+        <div style="display:flex;flex:1">
+          <div class="align-field align-field--data" style="width:75%">lightDir.xyz</div>
+          <div class="align-field align-field--pad" style="width:25%">pad ×4 B</div>
+        </div>
+        <div class="align-bytes">16 B used, 4 wasted</div>
+      </div>
+      <div class="align-row">
+        <div class="align-label">float intensity</div>
+        <div style="display:flex;flex:1">
+          <div class="align-field align-field--data" style="width:25%">intensity</div>
+          <div class="align-field align-field--pad" style="width:75%">padding ×12 B</div>
+        </div>
+        <div class="align-bytes">16 B used, 12 wasted</div>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#8b0000;font-weight:700">Total: 48 B declared · 20 B useful · 28 B wasted (58%)</div>
+    </div>
+
+    <div style="background:var(--atlas-bg-alt);border:1px solid var(--atlas-border);padding:16px;margin:12px 0">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.4);text-transform:uppercase;margin-bottom:12px">// PACKED — vec3 + float in same 16-byte slot</div>
+
+      <div class="align-row">
+        <div class="align-label">vec3 lightDir</div>
+        <div style="display:flex;flex:1">
+          <div class="align-field align-field--data" style="width:75%">lightDir.xyz</div>
+          <div class="align-field align-field--data" style="width:25%;background:rgba(26,77,26,.12);color:var(--atlas-ok)">intensity</div>
+        </div>
+        <div class="align-bytes">16 B · 0 wasted</div>
+      </div>
+      <div class="align-row">
+        <div class="align-label">float time</div>
+        <div style="display:flex;flex:1">
+          <div class="align-field align-field--data" style="width:25%">time</div>
+          <div class="align-field align-field--pad" style="width:75%">padding ×12 B</div>
+        </div>
+        <div class="align-bytes">16 B · 12 wasted</div>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:var(--atlas-ok);font-weight:700">Total: 32 B declared · 20 B useful · 12 B wasted (37%) — 33% smaller</div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Packing rule of thumb:</strong> sort struct members from <strong>largest to smallest</strong>. Put <span class="atlas-code-inline">float4</span> and matrices first, then <span class="atlas-code-inline">float3</span> immediately followed by a <span class="atlas-code-inline">float</span> to fill the 4th slot, then <span class="atlas-code-inline">float2</span> pairs, then individual <span class="atlas-code-inline">float</span>/<span class="atlas-code-inline">int</span>. Always verify with a static assert on the C# side.</p>
+    </div>
+
+    <h3 id="s05-csharp">C# → HLSL Struct Mapping</h3>
+    <p>Every field in your C# struct must mirror the GPU struct exactly — same order, same type size, same total byte count. Unity's <span class="atlas-code-inline">CBUFFER_START</span> macro wraps constants in a 16-byte-aligned block; SSBOs and ComputeBuffers use scalar layout when marshalled via <span class="atlas-code-inline">SetData</span>.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// ── C# side (CPU) ─────────────────────────────────────────
+[StructLayout(LayoutKind.Sequential)]  // force C-style packing
+struct LightData
+{
+    public Vector3 direction;   // 12 B
+    public float   intensity;   // 4 B  → total 16 B, packed into one vec4 slot
+    public Vector4 color;       // 16 B
+    public float   radius;      // 4 B
+    public int     flags;       // 4 B
+    public Vector2 reserved;    // 8 B  → total 16 B
+}
+// Total C# struct: 48 B
+
+// Verify at compile time — catches mismatches before runtime:
+static LightData() {
+    Debug.Assert(Marshal.SizeOf<LightData>() == 48,
+        "LightData size mismatch — check HLSL struct alignment");
+}
+
+// ── HLSL side (GPU) ───────────────────────────────────────
+struct LightData
+{
+    float3 direction;   // 12 B \
+    float  intensity;   //  4 B / → 16 B (one float4 slot)
+    float4 color;       // 16 B
+    float  radius;      //  4 B \
+    int    flags;       //  4 B  > 16 B (packed into one slot)
+    float2 reserved;    //  8 B /
+};
+// Total HLSL struct: 48 B ← must match C# exactly
+
+StructuredBuffer&lt;LightData&gt; _Lights : register(t0);
+
+// Per-frame cbuffer — uses 16-byte row packing:
+CBUFFER_START(UnityPerFrame)
+    float4x4 _ViewProj;      // 64 B
+    float3   _SunDir;        // 12 B \
+    float    _Time;          //  4 B / packed → 16 B
+    float4   _FogColor;      // 16 B
+CBUFFER_END</code></pre>
+
+    <h3 id="s05-table">Type Size Reference</h3>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>HLSL TYPE</th><th>GLSL TYPE</th><th>C# TYPE</th><th>SIZE</th><th>std140 ALIGN</th><th>std430 ALIGN</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>float</td><td>float</td><td>float</td><td>4 B</td><td>4 B</td><td>4 B</td></tr>
+          <tr><td>float2</td><td>vec2</td><td>Vector2</td><td>8 B</td><td>8 B</td><td>8 B</td></tr>
+          <tr><td>float3</td><td>vec3</td><td>Vector3</td><td>12 B</td><td><span style="color:#8b0000;font-weight:700">16 B !</span></td><td>16 B</td></tr>
+          <tr><td>float4</td><td>vec4</td><td>Vector4</td><td>16 B</td><td>16 B</td><td>16 B</td></tr>
+          <tr><td>float4x4</td><td>mat4</td><td>Matrix4x4</td><td>64 B</td><td>64 B</td><td>64 B</td></tr>
+          <tr><td>float3x4</td><td>mat3x4</td><td>—</td><td>48 B</td><td>48 B</td><td>48 B</td></tr>
+          <tr><td>int</td><td>int</td><td>int</td><td>4 B</td><td>4 B</td><td>4 B</td></tr>
+          <tr><td>uint</td><td>uint</td><td>uint</td><td>4 B</td><td>4 B</td><td>4 B</td></tr>
+          <tr><td>bool</td><td>bool</td><td>—</td><td><span style="color:#8b0000;font-weight:700">4 B (GPU!)</span></td><td>4 B</td><td>4 B</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--warning">
+      <p><strong>bool on GPU = 4 bytes, not 1.</strong> C# <span class="atlas-code-inline">bool</span> is 1 byte. HLSL <span class="atlas-code-inline">bool</span> is 4 bytes. Never send a C# <span class="atlas-code-inline">bool</span> field directly to a GPU buffer — use <span class="atlas-code-inline">int</span> or pack flags into a <span class="atlas-code-inline">uint</span> bitmask instead.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 05"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       06: CPU→GPU DATA FLOW
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s06">CPU→GPU Data Flow</h2>
+
+    <p>Once the struct is correctly packed, you need to move it to the GPU. The mechanism for this — and its cost — depends on the platform, the data update frequency, and the size of the payload. Choosing the wrong pattern is the second most common performance mistake after struct misalignment.</p>
+
+    <h3 id="s06-patterns">Upload Patterns — Static / Dynamic / Streaming</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ UPLOAD_PATTERNS // BY UPDATE FREQUENCY ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PATTERN</th><th>FREQUENCY</th><th>MECHANISM</th><th>COST</th><th>EXAMPLE</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Static</strong></td>
+            <td>Once at load</td>
+            <td>Upload buffer → GPU copy → discard upload buffer</td>
+            <td>One-time PCIe transfer</td>
+            <td>Mesh vertex data, baked lighting, LUTs</td>
+          </tr>
+          <tr>
+            <td><strong>Dynamic (per frame)</strong></td>
+            <td>Every frame</td>
+            <td>Ring buffer of N copies (typically 2–3). Map current frame's copy, write, submit.</td>
+            <td>CPU write + PCIe each frame</td>
+            <td>Per-frame matrices, time, light positions</td>
+          </tr>
+          <tr>
+            <td><strong>Streaming</strong></td>
+            <td>As-needed</td>
+            <td>Async DMA transfer. CPU queues transfer, GPU signals fence on completion.</td>
+            <td>DMA bandwidth, fence sync</td>
+            <td>Texture mip streaming, LOD mesh streaming</td>
+          </tr>
+          <tr>
+            <td><strong>Push Constants</strong></td>
+            <td>Per draw call</td>
+            <td>Written directly into the command buffer. No buffer allocation.</td>
+            <td>Near-zero — command buffer write</td>
+            <td>Draw ID, MVP matrix, material index</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <pre class="atlas-code-block"><code class="language-c">// ── STATIC upload (DX12) ──────────────────────────────────
+// Step 1: Create upload heap (CPU-visible)
+// Step 2: Copy data to upload heap
+// Step 3: Record CopyBufferRegion to default heap (VRAM)
+// Step 4: Signal fence, wait, release upload heap
+
+ID3D12Resource* uploadBuf; // UPLOAD heap
+ID3D12Resource* gpuBuf;    // DEFAULT heap (fast VRAM)
+
+memcpy(uploadBuf->Map(), meshData, size);
+cmdList->CopyBufferRegion(gpuBuf, 0, uploadBuf, 0, size);
+// After fence signal: uploadBuf safe to release
+
+// ── DYNAMIC per-frame (Vulkan ring buffer) ────────────────
+// Three copies of the UBO — one per frame-in-flight
+VkBuffer   frameUBOs[3];          // ring
+void*      mappedPtrs[3];         // persistently mapped
+uint32_t   frameIdx = 0;
+
+// Each frame:
+memcpy(mappedPtrs[frameIdx], &perFrameData, sizeof(PerFrameData));
+// Bind frameUBOs[frameIdx] as descriptor
+frameIdx = (frameIdx + 1) % 3;
+
+// ── PUSH CONSTANTS (DX12) ────────────────────────────────
+struct DrawPushConstants {
+    uint32_t instanceOffset;   // 4 B
+    uint32_t materialIndex;    // 4 B
+};
+DrawPushConstants pc{ drawOffset, matIdx };
+cmdList->SetGraphicsRoot32BitConstants(0, 2, &pc, 0);</code></pre>
+
+    <h3 id="s06-gc">GC Starvation — ComputeBuffer vs NativeArray</h3>
+
+    <p>In Unity, every <span class="atlas-code-inline">ComputeBuffer.SetData(T[])</span> call with a managed array allocates temporary memory, triggers a garbage collection stall, and performs an extra copy. At 60 Hz with 10 000 instances this is visible in the profiler as recurring GC spikes.</p>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // MANAGED ARRAY — GC alloc every frame</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// Unity — GC-heavy pattern
+// Allocates on managed heap every frame
+Matrix4x4[] matrices = new Matrix4x4[count]; // GC alloc
+for (int i = 0; i &lt; count; i++)
+    matrices[i] = transforms[i].localToWorldMatrix;
+
+// SetData boxes the array, allocates internal temp buffer
+computeBuffer.SetData(matrices); // GC pressure
+// matrices[] becomes eligible for GC → stall risk</code></pre>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // NATIVEARRAY — zero GC, Burst-compatible</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// Unity — zero-GC pattern
+NativeArray&lt;Matrix4x4&gt; matrices =
+    new NativeArray&lt;Matrix4x4&gt;(count, Allocator.TempJob);
+
+// Fill via Burst-compiled IJobParallelFor — no GC
+new BuildMatricesJob {
+    Transforms = transformAccessArray,
+    Output     = matrices
+}.Schedule(count, 64).Complete();
+
+// SetData from NativeArray: direct pointer, no copy, no GC
+computeBuffer.SetData(matrices);
+matrices.Dispose(); // explicit free — no GC involvement</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Rule:</strong> any buffer that updates every frame must use <span class="atlas-code-inline">NativeArray</span> or <span class="atlas-code-inline">GraphicsBuffer</span> with <span class="atlas-code-inline">Lock/Unlock</span>. Managed arrays for GPU data are only acceptable for one-time uploads at load time.</p>
+    </div>
+
+    <h3 id="s06-platforms">Platform Upload Differences</h3>
+
+    <h4><span class="pbadge pbadge--pc">PC</span> Staging buffers, ReBAR, async DMA</h4>
+    <p>Standard pattern: CPU writes to a <strong>staging buffer</strong> in CPU-accessible memory (UPLOAD heap in DX12, <span class="atlas-code-inline">HOST_VISIBLE</span> in Vulkan), then a DMA engine copies it to device-local VRAM asynchronously. The GPU can continue rendering while the DMA runs.</p>
+    <p>With <strong>ReBAR / Smart Access Memory</strong> enabled: the entire VRAM is CPU-addressable. Skip the staging buffer — write directly to VRAM. Reduces latency and saves one buffer allocation per resource.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// Vulkan — check for ReBAR and use direct write if available
+VkPhysicalDeviceMemoryProperties memProps;
+vkGetPhysicalDeviceMemoryProperties(physDevice, &memProps);
+
+// ReBAR: find DEVICE_LOCAL | HOST_VISIBLE heap
+for (uint32_t i = 0; i &lt; memProps.memoryTypeCount; i++) {
+    auto flags = memProps.memoryTypes[i].propertyFlags;
+    bool isBAR = (flags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) &&
+                 (flags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+    if (isBAR) {
+        // Allocate here for direct CPU→VRAM writes (no staging)
+        rebarMemoryTypeIndex = i;
+    }
+}</code></pre>
+
+    <h4><span class="pbadge pbadge--console">Console</span> Unified memory — no upload, fence only</h4>
+    <p>PS5 and Xbox have no PCIe, no staging buffer, no upload pass. CPU allocates from the unified pool, writes data, submits to GPU. The only cost is a <strong>timeline fence</strong> to ensure the CPU write completes before the GPU reads.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// PS5 — CPU writes, GPU reads, same pointer
+void* ptr = garlicAllocator.allocate(sizeof(PerFrameData), 256);
+memcpy(ptr, &perFrameData, sizeof(PerFrameData));
+
+// No copy. Signal fence so GPU waits for CPU write to complete.
+sce::Gnmx::submitAndFlip(cmdBuf, displayBuffer, fence);
+// GPU picks up ptr directly at the original address</code></pre>
+
+    <h4><span class="pbadge pbadge--mobile">Mobile</span> Shared LPDDR5 — minimise upload size, use UBO for small data</h4>
+    <p>Mobile shares one LPDDR5 pool between CPU and GPU. Every byte you upload competes with the GPU's texture fetches and framebuffer reads. Keep per-frame payloads small. Pack per-instance data into a UBO rather than a large SSBO when possible — the constant buffer cache is more aggressively optimised on Mali/Adreno than general buffer paths.</p>
+
+    <div class="atlas-callout atlas-callout--warning">
+      <p>On <strong>TBDR mobile</strong>, avoid mapping (writing) a buffer that the GPU is currently reading. This forces a <strong>pipeline stall</strong> — the GPU must finish its current tile before the CPU can proceed. Always use double or triple buffering for any buffer written from CPU while the GPU renders.</p>
+    </div>
+
+    <h3 id="s06-table">Upload Strategy Decision Matrix</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ UPLOAD_STRATEGY // DECISION_MATRIX ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>CONDITION</th><th>PC</th><th>Console</th><th>Mobile</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Data updated: never (static)</td>
+            <td>Upload → device-local. Release staging buffer.</td>
+            <td>Write once → unified pool. No staging.</td>
+            <td>Upload once. Keep in GPU pool.</td>
+          </tr>
+          <tr>
+            <td>Data updated: per frame, &lt;64 KB</td>
+            <td>Ring buffer (3×) in upload heap. Persistent map.</td>
+            <td>Write directly to unified ptr. Fence only.</td>
+            <td>UBO ring buffer. Keep payloads minimal.</td>
+          </tr>
+          <tr>
+            <td>Data updated: per frame, &gt;64 KB</td>
+            <td>Staging ring buffer → async DMA. Double buffer.</td>
+            <td>Large unified alloc. Write, fence, submit.</td>
+            <td>SSBO ring buffer. Profile bandwidth cost.</td>
+          </tr>
+          <tr>
+            <td>Per-draw data, &lt;256 B</td>
+            <td>Push / Root Constants. Zero allocation.</td>
+            <td>Push / Root Constants. Zero allocation.</td>
+            <td>setVertexBytes() (Metal) / Push Constants.</td>
+          </tr>
+          <tr>
+            <td>Unity: per-frame arrays</td>
+            <td colspan="3">NativeArray + Burst Job → GraphicsBuffer.SetData(). Never managed T[].</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- REFERENCES -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">Khronos Group</span> — GLSL 4.60 Specification: Uniform Block Layout Qualifiers (std140, std430).
+            <br><a href="https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.4.60.pdf" class="atlas-ref-link" target="_top">registry.khronos.org — GLSL 4.60 Spec (PDF)</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Microsoft</span> — Packing Rules for Constant Variables (HLSL). Microsoft Learn.
+            <br><a href="https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules" class="atlas-ref-link" target="_top">learn.microsoft.com — HLSL Packing Rules</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Microsoft</span> — DirectX 12 Upload Heaps and Resource Management. Microsoft Learn.
+            <br><a href="https://learn.microsoft.com/en-us/windows/win32/direct3d12/uploading-resources" class="atlas-ref-link" target="_top">learn.microsoft.com — DX12 Uploading Resources</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Unity Technologies</span> — NativeArray and the C# Job System. Unity Manual.
+            <br><a href="https://docs.unity3d.com/Manual/job-system-native-container.html" class="atlas-ref-link" target="_top">docs.unity3d.com — NativeArray Job System</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[05]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">ARM</span> — Vulkan Best Practices: Buffer and Image Management. ARM Developer Hub.
+            <br><a href="https://developer.arm.com/documentation/101897/latest/Buffer-and-Image-Management" class="atlas-ref-link" target="_top">developer.arm.com — Buffer and Image Management</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[06]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">AMD / GPUOpen</span> — Vulkan Memory Allocator Library. GPUOpen.
+            <br><a href="https://gpuopen.com/vulkan-memory-allocator/" class="atlas-ref-link" target="_top">gpuopen.com — Vulkan Memory Allocator</a>
+          </div>
+        </li>
+<li class="atlas-ref-item">
+          <span class="atlas-ref-num">[07]</span>
+          <div>
+            <span class="atlas-ref-tag">TALK</span>
+            <span class="atlas-ref-author">Adam Sawicki</span> — Efficient Use of GPU Memory in Modern Games. Digital Dragons 2021.
+            <br><a href="https://gpuopen.com/videos/efficient-use-of-gpu-memory-digital-dragons/" class="atlas-ref-link" target="_top">gpuopen.com — Efficient Use of GPU Memory</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 06"></div>
+  </div>
+
+
+  <!-- ══ SERIES NAV ════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-series-nav">
+      <ul class="atlas-series-nav__parts">
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-01" target="_top">
+            <span class="atlas-series-nav__num">01</span>
+            <span class="atlas-series-nav__title">The Machine — GPU Execution Model · Memory Hierarchy</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-02" target="_top">
+            <span class="atlas-series-nav__num">02</span>
+            <span class="atlas-series-nav__title">The Pipeline — Render Stages · Buffer Taxonomy</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--current">
+          <span class="atlas-series-nav__num">03</span>
+          <span class="atlas-series-nav__title">The Data — Alignment · Packing · CPU→GPU Flow</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--current">CURRENT</span>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--soon">
+          <span class="atlas-series-nav__num">04</span>
+          <span class="atlas-series-nav__title">The Shader — File→Pixel · Instancing · HLSL/GLSL/MSL · Compute</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--soon">SOON</span>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--soon">
+          <span class="atlas-series-nav__num">05</span>
+          <span class="atlas-series-nav__title">The Engine — Forward/Deferred · URP · HDRP · Unreal · Debug Tools</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--soon">SOON</span>
+        </li>
+      </ul>
+      <div class="atlas-part-nav">
+        <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-02" target="_top" class="atlas-part-nav__btn">
+          <span class="atlas-part-nav__direction">← Prev</span>
+          <span class="atlas-part-nav__label">Part 02: The Pipeline</span>
+          <span class="atlas-part-nav__sub">Render Stages · Buffer Taxonomy</span>
+        </a>
+        <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-04" target="_top" class="atlas-part-nav__btn atlas-part-nav__btn--next">
+          <span class="atlas-part-nav__direction">Next →</span>
+          <span class="atlas-part-nav__label">Part 04: The Shader</span>
+          <span class="atlas-part-nav__sub">File→Pixel · Instancing · HLSL/GLSL/MSL</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// FROM_FILE_TO_PIXEL // PART 03 OF 05 // CHAPTERS 05–06 // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat alignment_packing_cpu_gpu_flow.log',project:'From File to Pixel',module:'Part 03 — The Data',version:'v1.0',logId:'FTFP_P03',status:'LIVE',slug:'from-file-to-pixel-part-03',author:'Pavel Zosim',created:'2025.03.22',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</body>
+</html>
+

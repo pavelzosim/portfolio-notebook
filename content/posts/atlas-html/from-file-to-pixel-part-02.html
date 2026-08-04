@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/from-file-to-pixel-part-02">
+  <title>From File to Pixel · Part 02: The Pipeline — pavelzosim.com</title>
+  <meta name="description" content="GPU Render Pipeline stages and Buffer Taxonomy. IMR vs TBDR, Early-Z, HSR, rasterization. Every buffer type across Vulkan, DX12, DX11, Metal, GL ES — where it lives, what it costs, when to use it.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.7/cdn/atlas-framework.css?v=1.9.7">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html, body { margin: 0; padding: 0; background: transparent; }
+
+    .pbadge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border:1px solid;vertical-align:middle;margin-right:6px}
+    .pbadge--pc{color:#5BA8D8;border-color:#1A4060}
+    .pbadge--console{color:#9A7ED8;border-color:#3A2870}
+    .pbadge--mobile{color:#D8A83A;border-color:#5A3C0A}
+    .pbadge--vr{color:#3ABCB0;border-color:#0A3530}
+    .pbadge--all{color:rgba(0,0,0,.5);border-color:rgba(0,0,0,.2)}
+
+    /* memory / speed bars */
+    .mem-bars{display:flex;flex-direction:column;gap:5px;margin:12px 0}
+    .mb-row{display:grid;grid-template-columns:180px 1fr 140px;gap:8px;align-items:center}
+    .mb-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:#000}
+    .mb-track{height:5px;background:rgba(0,0,0,.08)}
+    .mb-fill{height:100%}
+    .mb-val{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(0,0,0,.45);text-align:right}
+
+    /* pipeline flow strip */
+    .pipeline-strip{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:16px 0;border:1px solid rgba(0,0,0,.15);overflow:hidden}
+    .ps-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-right:1px solid rgba(0,0,0,.12);flex:1;min-width:80px;text-align:center;background:rgba(0,0,0,.02)}
+    .ps-stage:last-child{border-right:none}
+    .ps-stage--prog{background:rgba(139,0,0,.06);color:#8b0000}
+    .ps-stage--fixed{background:rgba(0,0,0,.04);color:rgba(0,0,0,.5)}
+    .ps-stage__sub{font-size:8px;font-weight:400;color:rgba(0,0,0,.4);margin-top:2px;text-transform:none;letter-spacing:0}
+
+    /* series nav + part nav (same as P01) */
+    .atlas-container .atlas-series-nav{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 0;margin:32px 0 0;width:100%}
+    .atlas-container .atlas-series-nav::before{content:"[ SERIES // FROM_FILE_TO_PIXEL ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .atlas-series-nav__parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .atlas-series-nav__part{display:grid;grid-template-columns:36px 1fr auto;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);padding:8px 16px;transition:background .1s}
+    .atlas-container .atlas-series-nav__part:last-child{border-bottom:none}
+    .atlas-container .atlas-series-nav__part:hover{background:rgba(0,0,0,.02)}
+    .atlas-container .atlas-series-nav__part a{display:contents;text-decoration:none;color:inherit}
+    .atlas-container .atlas-series-nav__part:hover .atlas-series-nav__num,
+    .atlas-container .atlas-series-nav__part:hover .atlas-series-nav__title{color:#8b0000}
+    .atlas-container .atlas-series-nav__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);letter-spacing:.04em;transition:color .1s}
+    .atlas-container .atlas-series-nav__title{font-size:12px;font-weight:700;color:#000;transition:color .1s}
+    .atlas-container .atlas-series-nav__part--current{background:rgba(139,0,0,.03);border-left:2px solid #8b0000}
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__num,
+    .atlas-container .atlas-series-nav__part--current .atlas-series-nav__title{color:#8b0000}
+    .atlas-container .atlas-series-nav__part--soon .atlas-series-nav__title{color:rgba(0,0,0,.35)}
+    .atlas-container .atlas-series-nav__status{font-size:9px;font-weight:700;padding:1px 6px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+    .atlas-container .atlas-series-nav__status--live{color:var(--atlas-ok);border-color:var(--atlas-ok)}
+    .atlas-container .atlas-series-nav__status--soon{color:var(--atlas-ink-muted);border-color:var(--atlas-border)}
+    .atlas-container .atlas-series-nav__status--current{color:var(--atlas-crit);border-color:var(--atlas-crit)}
+    .atlas-container .atlas-part-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-top:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .atlas-part-nav__btn{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);text-decoration:none;transition:background .12s,border-color .12s}
+    .atlas-container .atlas-part-nav__btn:hover{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.3)}
+    .atlas-container .atlas-part-nav__btn--next{text-align:right}
+    .atlas-container .atlas-part-nav__direction{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.35);text-transform:uppercase}
+    .atlas-container .atlas-part-nav__label{font-size:12px;font-weight:700;color:#000}
+    .atlas-container .atlas-part-nav__sub{font-size:10px;color:rgba(0,0,0,.4)}
+    .atlas-container .atlas-part-nav__btn:hover .atlas-part-nav__label{color:#8b0000}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+</head>
+<body>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Render Pipeline Stages</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-imr"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">IMR vs TBDR — The Core Architectural Split</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-earlyz"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Early-Z · HSR · FPK — Depth Elimination</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-platforms"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Platform Pipeline Differences</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-table"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Pipeline Matrix — All Platforms</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Buffer Taxonomy</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s04-types"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Every Buffer Type — Where It Lives · When To Use</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s04-apis"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">API Code — Vulkan / DX12 / DX11 / Metal</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s04-names"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Buffer Names Cross-API Reference Table</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       03: RENDER PIPELINE STAGES
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 Render Pipeline Stages</h2>
+    <p>The render pipeline is the sequence of hardware and software stages that transforms geometry and material data into pixel colours in a framebuffer. Understanding which stages are programmable, which are fixed-function, and which behave differently between architectures determines how you write and optimise shader code.</p>
+
+    <h3>Universal Stage Sequence</h3>
+
+    <div class="pipeline-strip">
+      <div class="ps-stage ps-stage--prog">Input Assembly<div class="ps-stage__sub">VB/IB → triangles</div></div>
+      <div class="ps-stage ps-stage--prog">Vertex Shader<div class="ps-stage__sub">programmable</div></div>
+      <div class="ps-stage ps-stage--fixed">Tessellation<div class="ps-stage__sub">optional</div></div>
+      <div class="ps-stage ps-stage--fixed">Rasterization<div class="ps-stage__sub">fixed-function</div></div>
+      <div class="ps-stage ps-stage--fixed">Early-Z / HSR<div class="ps-stage__sub">depth cull</div></div>
+      <div class="ps-stage ps-stage--prog">Fragment Shader<div class="ps-stage__sub">programmable</div></div>
+      <div class="ps-stage ps-stage--fixed">Output Merger<div class="ps-stage__sub">blend · depth</div></div>
+    </div>
+
+    <p>Programmable stages (Vertex, Fragment, Compute) run your HLSL/GLSL/MSL code on the GPU. Fixed-function stages (Rasterization, Output Merger) execute at hardware speed with no programmable code — only state configuration via API calls.</p>
+
+    <h3 id="s03-imr">IMR vs TBDR — The Core Architectural Split</h3>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // IMR — Immediate Mode Rendering</div>
+        <div class="comp-body">
+          <p>Each draw call is processed and written to VRAM immediately. Fragments are shaded as they arrive. No ordering guarantee between draw calls — depth test eliminates hidden fragments after the fact.</p>
+          <p><strong>Used by:</strong> PC NVIDIA/AMD, PS5, Xbox Series X.</p>
+          <p><strong>Advantage:</strong> simple model, unlimited render targets, no tile budget constraints.</p>
+          <p><strong>Disadvantage:</strong> hidden surfaces consume fragment shader invocations before depth test eliminates them (without depth prepass).</p>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // TBDR — Tile-Based Deferred Rendering</div>
+        <div class="comp-body">
+          <p>Screen is divided into tiles (~16×16 px). All geometry in a frame is rasterized and binned per-tile first (Binning Pass). Then each tile is rendered entirely in on-chip SRAM — including depth test — before writing the final colour to system RAM.</p>
+          <p><strong>Used by:</strong> Mali, Adreno, Apple GPU, Quest 3.</p>
+          <p><strong>Advantage:</strong> intermediate buffers (depth, G-Buffer) stay on-chip. Bandwidth to LPDDR5 = final colour only.</p>
+          <p><strong>Disadvantage:</strong> binning overhead, tile memory size limit, framebuffer breaks are catastrophically expensive.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 id="s03-earlyz">Early-Z · HSR · FPK — Depth Elimination</h3>
+
+    <p>The most important fixed-function performance feature in the pipeline. Eliminates fragments before the fragment shader runs — saving ALU, bandwidth, and power.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ DEPTH_ELIMINATION // MECHANISMS BY PLATFORM ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>MECHANISM</th><th>PLATFORM</th><th>HOW IT WORKS</th><th>WHAT BREAKS IT</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Early-Z</strong></td>
+            <td><span class="pbadge pbadge--pc">PC</span><span class="pbadge pbadge--console">Console</span></td>
+            <td>Hardware depth test runs before fragment shader. Fragments that fail depth are discarded without invoking the PS.</td>
+            <td><span class="atlas-code-inline">discard</span> / <span class="atlas-code-inline">clip()</span> in fragment shader. Manual <span class="atlas-code-inline">SV_Depth</span> write. Alpha test. Any operation that may change whether the fragment writes depth.</td>
+          </tr>
+          <tr>
+            <td><strong>HSR</strong><br><span style="font-size:10px;color:rgba(0,0,0,.4)">Hidden Surface Removal</span></td>
+            <td><span class="pbadge pbadge--mobile">Apple GPU</span></td>
+            <td>After binning, the GPU sorts fragments per-tile and eliminates hidden ones before any fragment shader runs. Stronger than Early-Z — eliminates even within a single draw call.</td>
+            <td>Same as Early-Z. Discard breaks HSR analysis.</td>
+          </tr>
+          <tr>
+            <td><strong>FPK</strong><br><span style="font-size:10px;color:rgba(0,0,0,.4)">Forward Pixel Kill</span></td>
+            <td><span class="pbadge pbadge--mobile">ARM Mali</span></td>
+            <td>During fragment execution, if a later fragment covers an earlier one and the earlier one hasn't written yet, Mali kills the earlier fragment mid-execution.</td>
+            <td>Alpha blend (write order matters), <span class="atlas-code-inline">discard</span>, late depth write.</td>
+          </tr>
+          <tr>
+            <td><strong>Depth Prepass</strong></td>
+            <td><span class="pbadge pbadge--all">IMR</span></td>
+            <td>Explicit first pass rendering only depth with minimal PS. Main pass uses <span class="atlas-code-inline">ZTest Equal</span> → only visible fragments shade.</td>
+            <td>Doubles draw calls. Only worth it when PS is expensive and overdraw is high.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>The single most common Early-Z killer:</strong> <span class="atlas-code-inline">clip()</span> or <span class="atlas-code-inline">discard</span> in an opaque fragment shader. This includes alpha cutout vegetation shaders. If your foliage shader uses <span class="atlas-code-inline">clip(albedo.a - _Cutoff)</span>, Early-Z is disabled for every draw using that shader. Solution: use a dedicated depth prepass with alpha test, then the main pass with <span class="atlas-code-inline">ZTest Equal</span>.</p>
+    </div>
+
+    <h3 id="s03-platforms">Platform Pipeline Differences</h3>
+
+    <h4><span class="pbadge pbadge--pc">PC</span> Modern extensions — Mesh Shaders, Ray Tracing</h4>
+    <p>DX12 SM6.5 / Vulkan 1.3 introduced <strong>Mesh Shaders</strong>: replace Input Assembly + Vertex + (optionally) Tessellation with two programmable stages — Amplification Shader (per-meshlet culling) and Mesh Shader (per-meshlet geometry). Nanite in Unreal 5 uses this on PC/Console for software rasterization of micro-polygons.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// DX12 Mesh Shader — per-meshlet dispatch
+[numthreads(128, 1, 1)]
+[OutputTopology("triangle")]
+void MeshMain(
+    uint3  gid  : SV_GroupID,
+    uint   gtid : SV_GroupIndex,
+    out vertices Vertex  verts[252],
+    out indices  uint3   tris[126])
+{
+    Meshlet m = _Meshlets[gid.x];
+    SetMeshOutputCounts(m.vertexCount, m.triangleCount);
+    if (gtid < m.vertexCount)
+        verts[gtid] = LoadVertex(m, gtid);
+    if (gtid < m.triangleCount)
+        tris[gtid]  = LoadTriangle(m, gtid);
+}</code></pre>
+
+    <h4><span class="pbadge pbadge--console">Console</span> Async Compute + ICB</h4>
+    <p>PS5 and Xbox support <strong>Indirect Command Buffers (ICB)</strong> — a GPU writes draw commands into a buffer, which the GPU then executes without any CPU involvement. Combined with an Async Compute pre-pass for culling, this is how modern console engines achieve GPU-driven rendering with near-zero CPU overhead.</p>
+
+    <h4><span class="pbadge pbadge--mobile">Mobile</span> TBDR render pass design</h4>
+    <p>On TBDR, the render pass boundary is the unit of execution. Incorrect <span class="atlas-code-inline">loadOp</span> / <span class="atlas-code-inline">storeOp</span> causes unnecessary LPDDR5 traffic. The rules are simple and absolute:</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>ATTACHMENT</th><th>loadOp</th><th>storeOp</th><th>RULE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Color (final)</td><td>CLEAR</td><td>STORE</td><td>Always store final color to RAM</td></tr>
+          <tr><td>Depth (not read later)</td><td>CLEAR</td><td><strong>DONT_CARE</strong></td><td>Never store depth if not needed downstream — saves full frame of LPDDR5 writes</td></tr>
+          <tr><td>Depth (read by next pass)</td><td>CLEAR</td><td>STORE</td><td>Must store if shadow map or depth-of-field reads it</td></tr>
+          <tr><td>G-Buffer (same-pass subpass)</td><td>DONT_CARE</td><td><strong>DONT_CARE</strong></td><td>Never leaves tile SRAM — free read via subpassInput / framebuffer fetch</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <pre class="atlas-code-block"><code class="language-c">// Vulkan — correct mobile render pass configuration
+VkRenderPassCreateInfo rpInfo = {};
+// Depth attachment — DONT_CARE storeOp saves bandwidth
+VkAttachmentDescription depthAttach = {
+    .format         = VK_FORMAT_D32_SFLOAT,
+    .loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR,
+    .storeOp        = VK_ATTACHMENT_STORE_OP_DONT_CARE, // never hits LPDDR5
+    .initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED,
+    .finalLayout    = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+};</code></pre>
+
+    <h4><span class="pbadge pbadge--vr">VR</span> Single-Pass Instanced Stereo</h4>
+    <p>Standard stereo rendering submits every draw call twice — once per eye. Single-Pass Instanced renders both eyes in one draw: the vertex shader receives an instance ID that encodes the eye index, selects the correct VP matrix, and writes to the correct render target array layer. One draw call, two eyes, halved CPU submission cost.</p>
+
+    <h3 id="s03-table">Pipeline Matrix — All Platforms</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ PIPELINE_MATRIX // PLATFORM_COMPARISON ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>PLATFORM</th><th>RASTER MODEL</th><th>DEPTH ELIM</th><th>RT MEMORY</th><th>KEY RECOMMENDATION</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>PC (NVIDIA/AMD)</td><td>IMR</td><td>Early-Z (HW)</td><td>VRAM</td><td>Avoid discard in opaque shaders; use depth prepass for complex scenes</td></tr>
+          <tr><td>PS5 / Xbox</td><td>IMR + Mesh Shader</td><td>Early-Z</td><td>VRAM (unified)</td><td>Use async compute queues; leverage ICB for GPU-driven rendering</td></tr>
+          <tr><td>Mali Valhall</td><td>TBDR</td><td>FPK (HW)</td><td>Tile SRAM → LPDDR5</td><td>DONT_CARE depth storeOp; design render passes; avoid discard</td></tr>
+          <tr><td>Adreno 7xx</td><td>TBDR</td><td>HSR (Adreno)</td><td>Tile SRAM → LPDDR5</td><td>Minimise overdraw; DONT_CARE depth; avoid mid-frame RT reads</td></tr>
+          <tr><td>Apple GPU</td><td>TBDR</td><td>HSR (HW)</td><td>Tile SRAM → unified</td><td>Tile Shaders; Subpass / Framebuffer Fetch for G-Buffer; DONT_CARE</td></tr>
+          <tr><td>VR PC (PCVR)</td><td>IMR + stereo</td><td>Early-Z</td><td>VRAM (eye textures)</td><td>Single-Pass Instanced; store depth for ATW; minimal post-processing</td></tr>
+          <tr><td>VR Standalone (Quest)</td><td>TBDR + stereo</td><td>HSR</td><td>Tile SRAM → LPDDR5</td><td>FFR; alpha-to-coverage; Single-Pass Instanced; 11 ms hard limit</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       04: BUFFER TAXONOMY
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Buffer Taxonomy</h2>
+    <p>A GPU buffer is a typed allocation in memory with specific access rules. The type determines where data physically lives, who can read and write it, how the hardware caches it, and at what cost. Choosing the wrong buffer type is one of the most common sources of invisible performance loss — no compiler warning, no crash, just slower rendering.</p>
+
+    <h3 id="s04-types">Every Buffer Type — Where It Lives · When To Use</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ BUFFER_TAXONOMY // ALL TYPES ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>BUFFER TYPE</th><th>LIVES IN</th><th>ACCESS</th><th>CACHE</th><th>MAX SIZE</th><th>USE CASE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Vertex Buffer</td><td>VRAM</td><td>VS read</td><td>L1/L2</td><td>4 GB</td><td>Per-vertex geometry: position, normal, UV, color</td></tr>
+          <tr><td>Index Buffer</td><td>VRAM</td><td>Fixed func</td><td>L1</td><td>4 GB</td><td>Triangle topology — reuse vertices without duplication</td></tr>
+          <tr><td>Constant / Uniform Buffer</td><td>VRAM → L1</td><td>All stages, read</td><td>CB cache (aggressive)</td><td>64 KB</td><td>Per-frame / per-material shared data: matrices, lights, params</td></tr>
+          <tr><td>Push Constants / Root Constants</td><td>Cmd Buffer</td><td>All stages, read</td><td>Register-like</td><td>128–256 B</td><td>Per-draw hot data: MVP matrix, draw ID</td></tr>
+          <tr><td>Structured Buffer / SSBO</td><td>VRAM</td><td>Any stage, read</td><td>L2 general</td><td>VRAM limit</td><td>Instance arrays, bone matrices, large dynamic data</td></tr>
+          <tr><td>RW Buffer / UAV / SSBO (rw)</td><td>VRAM</td><td>CS read+write</td><td>L2 (coherent)</td><td>VRAM limit</td><td>Compute output: particles, physics, GPU culling results</td></tr>
+          <tr><td>Texture 2D (SRV)</td><td>VRAM</td><td>PS/CS, sampler</td><td>Texture cache (2D spatial)</td><td>16K×16K</td><td>Albedo, normals, LUTs — with mip + filtering</td></tr>
+          <tr><td>RW Texture / UAV</td><td>VRAM</td><td>CS read+write</td><td>L2</td><td>—</td><td>Post-process, procedural texture generation</td></tr>
+          <tr><td>Render Target</td><td>VRAM / Tile SRAM</td><td>PS write, blend</td><td>ROP / tile</td><td>—</td><td>G-Buffer, shadow maps, final color output</td></tr>
+          <tr><td>Depth Buffer</td><td>VRAM / Tile SRAM</td><td>HW depth test</td><td>Depth cache</td><td>—</td><td>Occlusion, shadow depth, reprojection (VR)</td></tr>
+          <tr><td>Shared / Group Memory</td><td>On-chip SM</td><td>CS only, R+W</td><td>No cache — direct</td><td>64–100 KB</td><td>Intra-group communication, reductions, tiled algorithms</td></tr>
+          <tr><td>Indirect Buffer</td><td>VRAM</td><td>Fixed func args</td><td>L2</td><td>—</td><td>GPU-written draw arguments for GPU-driven rendering</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Access Speed Order</h4>
+
+    <div class="mem-bars">
+      <div class="mb-row"><div class="mb-label">Push / Root Constants</div><div class="mb-track"><div class="mb-fill" style="width:100%;background:#1a4d1a"></div></div><div class="mb-val">registers · ~1 cy</div></div>
+      <div class="mb-row"><div class="mb-label">Shared / Group Mem</div><div class="mb-track"><div class="mb-fill" style="width:90%;background:#1a4d1a"></div></div><div class="mb-val">~20 cy (no conflict)</div></div>
+      <div class="mb-row"><div class="mb-label">Constant Buffer (L1 hit)</div><div class="mb-track"><div class="mb-fill" style="width:72%;background:#1A4060"></div></div><div class="mb-val">~30 cy</div></div>
+      <div class="mb-row"><div class="mb-label">Texture (L2 hit)</div><div class="mb-track"><div class="mb-fill" style="width:55%;background:#7a5200"></div></div><div class="mb-val">~100 cy</div></div>
+      <div class="mb-row"><div class="mb-label">Structured Buffer (L2 hit)</div><div class="mb-track"><div class="mb-fill" style="width:38%;background:#7a5200"></div></div><div class="mb-val">~150 cy</div></div>
+      <div class="mb-row"><div class="mb-label">VRAM miss</div><div class="mb-track"><div class="mb-fill" style="width:12%;background:#8b0000"></div></div><div class="mb-val">~400–600 cy</div></div>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><strong>Decision rule:</strong> per-draw data under 128B → Push Constants. Per-frame shared data under 64 KB → Constant Buffer. Large arrays / dynamic data → Structured Buffer. Compute output → UAV / RWBuffer. Inter-thread communication → Shared Memory.</p>
+    </div>
+
+    <h3 id="s04-apis">API Code — Vulkan / DX12 / DX11 / Metal</h3>
+
+    <h4><span class="pbadge pbadge--pc">Vulkan</span></h4>
+    <p>In Vulkan every buffer is a <span class="atlas-code-inline">VkBuffer</span> with usage flags. The "type" is determined by how you bind it in a descriptor set.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// Vulkan GLSL — all buffer types declared in shader
+layout(set=0, binding=0) uniform FrameUBO {    // Constant Buffer
+    mat4 viewProj;
+    vec4 sunDir;
+} frame;
+
+layout(set=1, binding=0) readonly buffer InstanceSSBO { // Structured Buffer
+    mat4 matrices[];
+} instances;
+
+layout(set=1, binding=1) buffer ParticleSSBO { // RW Structured Buffer (UAV)
+    struct { vec3 pos; float life; } data[];
+} particles;
+
+layout(set=2, binding=0) uniform sampler2D albedoMap;      // Texture SRV
+layout(set=2, binding=1, rgba8) uniform image2D outputTex; // RW Texture UAV</code></pre>
+
+    <h4><span class="pbadge pbadge--pc">DX12</span></h4>
+    <p>DX12 uses Descriptor Heaps — large arrays of resource descriptors (CBV, SRV, UAV, Sampler) in GPU-visible memory. Shaders index into them via the Root Signature. Bindless rendering stores thousands of texture descriptors in one heap and indexes with a root constant.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// HLSL DX12 — bindless textures via heap indexing
+Texture2D textures[] : register(t0, space0); // unbounded array
+
+uint texIndex; // passed as root constant
+float4 albedo = textures[texIndex].Sample(samp, uv);
+
+// Structured buffer — typed array
+StructuredBuffer<float4x4> _Instances : register(t1);
+
+// RW buffer for compute output
+RWStructuredBuffer<ParticleData> _Particles : register(u0);</code></pre>
+
+    <h4><span class="pbadge pbadge--pc">DX11 / Unity Built-in</span></h4>
+    <p>Slot-based: textures bind to <span class="atlas-code-inline">t0–t127</span>, constant buffers to <span class="atlas-code-inline">b0–b13</span>, UAVs to <span class="atlas-code-inline">u0–u7</span>. No explicit descriptor management — the driver handles it.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// HLSL DX11 / Unity — explicit register slots
+Texture2D        _BaseMap    : register(t0);
+SamplerState     sampler_BaseMap : register(s0);
+StructuredBuffer<float4x4> _Instances : register(t1);
+
+CBUFFER_START(UnityPerMaterial)
+    float4 _BaseColor;
+    float  _Roughness;
+CBUFFER_END
+
+// Unity NativeArray — zero-GC update
+var native = new NativeArray<Matrix4x4>(count, Allocator.TempJob);
+// fill via Burst-compiled Job
+computeBuffer.SetData(native); // memcpy native → VRAM, no GC alloc
+native.Dispose();</code></pre>
+
+    <h4><span class="pbadge pbadge--mobile">Metal</span> Argument Buffers — bindless as a first-class feature</h4>
+    <p>Metal's Argument Buffers pack all resources for a draw — textures, samplers, constant pointers — into a single struct buffer. On Apple Silicon, the struct written by CPU is read by GPU without any copy.</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// MSL — Argument Buffer
+struct MaterialArgs {
+    texture2d<float>    albedo    [[id(0)]];
+    texture2d<float>    normalMap [[id(1)]];
+    constant float4*    params    [[id(2)]];
+    sampler             samp      [[id(3)]];
+};
+
+fragment float4 fragMain(
+    Varyings in [[stage_in]],
+    device MaterialArgs& mat [[buffer(0)]])
+{
+    float4 col = mat.albedo.sample(mat.samp, in.uv);
+    return col * mat.params[0];
+}
+
+// Mobile subpass input — free tile memory read on TBDR
+layout(input_attachment_index=0, set=0, binding=0)
+    uniform subpassInput colorInput;
+vec4 prev = subpassLoad(colorInput); // FREE on Mali/Adreno — on-chip read</code></pre>
+
+    <h3 id="s04-names">Buffer Names Cross-API Reference</h3>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ BUFFER_NAMES // CROSS-API REFERENCE ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>CONCEPT</th><th>Vulkan GLSL</th><th>DX12 HLSL</th><th>DX11 HLSL</th><th>Metal MSL</th><th>GL ES</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Constant Buffer</td><td>uniform block (UBO)</td><td>cbuffer / CBV</td><td>cbuffer</td><td>constant T& [[buffer(N)]]</td><td>uniform block</td></tr>
+          <tr><td>Per-draw fast data</td><td>push_constant block</td><td>Root Constants</td><td>—</td><td>setVertexBytes()</td><td>glUniform*()</td></tr>
+          <tr><td>Read-only array</td><td>readonly buffer (SSBO)</td><td>StructuredBuffer&lt;T&gt;</td><td>StructuredBuffer&lt;T&gt;</td><td>device const T* [[buffer(N)]]</td><td>readonly SSBO</td></tr>
+          <tr><td>Read-write array</td><td>buffer (SSBO)</td><td>RWStructuredBuffer&lt;T&gt;</td><td>RWStructuredBuffer&lt;T&gt;</td><td>device T* (rw)</td><td>SSBO</td></tr>
+          <tr><td>Texture read</td><td>sampler2D</td><td>Texture2D + SamplerState</td><td>Texture2D + SamplerState</td><td>texture2d&lt;T&gt; + sampler</td><td>sampler2D</td></tr>
+          <tr><td>Texture write</td><td>image2D (imageStore)</td><td>RWTexture2D&lt;T&gt;</td><td>RWTexture2D&lt;T&gt;</td><td>texture2d&lt;T, access::write&gt;</td><td>image2D</td></tr>
+          <tr><td>Group shared</td><td>shared T[]</td><td>groupshared T[]</td><td>groupshared T[]</td><td>threadgroup T[]</td><td>shared T[]</td></tr>
+          <tr><td>Tile memory read</td><td>subpassInput</td><td>—</td><td>—</td><td>[[color(N)]] inout</td><td>framebuffer_fetch</td></tr>
+          <tr><td>Indirect args</td><td>VkDrawIndexedIndirectCommand</td><td>D3D12_DRAW_INDEXED_ARGUMENTS</td><td>—</td><td>MTLDrawIndexedPrimitivesIndirectArguments</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- REFERENCES -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">SPEC</span>
+            <span class="atlas-ref-author">Khronos Group</span> — Vulkan 1.3 Specification: Render Passes and Framebuffers.
+            <br><a href="https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html#renderpass" class="atlas-ref-link" target="_top">registry.khronos.org — Vulkan Render Passes</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Microsoft</span> — DirectX 12 Resource Binding. Microsoft Learn.
+            <br><a href="https://learn.microsoft.com/en-us/windows/win32/direct3d12/resource-binding" class="atlas-ref-link" target="_top">learn.microsoft.com — DX12 Resource Binding</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">ARM</span> — Mali GPU Best Practices: Render Passes and Bandwidth. ARM Developer Hub.
+            <br><a href="https://developer.arm.com/documentation/101897/latest/Optimal-Render-Pass-Design" class="atlas-ref-link" target="_top">developer.arm.com — Optimal Render Pass Design</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[04]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Apple</span> — Metal Feature Set Tables: Tile-Based Rendering. Apple Developer Documentation.
+            <br><a href="https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf" class="atlas-ref-link" target="_top">developer.apple.com — Metal Feature Set Tables</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[05]</span>
+          <div>
+            <span class="atlas-ref-tag">TALK</span>
+            <span class="atlas-ref-author">Yuriy O'Donnell</span> — FrameGraph: Extensible Rendering Architecture in Frostbite. GDC 2017.
+            <br><a href="https://www.gdcvault.com/play/1024612/FrameGraph-Extensible-Rendering-Architecture-in" class="atlas-ref-link" target="_top">gdcvault.com — FrameGraph GDC 2017</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[06]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Microsoft</span> — DirectX 12: Mesh Shaders. Microsoft Learn.
+            <br><a href="https://microsoft.github.io/DirectX-Specs/d3d/MeshShader.html" class="atlas-ref-link" target="_top">learn.microsoft.com — DX12 Mesh Shaders</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[07]</span>
+          <div>
+            <span class="atlas-ref-tag">DOCS</span>
+            <span class="atlas-ref-author">Unity Technologies</span> — Unity RenderGraph System. Unity 6 Documentation.
+            <br><a href="https://docs.unity3d.com/6000.0/Documentation/Manual/urp/render-graph.html" class="atlas-ref-link" target="_top">docs.unity3d.com — RenderGraph System</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══ SERIES NAV ════════════════════════════════════════════════ -->
+  <div class="content-block">
+    <div class="atlas-series-nav">
+      <ul class="atlas-series-nav__parts">
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-01" target="_top">
+            <span class="atlas-series-nav__num">01</span>
+            <span class="atlas-series-nav__title">The Machine — GPU Execution Model · Memory Hierarchy</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--current">
+          <span class="atlas-series-nav__num">02</span>
+          <span class="atlas-series-nav__title">The Pipeline — Render Stages · Buffer Taxonomy</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--current">CURRENT</span>
+        </li>
+        <li class="atlas-series-nav__part">
+          <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-03" target="_top">
+            <span class="atlas-series-nav__num">03</span>
+            <span class="atlas-series-nav__title">The Data — Alignment · Packing · CPU→GPU Flow</span>
+            <span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span>
+          </a>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--soon">
+          <span class="atlas-series-nav__num">04</span>
+          <span class="atlas-series-nav__title">The Shader — File→Pixel · Instancing · HLSL/GLSL/MSL · Compute</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--soon">SOON</span>
+        </li>
+        <li class="atlas-series-nav__part atlas-series-nav__part--soon">
+          <span class="atlas-series-nav__num">05</span>
+          <span class="atlas-series-nav__title">The Engine — Forward/Deferred · URP · HDRP · Unreal · Debug Tools</span>
+          <span class="atlas-series-nav__status atlas-series-nav__status--soon">SOON</span>
+        </li>
+      </ul>
+      <div class="atlas-part-nav">
+        <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-01" target="_top" class="atlas-part-nav__btn">
+          <span class="atlas-part-nav__direction">← Prev</span>
+          <span class="atlas-part-nav__label">Part 01: The Machine</span>
+          <span class="atlas-part-nav__sub">GPU Execution · Memory Hierarchy</span>
+        </a>
+        <a href="https://www.pavelzosim.com/post/from-file-to-pixel-part-03" target="_top" class="atlas-part-nav__btn atlas-part-nav__btn--next">
+          <span class="atlas-part-nav__direction">Next →</span>
+          <span class="atlas-part-nav__label">Part 03: The Data</span>
+          <span class="atlas-part-nav__sub">Alignment · Packing · CPU→GPU Flow</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// FROM_FILE_TO_PIXEL // PART 02 OF 05 // CHAPTERS 03–04 // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat render_pipeline_buffer_taxonomy.log',project:'From File to Pixel',module:'Part 02 — The Pipeline',version:'v1.0',logId:'FTFP_P02',status:'LIVE',slug:'from-file-to-pixel-part-02',author:'Pavel Zosim',created:'2025.03.15',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
+var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</body>
+</html>
+
