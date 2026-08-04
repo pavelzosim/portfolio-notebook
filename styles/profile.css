@@ -1,0 +1,29 @@
+/* Revision — dotted paper, simplified commander, professional profile */
+:root{--dots:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><circle cx="1" cy="1" r=".65" fill="black" fill-opacity=".18"/></svg>')}
+body{background-color:var(--paper);background-image:var(--dots);background-size:8px 8px}
+body::before{display:none}
+main{background:rgba(238,231,223,.95)}
+.shellbar nav{position:relative;isolation:isolate;height:30px;padding:2px;display:flex;gap:0;align-items:stretch;border:1px solid #000066;background:var(--vc)}
+.shellbar nav::after{content:"";position:absolute;z-index:-1;left:4px;top:4px;width:100%;height:100%;background:var(--dither);pointer-events:none}
+.shellbar nav a{height:auto;padding:5px 13px;border:0;border-right:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;line-height:1;text-transform:uppercase}
+.shellbar nav a:last-child{border-right:0}
+.shellbar nav a span{color:var(--vc-yellow);font-weight:700}
+.shellbar nav a:hover,.shellbar nav a:focus-visible{border-color:rgba(255,255,255,.22);background:var(--vc-hi);color:#fff;outline:0}
+.shellbar nav a.active{border-color:rgba(255,255,255,.22);background:var(--paper2);color:var(--vc);outline:0}
+.shellbar nav a.active span{color:var(--red)}
+.function-bar .vc-button::after{display:none}
+h1 span{font-size:.58em;letter-spacing:.01em;color:var(--red);text-transform:uppercase}
+.mission{max-width:670px;margin:0 0 24px;padding:12px 14px;border-left:3px solid var(--red);background:rgba(17,17,17,.025);font-size:11px;line-height:1.65}
+.profile-facts{margin:0 0 28px;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line2);border-left:1px solid var(--line2)}
+.profile-facts div{padding:9px 11px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+.profile-facts dt{margin-bottom:5px;color:var(--muted);font-size:8px}
+.profile-facts dd{margin:0;font-size:9px}.profile-facts dd span{color:var(--green)}
+.about-layout{grid-template-columns:minmax(0,1fr) 245px}.about-layout .prose{max-width:none}.about-layout .prose p{margin:0 0 18px}
+.about-layout dl div{grid-template-columns:92px 1fr}
+@media(max-width:760px){
+  .shellbar nav{height:29px;padding:2px;overflow:visible}
+  .shellbar nav a{padding:6px 8px;font-size:9px}
+  .profile-facts{grid-template-columns:1fr}
+  h1 span{font-size:.5em}
+}
+

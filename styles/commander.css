@@ -1,0 +1,35 @@
+/* ATLAS COMMANDER — functional navigation and dither controls */
+:root{--vc:#0000aa;--vc-hi:#0000dd;--vc-yellow:#ffff55;--dither:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="2" height="2" x="0" y="0" fill="black"/><rect width="2" height="2" x="2" y="2" fill="black"/></svg>')}
+body{padding-bottom:38px}
+.vc-button{position:relative;isolation:isolate}
+.vc-button::after{content:"";position:absolute;z-index:-1;left:4px;top:4px;width:100%;height:100%;background:var(--dither);pointer-events:none}
+.shellbar nav{gap:7px;align-items:center}
+.shellbar nav a{height:auto;padding:6px 10px;color:#fff;background:var(--vc);border:1px solid #000066;text-decoration:none;text-transform:uppercase}
+.shellbar nav a:hover,.shellbar nav a:focus-visible,.shellbar nav a.active{color:#fff;background:var(--vc-hi);border-color:#000066;outline:1px solid var(--paper2);outline-offset:-3px}
+.shellbar nav kbd{color:var(--vc-yellow);font:inherit}
+.shell-status{text-decoration:none}.shell-status:hover{color:var(--vc)}
+.command{padding:7px 10px;display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center}
+.command label span{color:var(--red);font-weight:700}
+.command input{min-width:0;padding:3px 6px;border:0;border-bottom:1px solid var(--line);outline:0;background:transparent;color:var(--ink);font:10px var(--mono)}
+.command input:focus{border-color:var(--vc);background:var(--paper2)}
+.command kbd{padding:1px 5px;border:1px solid var(--line);color:var(--muted);font:9px var(--mono)}
+.command output{min-width:68px;text-align:right;color:var(--muted);font-size:9px}
+[hidden]{display:none!important}
+.meta-block li a{text-decoration:none}.meta-block li a:hover{color:var(--vc);text-decoration:underline}
+.tag-cloud a{padding:2px 4px;border:1px solid var(--line);text-decoration:none}
+.tag-cloud a:hover,.tag-cloud a:focus-visible{color:#fff;background:var(--vc);border-color:var(--vc)}
+.function-bar{position:fixed;z-index:30;left:0;right:0;bottom:0;height:34px;padding:4px 12px;display:grid;grid-template-columns:repeat(6,minmax(90px,1fr));gap:7px;background:#111;border-top:1px solid #000;color:#fff}
+.function-bar .vc-button{min-width:0;padding:3px 9px;display:flex;justify-content:flex-start;gap:7px;align-items:center;border:1px solid #000066;background:var(--vc);color:#fff;text-decoration:none;font:10px var(--mono);cursor:pointer}
+.function-bar .vc-button:hover,.function-bar .vc-button:focus-visible{background:var(--vc-hi);outline:1px solid #fff;outline-offset:-3px}
+.function-bar kbd{min-width:25px;color:var(--vc-yellow);font:inherit;font-weight:700}
+dialog{width:min(480px,calc(100vw - 32px));padding:0;border:1px solid #000;background:var(--paper2);color:var(--ink);box-shadow:8px 8px 0 transparent;font:11px/1.5 var(--mono)}
+dialog::backdrop{background-color:rgba(0,0,0,.42);background-image:var(--dither);background-size:4px 4px}
+.dialog-title{padding:7px 9px;display:flex;justify-content:space-between;background:var(--vc);color:#fff}
+.dialog-title button{border:0;background:transparent;color:var(--vc-yellow);font:700 16px/1 var(--mono);cursor:pointer}
+dialog dl{margin:16px;border-top:1px solid var(--line2)}
+dialog dl div{display:grid;grid-template-columns:55px 1fr;border-bottom:1px solid var(--line)}
+dialog dt,dialog dd{margin:0;padding:6px}dialog dt{color:var(--red);font-weight:700}
+.dialog-ok{float:right;margin:0 16px 16px;padding:6px 14px;border:1px solid #000066;background:var(--vc);color:#fff;font:10px var(--mono);cursor:pointer}
+.dialog-ok kbd{color:var(--vc-yellow);font:inherit}
+@media(max-width:760px){body{padding-bottom:42px}.shellbar nav{gap:5px;overflow-x:auto;padding-bottom:5px}.shellbar nav a{padding:5px 7px;white-space:nowrap}.shellbar nav kbd{display:inline}.function-bar{height:38px;padding:5px 8px;display:flex;overflow-x:auto}.function-bar .vc-button{flex:0 0 auto}.function-bar .vc-button span{display:none}.command{grid-template-columns:auto 1fr auto}.command output{grid-column:2;text-align:left}.command>kbd{grid-column:3;grid-row:1}}
+

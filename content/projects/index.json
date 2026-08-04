@@ -1,0 +1,8 @@
+{
+  "projects": [
+    {"slug":"nasa-first-woman","title":"NASA First Woman","sourceUrl":"https://www.pavelzosim.com/projects/nasa-first-woman","status":"inventory"},
+    {"slug":"meta-blumhouse-xr-experience","title":"Meta × Blumhouse","sourceUrl":"https://www.pavelzosim.com/projects/meta-blumhouse-xr-experience","status":"inventory"},
+    {"slug":"airport-interaction-screen","title":"FAA Interaction Screen","sourceUrl":"https://www.pavelzosim.com/projects/airport-interaction-screen","status":"inventory"},
+    {"slug":"deloitte-virtual-factory","title":"Deloitte Virtual Factory","sourceUrl":"https://www.pavelzosim.com/projects/deloitte-virtual-factory","status":"inventory"}
+  ]
+}

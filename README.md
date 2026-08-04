@@ -17,6 +17,12 @@ Then open `http://127.0.0.1:8765/`.
 ## Current structure
 
 - `index.html` — homepage content and lightweight interaction
-- `home.css` — responsive visual system and Commander interface
+- `styles/atlas.css` — stylesheet orchestrator
+- `styles/*.css` — ordered visual-system modules
+- `content/` — Markdown documents and content indexes
+- `public/media/` — repository-owned post, project, reel, and shared media
+- `home.css` — compatibility entry point for older embeds
 
 Content links and media currently point to the existing Wix portfolio at [pavelzosim.com](https://www.pavelzosim.com/).
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for module boundaries and the Wix migration workflow.

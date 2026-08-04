@@ -1,0 +1,20 @@
+/* Revision — quiet text navigation and engine-agnostic statement */
+.shellbar nav{position:static;isolation:auto;height:auto;padding:0;display:flex;gap:0;align-items:center;border:0;background:transparent}
+.shellbar nav::after{display:none}
+.shellbar nav a{height:auto;padding:4px 9px;border:0;border-bottom:1px solid transparent;background:transparent;color:var(--muted);line-height:1;text-transform:uppercase;letter-spacing:.04em}
+.shellbar nav a:last-child{border-right:0}
+.shellbar nav a:hover,.shellbar nav a:focus-visible{border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--ink);outline:0}
+.shellbar nav a.active{border:0;border-bottom:1px solid var(--red);background:transparent;color:var(--red);outline:0}
+.nav-divider{color:var(--line2);font-size:9px}
+.scope-line{margin:22px 0 15px;color:var(--red);font-size:9px;font-weight:700;letter-spacing:.09em}
+.doc-head .abstract{margin-top:0}
+.mission{margin-bottom:16px;background:transparent}
+.site-purpose{max-width:670px;margin:0 0 24px;padding:9px 0;border-top:1px dotted var(--line2);border-bottom:1px dotted var(--line2);color:var(--muted);font-size:9px;line-height:1.65}
+.site-purpose strong{color:var(--ink)}
+@media(max-width:760px){
+  .shellbar nav{height:auto;padding:4px 0;overflow:visible}
+  .shellbar nav a{padding:5px 6px;font-size:9px}
+  .nav-divider{display:inline}
+  .scope-line{line-height:1.5}
+}
+
