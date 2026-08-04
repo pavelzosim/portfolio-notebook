@@ -1,13 +1,18 @@
 # Media library
 
-Repository-owned media is stored by content type and slug:
+Portfolio media is stored locally by content type and source slug:
 
 ```text
 media/
-├── posts/<slug>/
-├── projects/<slug>/
-├── reel/
-└── shared/
+|-- home/home/
+|-- posts/<slug>/
+|-- projects/<slug>/
+|-- reel/
+`-- shared/
 ```
 
-Do not rename imported files until their Wix source URL, caption, alt text, and owning post have been recorded in `content/migration/wix-map.json`.
+The original CDN URL, local path, file size, and checksum are recorded in
+`content/migration/media-map.json`. Run `scripts/localize_wix_media.py` after
+importing or updating Atlas HTML sources.
+
+YouTube players and external technical references intentionally remain remote.

@@ -123,7 +123,7 @@
     <p>The goal is to generate a flexible and physically accurate tire model based on standard tire measurements. The system accounts for both symmetrical and asymmetrical tread designs.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_a9a1803f63574df98a21a3fd75615b85~mv2.png/v1/fill/w_925,h_578,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_a9a1803f63574df98a21a3fd75615b85~mv2.png" alt="Tire Generator Overview">
+      <img src="/public/media/posts/procedural-modeling-tire-generator/asset-ad615261ddfd32c6.png" alt="Tire Generator Overview">
       <div class="media-caption">Fig 02: Tire generator overview — physically consistent scaling from real-world spec inputs.</div>
     </div>
 
@@ -144,7 +144,7 @@
     <p>The internal logic creates a cascading dependency: <span class="atlas-code-inline">Tire Width</span> acts as the master scale, <span class="atlas-code-inline">Aspect Ratio</span> drives sidewall vertical displacement, and <span class="atlas-code-inline">Wheel Diameter</span> defines the rim aperture. All three are converted to meters before any geometry is generated.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_82a3230c7c444f5195cf41a697b2f69b~mv2.gif" alt="Dynamic scaling animation">
+      <img src="/public/media/posts/procedural-modeling-tire-generator/asset-5ee530018528e364.gif" alt="Dynamic scaling animation">
       <div class="media-caption">Fig 02b: Dynamic scaling — all geometry updates instantly when any input parameter changes.</div>
     </div>
 
@@ -176,7 +176,7 @@ f@wheelDiameter  = wheelDiameter / 39.37;</code></pre>
     <p>To avoid point overlaps or misalignments along the tile length, each section is adjusted by calculating the angle <span class="atlas-code-inline">θ</span> for every spline section point. These corrections ensure a seamless, closed-loop cylinder without manual vertex tweaking.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_08aed83cd49c478284db9e87ee9b4a7d~mv2.gif" alt="Tread tiling and angular correction">
+      <img src="/public/media/posts/procedural-modeling-tire-generator/asset-ae9a00933ebc4a60.gif" alt="Tread tiling and angular correction">
       <div class="media-caption">Fig 03: Seamless tread tiling — angular correction prevents point overlap at tile boundaries.</div>
     </div>
 
@@ -212,7 +212,7 @@ f@wheelDiameter  = wheelDiameter / 39.37;</code></pre>
     </ul>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_22ed8a1f9cd542c1ab7f2836ceb24d3f~mv2.gif" alt="Uniform subdivision tool">
+      <img src="/public/media/posts/procedural-modeling-tire-generator/asset-02249583ea375895.gif" alt="Uniform subdivision tool">
       <div class="media-caption">Fig 04: Custom tool for uniform polygon division — consistent edge lengths across varying topology.</div>
     </div>
 
@@ -227,7 +227,7 @@ f@wheelDiameter  = wheelDiameter / 39.37;</code></pre>
     <p>For final tread height and shape, a dedicated radial displacement tool is used. It supports grouping of edge loops for both symmetrical and asymmetrical tread patterns. Soft selection ensures smooth transitions between displaced areas — providing high precision without hard polygon breaks at pattern boundaries.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_ae599551827448bf8933df9ab3be98f2~mv2.gif" alt="Radial displacement with soft selection">
+      <img src="/public/media/posts/procedural-modeling-tire-generator/asset-b726e6306c421b85.gif" alt="Radial displacement with soft selection">
       <div class="media-caption">Fig 05: Radial displacement — soft selection for smooth tread depth transitions.</div>
     </div>
 
@@ -268,8 +268,8 @@ f@wheelDiameter  = wheelDiameter / 39.37;</code></pre>
 
     <div class="media-frame">
       <div class="gallery-grid gallery-grid--2col">
-        <img src="https://static.wixstatic.com/media/ace175_23b668e3ff8d4009b988e04d60a34b15~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_23b668e3ff8d4009b988e04d60a34b15~mv2.webp" alt="Pattern-Based UVs">
-        <img src="https://static.wixstatic.com/media/ace175_321495aedb6e4c1792ffebc95777cc67~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_321495aedb6e4c1792ffebc95777cc67~mv2.webp" alt="Cylindrical UVs">
+        <img src="/public/media/posts/procedural-modeling-tire-generator/asset-2c70cb400c6ad976.webp" alt="Pattern-Based UVs">
+        <img src="/public/media/posts/procedural-modeling-tire-generator/asset-c88ebfc487bec4ee.webp" alt="Cylindrical UVs">
       </div>
       <div class="media-caption">Gallery 06: Pattern-based UVs (left) vs Cylindrical UVs (right) — dual setup for baking and real-time.</div>
     </div>
@@ -287,7 +287,7 @@ f@wheelDiameter  = wheelDiameter / 39.37;</code></pre>
     <p>The utility extends beyond tire branding — it functions as a <strong>general-purpose geometry-to-vector converter</strong>, reusable for any hard-surface asset requiring vector-based surface markings.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_9e043f574d0648738df33b0b18e6bb32~mv2.gif" alt="SVG export workflow">
+      <img src="/public/media/posts/procedural-modeling-tire-generator/asset-f96fa0806b2ba22c.gif" alt="SVG export workflow">
       <div class="media-caption">Fig 07: Procedural geometry → SVG conversion — editable vector tiles for sidewall branding.</div>
     </div>
 

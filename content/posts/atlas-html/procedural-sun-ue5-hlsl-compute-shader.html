@@ -328,12 +328,12 @@
     <p>I am documenting this process in real-time. As the project progresses, this report will be updated to reflect the evolving C++ architecture and the math driving the solar photosphere.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_ca6589de87f445ed80b88a7ce666e7b0~mv2.png/v1/fill/w_925,h_853,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_ca6589de87f445ed80b88a7ce666e7b0~mv2.png" alt="Unreal RAW alpha footage">
+      <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-4b7b175e68eee1ff.png" alt="Unreal RAW alpha footage">
       <div class="media-caption">Fig 01: Unreal RAW alpha footage — photosphere surface with granulation and sunspots.</div>
     </div>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_8e3b8e68379949f7bcec8a4be710a738~mv2.png/v1/fill/w_2425,h_794,al_c,q_90/ace175_8e3b8e68379949f7bcec8a4be710a738~mv2.webp" alt="Houdini Prototype">
+      <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-07ef0d4d9bc48619.webp" alt="Houdini Prototype">
       <div class="media-caption">Fig 02: Houdini Prototype — Biot-Savart magnetic field simulation used as reference for the GPU compute shader.</div>
     </div>
 
@@ -567,8 +567,8 @@
 
     <div class="media-frame">
       <div class="gallery-grid">
-        <img src="https://static.wixstatic.com/media/ace175_a63af9e570774334a9ae507d24f4daac~mv2.png/v1/fill/w_925,h_391,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_a63af9e570774334a9ae507d24f4daac~mv2.png" alt="HLSL Module reroute">
-        <img src="https://static.wixstatic.com/media/ace175_ba56c2c458ac4ef48324dde09fb1ec4b~mv2.png/v1/fill/w_925,h_371,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_ba56c2c458ac4ef48324dde09fb1ec4b~mv2.png" alt="HLSL Module structure">
+        <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-e2c88aef9c471c72.png" alt="HLSL Module reroute">
+        <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-093febb3b94c64d0.png" alt="HLSL Module structure">
       </div>
       <div class="media-caption">Gallery 04: Modular HLSL system — material graph reroute node and .ush include structure.</div>
     </div>
@@ -635,7 +635,7 @@ float bright = lerp(0.78, 1.12, cell) + lane * 0.05;
 // bright ∈ [0.78..1.12] → feeds temperature pipeline downstream</code></pre>
 
       <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_f2cf467c7fce415b951e96e11994d3d1~mv2.png/v1/fill/w_925,h_523,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_f2cf467c7fce415b951e96e11994d3d1~mv2.png" alt="Unreal RAW alpha footage">
+      <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-bc8f7ee7bf80ba0d.png" alt="Unreal RAW alpha footage">
       <div class="media-caption">Fig 05: Procedural sun surface simulation using UE5 HLSL Compute Shaders and Niagara.</div>
     </div>
 
@@ -680,9 +680,9 @@ RWMagneticField[DispatchID.xy] = saturate(Bz * FieldStrength);</code></pre>
 
     <div class="media-frame">
       <div class="gallery-grid">
-        <img src="https://static.wixstatic.com/media/ace175_77af88790c7e4d699c6b77010eb041ea~mv2.png" alt="HLSL Module reroute">
-        <img src="https://static.wixstatic.com/media/ace175_ff42ee5c4e2246c3a87b4cf704168d9c~mv2.png" alt="Procedural sun surface simulation using UE5 HLSL Compute Shaders and Niagara">
-        <img src="https://static.wixstatic.com/media/ace175_5fbc7e8778fe4744b2a4c3f81b543dd9~mv2.png/v1/fill/w_2984,h_1430,al_c,q_90/ace175_5fbc7e8778fe4744b2a4c3f81b543dd9~mv2.webp" alt="HLSL Module structure">
+        <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-dafdfc0da4c4e082.png" alt="HLSL Module reroute">
+        <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-30fa3bfa97b281a1.png" alt="Procedural sun surface simulation using UE5 HLSL Compute Shaders and Niagara">
+        <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-5dbf76e5775d06e3.webp" alt="HLSL Module structure">
       </div>
       <div class="media-caption">Gallery 05: Modular HLSL system — Debuging visuals.</div>
     </div>
@@ -948,8 +948,8 @@ float3 ScatteredColor = SunColor * ThomsonScatterFactor;</code></pre>
 
     <div class="media-frame">
       <div class="gallery-grid gallery-grid--2col">
-        <img src="https://static.wixstatic.com/media/ace175_b1152c1cb0cb4a418c3909663b2d970b~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_b1152c1cb0cb4a418c3909663b2d970b~mv2.webp" alt="Solar prominence arc 1">
-        <img src="https://static.wixstatic.com/media/ace175_ba8b96f230df4aa9875250d0fd3435b6~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_ba8b96f230df4aa9875250d0fd3435b6~mv2.webp" alt="Solar prominence arc 2">
+        <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-ab81765f65c964b6.webp" alt="Solar prominence arc 1">
+        <img src="/public/media/posts/procedural-sun-ue5-hlsl-compute-shader/asset-9011d5f7c297d63d.webp" alt="Solar prominence arc 2">
       </div>
       <div class="media-caption">Fig 13: Niagara solar prominences — GPU particle pairing via adapted Gale-Shapley algorithm.</div>
     </div>

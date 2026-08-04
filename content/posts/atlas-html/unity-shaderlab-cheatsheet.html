@@ -486,7 +486,7 @@
 
 
         <div class="atlas-media-node">
-          <div class="atlas-media-node__wrapper"><img src="https://static.wixstatic.com/media/ace175_17119243e76545398ebbd5abde114bd7~mv2.png/v1/fill/w_530,h_311,al_c,lg_1,q_85,enc_avif,quality_auto/ace175_17119243e76545398ebbd5abde114bd7~mv2.png" alt="Unity Material Inspector Property Binding Mapping"></div>
+          <div class="atlas-media-node__wrapper"><img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-9145ab9079dff35f.png" alt="Unity Material Inspector Property Binding Mapping"></div>
           <div class="atlas-media-node__caption">
             <strong>[ Hardware Capture 01.A ]</strong>
           </div>
@@ -499,7 +499,7 @@
           <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "CustomPath/ShaderName_simpleColor" PropertyName("Display Name", DataType) = DefaultValue</code></pre>
         </ul>
         <div class="atlas-media-node">
-          <div class="atlas-media-node__wrapper"><img src="https://static.wixstatic.com/media/ace175_a0fd78d807f54af38d76b99ad735c4cc~mv2.png/v1/fill/w_524,h_195,al_c,lg_1,q_85,enc_avif,quality_auto/ace175_a0fd78d807f54af38d76b99ad735c4cc~mv2.png" alt="Unity Shader Dropdown Hierarchy Menu Mapping"></div>
+          <div class="atlas-media-node__wrapper"><img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-5767efede1a8468d.png" alt="Unity Shader Dropdown Hierarchy Menu Mapping"></div>
           <div class="atlas-media-node__caption">
             <strong>[ Hardware Capture 01.B ]</strong> Inspector namespace resolution. The compiler tokenizes the string literal <code>"CustomPath/ShaderName_simpleColor"</code>, dynamically instantiating the <code>CustomPath</code> folder hierarchy within the Material Selector viewport dropdown.
           </div>
@@ -1054,7 +1054,7 @@ SubShader {
         <p>Before processing a given pixel, the GPU compares the pixel’s depth against the existing value in the Z-Buffer. If the new pixel is closer than the stored value (or meets the specified comparison criteria), it is drawn and its depth is updated; otherwise, it is discarded.</p>
         <p>By manipulating depth-related commands, you can generate various visual effects. Three important ShaderLab commands related to this are Cull, ZWrite, and ZTest.</p>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_e33de05129d5471c8876847c81a0912c~mv2.png/v1/fill/w_925,h_289,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_e33de05129d5471c8876847c81a0912c~mv2.png" alt="Depth Testing Comparison Pipeline"> <span class="atlas-media-caption">[ Diagram: Hardware Depth Test Comparison Stages ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-ec788dfeadedb294.png" alt="Depth Testing Comparison Pipeline"> <span class="atlas-media-caption">[ Diagram: Hardware Depth Test Comparison Stages ]</span>
         </div>
         <h3>Core Concepts</h3>
         <ul>
@@ -1062,10 +1062,10 @@ SubShader {
           A dedicated memory space that holds depth values for each pixel. The closer an object is to the camera, the lower (or sometimes higher, depending on the device) its depth value will be. Each rendered pixel has a depth value representing its distance from the camera. The closer an object is, the lower its depth value. When multiple objects contribute to the same pixel, the one with the lowest depth value (closest to the camera) overwrites the others.</li>
         </ul>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_63660de4c9534791bcf2c0ce5c7a9be3~mv2.png/v1/fill/w_920,h_457,al_c,q_90,enc_avif,quality_auto/ace175_63660de4c9534791bcf2c0ce5c7a9be3~mv2.png" alt="Z-Buffer and Color Buffer relationship"> <span class="atlas-media-caption">[ Diagram: The Z-Buffer stores the depth of the object in the scene, and the Color Buffer stores the RGBA color information ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-82739a98f50c33d2.png" alt="Z-Buffer and Color Buffer relationship"> <span class="atlas-media-caption">[ Diagram: The Z-Buffer stores the depth of the object in the scene, and the Color Buffer stores the RGBA color information ]</span>
         </div>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_75b757e2abb14964a72b27280444d468~mv2.png/v1/fill/w_922,h_455,al_c,q_90,enc_avif,quality_auto/ace175_75b757e2abb14964a72b27280444d468~mv2.png" alt="Depth Testing Conditional Check Pipeline"> <span class="atlas-media-caption">[ Diagram: Depth Testing Conditional Check and Z-Buffer Evaluation ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-a397ff8603fe0e24.png" alt="Depth Testing Conditional Check Pipeline"> <span class="atlas-media-caption">[ Diagram: Depth Testing Conditional Check and Z-Buffer Evaluation ]</span>
         </div>
         <ul>
           <li><strong>Depth Testing:</strong><br>
@@ -1074,7 +1074,7 @@ SubShader {
           For opaque objects, a front-to-back order ensures that only the visible (closest) pixels are processed. For transparent objects, Unity (by default) uses a back-to-front order so that blending occurs correctly.</li>
         </ul>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_974ba85a72d0400ea3f60c37f7a2e2ce~mv2.png/v1/fill/w_885,h_280,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_974ba85a72d0400ea3f60c37f7a2e2ce~mv2.png" alt="SubShader and Pass Scope Placement"> <span class="atlas-media-caption">[ Diagram: GPU Sorting Pipeline — Front-to-Back vs. Back-to-Front Layouts ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-cf5af1cd11491b24.png" alt="SubShader and Pass Scope Placement"> <span class="atlas-media-caption">[ Diagram: GPU Sorting Pipeline — Front-to-Back vs. Back-to-Front Layouts ]</span>
         </div>
         <p>Like Tags, culling and depth testing options can be written in different fields: within the SubShader field or the Pass field. The position will depend on the result we want to achieve and the number of passes we want to work with.</p>
         <h3>Additional Notes on Transparent Shaders and Depth Buffer Management</h3>
@@ -1166,7 +1166,7 @@ SubShader {
         <p>The Z-fighting occurs when we have two or more objects at the same distance from the camera, causing identical values in the Z-Buffer.</p>
         <p>This effect occurs when trying to render a pixel at the end of the rendering pipeline. Since the Z-Buffer cannot determine which element is behind the other, it produces flickering lines that change shape depending on the camera’s position. To correct this issue, we simply need to disable the Z-Buffer using the “ZWrite off” command.</p>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_25c6f16649af4dbabfc55ff5130a484b~mv2.png/v1/fill/w_803,h_408,al_c,lg_1,q_85,enc_avif,quality_auto/ace175_25c6f16649af4dbabfc55ff5130a484b~mv2.png" alt="Z-fighting artifact demonstration"> <span class="atlas-media-caption">[ Diagram: Planar Co-planar Geometry Conflict Resulting in Z-Fighting Artifacts ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-aee9bd917a8542e6.png" alt="Z-fighting artifact demonstration"> <span class="atlas-media-caption">[ Diagram: Planar Co-planar Geometry Conflict Resulting in Z-Fighting Artifacts ]</span>
         </div>
         <h3>4.5.3 ShaderLab ZTest</h3>
         <p><code>ZTest</code> defines how depth testing is performed by comparing each pixel’s depth to the Z-Buffer. It supports several comparison functions:</p>
@@ -1182,15 +1182,15 @@ SubShader {
         <p><code>ZTest Less</code>: (&lt;) Draws the objects in front. It ignores objects that are at the same distance or behind the shader object.</p>
         <p>To understand this command, we will do the following exercise: Let’s suppose we have two objects in our scene; a Cube and a Sphere. The Sphere is in front of the Cube relative to the camera, and the pixel depth is as expected.</p>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_82ce2ff71dad40baa322559ab5c70ae7~mv2.png/v1/fill/w_925,h_318,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_82ce2ff71dad40baa322559ab5c70ae7~mv2.png" alt="Sphere in front of the Cube execution"> <span class="atlas-media-caption">[ Diagram: Standard Depth Verification — Sphere Positioned In Front of the Cube Scope ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-fc0df59bedebdc74.png" alt="Sphere in front of the Cube execution"> <span class="atlas-media-caption">[ Diagram: Standard Depth Verification — Sphere Positioned In Front of the Cube Scope ]</span>
         </div>
         <p>If we position the Sphere behind the Cube then again, the depth values will be as expected, why? Because the Z-Buffer is storing depth values for each pixel on the screen. The depth values are calculated concerning the proximity of an object to the camera.</p>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_d6d6fa40978c4be0b78c1ccc7b7e54d1~mv2.png/v1/fill/w_925,h_316,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_d6d6fa40978c4be0b78c1ccc7b7e54d1~mv2.png" alt="Sphere behind the Cube execution"> <span class="atlas-media-caption">[ Diagram: Standard Depth Verification — Sphere Occluded by the Cube Volume ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-19a855d6e225e7f9.png" alt="Sphere behind the Cube execution"> <span class="atlas-media-caption">[ Diagram: Standard Depth Verification — Sphere Occluded by the Cube Volume ]</span>
         </div>
         <p>Now, what would happen if we activated <code>ZTest Always</code>? In this case, Depth Testing would not be done, therefore, all pixels would appear at the same depth on screen.</p>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_98de10737455418a8dd9979889f81010~mv2.png/v1/fill/w_925,h_319,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_98de10737455418a8dd9979889f81010~mv2.png" alt="ZTest Always execution override"> <span class="atlas-media-caption">[ Diagram: Depth Buffer Evaluation Overridden via ZTest Always Command ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-5275d551580d9573.png" alt="ZTest Always execution override"> <span class="atlas-media-caption">[ Diagram: Depth Buffer Evaluation Overridden via ZTest Always Command ]</span>
         </div>
         <p>Example implementation:</p>
         <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/ZTestExample" {
@@ -1208,7 +1208,7 @@ SubShader {
         <h3>4.5.4 ShaderLab Stencil</h3>
         <p>The <code>Stencil Buffer</code> is a specialized buffer that stores an 8-bit integer (values 0–255) for each pixel in the Frame Buffer. Before executing the fragment shader for a pixel, the GPU can perform a Stencil Test — comparing the current value in the Stencil Buffer with a specified reference value. If the test passes, the GPU then performs the depth test; if it fails, the GPU skips further processing for that pixel. Essentially, the Stencil Buffer acts as a mask, letting you control which pixels are drawn and which are discarded.</p>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_0cee99e88fe04eb28a8957883aceda01~mv2.png/v1/fill/w_918,h_455,al_c,q_90,enc_avif,quality_auto/ace175_0cee99e88fe04eb28a8957883aceda01~mv2.png" alt="Stencil Buffer Pipeline Masking"> <span class="atlas-media-caption">[ Diagram: Fragment Rejection Pipeline via Hardware Stencil Evaluation ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-8c56a0413b263e5c.png" alt="Stencil Buffer Pipeline Masking"> <span class="atlas-media-caption">[ Diagram: Fragment Rejection Pipeline via Hardware Stencil Evaluation ]</span>
         </div>
         <h3>How the Stencil Buffer Works</h3>
         <ul>
@@ -1239,7 +1239,7 @@ SubShader {
           <li><strong><code>Comp Always</code>:</strong> Always passes the test.</li>
         </ul>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_2fef40972a01476d80d01b587cc9a3db~mv2.png/v1/fill/w_925,h_459,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_2fef40972a01476d80d01b587cc9a3db~mv2.png" alt="Stencil Comparison Functions Matrix"> <span class="atlas-media-caption">[ Diagram: Matrix of Hardware Stencil Comparison Operations ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-eb8a8a1974625e1a.png" alt="Stencil Comparison Functions Matrix"> <span class="atlas-media-caption">[ Diagram: Matrix of Hardware Stencil Comparison Operations ]</span>
         </div>
         <h3>Practical Example</h3>
         <p>Suppose you have three objects in your scene—a Cube, a Sphere, and a Square—and you want to use the Square as a mask so that only the Sphere inside the Cube is visible.</p>
@@ -1306,11 +1306,11 @@ SubShader {
           <li>The masked object shader (USB_stencil_value) renders only where the stencil value is not equal to 2—hiding the Cube where the mask is applied, allowing the Sphere behind it to be visible.</li>
         </ul>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_48d961d9427e4f1483305760063db870~mv2.png/v1/fill/w_925,h_316,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_48d961d9427e4f1483305760063db870~mv2.png" alt="Stencil Masking Result Step 1"> <span class="atlas-media-caption">[ Diagram: Stencil Space Exclusion Test Setup — Geometry Queue (Geometry - 1) Execution ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-6bb3b8de593ecc73.png" alt="Stencil Masking Result Step 1"> <span class="atlas-media-caption">[ Diagram: Stencil Space Exclusion Test Setup — Geometry Queue (Geometry - 1) Execution ]</span>
         </div>
         <p>We configured “Queue” to “Geometry minus one”. Since Geometry defaults to 2000, this equals 1999, processing our mask in the Z-Buffer. Unity processes objects based on their scene position relative to the camera. To disable this, set “ZWrite to Off”. Set “ColorMask to zero” to discard mask pixels in the Frame Buffer, making them transparent.</p>
         <div class="atlas-media-container">
-          <img src="https://static.wixstatic.com/media/ace175_5f916e0e3ce44606b181a8c2dc5ad31b~mv2.png/v1/fill/w_925,h_319,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_5f916e0e3ce44606b181a8c2dc5ad31b~mv2.png" alt="Stencil Masking Final Composite"> <span class="atlas-media-caption">[ Diagram: Frame Buffer Result with ColorMask 0 Masking Enabled ]</span>
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png" alt="Stencil Masking Final Composite"> <span class="atlas-media-caption">[ Diagram: Frame Buffer Result with ColorMask 0 Masking Enabled ]</span>
         </div>
         <h2>4.5.5 ShaderLab Pass</h2>
         <p>A Pass in rendering refers to generating different layers (e.g., color, light, occlusion) separately in 3D software like Maya or Blender. Each Pass renders one object at a time, equivalent to a draw call, so minimizing passes is crucial to avoid significant graphic load.</p>

@@ -122,7 +122,7 @@
     <p>What I find genuinely interesting in VFX work is not any single effect — it's the patterns underneath. Most effects, when you look closely enough, share the same structural logic. Find that logic, build a system around it, and you get something <strong>reusable, predictable, and fast to iterate</strong>.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_e79a0f3079454426b23898a2fbd5798c~mv2.gif" alt="Unity Explosion VFX">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-d9f1ca6b786259a5.gif" alt="Unity Explosion VFX">
       <div class="media-caption">Fig 01: Unity Explosion VFX — real-time playback from VAT export.</div>
     </div>
 
@@ -134,9 +134,9 @@
 
     <div class="media-frame">
       <div class="gallery-grid gallery-grid--3col">
-        <img src="https://static.wixstatic.com/media/ace175_c4ab47faa0f148e58d134ab2bae1be2d~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_c4ab47faa0f148e58d134ab2bae1be2d~mv2.webp" alt="VFX Process 01">
-        <img src="https://static.wixstatic.com/media/ace175_1aa7fdab08f74aff9da2d7ce2d17290b~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_1aa7fdab08f74aff9da2d7ce2d17290b~mv2.webp" alt="VFX Process 02">
-        <img src="https://static.wixstatic.com/media/ace175_d1beb31604c2475397a204159f772cd6~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_d1beb31604c2475397a204159f772cd6~mv2.webp" alt="VFX Process 03">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-d374d0c46c0bb20a.webp" alt="VFX Process 01">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-597b4c76b7830f25.webp" alt="VFX Process 02">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-2eab2303e819fc73.webp" alt="VFX Process 03">
       </div>
       <div class="media-caption">Gallery 01: Simulation stages — burst expansion, layer composition, final look.</div>
     </div>
@@ -178,7 +178,7 @@
     <p>These patterns — extracted from reference — became the architecture of the tool.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_05bc778e26364531977b3e02374a2b64~mv2.png/v1/fill/w_1598,h_1080,fp_0.50_0.50,q_90/ace175_05bc778e26364531977b3e02374a2b64~mv2.webp" alt="VFX Architecture Reference">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-0077fa97c8cdc237.webp" alt="VFX Architecture Reference">
       <div class="media-caption">Fig 02: Reference analysis — phase extraction becomes HDA architecture.</div>
     </div>
 
@@ -226,7 +226,7 @@
 
     <div class="media-frame">
       <video width="100%" autoplay loop muted playsinline>
-        <source src="https://video.wixstatic.com/video/ace175_fa47f18380d74ee3b60d98eeb75f138b/1080p/mp4/file.mp4" type="video/mp4">
+        <source src="/public/media/posts/houdini-procedural-explosion-vfx/asset-92ef957abefea1fb.mp4" type="video/mp4">
       </video>
       <div class="media-caption">Fig 03: Layered simulation logic — all layers composited in real-time.</div>
     </div>
@@ -248,7 +248,7 @@
     <p>Everything starts with two objects: a <strong>sphere</strong> defines the shape and scale of the explosion, and a <strong>point</strong> defines the direction. These are the two inputs to the first HDA. From there, the configuration is managed via three primary tabs.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_26c0c85cb43d44c9a71605f8afdbce48~mv2.png/v1/fill/w_925,h_1278,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_26c0c85cb43d44c9a71605f8afdbce48~mv2.png" alt="Initial Mesh Setup UI">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-49c236aa31be2bb7.png" alt="Initial Mesh Setup UI">
       <div class="media-caption">Fig 04: HDA 1 — Initial Mesh Setup Interface. Three-tab structure.</div>
     </div>
 
@@ -258,7 +258,7 @@
     <p>The noise is masked through the <strong>dot product of the mesh normals</strong>: near the ground, the shape automatically smooths out. This is physically correct — the blast wave flattens as it meets surface resistance.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_e5185711f95e49319658a66c14977ade~mv2.png/v1/fill/w_438,h_454,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/ace175_e5185711f95e49319658a66c14977ade~mv2.png" alt="Initial Shape Noise Masking">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-64611e14cda20b64.png" alt="Initial Shape Noise Masking">
       <div class="media-caption">Fig 04a: Perlin noise masked by normal dot product — ground contact smooths automatically.</div>
     </div>
 
@@ -266,13 +266,13 @@
 
     <div class="media-frame">
       <video width="100%" autoplay loop muted playsinline>
-        <source src="https://video.wixstatic.com/video/ace175_28ef94526f7b4881861ff1d7261cb803/1080p/mp4/file.mp4" type="video/mp4">
+        <source src="/public/media/posts/houdini-procedural-explosion-vfx/asset-71a9bfbfce3eb764.mp4" type="video/mp4">
       </video>
       <div class="media-caption">Fig 04b: Bias interpolation — symmetric vs. directional blast.</div>
     </div>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_4a5027676b3e47e68c8d93e376ec2c52~mv2.png/v1/fill/w_925,h_711,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_4a5027676b3e47e68c8d93e376ec2c52~mv2.png" alt="Bias Interpolation">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-de19c3859c22e8ee.png" alt="Bias Interpolation">
       <div class="media-caption">Fig 04c: Flow Noise layer can be enabled on top for additional organic variation.</div>
     </div>
 
@@ -294,7 +294,7 @@
     </div>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_e9fd2556018549358c1462613d182ecb~mv2.png/v1/fill/w_925,h_821,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_e9fd2556018549358c1462613d182ecb~mv2.png" alt="Burst Animation Interface">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-6d1cbc97097d0469.png" alt="Burst Animation Interface">
       <div class="media-caption">Fig 04d: Burst Animation tab — dual curve control for temporal shape.</div>
     </div>
 
@@ -303,10 +303,10 @@
 
     <div class="media-frame">
       <div class="gallery-grid gallery-grid--2col gallery-grid--tall">
-        <img src="https://static.wixstatic.com/media/ace175_cf0e26d58c9147f19c3b9aadf92aecc3~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_cf0e26d58c9147f19c3b9aadf92aecc3~mv2.webp" alt="Layer 1 — Main Burst">
-        <img src="https://static.wixstatic.com/media/ace175_81a0e202cd5a4cb5905711f1939b85b2~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_81a0e202cd5a4cb5905711f1939b85b2~mv2.webp" alt="Layer 2 — Curl">
-        <img src="https://static.wixstatic.com/media/ace175_faacefcb508646ee9f0d1102104f1703~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_faacefcb508646ee9f0d1102104f1703~mv2.webp" alt="Layer 3 — Shockwave">
-        <img src="https://static.wixstatic.com/media/ace175_f53f1c0a1fe5479c9d4b5d05c12f41f0~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_f53f1c0a1fe5479c9d4b5d05c12f41f0~mv2.webp" alt="Layer 4 — Pump">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-32990e2982967336.webp" alt="Layer 1 — Main Burst">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-66b32a74627a4a6e.webp" alt="Layer 2 — Curl">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-53045a72f750dcfc.webp" alt="Layer 3 — Shockwave">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-e797a2c61238f663.webp" alt="Layer 4 — Pump">
       </div>
       <div class="media-caption">Gallery 04: Four independent layers — Main Burst / Curl / Shockwave / Pump.</div>
     </div>
@@ -330,8 +330,8 @@
 
     <div class="media-frame">
       <div class="gallery-grid gallery-grid--2col">
-        <img src="https://static.wixstatic.com/media/ace175_756a762d4a3048eb9d7343fec66370f8~mv2.png/v1/fill/w_777,h_558,al_c,q_90,enc_avif,quality_auto/ace175_756a762d4a3048eb9d7343fec66370f8~mv2.png" alt="Debris system">
-        <img src="https://static.wixstatic.com/media/ace175_9827fc5cd1b74f0ab61e07699814059d~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_9827fc5cd1b74f0ab61e07699814059d~mv2.webp" alt="Debris details 1">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-947b4ee20d6bb03f.png" alt="Debris system">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-6f8ee63672992fa4.webp" alt="Debris details 1">
       </div>
       <div class="media-caption">Gallery 04b: Debris system — fragment scatter with Curl trajectory and spin.</div>
     </div>
@@ -353,7 +353,7 @@
     <p>The second HDA receives the data from the first. On initialization, a Python script reads the layer count and types from HDA 1 and auto-configures the interface — the designer gets a ready-made interface that matches whatever was set up upstream.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_69034cad321c47968a79a852651c01b1~mv2.png/v1/fill/w_925,h_586,al_c,q_90,usm_0.66_1.00_0.01,enc_auto/ace175_69034cad321c47968a79a852651c01b1~mv2.png" alt="se_simulation DOP network">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-6f642d7586219a7b.png" alt="se_simulation DOP network">
       <div class="media-caption">Fig 05: se_simulation DOP network — LAYERS / DEBRIS / PUMP / SIM branches auto-built by Python.</div>
     </div>
 
@@ -410,7 +410,7 @@ def create_dop_volume_source_nodes():
     <p>For the main burst layer: <strong>Alligator noise</strong> — it produces the characteristic bumpy structure close to how real smoke behaves at cloud boundaries. The Debris layer has a separate Velocity tab with optional Curl Noise for additional swirl along fragment trajectories.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_10e328f46e864793a16572d8970a41cd~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_10e328f46e864793a16572d8970a41cd~mv2.webp" alt="Pyro Setup Interface">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-a2d11dd7a3fea18a.webp" alt="Pyro Setup Interface">
       <div class="media-caption">Fig 05a: Pyro Setup tab — per-layer noise configuration.</div>
     </div>
 
@@ -422,7 +422,7 @@ def create_dop_volume_source_nodes():
     </div>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_25b17a7b4d664563a8d39be6ad7fa2ed~mv2.png/v1/fill/w_610,h_608,fp_0.50_0.50,q_90/ace175_25b17a7b4d664563a8d39be6ad7fa2ed~mv2.webp" alt="Rasterize Attributes Interface">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-3a61ef96ebcf1fb0.webp" alt="Rasterize Attributes Interface">
       <div class="media-caption">Fig 05b: Rasterize Attributes — particle scale per layer.</div>
     </div>
 
@@ -430,7 +430,7 @@ def create_dop_volume_source_nodes():
     <p>Pyro solver settings. <strong>Voxel Size</strong> balances detail against simulation time. Per-layer multipliers for Density, Temperature, and Velocity determine the weight of each layer in the final simulation. The shockwave and curl layers get a higher velocity multiplier to amplify their influence on smoke behavior.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_b45de5f9b6dd4e6a9644352cd47abd23~mv2.png/v1/fill/w_608,h_608,fp_0.50_0.50,q_90/ace175_b45de5f9b6dd4e6a9644352cd47abd23~mv2.webp" alt="Smoke Simulation Settings">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-41f941870b2dbae6.webp" alt="Smoke Simulation Settings">
       <div class="media-caption">Fig 05c: Smoke Simulation tab — voxel size and per-layer multipliers.</div>
     </div>
 
@@ -451,7 +451,7 @@ def create_dop_volume_source_nodes():
 
     <div class="media-frame">
       <video width="100%" autoplay loop muted playsinline>
-        <source src="https://video.wixstatic.com/video/ace175_1bb5019a7304413194371bdc13aa75d4/1080p/mp4/file.mp4" type="video/mp4">
+        <source src="/public/media/posts/houdini-procedural-explosion-vfx/asset-bbd8f401568ff573.mp4" type="video/mp4">
       </video>
       <div class="media-caption">Fig 06a: Initial Mesh Velocity Trail Noise — procedural validation pass.</div>
     </div>
@@ -461,7 +461,7 @@ def create_dop_volume_source_nodes():
 
     <div class="media-frame">
       <video width="100%" autoplay loop muted playsinline>
-        <source src="https://video.wixstatic.com/video/ace175_5ac6ffd9990a44b38b5b5bd7cd932aa9/1080p/mp4/file.mp4" type="video/mp4">
+        <source src="/public/media/posts/houdini-procedural-explosion-vfx/asset-ffc9b6d28b9bfc00.mp4" type="video/mp4">
       </video>
       <div class="media-caption">Fig 06b: Volume Layers Blend — system coherence test.</div>
     </div>
@@ -471,7 +471,7 @@ def create_dop_volume_source_nodes():
 
     <div class="media-frame">
       <video width="100%" autoplay loop muted playsinline>
-        <source src="https://video.wixstatic.com/video/ace175_6e761ff83afe4cf9b9d0974334a11858/1080p/mp4/file.mp4" type="video/mp4">
+        <source src="/public/media/posts/houdini-procedural-explosion-vfx/asset-4d606ce89a581ed9.mp4" type="video/mp4">
       </video>
       <div class="media-caption">Fig 06c: Arnold Render — look development verification pass.</div>
     </div>
@@ -534,8 +534,8 @@ def create_dop_volume_source_nodes():
 
     <div class="media-frame">
       <div class="gallery-grid gallery-grid--2col">
-        <img src="https://static.wixstatic.com/media/ace175_63f2ad9ba2c44398a5e41e7bc55e4f56~mv2.png/v1/fill/w_820,h_583,al_c,lg_1,q_90,enc_avif,quality_auto/ace175_63f2ad9ba2c44398a5e41e7bc55e4f56~mv2.png" alt="VAT Orthographic Camera Setup 01">
-        <img src="https://static.wixstatic.com/media/ace175_104198e83c764954926f2c51e40d6586~mv2.png/v1/fill/w_753,h_766,al_c,q_90,enc_avif,quality_auto/ace175_104198e83c764954926f2c51e40d6586~mv2.png" alt="VAT Orthographic Camera Setup 02">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-6650aa3f86c444ab.png" alt="VAT Orthographic Camera Setup 01">
+        <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-d28c6b5b53b16f53.png" alt="VAT Orthographic Camera Setup 02">
       </div>
       <div class="media-caption">Gallery 08: Houdini VAT export orthographic camera configuration.</div>
     </div>
@@ -563,7 +563,7 @@ def create_dop_volume_source_nodes():
     </div>
 
     <div class="media-frame">
-      <img src="https://i.ytimg.com/vi/ZvJuTKn3Bnc/maxresdefault.jpg" alt="Motion Vector Frame Blending Comparison">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-8203fb32b352318c.jpg" alt="Motion Vector Frame Blending Comparison">
       <div class="media-caption">Fig 09: Frame Blending — standard flipbook stutter vs. Motion Vector interpolation.</div>
     </div>
 
@@ -580,7 +580,7 @@ def create_dop_volume_source_nodes():
     <p>Standard sprite or flipbook effects are lit as flat surfaces — they receive light from one direction and ignore everything else. This looks fine in a static scene but breaks the moment a dynamic light source moves, or the effect is placed near colored environment lighting.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_0e89ed50f5cb472eb3eea876da84882f~mv2.jpg/v1/fill/w_925,h_520,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_0e89ed50f5cb472eb3eea876da84882f~mv2.jpg" alt="Six Point Lighting comparison">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-2699a5629b4cd9f6.jpg" alt="Six Point Lighting comparison">
       <div class="media-caption">Fig 10a: Six Point Lighting — flat billboard vs. dynamic environment response.</div>
     </div>
 
@@ -601,7 +601,7 @@ def create_dop_volume_source_nodes():
     <p>In-engine, the shader reconstructs approximate volumetric lighting by blending these six samples based on the current light direction. The explosion responds correctly to any light in the scene — a muzzle flash nearby, rotating sunlight, colored fill from an environment — without any volumetric rendering, without runtime simulation.</p>
 
     <div class="media-frame">
-      <img src="https://static.wixstatic.com/media/ace175_ddaadc1f45314abdb224f333fde21ba7~mv2.png/v1/fill/w_925,h_505,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/ace175_ddaadc1f45314abdb224f333fde21ba7~mv2.png" alt="Houdini 6-point Lighting Preparation">
+      <img src="/public/media/posts/houdini-procedural-explosion-vfx/asset-423d2a1789f4d135.png" alt="Houdini 6-point Lighting Preparation">
       <div class="media-caption">Fig 10b: Houdini — Six Point Lighting render preparation, six-camera rig setup.</div>
     </div>
 

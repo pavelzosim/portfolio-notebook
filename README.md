@@ -1,8 +1,11 @@
 # Pavel Zosim — Technical Systems Notebook
 
-Homepage prototype for Pavel Zosim's technical-art portfolio, blog, and R&D notebook.
+Technical-art portfolio, blog, and R&D notebook for Pavel Zosim.
 
-The interface follows an engineering/editorial direction: a dotted-paper document surface, JetBrains Mono typography, terminal-inspired navigation, project records, technical notes, tools and assets, and direct contact information.
+The interface follows an engineering/editorial direction: a dotted-paper
+document surface, JetBrains Mono typography, terminal-inspired navigation,
+project records, technical notes, tools and assets, and direct contact
+information.
 
 ## Local preview
 
@@ -18,11 +21,14 @@ Then open `http://127.0.0.1:8765/`.
 
 - `index.html` — homepage content and lightweight interaction
 - `styles/atlas.css` — stylesheet orchestrator
-- `styles/*.css` — ordered visual-system modules
-- `content/` — Markdown documents and content indexes
-- `public/media/` — repository-owned post, project, reel, and shared media
+- `styles/framework/` — canonical Atlas framework modules
+- `styles/home/` — homepage-specific modules
+- `content/posts/atlas-html/` — canonical post sources imported from Atlas
+- `content/migration/` — content and media provenance maps
+- `public/media/` — localized post, project, reel, and shared media
+- `scripts/localize_wix_media.py` — repeatable Wix media localization
 - `home.css` — compatibility entry point for older embeds
 
-Content links and media currently point to the existing Wix portfolio at [pavelzosim.com](https://www.pavelzosim.com/).
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for module boundaries and the Wix migration workflow.
+YouTube players and external technical references remain remote by design.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for module boundaries and the Wix
+migration workflow.
