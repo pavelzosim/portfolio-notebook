@@ -3,25 +3,69 @@
     {
       "id": "PRJ-001",
       "slug": "nasa-first-woman",
-      "title": "NASA First Woman",
-      "type": "XR / technical art",
-      "role": "Technical Artist",
-      "environment": "Real-time XR",
+      "title": "NASA First Woman — XR Educational Platform",
+      "type": "XR / educational platform",
+      "role": "Art Director / UI–UX / Technical Artist",
+      "environment": "Unity / mobile XR / web / print",
       "status": "PRODUCTION",
-      "image": "/public/media/home/home/asset-4eb0f0d1011fdc0d.png",
-      "summary": "Production systems and real-time content for an XR platform built around lunar exploration education.",
-      "overview": "NASA First Woman is an educational XR platform. My contribution sits at the intersection of authored visual content, real-time implementation, and production constraints across target platforms.",
+      "image": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
+      "summary": "Real-time XR educational platform for STEM, space exploration, and NASA’s Artemis program narrative.",
+      "overview": "NASA First Woman combines a graphic novel, an AR-enabled mobile application, a website, and interactive educational content. The platform expands the Artemis program narrative through immersive storytelling and lets a public audience explore spaceflight concepts through augmented reality.",
       "scope": [
-        "Technical-art support for real-time content production",
-        "Integration work between authored assets and runtime systems",
-        "Reusable workflows designed for production iteration"
+        "Real-time XR mobile application with a single-screen experience per device",
+        "Educational, public-facing content across app, website, graphic novels, and video",
+        "Long-term initiative with multiple releases and iterations",
+        "Scientific and narrative consistency across every visual format"
       ],
       "constraints": [
-        "Real-time visual quality within platform performance budgets",
-        "Maintainable content across more than one target configuration",
-        "Clear hand-off between artists, technical artists, and engineers"
+        "Mobile performance budgets across iOS and iPad hardware",
+        "Consistent UI behaviour in screen space and world space",
+        "Reusable content architecture for multiple screens and aspect ratios",
+        "Visual clarity without sacrificing scientific plausibility"
       ],
-      "outcome": "The platform was recognized with American Advertising Awards. This public record intentionally summarizes system-level responsibilities without exposing protected production details.",
+      "roleDetails": [
+        "Screen-space and world-space UI design",
+        "UI shaders and partial environment rendering",
+        "Visual design and art direction: color, composition, and spatial consistency",
+        "Motion graphics for video intros, achievements, and narrative elements",
+        "Facial-expression animation system for the robot assistant",
+        "UX and UI design for the website and mobile application",
+        "Marketing renders, print design, lighting, and selected interior-space detailing",
+        "Ownership of visual and technical decisions, initiated and approved collaboratively"
+      ],
+      "solutions": [
+        "Designed UI systems that operate consistently across screen-space and world-space contexts",
+        "Developed UI shaders that rank and position elements through UV offsets",
+        "Built an automated Houdini system that packs screens with different aspect ratios into a unified texture atlas for efficient reuse and shader-driven control",
+        "Used After Effects for robot facial expressions, motion graphics, intro sequences, and rapid web prototyping",
+        "Created a procedural animation system for robot eyes and eyelids to produce expressive emotional states efficiently",
+        "Maintained scientific plausibility and visual coherence across interface, environment, video, web, and print"
+      ],
+      "tools": ["Unity", "Houdini", "After Effects", "Photoshop", "Illustrator"],
+      "results": [
+        "1.5 million website page views",
+        "325K+ app-store downloads",
+        "350K+ graphic-novel copies distributed worldwide",
+        "Content read aboard the ISS by astronaut Frank Rubio, 205 miles above Earth",
+        "American Advertising Awards recognition",
+        "Long-term reuse across application, web, video, and print releases"
+      ],
+      "video": {
+        "src": "/public/media/home/home/asset-80ec1ae328b8d595.mp4",
+        "poster": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
+        "caption": "Selected production reel — broader professional context; not a NASA-only reel."
+      },
+      "media": [
+        {"src":"/public/media/projects/nasa-first-woman/xr-interface-overview.webp","alt":"NASA First Woman XR interior with screen-space and world-space interfaces","caption":"XR interior and unified interface language"},
+        {"src":"/public/media/projects/nasa-first-woman/xr-interface-system.webp","alt":"NASA First Woman interface system study","caption":"Early interface-system study and control hierarchy"},
+        {"src":"/public/media/projects/nasa-first-woman/ui-lunar-navigation.webp","alt":"Lunar navigation interface concept","caption":"Lunar navigation and terrain-readout study"},
+        {"src":"/public/media/projects/nasa-first-woman/ui-mission-map.webp","alt":"Lunar rover diagnostic interface","caption":"Vehicle telemetry and diagnostic UI"},
+        {"src":"/public/media/projects/nasa-first-woman/mission-specialist-orbit-patch.gif","alt":"Animated First Woman Mission Specialist orbit patch","caption":"Animated mission-badge state"},
+        {"src":"/public/media/projects/nasa-first-woman/mission-specialist-animation.gif","alt":"Animated First Woman Mission Specialist badge variation","caption":"Cross-media badge animation variation"},
+        {"src":"/public/media/projects/nasa-first-woman/robot-eye-animation.gif","alt":"Animated robot eye and eyelid motion","caption":"Robot eye and eyelid motion state"},
+        {"src":"/public/media/projects/nasa-first-woman/mission-specialist-patch.gif","alt":"First Woman Mission Specialist animated patch","caption":"Cross-media mission badge and achievement asset"}
+      ],
+      "outcome": "The platform shipped publicly across multiple media formats and developed into a long-running educational initiative. The production record combines technical-art systems with art direction and practical delivery across real-time, web, video, and print.",
       "sourceUrl": "https://www.pavelzosim.com/projects/nasa-first-woman"
     },
     {

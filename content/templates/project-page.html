@@ -4,8 +4,8 @@
   <nav aria-label="Primary">
     <a class="active" href="/projects/">Projects</a><span class="nav-divider" aria-hidden="true">/</span>
     <a href="/#notes">Notes</a><span class="nav-divider" aria-hidden="true">/</span>
-    <a href="/#tools">Tools</a><span class="nav-divider" aria-hidden="true">/</span>
-    <a href="/#blog">Blog</a><span class="nav-divider" aria-hidden="true">/</span>
+    <a href="/tools/">Tools</a><span class="nav-divider" aria-hidden="true">/</span>
+    <a href="/blog/">Blog</a><span class="nav-divider" aria-hidden="true">/</span>
     <a href="/#about">About</a><span class="nav-divider" aria-hidden="true">/</span>
     <a href="/#contacts">Contacts</a>
   </nav>
@@ -19,7 +19,10 @@
       <li><a href="#overview"><span>01</span> Overview</a></li>
       <li><a href="#scope"><span>02</span> Technical scope</a></li>
       <li><a href="#constraints"><span>03</span> Constraints</a></li>
-      <li><a href="#outcome"><span>04</span> Outcome</a></li>
+      <li data-nav-for="role"><a href="#role"><span>04</span> My role</a></li>
+      <li data-nav-for="technical"><a href="#technical"><span>05</span> Solution</a></li>
+      <li data-nav-for="media"><a href="#media"><span>06</span> Media</a></li>
+      <li><a href="#outcome"><span data-outcome-nav>07</span> Outcome</a></li>
     </ol>
     <div class="rail-note"><strong>PUBLIC RECORD</strong>Production details are limited to material safe to publish.</div>
     <p><a class="project-back" href="/projects/">← project index</a></p>
@@ -42,7 +45,10 @@
       <section id="overview"><h2><span>§ 01</span> Overview</h2><p data-field="overview"></p></section>
       <section id="scope"><h2><span>§ 02</span> Technical scope</h2><ul data-list="scope"></ul></section>
       <section id="constraints"><h2><span>§ 03</span> Production constraints</h2><ul data-list="constraints"></ul></section>
-      <section id="outcome"><h2><span>§ 04</span> Outcome / record</h2><p data-field="outcome"></p></section>
+      <section id="role" data-optional="role"><h2><span>§ 04</span> My role</h2><ul data-list="roleDetails"></ul></section>
+      <section id="technical" data-optional="technical"><h2><span>§ 05</span> Technical solution</h2><ul data-list="solutions"></ul><div class="project-tools" data-tools></div></section>
+      <section id="media" data-optional="media"><h2><span>§ 06</span> Media record</h2><figure class="project-reel" data-video-record><video data-project-video controls preload="metadata"></video><figcaption data-video-caption></figcaption></figure><div class="project-media-grid" data-media-grid></div></section>
+      <section id="outcome"><h2><span data-outcome-number>§ 07</span> Result / record</h2><ul class="project-results" data-list="results"></ul><p data-field="outcome"></p></section>
       <p class="section-foot"><span>source / original portfolio record</span><a data-source-link rel="external">open Wix source ↗</a></p>
     </article>
     <nav class="project-nav" aria-label="Adjacent projects"><a data-project-previous></a><a data-project-next></a></nav>
