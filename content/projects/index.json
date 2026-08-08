@@ -1,8 +1,100 @@
 {
   "projects": [
-    {"slug":"nasa-first-woman","title":"NASA First Woman","sourceUrl":"https://www.pavelzosim.com/projects/nasa-first-woman","status":"inventory"},
-    {"slug":"meta-blumhouse-xr-experience","title":"Meta × Blumhouse","sourceUrl":"https://www.pavelzosim.com/projects/meta-blumhouse-xr-experience","status":"inventory"},
-    {"slug":"airport-interaction-screen","title":"FAA Interaction Screen","sourceUrl":"https://www.pavelzosim.com/projects/airport-interaction-screen","status":"inventory"},
-    {"slug":"deloitte-virtual-factory","title":"Deloitte Virtual Factory","sourceUrl":"https://www.pavelzosim.com/projects/deloitte-virtual-factory","status":"inventory"}
+    {
+      "id": "PRJ-001",
+      "slug": "nasa-first-woman",
+      "title": "NASA First Woman",
+      "type": "XR / technical art",
+      "role": "Technical Artist",
+      "environment": "Real-time XR",
+      "status": "PRODUCTION",
+      "image": "/public/media/home/home/asset-4eb0f0d1011fdc0d.png",
+      "summary": "Production systems and real-time content for an XR platform built around lunar exploration education.",
+      "overview": "NASA First Woman is an educational XR platform. My contribution sits at the intersection of authored visual content, real-time implementation, and production constraints across target platforms.",
+      "scope": [
+        "Technical-art support for real-time content production",
+        "Integration work between authored assets and runtime systems",
+        "Reusable workflows designed for production iteration"
+      ],
+      "constraints": [
+        "Real-time visual quality within platform performance budgets",
+        "Maintainable content across more than one target configuration",
+        "Clear hand-off between artists, technical artists, and engineers"
+      ],
+      "outcome": "The platform was recognized with American Advertising Awards. This public record intentionally summarizes system-level responsibilities without exposing protected production details.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/nasa-first-woman"
+    },
+    {
+      "id": "PRJ-002",
+      "slug": "meta-blumhouse-xr-experience",
+      "title": "Meta × Blumhouse",
+      "type": "XR / real-time VFX",
+      "role": "Technical Artist",
+      "environment": "Real-time immersive experience",
+      "status": "PRODUCTION",
+      "image": "/public/media/home/home/asset-15dfbd06ef03a5d1.jpg",
+      "summary": "Atmospheric effects and engine-facing workflows for the Blumhouse Enhanced Cinema experience at Nexus Studios for Meta.",
+      "overview": "The project required production-ready visual systems for an immersive experience rather than isolated final-frame effects. The technical-art work focused on carrying visual intent into a constrained real-time environment.",
+      "scope": [
+        "Real-time VFX and atmospheric system development",
+        "Engine-facing workflows for repeatable content integration",
+        "Technical collaboration across art and engineering disciplines"
+      ],
+      "constraints": [
+        "Strict real-time performance budgets",
+        "Stable behaviour across production content and target hardware",
+        "Visual consistency without one-off, shot-specific solutions"
+      ],
+      "outcome": "The Blumhouse Enhanced Cinema experience was Emmy-nominated. The page records the technical context while respecting the limits of publicly shareable production material.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/meta-blumhouse-xr-experience"
+    },
+    {
+      "id": "PRJ-003",
+      "slug": "airport-interaction-screen",
+      "title": "FAA Interaction Screen",
+      "type": "Interactive / real-time",
+      "role": "Technical Artist",
+      "environment": "Large-format public installation",
+      "status": "PRODUCTION",
+      "image": "/public/media/home/home/asset-9bd2f763a7729063.png",
+      "summary": "Responsive visual systems for a large-format airport interaction screen.",
+      "overview": "This work belongs to the practical side of real-time graphics: a public-facing interactive surface that must remain legible, responsive, and stable outside a controlled demo environment.",
+      "scope": [
+        "Real-time visual implementation for an interactive display",
+        "Asset integration and presentation-system support",
+        "Iteration with design and development stakeholders"
+      ],
+      "constraints": [
+        "Reliable continuous operation in a public installation",
+        "Readability and responsiveness at large display scale",
+        "Predictable behaviour under real production conditions"
+      ],
+      "outcome": "The public portfolio record focuses on the interaction and real-time production context. A deeper technical breakdown can be added when project material is cleared for publication.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/airport-interaction-screen"
+    },
+    {
+      "id": "PRJ-004",
+      "slug": "deloitte-virtual-factory",
+      "title": "Deloitte Virtual Factory",
+      "type": "Digital twin / pipeline",
+      "role": "Technical Artist",
+      "environment": "Industrial real-time platform",
+      "status": "PRODUCTION",
+      "image": "/public/media/home/home/asset-31cf3e41410f3a3c.png",
+      "summary": "Environment and production workflows for an industrial virtual-factory platform.",
+      "overview": "The project combined environment production with the structure and maintainability expected from an industrial real-time platform. The work was less about a single image and more about keeping content usable as the system evolved.",
+      "scope": [
+        "Environment and asset-pipeline support",
+        "Production workflows for repeatable scene integration",
+        "Technical-art coordination between authored content and runtime needs"
+      ],
+      "constraints": [
+        "Scalable scene and asset organization",
+        "Maintainable workflows for ongoing production changes",
+        "Real-time performance across complex industrial content"
+      ],
+      "outcome": "The result is documented as a production-system record. Additional diagrams and implementation notes can be appended without changing the page structure.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/deloitte-virtual-factory"
+    }
   ]
 }

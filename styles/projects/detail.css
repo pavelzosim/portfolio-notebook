@@ -1,0 +1,26 @@
+.project-hero{padding:34px 36px 0;border-bottom:1px solid var(--line2)}
+.project-hero .breadcrumb{margin-bottom:26px}
+.project-hero h1{max-width:680px;margin:0 0 14px;font-size:clamp(30px,4vw,44px)}
+.project-hero .project-dek{max-width:680px;margin:0 0 26px;color:var(--muted);font-size:12px;line-height:1.75}
+.project-cover{margin:0 -36px;border-top:1px solid var(--line2)}
+.project-cover img{display:block;width:100%;max-height:520px;object-fit:cover;background:var(--paper2)}
+.project-facts{display:grid;grid-template-columns:repeat(4,1fr);margin:0;border-bottom:1px solid var(--line2)}
+.project-facts div{min-width:0;padding:12px 14px;border-right:1px solid var(--line)}
+.project-facts div:last-child{border-right:0}
+.project-facts dt{color:var(--muted);font-size:8px;text-transform:uppercase}
+.project-facts dd{margin:4px 0 0;font-size:9px}
+.project-record{padding:34px 36px 46px}
+.project-record section{padding:0 0 32px;margin:0 0 32px;border-bottom:1px solid var(--line)}
+.project-record section:last-of-type{margin-bottom:0}
+.project-record h2{margin:0 0 16px;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.project-record h2 span{display:inline-block;min-width:42px;color:var(--red)}
+.project-record p{max-width:680px;margin:0;font-size:11px;line-height:1.8}
+.project-record ul{max-width:680px;margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.project-record li{padding:8px 10px 8px 28px;border-bottom:1px solid var(--line);font-size:10px;position:relative}
+.project-record li::before{content:"├─";position:absolute;left:7px;color:var(--red)}
+.project-record li:last-child::before{content:"└─"}
+.project-nav{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line2)}
+.project-nav a{padding:16px 18px;text-decoration:none;font-size:9px}
+.project-nav a:last-child{text-align:right;border-left:1px solid var(--line)}
+.project-nav a:hover{background:var(--paper2);color:var(--red)}
+@media(max-width:760px){.project-hero,.project-record{padding-inline:18px}.project-cover{margin-inline:-18px}.project-facts{grid-template-columns:1fr 1fr}.project-facts div:nth-child(2){border-right:0}.project-facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}}

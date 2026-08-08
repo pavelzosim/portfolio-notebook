@@ -1,0 +1,4 @@
+/* Project-page stylesheet orchestrator. */
+@import url("./projects/shared.css");
+@import url("./projects/index.css");
+@import url("./projects/detail.css");

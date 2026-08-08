@@ -6,6 +6,7 @@
 .shellbar nav a{padding-inline:7px;font-size:9px}
 .log-table>a{min-height:106px;grid-template-columns:146px 54px 66px minmax(170px,1fr) 98px 15px}
 .log-table>a>img{width:136px;height:82px}
+.log-table>a:hover,.log-table>a:focus-visible{background:var(--paper2);color:var(--ink);outline:0;box-shadow:inset 3px 0 0 var(--red)}
 .project-index>a{min-height:116px;grid-template-columns:150px 58px 1.15fr .85fr 44px;align-items:start}
 .project-index>a>img{width:140px;height:88px}
 .media-record{margin:0 0 28px;display:grid;grid-template-columns:minmax(260px,1.1fr) minmax(190px,.9fr);border:1px solid var(--line2);background:rgba(17,17,17,.025)}
@@ -30,6 +31,7 @@
 .contact-layout dt{color:var(--muted);font-size:8px}
 .contact-layout dd{margin:0;font-size:9px;text-align:right}
 .contact-layout a:hover{color:var(--red)}
+.about-layout a:hover,.about-layout a:focus-visible,.contact-layout a:focus-visible{color:var(--red);outline:0}
 .function-bar{grid-template-columns:repeat(8,minmax(72px,1fr))}
 @media(max-width:760px){
   .shellbar nav{overflow-x:auto;white-space:nowrap}
@@ -47,6 +49,4 @@
   .resource-grid img{grid-row:1/4;width:112px;height:84px}
   .contact-layout{grid-template-columns:1fr;gap:20px}
 }
-
-
 
