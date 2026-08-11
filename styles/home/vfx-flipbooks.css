@@ -1,0 +1,16 @@
+.vfx-intro{max-width:680px;margin:0 0 24px;color:var(--muted);font-size:10px;line-height:1.7}
+.vfx-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vfx-loop{min-width:0;margin:0;border:1px solid var(--line2);background:rgba(230,220,210,.92)}
+.vfx-loop[hidden]{display:none}
+.vfx-loop video{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#111;cursor:pointer}
+.vfx-loop:hover,.vfx-loop:focus-within{border-color:var(--red)}
+.vfx-loop figcaption{min-height:58px;padding:8px 9px;display:grid;grid-template-columns:auto 1fr;gap:2px 8px;border-top:1px solid var(--line);font-size:8px}
+.vfx-loop figcaption span{color:var(--red);font-weight:700}
+.vfx-loop figcaption strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;font-weight:600}
+.vfx-loop figcaption small{grid-column:1/-1;color:var(--muted);font-size:8px}
+.vfx-controls{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;padding-top:10px;border-top:1px dotted var(--line2)}
+.vfx-count{color:var(--muted);font-size:8px;text-transform:uppercase}
+.vfx-more{min-width:132px;min-height:34px;border:0}
+@media(max-width:760px){.vfx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){.vfx-grid{grid-template-columns:1fr}.vfx-loop figcaption{min-height:52px}}
+@media(prefers-reduced-motion:reduce){.vfx-loop video{cursor:zoom-in}}
