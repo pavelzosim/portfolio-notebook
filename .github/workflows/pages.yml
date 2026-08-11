@@ -23,6 +23,8 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Build preview
         run: python scripts/build_github_pages.py --base-path "/${{ github.event.repository.name }}" --noindex
