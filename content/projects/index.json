@@ -41,7 +41,13 @@
         "Created a procedural animation system for robot eyes and eyelids to produce expressive emotional states efficiently",
         "Maintained scientific plausibility and visual coherence across interface, environment, video, web, and print"
       ],
-      "tools": ["Unity", "Houdini", "After Effects", "Photoshop", "Illustrator"],
+      "tools": [
+        "Unity",
+        "Houdini",
+        "After Effects",
+        "Photoshop",
+        "Illustrator"
+      ],
       "results": [
         "1.5 million website page views",
         "325K+ app-store downloads",
@@ -56,14 +62,46 @@
         "caption": "Selected production reel — broader professional context; not a NASA-only reel."
       },
       "media": [
-        {"src":"/public/media/projects/nasa-first-woman/xr-interface-overview.webp","alt":"NASA First Woman XR interior with screen-space and world-space interfaces","caption":"XR interior and unified interface language"},
-        {"src":"/public/media/projects/nasa-first-woman/xr-interface-system.webp","alt":"NASA First Woman interface system study","caption":"Early interface-system study and control hierarchy"},
-        {"src":"/public/media/projects/nasa-first-woman/ui-lunar-navigation.webp","alt":"Lunar navigation interface concept","caption":"Lunar navigation and terrain-readout study"},
-        {"src":"/public/media/projects/nasa-first-woman/ui-mission-map.webp","alt":"Lunar rover diagnostic interface","caption":"Vehicle telemetry and diagnostic UI"},
-        {"src":"/public/media/projects/nasa-first-woman/mission-specialist-orbit-patch.gif","alt":"Animated First Woman Mission Specialist orbit patch","caption":"Animated mission-badge state"},
-        {"src":"/public/media/projects/nasa-first-woman/mission-specialist-animation.gif","alt":"Animated First Woman Mission Specialist badge variation","caption":"Cross-media badge animation variation"},
-        {"src":"/public/media/projects/nasa-first-woman/robot-eye-animation.gif","alt":"Animated robot eye and eyelid motion","caption":"Robot eye and eyelid motion state"},
-        {"src":"/public/media/projects/nasa-first-woman/mission-specialist-patch.gif","alt":"First Woman Mission Specialist animated patch","caption":"Cross-media mission badge and achievement asset"}
+        {
+          "src": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
+          "alt": "NASA First Woman XR interior with screen-space and world-space interfaces",
+          "caption": "XR interior and unified interface language"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/xr-interface-system.webp",
+          "alt": "NASA First Woman interface system study",
+          "caption": "Early interface-system study and control hierarchy"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui-lunar-navigation.webp",
+          "alt": "Lunar navigation interface concept",
+          "caption": "Lunar navigation and terrain-readout study"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui-mission-map.webp",
+          "alt": "Lunar rover diagnostic interface",
+          "caption": "Vehicle telemetry and diagnostic UI"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/mission-specialist-orbit-patch.gif",
+          "alt": "Animated First Woman Mission Specialist orbit patch",
+          "caption": "Animated mission-badge state"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/mission-specialist-animation.gif",
+          "alt": "Animated First Woman Mission Specialist badge variation",
+          "caption": "Cross-media badge animation variation"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/robot-eye-animation.gif",
+          "alt": "Animated robot eye and eyelid motion",
+          "caption": "Robot eye and eyelid motion state"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/mission-specialist-patch.gif",
+          "alt": "First Woman Mission Specialist animated patch",
+          "caption": "Cross-media mission badge and achievement asset"
+        }
       ],
       "outcome": "The platform shipped publicly across multiple media formats and developed into a long-running educational initiative. The production record combines technical-art systems with art direction and practical delivery across real-time, web, video, and print.",
       "sourceUrl": "https://www.pavelzosim.com/projects/nasa-first-woman"
@@ -71,74 +109,323 @@
     {
       "id": "PRJ-002",
       "slug": "meta-blumhouse-xr-experience",
-      "title": "Meta × Blumhouse",
-      "type": "XR / real-time VFX",
-      "role": "Technical Artist",
-      "environment": "Real-time immersive experience",
+      "title": "Meta × Blumhouse — Enhanced Cinema",
+      "type": "XR / cinematic real-time VFX",
+      "role": "Technical Artist / VFX / XR",
+      "environment": "Unity / Meta Quest 3 / streamed XR",
       "status": "PRODUCTION",
-      "image": "/public/media/home/home/asset-15dfbd06ef03a5d1.jpg",
-      "summary": "Atmospheric effects and engine-facing workflows for the Blumhouse Enhanced Cinema experience at Nexus Studios for Meta.",
-      "overview": "The project required production-ready visual systems for an immersive experience rather than isolated final-frame effects. The technical-art work focused on carrying visual intent into a constrained real-time environment.",
+      "summary": "XR cinematic experience combining streamed 4K content, spatial audio, and synchronized real-time VFX on standalone Meta Quest hardware.",
+      "overview": "The experience reimagined Blumhouse films including M3GAN and The Black Phone as immersive XR cinema. Real-time environmental effects extended beyond the streamed screen while spatial audio increased presence. It premiered at Meta Connect and was later released publicly on the Meta Quest Store.",
       "scope": [
-        "Real-time VFX and atmospheric system development",
-        "Engine-facing workflows for repeatable content integration",
-        "Technical collaboration across art and engineering disciplines"
+        "XR cinematic experience with minimal interactivity",
+        "Real-time streaming application for Meta Quest 3 and Meta Quest 3S",
+        "High-quality 4K streamed video with spatial audio",
+        "Immersive VFX synchronized with cinematic content"
       ],
       "constraints": [
-        "Strict real-time performance budgets",
-        "Stable behaviour across production content and target hardware",
-        "Visual consistency without one-off, shot-specific solutions"
+        "Standalone XR performance budgets",
+        "Network latency and bandwidth variability",
+        "Strict Meta, Blumhouse, and Universal Pictures IP requirements",
+        "Delivery timeline aligned with the Meta Connect premiere"
       ],
-      "outcome": "The Blumhouse Enhanced Cinema experience was Emmy-nominated. The page records the technical context while respecting the limits of publicly shareable production material.",
-      "sourceUrl": "https://www.pavelzosim.com/projects/meta-blumhouse-xr-experience"
+      "roleDetails": [
+        "Development of real-time shaders and visual effects",
+        "Technical-art tools and effect integration",
+        "Real-time VFX implementation in Unity",
+        "Optimization for Meta Quest hardware",
+        "Integration of cinematic content with immersive environmental effects"
+      ],
+      "solutions": [
+        "Developed custom HLSL shaders and XR-specific real-time VFX",
+        "Balanced headset rendering budgets with streamed 4K video playback",
+        "Layered real-time effects over synchronized cinematic content",
+        "Used HISPlayer for streaming and Dolby Atmos for spatial audio",
+        "Prototyped cloud-tank simulations and effect workflows in Houdini",
+        "Maintained synchronization under changing network conditions"
+      ],
+      "tools": [
+        "Unity",
+        "HLSL",
+        "Houdini",
+        "HISPlayer",
+        "Dolby Atmos"
+      ],
+      "results": [
+        "Live demonstration at Meta Connect",
+        "Public release on the Meta Quest Store",
+        "Strong audience response during horror sequences",
+        "Positive feedback from Meta and Blumhouse teams",
+        "Emmy-nominated immersive production",
+        "Reusable techniques for future VR cinema experiences"
+      ],
+      "outcome": "The project demonstrated that streamed cinematic content, spatial audio, and synchronized real-time effects can form a convincing XR cinema experience within strict standalone-headset constraints.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/meta-blumhouse-xr-experience",
+      "image": "/public/media/projects/meta-blumhouse-xr-experience/asset-9340fc6655b8a14f.gif",
+      "media": [
+        {
+          "src": "/public/media/projects/meta-blumhouse-xr-experience/asset-9340fc6655b8a14f.gif",
+          "alt": "Meta × Blumhouse — Enhanced Cinema production image 01",
+          "caption": "Production record / image 01"
+        },
+        {
+          "src": "/public/media/projects/meta-blumhouse-xr-experience/asset-bebb879776368d64.jpg",
+          "alt": "Meta × Blumhouse — Enhanced Cinema production image 02",
+          "caption": "Production record / image 02"
+        }
+      ],
+      "video": {
+        "src": "/public/media/projects/meta-blumhouse-xr-experience/asset-f51ecfc17cc2ea50.mp4",
+        "caption": "Meta × Blumhouse Enhanced Cinema — selected XR production footage."
+      }
     },
     {
       "id": "PRJ-003",
       "slug": "airport-interaction-screen",
-      "title": "FAA Interaction Screen",
-      "type": "Interactive / real-time",
-      "role": "Technical Artist",
-      "environment": "Large-format public installation",
+      "title": "Airport Operations Interaction Screen",
+      "type": "Interactive / aviation visualization",
+      "role": "Art Director / Technical Artist",
+      "environment": "Unity HDRP / touch display / continuous operation",
       "status": "PRODUCTION",
-      "image": "/public/media/home/home/asset-9bd2f763a7729063.png",
-      "summary": "Responsive visual systems for a large-format airport interaction screen.",
-      "overview": "This work belongs to the practical side of real-time graphics: a public-facing interactive surface that must remain legible, responsive, and stable outside a controlled demo environment.",
+      "summary": "Interactive airport-operations visualization combining a timeline-driven aircraft lifecycle, video playback, and touch-controlled camera navigation.",
+      "overview": "An internal R&D interaction screen visualizing the complete aircraft lifecycle from taxi and takeoff through flight and landing. Synchronized animation, video playback, and an interactive camera created a continuous operational presentation.",
       "scope": [
-        "Real-time visual implementation for an interactive display",
-        "Asset integration and presentation-system support",
-        "Iteration with design and development stakeholders"
+        "Real-time touch-screen application",
+        "Aircraft taxi, takeoff, flight, and landing animation",
+        "Timeline-driven presentation synchronized with video",
+        "Rotatable camera controlled through on-screen gestures"
       ],
       "constraints": [
-        "Reliable continuous operation in a public installation",
-        "Readability and responsiveness at large display scale",
-        "Predictable behaviour under real production conditions"
+        "Continuous 24/7 stability requirements",
+        "Accurate spatial layout and operational representation",
+        "Safety and compliance constraints",
+        "Precise animation timing and scale",
+        "Visual pacing suitable for extended viewing"
       ],
-      "outcome": "The public portfolio record focuses on the interaction and real-time production context. A deeper technical breakdown can be added when project material is cleared for publication.",
-      "sourceUrl": "https://www.pavelzosim.com/projects/airport-interaction-screen"
+      "roleDetails": [
+        "Art direction, motion graphics, and storyboard creation",
+        "Airport props, markings, signage, and signals",
+        "Level design and spatial layout",
+        "Camera positioning and interaction logic",
+        "Timeline design and video synchronization",
+        "Aircraft lifecycle animation",
+        "Integration planning with developers"
+      ],
+      "solutions": [
+        "Built the real-time presentation in Unity HDRP",
+        "Designed a timeline system for synchronized animation and playback",
+        "Used Cinema 4D for concept development and motion design",
+        "Generated procedural city content from OpenStreetMap data with Houdini and Python",
+        "Integrated SpeedTree vegetation assets",
+        "Balanced continuous visual pacing with long-running stability"
+      ],
+      "tools": [
+        "Unity HDRP",
+        "Houdini",
+        "Cinema 4D",
+        "SpeedTree",
+        "Python"
+      ],
+      "results": [
+        "Delivered as an internal R&D demonstration",
+        "Tested successfully for continuous-operation stability",
+        "Validated the airport-operations visualization concept",
+        "Established a technical and design base for future aviation interaction systems"
+      ],
+      "outcome": "The resulting system functioned as both a stable continuous presentation and a proof of concept for larger aviation-focused interactive visualization tools.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/airport-interaction-screen",
+      "image": "/public/media/projects/airport-interaction-screen/asset-1f799418e32a7664.png",
+      "media": [
+        {
+          "src": "/public/media/projects/airport-interaction-screen/asset-1f799418e32a7664.png",
+          "alt": "Airport Operations Interaction Screen production image 01",
+          "caption": "Production record / image 01"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/asset-93ea597abb7f525d.png",
+          "alt": "Airport Operations Interaction Screen production image 02",
+          "caption": "Production record / image 02"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/asset-266db4cf554ea001.png",
+          "alt": "Airport Operations Interaction Screen production image 03",
+          "caption": "Production record / image 03"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/asset-54cae7605ab964e3.png",
+          "alt": "Airport Operations Interaction Screen production image 04",
+          "caption": "Production record / image 04"
+        }
+      ],
+      "video": {
+        "src": "/public/media/projects/airport-interaction-screen/asset-c54e56ddb0333c6f.mp4",
+        "caption": "Airport Operations Interaction Screen — selected installation footage."
+      }
     },
     {
       "id": "PRJ-004",
       "slug": "deloitte-virtual-factory",
-      "title": "Deloitte Virtual Factory",
-      "type": "Digital twin / pipeline",
-      "role": "Technical Artist",
-      "environment": "Industrial real-time platform",
+      "title": "Deloitte Virtual Factory — AR Digital Twin",
+      "type": "AR / digital twin / multiplayer installation",
+      "role": "Art Director / Technical Artist / UI–UX",
+      "environment": "Unity / AR / exhibition installation",
       "status": "PRODUCTION",
-      "image": "/public/media/home/home/asset-31cf3e41410f3a3c.png",
-      "summary": "Environment and production workflows for an industrial virtual-factory platform.",
-      "overview": "The project combined environment production with the structure and maintainability expected from an industrial real-time platform. The work was less about a single image and more about keeping content usable as the system evolved.",
+      "summary": "AR-based digital-twin and multiplayer racing experience translating complex IoT concepts into a multi-zone public installation.",
+      "overview": "The Virtual Factory was designed as an interactive sales-enablement and experiential-learning platform. It combined physical space, synchronized mobile devices, real-time visuals, and a story-driven representation of IoT concepts. The project evolved through several releases and culminated in Virtual Factory 3.0.",
       "scope": [
-        "Environment and asset-pipeline support",
-        "Production workflows for repeatable scene integration",
-        "Technical-art coordination between authored content and runtime needs"
+        "Real-time AR interactive installation",
+        "Multiplayer experience across synchronized devices",
+        "Multiple interactive zones in a public exhibition space",
+        "Long-term iterative development culminating in Virtual Factory 3.0"
       ],
       "constraints": [
-        "Scalable scene and asset organization",
-        "Maintainable workflows for ongoing production changes",
-        "Real-time performance across complex industrial content"
+        "Device synchronization and stable public use",
+        "Strict Deloitte brand and visual-consistency requirements",
+        "Consistent UI across screen-space and world-space contexts",
+        "Readable tiled floor markers from multiple viewing angles"
       ],
-      "outcome": "The result is documented as a production-system record. Additional diagrams and implementation notes can be appended without changing the page structure.",
-      "sourceUrl": "https://www.pavelzosim.com/projects/deloitte-virtual-factory"
+      "roleDetails": [
+        "Screen-space and world-space UI design",
+        "Custom UI rendering and water shaders",
+        "9-slice UI, sprite sheets, and texture-atlas delivery",
+        "Motion graphics for UI and narrative elements",
+        "UI/UX decisions across gameplay and interaction flow",
+        "Art direction within established brand guidelines",
+        "Print design for AR safety and navigation floor markers",
+        "Ownership of the UI delivery pipeline"
+      ],
+      "solutions": [
+        "Designed UI systems shared across screen-space and world-space contexts",
+        "Developed real-time UI shaders for performance and readability",
+        "Built sprite-sheet assets and optimized texture layouts",
+        "Used Houdini for procedural content and motion-graphics generation",
+        "Used After Effects for prerendered motion graphics and visual prototyping",
+        "Created tools for rapid Photoshop export and sprite-sheet generation"
+      ],
+      "tools": [
+        "Unity",
+        "Houdini",
+        "After Effects",
+        "Photoshop",
+        "Illustrator"
+      ],
+      "results": [
+        "Deployed successfully as a live exhibition experience",
+        "Thousands of visitors and more than 500 captured leads",
+        "Stable real-time performance during public use",
+        "Strong visitor and client feedback",
+        "Project success led to a larger expanded version",
+        "American Advertising Awards recognition",
+        "Internal tools and Houdini setups reused on later productions"
+      ],
+      "outcome": "The installation made complex digital-twin and IoT concepts approachable through a stable, public-facing AR experience and established reusable UI and procedural workflows for later productions.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/deloitte-virtual-factory",
+      "image": "/public/media/projects/deloitte-virtual-factory/asset-5c9650392948a0e3.png",
+      "media": [
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/asset-5c9650392948a0e3.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 01",
+          "caption": "Production record / image 01"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/asset-dbe0074aa2bc36b8.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 02",
+          "caption": "Production record / image 02"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/asset-05fc9fc1152a74ae.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 03",
+          "caption": "Production record / image 03"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/asset-894a4ddfd9e2db67.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 04",
+          "caption": "Production record / image 04"
+        }
+      ],
+      "video": {
+        "src": "/public/media/projects/deloitte-virtual-factory/asset-f5d861543e1c6d5f.mp4",
+        "caption": "Deloitte Virtual Factory — selected AR digital-twin footage."
+      }
+    },
+    {
+      "id": "PRJ-005",
+      "slug": "quantum-fiber-speed-zone",
+      "title": "Quantum Fiber × Seahawks — Speed Zone",
+      "type": "Interactive installation / real-time game",
+      "role": "Technical Artist / VFX Artist",
+      "environment": "Unreal Engine / gesture recognition / stadium installation",
+      "status": "PRODUCTION",
+      "summary": "Gesture-driven 100-yard digital dash for live Seahawks game days, combining real-time gameplay, branded VFX, and live leaderboard feedback.",
+      "overview": "The Speed Zone was a public real-time installation at Lumen Field. Fans ran in place while AI-driven webcam gesture recognition propelled a virtual player through a recreated stadium environment, with large-screen feedback and a live leaderboard.",
+      "scope": [
+        "Real-time interactive stadium installation",
+        "Gesture-based input through webcam and AI recognition",
+        "Large-screen visuals and a live game loop",
+        "CMS and backend integration for leaderboard and sharing"
+      ],
+      "constraints": [
+        "High-traffic public game-day environment",
+        "Unpredictable user input and system load",
+        "Strong Quantum Fiber, Seahawks, and NFL brand requirements",
+        "Immediate visual readability and low interaction latency"
+      ],
+      "roleDetails": [
+        "Real-time shader and VFX development",
+        "Gameplay-data-driven amplification effects",
+        "Integration of VFX into the real-time gameplay loop",
+        "Performance-conscious visual design for a public installation",
+        "Alignment with existing brand and visual guidelines"
+      ],
+      "solutions": [
+        "Implemented shaders and real-time VFX in Unreal Engine",
+        "Used player velocity to drive and intensify visual effects",
+        "Integrated AI-driven gesture input with the real-time experience",
+        "Supported live leaderboard updates and content sharing",
+        "Kept effects responsive and readable under variable public usage"
+      ],
+      "tools": [
+        "Unreal Engine",
+        "Custom shaders",
+        "Real-time VFX",
+        "AI gesture recognition",
+        "CMS / backend systems"
+      ],
+      "results": [
+        "Deployed as a live game-day installation at Lumen Field",
+        "Five times higher engagement than previous activations",
+        "Three times more product-related conversations",
+        "Strong positive client feedback",
+        "2024 ADDY Gold and Silver awards"
+      ],
+      "outcome": "The installation proved that responsive gesture input and gameplay-driven VFX could sustain strong engagement in a demanding stadium environment while supporting measurable campaign outcomes.",
+      "sourceUrl": "https://www.pavelzosim.com/projects/quantum-fiber-speed-zone",
+      "image": "/public/media/projects/quantum-fiber-speed-zone/asset-5525b19ee3974f58.png",
+      "media": [
+        {
+          "src": "/public/media/projects/quantum-fiber-speed-zone/asset-5525b19ee3974f58.png",
+          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 01",
+          "caption": "Production record / image 01"
+        },
+        {
+          "src": "/public/media/projects/quantum-fiber-speed-zone/asset-3064c7741ec0b06a.png",
+          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 02",
+          "caption": "Production record / image 02"
+        },
+        {
+          "src": "/public/media/projects/quantum-fiber-speed-zone/asset-0291707f1b6ef133.png",
+          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 03",
+          "caption": "Production record / image 03"
+        },
+        {
+          "src": "/public/media/projects/quantum-fiber-speed-zone/asset-fcf5a02835cf9480.png",
+          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 04",
+          "caption": "Production record / image 04"
+        }
+      ],
+      "video": {
+        "src": "/public/media/projects/quantum-fiber-speed-zone/asset-f41a81ac69627246.mp4",
+        "caption": "Quantum Fiber Speed Zone — selected live installation footage."
+      }
     }
   ]
 }

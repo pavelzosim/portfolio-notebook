@@ -3,3 +3,7 @@ Thumbs.db
 *.log
 .cache/
 tmp/
+_site/
+__pycache__/
+*.pyc
+.gh-auth-*.txt

@@ -23,8 +23,8 @@
   };
 
   Promise.all([
-    fetch('/content/templates/project-page.html'),
-    fetch('/content/projects/index.json')
+    fetch('/content/templates/project-page.html', { cache: 'no-store' }),
+    fetch('/content/projects/index.json', { cache: 'no-store' })
   ])
     .then(async ([templateResponse, indexResponse]) => {
       if (!templateResponse.ok) throw new Error(`Project template: ${templateResponse.status}`);
@@ -102,9 +102,6 @@
       const image = document.querySelector('[data-project-image]');
       image.src = project.image;
       image.alt = `${project.title} project record`;
-
-      const source = document.querySelector('[data-source-link]');
-      source.href = project.sourceUrl;
 
       const previous = projects[(index - 1 + projects.length) % projects.length];
       const next = projects[(index + 1) % projects.length];

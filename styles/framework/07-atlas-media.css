@@ -73,7 +73,8 @@
   display: block;
   width: 100%;
   height: 180px;           /* Фиксированная высота — все ячейки одного роста */
-  object-fit: cover;       /* Обрезаем без искажения */
+  object-fit: contain;     /* Показываем изображение целиком без обрезки */
+  background: #111;
   border: 1px solid var(--atlas-border);
 }
 
@@ -114,4 +115,3 @@
     height: 200px;
   }
 }
-

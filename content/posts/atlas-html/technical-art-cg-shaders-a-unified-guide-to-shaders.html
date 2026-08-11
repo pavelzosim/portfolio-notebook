@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders">
+  <meta name="description" content="A unified technical art CG shaders guide explaining real-time rendering, shader stages, and engine pipelines for technical artists.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Technical Art CG Shaders – Unified Guide">
+  <meta property="og:description" content="A unified technical art CG shaders guide explaining real-time rendering, shader stages, and engine pipelines for technical artists.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders">
+  <title>Technical Art CG Shaders – Unified Guide · Pavel Zosim</title>
+  <link rel="stylesheet" href="/styles/atlas.css">
+  <link rel="stylesheet" href="/styles/posts.css">
+</head>
+<body class="migrated-post">
+  <main class="post-shell">
+    <header class="post-header">
+      <p class="post-path">~/blog/technical-art-cg-shaders-a-unified-guide-to-shaders.md</p>
+      <h1>Technical Art CG Shaders – Unified Guide</h1>
+      <p class="post-summary">A unified technical art CG shaders guide explaining real-time rendering, shader stages, and engine pipelines for technical artists.</p>
+      <div class="post-meta"><span>Pavel Zosim</span><span>2025-03-05</span><span>#shaders</span><span>#technical-art</span></div>
+    </header>
+    <article class="atlas-container">
+      <div class="content-block">
+      <p><em>edit v.0.6</em></p>
+      <h2>Technical Art CG Shaders Overview</h2>
+      <p>This article is a unified guide to technical art CG shaders, covering rendering concepts, shader stages, and real-time engine pipelines.</p>
+      <h2>Shader Fundamentals and Rendering Pipeline</h2>
+      <p>Shaders are small programs (with a “.shader” extension in Unity, and .usf/.ush in Unreal) that determine how surfaces interact with light. They perform mathematical calculations and execute a set of instructions (commands) to compute the color of every pixel covering an object. In essence, a shader tells the GPU—whose thousands of small, efficient cores are optimized for parallel processing—how to render objects based on their intrinsic properties. In contrast, the CPU is built for sequential serial processing.</p>
+      <ul><li><strong>Unity</strong>: .shader files with HLSL/CG.</li><li><strong>Unreal</strong>: Node-based Material Editor or HLSL via Custom Nodes (.usf files).</li></ul>
+      <p>Shaders operate within various coordinate spaces—such as UV, world, and screen space—to accurately map textures and calculate lighting across objects.</p>
+      <ul><li>Operates in UV, world, and screen spaces.</li><li>The output is Defines color, transparency, and lighting for each pixel/vertex.</li></ul>
+      <p><strong>The Rendering Pipeline</strong></p>
+      <p>Regardless of the rendering pipeline, generating an image requires processing data through several stages:</p>
+      <pre><code>Input Assembler → Vertex Shader → Tessellation → Geometry Shader → Rasterizer → Pixel Shader → Color Blending (Output Merger)</code></pre>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-cdad8f7d82da4aca.png" alt="Flowchart illustrating GPU operations: attributes and spaces lead to vertex and fragment shaders, then to frame buffer labeled 2D View Space." loading="lazy"></div>
+      <p>Each stage contributes to the final image:</p>
+      <ol><li><strong>Input Assembler:</strong> Gathers vertex data.</li><li><strong>Vertex Shader:</strong> Processes vertex positions, normals, and texture coordinates.</li><li><strong>Tessellation &amp; Geometry Shader:</strong> (Optional) Modify geometry dynamically.</li><li><strong>Rasterizer: </strong>Converts vector data into fragments (potential pixels).</li><li><strong>Pixel Shader (Fragment Shader)</strong>: Computes the final color of each pixel.</li><li><strong>Color Blending:</strong> Combines pixel data for the final output.</li></ol>
+      <p>Different rendering paths offer various trade-offs between quality and performance.</p>
+      <div class="atlas-table-frame"><table><tr><td>Rendering Path</td><td>Advantages</td><td>Use Cases</td></tr><tr><td>Forward Rendering</td><td>Broad compatibility, mobile-friendly</td><td>Default for most projects</td></tr><tr><td>Deferred Shading</td><td>Efficient handling of multiple dynamic lights</td><td>Complex 3D scenes</td></tr><tr><td>Legacy Deferred/Vertex Lit</td><td>Legacy optimizations, older project support</td><td>Backward compatibility</td></tr></table></div>
+      <p><strong>Unreal-Specific:</strong></p>
+      <p><strong>Mobile Path:</strong> Simplified Forward with ES3.1 fallbacks.</p>
+      <p><strong>Nanite: </strong>Meshlet-based rendering (no traditional vertex shaders).</p>
+      <p><strong>Example: </strong></p>
+      <pre><code>Unity uses forward rendering by default because it offers greater compatibility with various graphics cards and optimizes the lighting calculation process.</code></pre>
+      <p><strong>Lighting Interaction and Models</strong></p>
+      <p>The final appearance of an image is strongly influenced by how light interacts with objects. This interaction depends on two main aspects</p>
+      <p><strong>Lighting Characteristics: </strong>(e.g., light type—directional, point, or spot—intensity, and color)</p>
+      <p><strong>Material Characteristics: </strong>(e.g., albedo (base color), metallicity, and smoothness/roughness)</p>
+      <p>These factors together define the lighting model used by the shader. Lighting calculations can be performed either per-vertex or per-fragment:</p>
+      <ol><li><strong>Per-Vertex Lighting:</strong> Calculated in the vertex shader.</li><li><strong>Per-Fragment (Per-Pixel) Lighting: </strong>Calculated in the fragment shader.<br></li></ol>
+      <div class="atlas-table-frame"><table><tr><td>Lighting Type</td><td>Precision</td><td>Performance</td></tr><tr><td>Per-Vertex</td><td>Low</td><td>High (mobile)</td></tr><tr><td>Per-Fragment (Pixel)</td><td>High</td><td>Moderate (desktop)</td></tr></table></div>
+      <p><strong>Per-Pixel Example:</strong></p>
+      <p><strong>Physically Based Rendering (PBR) </strong>a very simplified representation of a PBR shading model. It conveys the basic idea that the final color of a material is a combination:</p>
+      <pre><code>// Unity (Diffuse + Specular):
+Final Color = Albedo × (Diffuse + Specular) + Emission
+
+// Unity (Metallic Workflow):
+Final Color = Emission + (1 - Metallic) * Albedo * DiffuseTerm + SpecularTerm
+
+// UE5 (Material Graph)  
+BaseColor = Lerp(DielectricSpecular, Albedo, Metallic);</code></pre>
+      <p><strong>Shader File Types</strong></p>
+      <p>Unity organizes shader-related files into several categories, each serving a specific purpose:</p>
+      <div class="atlas-table-frame"><table><tr><td>File Type</td><td>Unity</td><td>Unreal</td><td>Purpose</td></tr><tr><td>Text-Based Shaders</td><td>.shader (HLSL/CG)</td><td>.usf (Unreal Shader File) / .ush (Unreal Shader Header)</td><td>Core shader code with vertex/fragment logic.</td></tr><tr><td>Visual Shaders</td><td>.shadergraph (Shader Graph)</td><td>.uasset (Material/ Material Instance)</td><td>Node-based shader creation (no direct code editing).</td></tr><tr><td>Custom Functions</td><td>.hlsl (standalone HLSL files)</td><td>.ush / .usf (HLSL code in Plugins or Engine/Shaders)</td><td>Reusable HLSL functions for Shader Graph or C++ integration.</td></tr><tr><td>Include Files</td><td>.cginc (legacy CG includes) / .hlsl (modern HLSL)</td><td>.ush (shared headers, e.g., Common.ush, Definitions.ush)</td><td>Reusable code snippets (lighting models, math utilities).</td></tr></table></div>
+      <h2>Key Corrections &amp; Explanations</h2>
+      <p>1. <strong>Text-Based Shaders</strong></p>
+      <ul><li><strong>Unity</strong>:<ul><li>.shader files contain ShaderLab code with CGPROGRAM/HLSLPROGRAM blocks.<br></li></ul></li></ul>
+      <ul><li><strong>Unreal</strong>:<ul><li>.usf files define full shaders (e.g., BasePassPixelShader.usf).</li><li>.ush files are headers for shared code (e.g., BRDF.ush).<br></li></ul></li></ul>
+      <p>2. <strong>Visual Shaders</strong></p>
+      <ul><li><strong>Unity</strong>:<ul><li>Shader Graph (.shadergraph) is limited to URP/HDRP.</li><li>Outputs HLSL code automatically.</li></ul></li><li><strong>Unreal</strong>:<ul><li>Material Editor (.uasset) is the primary tool for 90% of shader work.</li><li>Node graphs compile to HLSL via the Material Template system.<br></li></ul></li></ul>
+      <p>3. <strong>Custom Functions</strong></p>
+      <ul><li><strong>Unity</strong>:<ul><li>.hlsl files are linked to Shader Graph via the Custom Function Node.</li></ul></li><li><strong>Unreal</strong>:<ul><li>Custom HLSL is added via the Custom Expression node in the Material Editor.</li></ul></li></ul>
+      <p>4. <strong>Include Files</strong></p>
+      <ul><li><strong>Unity</strong>:<ul><li>.cginc (legacy CG) is used in Built-in RP (e.g., UnityCG.cginc).</li><li>.hlsl includes are standard in URP/HDRP.</li></ul></li><li><strong>Unreal</strong>:<ul><li>.ush files (e.g., ShadingModels.ush) define shared lighting logic.</li><li>No equivalent to .cginc – Unreal uses HLSL exclusively.<br></li></ul></li></ul>
+      <ol><li><strong>Associations</strong></li></ol>
+      <pre><code>Unity
+graph LR  
+A[.shader] --&gt; B[CGPROGRAM]
+A --&gt; C[HLSLPROGRAM]  
+B --&gt; D[.cginc]  
+C --&gt; E[.hlsl]  
+F[.shadergraph] --&gt; G[HLSLPROGRAM]
+
+Unreal
+graph LR
+A[.usf] --&gt; B[HLSL] \
+C[.uasset] --&gt; D[Material Template]
+D --&gt; E[.ush]</code></pre>
+      <p><strong>Important Notes:</strong></p>
+      <p><strong>Unreal Does NOT Use:</strong></p>
+      <p>CGPROGRAM blocks or Cg language.</p>
+      <p>.cginc files – replaced by .ush/.usf.</p>
+      <p><strong>Unity to Unreal Translation:</strong></p>
+      <p>Unity’s Surface Shader ≈ Unreal’s Material Domain (e.g., Surface, Deferred Decal).</p>
+      <p>Unity’s <a href="https://www.pavelzosim.com/blog/hashtags/pragma" rel="external">#pragma</a> multi_compile ≈ Unreal’s Static Switches or Shader Permutations.</p>
+      <p><strong>Pipeline Compatibility:</strong></p>
+      <p>Unity: .shadergraph only works in URP/HDRP.</p>
+      <p>Unreal: Materials work across all pipelines (Forward, Deferred, Mobile).</p>
+      <p><strong>Common Architectures</strong></p>
+      <p>Unity defines several shader structures that simplify the creation process by automatically providing built-in operations:</p>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-f02f3d44df8bec82.png" alt="Flowchart showing stages of graphics processing: Vertices, Vertex Shader, Rasterizer, Fragment Shader, and Return Pixels. Triangles colored." loading="lazy"></div>
+      <ul><li><strong>Vertex + Fragment Shader: </strong>The traditional approach, where the vertex shader processes vertex data and the fragment shader computes the color for each pixel.</li><li><strong>Surface Shader: </strong>Automatically handles lighting calculations based on a defined surface model, streamlining work with dynamic lighting.</li><li><strong>Compute Shader: </strong>Used for advanced tasks and general-purpose computations on the GPU, extending beyond traditional rendering.</li><li><strong>Additional Structures: </strong>Unity may include other specialized shader structures designed to streamline certain tasks.<br></li></ul>
+      <p>Each of these structures has its own set of properties and functions that facilitate the compilation process, making it easier to define and organize your operations.</p>
+      <div class="atlas-table-frame"><table><tr><td>Structure</td><td>Unity</td><td>Unreal</td></tr><tr><td>Vertex-Fragment</td><td>Manual control over stages.</td><td>Custom HLSL via CustomExpression.</td></tr><tr><td>Surface Shader</td><td>#pragma surface surf Standard</td><td>DefaultLit material template.</td></tr><tr><td>Compute Shader</td><td>#pragma kernel CSMain</td><td>FRHIComputeShader (C++ integration).</td></tr></table></div>
+      <p><strong>Property Systems</strong></p>
+      <div class="atlas-table-frame"><table><tr><td>Feature</td><td>Unity</td><td>Unreal</td></tr><tr><td>Toggle</td><td>[Toggle] attribute + #pragma.</td><td>Static Switch Parameter node.</td></tr><tr><td>Enum</td><td>[Enum(...)].</td><td>Enum Parameter node.</td></tr><tr><td>Slider</td><td>[Range(min,max)].</td><td>Scalar Parameter with min/max.</td></tr></table></div>
+      <p><strong>Unreal Example (Toggle):</strong></p>
+      <p><strong>Shader Variants</strong></p>
+      <div class="atlas-table-frame"><table><tr><td>Feature</td><td>Unity</td><td>Unreal</td></tr><tr><td>Multi-Compile</td><td>#pragma multi_compile.</td><td>Static Permutation (C++-driven).</td></tr><tr><td>Keyword</td><td>#pragma shader_feature _KEY.</td><td>#define in .usf + C++ plumbing.</td></tr></table></div>
+      <p><strong>Unreal Optimization:</strong></p>
+      <ul><li>Fewer Variants: Unreal auto-strips unused permutations.</li><li>Material Layers: Reduces variant explosion.<br></li></ul>
+      <p><strong>Programming Languages for Shader Development in Unity</strong></p>
+      <p>Shader development in Unity involves three main programming languages:</p>
+      <ul><li><strong>HLSL (High-Level Shader Language): </strong>The official shader language for Unity (from version 2019 onward) and the preferred language for writing shader code today.</li><li><strong>Cg (C for Graphics): </strong>Developed by NVIDIA, this language compiles into shaders; however, it is considered outdated in current versions of Unity.</li><li><strong>ShaderLab: </strong>A declarative language used by Unity to define the overall structure of a shader, including its properties, subshaders, passes, and fallback instructions.<br></li></ul>
+      <p>When creating a shader, the actual shader code is placed inside a CGPROGRAM block (or, in future versions, an HLSLPROGRAM block).</p>
+      <p><strong>Debugging Tools</strong></p>
+      <div class="atlas-table-frame"><table><tr><td>Tool</td><td>Unity</td><td>Unreal</td></tr><tr><td>Frame Debugger</td><td>View per-draw call stages.</td><td>GPU Visualizer (full pipeline).</td></tr><tr><td>Shader Errors</td><td>Console with line numbers.</td><td>Material Editor real-time preview.</td></tr></table></div>
+      <p><strong><em>References:</em></strong></p>
+      <p><em>GPU Rendering: </em><a href="https://gamersnexus.net/guides/2429-gpu-rendering-and-game-graphics-explained" rel="external"><em>https://gamersnexus.net/guides/2429-gpu-rendering-and-game-graphics-explained</em></a></p>
+      <p><em>Lighting: </em><a href="https://learnopengl.com/PBR/Lighting" rel="external"><em>https://learnopengl.com/PBR/Lighting</em></a></p>
+      <p><em>Learn OpenGl: </em><a href="https://learnopengl.com/Getting-started/Hello-Triangle" rel="external"><em>https://learnopengl.com/Getting-started/Hello-Triangle</em></a></p>
+      </div>
+    </article>
+    <footer class="post-end"><a href="/blog/">← Blog index</a><span>Local archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
+  </main>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-04",
+  "generated": "2026-08-08",
   "policy": "Wix-owned media and YouTube thumbnails are local. Interactive YouTube embeds and external references remain remote.",
   "assets": [
     {
@@ -582,6 +582,328 @@
       "localUrl": "/public/media/home/home/asset-80ec1ae328b8d595.mp4",
       "bytes": 35377914,
       "sha256": "bb27f64cb82389b1c2e4b91154342c770e329e025f6da059ce20819a56bc0009"
+    },
+    {
+      "document": "content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_970bb1cfed234121acf4a0afa8b04272~mv2.png",
+      "localUrl": "/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-cf88726cc193c7fd.png",
+      "bytes": 123706,
+      "sha256": "cf88726cc193c7fd233aa6d3820bc182e9d4dc3feeb04745e330681afac610e4"
+    },
+    {
+      "document": "content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_809d85c0248f4b5b8819d28650fdcc19~mv2.png",
+      "localUrl": "/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-0f93b46344999e30.png",
+      "bytes": 247240,
+      "sha256": "0f93b46344999e3026652d5ae48738e3b1a55a32901f915ef4a95b2a1e70ec1a"
+    },
+    {
+      "document": "content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_5e97ce9424bb4e0b84ea40ec5562f0c5~mv2.png",
+      "localUrl": "/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-de666c5151e862be.png",
+      "bytes": 2433652,
+      "sha256": "de666c5151e862be3963ba36951fe622cc33a5cd02de04eb143e9a42ad05be5c"
+    },
+    {
+      "document": "content/posts/atlas-html/jackpressed-powerful-image-compression-resizing-tool.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_ffd49c2383f74927ad2022497429a09f~mv2.png",
+      "localUrl": "/public/media/posts/jackpressed-powerful-image-compression-resizing-tool/asset-6502b4656e14b13b.png",
+      "bytes": 34982,
+      "sha256": "6502b4656e14b13b2b167794e45133cf918bb3ad056a88b5cb5411d96e84ded3"
+    },
+    {
+      "document": "content/posts/atlas-html/jackpressed-powerful-image-compression-resizing-tool.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_2f931fabcd7140c2b7d1883796524cac~mv2.jpg",
+      "localUrl": "/public/media/posts/jackpressed-powerful-image-compression-resizing-tool/asset-499b7ef2204a495a.jpg",
+      "bytes": 618499,
+      "sha256": "499b7ef2204a495a49760679333ac6b36735db1d2bfeea3e7bc8f1cef41c07a4"
+    },
+    {
+      "document": "content/posts/atlas-html/low-poly-dumpster-3d-model.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_8091c3f56def4664a3b564175606446d~mv2.png",
+      "localUrl": "/public/media/posts/low-poly-dumpster-3d-model/asset-5beabe638a674078.png",
+      "bytes": 3885650,
+      "sha256": "5beabe638a674078ad3df96a8bfcd7d5d5698d2ffdf3ea6b8fde42614a5be1b6"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-cg-shaders-a-unified-guide-to-shaders.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_476ba17c762d49bfabeeee2842947954~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-cdad8f7d82da4aca.png",
+      "bytes": 47343,
+      "sha256": "cdad8f7d82da4aca355b6cb94ca7b769aa0602e3187c0d5f4d142432b29e4c3c"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-cg-shaders-a-unified-guide-to-shaders.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_66d14d9d331648ee9645b4ca3b838fd3~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-f02f3d44df8bec82.png",
+      "bytes": 33440,
+      "sha256": "f02f3d44df8bec820f4afd6f25ef7138dcd3459eb3f2d63ab4ac7b6e5fb933ef"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://video.wixstatic.com/video/ace175_7d23565656394c669a9cbc29a17c7ace/720p/mp4/file.mp4",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-c2d6b7f03906c8be.mp4",
+      "bytes": 5342482,
+      "sha256": "c2d6b7f03906c8bec20e606a9f566f71cd31a0ea93acbb788996cb427f8fb0f0"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_db8b9c2d0b7f4abd82baa7d2119a7c19~mv2.jpg",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg",
+      "bytes": 357062,
+      "sha256": "a9b5a1811db0a6afd1c4e7de42ef611b3f43efb051b545f2938c47321de65e2a"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_79c5ee4da705440ab2b336529d988749~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-9465d3cc21a6c842.png",
+      "bytes": 295172,
+      "sha256": "9465d3cc21a6c8426b2062a507d4989e8e6a3108018496abeace2ea01f04c13f"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_8390e0fac2f14b02b82ecf8fe16aac7e~mv2.jpg",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-324850be4352331c.jpg",
+      "bytes": 79042,
+      "sha256": "324850be4352331cf1905cf1cc4a333b083e161578afcf46d63c0605ac188b8d"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_89d4c782c61649d986d31f96ca871b96~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-b97f50042454c156.png",
+      "bytes": 38471,
+      "sha256": "b97f50042454c1560e17618b8be475895a7b64aa9c1ed5f066f71a8885841a52"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_4bb42aa03811496a991e9c90dfdcf70a~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-50d0353a70658443.png",
+      "bytes": 20299,
+      "sha256": "50d0353a70658443088f135423169e169058795cfa45ee21cd8d14f07e1d6739"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_d349eef5563b4630a97d3aa3634cc140~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-f7df3522726fa599.png",
+      "bytes": 106964,
+      "sha256": "f7df3522726fa599d30d73a4c7a9d95c499d1490ee732ad4e86eda13c9446b15"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_a8e34e827ec94a46aac8007146409a92~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-8ec8c724e24a1584.png",
+      "bytes": 22796,
+      "sha256": "8ec8c724e24a1584fba9ba42b45e06b0bb202521b4a647631285e2f5fb9f8b37"
+    },
+    {
+      "document": "content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_1a2a2e68bccf41ab9d192f112bae5e26~mv2.png",
+      "localUrl": "/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-ff691cd386e7e629.png",
+      "bytes": 985120,
+      "sha256": "ff691cd386e7e629a5a25efbe53ea83664b7cff55b90871958322272360edf20"
+    },
+    {
+      "document": "content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_242375e39a2d48c4baa9a695f0bd7f89~mv2.png",
+      "localUrl": "/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-b0c77b806982c09b.png",
+      "bytes": 1129356,
+      "sha256": "b0c77b806982c09bc4536996fd4fd73e2f28e4d739e2a43fed9d0cc5cecf6054"
+    },
+    {
+      "document": "content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_ea541ff07f944a2587e21ebc601fd1c5~mv2.png",
+      "localUrl": "/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-30cbdae0db260a14.png",
+      "bytes": 820254,
+      "sha256": "30cbdae0db260a149b25b425e9f658b62d6149a4392ef9de34441a3acaec0a7d"
+    },
+    {
+      "document": "content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_5113f081c42446cd872c3277f57f202b~mv2.png",
+      "localUrl": "/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-8ca4089d5f273a04.png",
+      "bytes": 1137422,
+      "sha256": "8ca4089d5f273a04c456ca39222431e0ef58a6220dc71271aa3bc430be70cae6"
+    },
+    {
+      "document": "content/posts/atlas-html/modular-market-shelf-3d-model.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_5f789eea70974aad946e4cea3af44c58~mv2.png",
+      "localUrl": "/public/media/posts/modular-market-shelf-3d-model/asset-bf358c5e9145fb5e.png",
+      "bytes": 1143871,
+      "sha256": "bf358c5e9145fb5ea12f76348feae1a49387fa4f0911be67ae103d1c29739c7f"
+    },
+    {
+      "document": "content/posts/atlas-html/modular-market-shelf-3d-model.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_a1649656bd114fa8a2b1aaa2f84fb1f5~mv2.png",
+      "localUrl": "/public/media/posts/modular-market-shelf-3d-model/asset-da39d7e0f38fdc1a.png",
+      "bytes": 1274742,
+      "sha256": "da39d7e0f38fdc1aabfcb6ba2f86c5fade1c6cd065d77df47fb765be8d09e805"
+    },
+    {
+      "document": "content/posts/atlas-html/modular-market-shelf-3d-model.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_d802d4683dc34d5ab12a3e21a521af37~mv2.png",
+      "localUrl": "/public/media/posts/modular-market-shelf-3d-model/asset-406bc65288549829.png",
+      "bytes": 1178031,
+      "sha256": "406bc65288549829d8b29282e6ebb227453ffadc130e278e8159544b9b638c21"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_dd76a499ca5f4a3f95e0efd0b6427c96~mv2.gif",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-bc40451c9d0903bb.gif",
+      "bytes": 843297,
+      "sha256": "bc40451c9d0903bbae89ad75e54a5de887efecaa1c03a336d6a995243d55f07d"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_232ea659b7f14897bd77d3fd8069454c~mv2.gif",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-3735127785b9a335.gif",
+      "bytes": 1691046,
+      "sha256": "3735127785b9a335af163978afbfc3fe8ae5a2cb3d281e6adf2c94699cf66a6b"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_c67f5e23c69c40cc8e0897f35c216127~mv2.gif",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-266d1678af70cb87.gif",
+      "bytes": 9664481,
+      "sha256": "266d1678af70cb87de2f76a5d28ad398a3dd84b4bc469ee17d7774a02655b97f"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_add49b35c3204f97a77f30c1e2dbc290~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-ded0f34b3544f3e9.png",
+      "bytes": 15370,
+      "sha256": "ded0f34b3544f3e90900b863c9feac1481199e487d7ffdaed283b8b13196eafd"
+    },
+    {
+      "document": "content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_4cdc9d4747c0447cb52978be11e3683a~mv2.png",
+      "localUrl": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-cdf9af3b8ac6726a.png",
+      "bytes": 1923411,
+      "sha256": "cdf9af3b8ac6726a461262816290708c7f3369e05845fd354f514fdafb69b642"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_cdd30209e47d4bb1a414a14d77351052~mv2.gif",
+      "localUrl": "/public/media/projects/meta-blumhouse-xr-experience/asset-9340fc6655b8a14f.gif",
+      "bytes": 3402584,
+      "sha256": "9340fc6655b8a14f2c3a2dde7b41de6345ffb79bee27fed0eeb9fd27c841accb"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_8812804dcc4249dd93a1889daf57e41f~mv2.jpg",
+      "localUrl": "/public/media/projects/meta-blumhouse-xr-experience/asset-bebb879776368d64.jpg",
+      "bytes": 93966,
+      "sha256": "bebb879776368d64484d5ba4e4a027f742d15cdf922e8fc5784a87c0bd397b0a"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_c157d27bb0dc4d23a9b15c6cd6dbc8f2~mv2.png",
+      "localUrl": "/public/media/projects/airport-interaction-screen/asset-1f799418e32a7664.png",
+      "bytes": 125602,
+      "sha256": "1f799418e32a7664843f2a6242a1d8f86284b89df6a7c935fb415f96fa20f64c"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_98291a266a364b50aeef8e07595ecb9a~mv2.png",
+      "localUrl": "/public/media/projects/airport-interaction-screen/asset-93ea597abb7f525d.png",
+      "bytes": 122093,
+      "sha256": "93ea597abb7f525d99484fd20c20806ffe6b19e0619cb0c24a203e56f03e88e3"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_df515929fbb34002b2cc54bc6a555213~mv2.png",
+      "localUrl": "/public/media/projects/airport-interaction-screen/asset-266db4cf554ea001.png",
+      "bytes": 2117940,
+      "sha256": "266db4cf554ea001dfc4171e8dc3035b6e4db47ca7ab30bba9c43fdc43389bd2"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_9583961a427d4f10b813714dac25f5ef~mv2.png",
+      "localUrl": "/public/media/projects/airport-interaction-screen/asset-54cae7605ab964e3.png",
+      "bytes": 230025,
+      "sha256": "54cae7605ab964e344c3535fac9821370ec25bb84f85f80803f28750a23c30d8"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_39e1cbb0b3654e60aa74d9453655e494~mv2.png",
+      "localUrl": "/public/media/projects/deloitte-virtual-factory/asset-5c9650392948a0e3.png",
+      "bytes": 703930,
+      "sha256": "5c9650392948a0e3dc20df8490b49204c928b5079ec889987b2729cd8a1dfaaf"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_8d6d8f2f36ab45baa96f484d8b476737~mv2.png",
+      "localUrl": "/public/media/projects/deloitte-virtual-factory/asset-dbe0074aa2bc36b8.png",
+      "bytes": 4237723,
+      "sha256": "dbe0074aa2bc36b85c84042dd0dd0fc8fe4992b8efdc8fa33f02b8d79609f662"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_d3e3e2edd87b44ad84b3fe775097df48~mv2.png",
+      "localUrl": "/public/media/projects/deloitte-virtual-factory/asset-05fc9fc1152a74ae.png",
+      "bytes": 362425,
+      "sha256": "05fc9fc1152a74aef255f16c828af66c97b61de3b94bf8f3efe85929616dcb47"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_5029372663d8435bb938d57ab9769ee1~mv2.png",
+      "localUrl": "/public/media/projects/deloitte-virtual-factory/asset-894a4ddfd9e2db67.png",
+      "bytes": 289246,
+      "sha256": "894a4ddfd9e2db67350241ecb5a3da6f7071d9b647fce5578f6acad0d1187a3e"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_a4e5501baa5b4ddaa4293f184f0b8235~mv2.png",
+      "localUrl": "/public/media/projects/quantum-fiber-speed-zone/asset-5525b19ee3974f58.png",
+      "bytes": 929811,
+      "sha256": "5525b19ee3974f584fe4ef7efebc076e3594550423f078a3a661514c2d0028b2"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_0ee33da0585c499dae6a69796a1ae5f1~mv2.png",
+      "localUrl": "/public/media/projects/quantum-fiber-speed-zone/asset-3064c7741ec0b06a.png",
+      "bytes": 1127616,
+      "sha256": "3064c7741ec0b06aad1865e7af087162a1054508277066814b2e904a047b3a7c"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_45d4b949922d4423836da7a814e47738~mv2.png",
+      "localUrl": "/public/media/projects/quantum-fiber-speed-zone/asset-0291707f1b6ef133.png",
+      "bytes": 2567905,
+      "sha256": "0291707f1b6ef133f04c2a8ce01e7daba17f3cfa76b7d81a0377ad8c3ed2d411"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://static.wixstatic.com/media/ace175_c45c9eebcc534d1f9be3405fad3a38d9~mv2.png",
+      "localUrl": "/public/media/projects/quantum-fiber-speed-zone/asset-fcf5a02835cf9480.png",
+      "bytes": 772981,
+      "sha256": "fcf5a02835cf94809eb8682d886b1f0d34695089be07f7a6a27b174b2bff8c0b"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://video.wixstatic.com/video/ace175_c620ca06c1f64541ad648302cde83d68/720p/mp4/file.mp4",
+      "localUrl": "/public/media/projects/meta-blumhouse-xr-experience/asset-f51ecfc17cc2ea50.mp4",
+      "bytes": 25711890,
+      "sha256": "f51ecfc17cc2ea50b411cd24f633e13235d58f5411919b9bf546f339d0c625ed"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://video.wixstatic.com/video/ace175_cc5a44f6e318455abbcd0df755446e2e/720p/mp4/file.mp4",
+      "localUrl": "/public/media/projects/airport-interaction-screen/asset-c54e56ddb0333c6f.mp4",
+      "bytes": 2799773,
+      "sha256": "c54e56ddb0333c6feea34fcb78d5e1792d890d7de0aedbb5abec3fc7d2e84904"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://video.wixstatic.com/video/ace175_6fc399c16a2e45f19c19eb629c1106aa/720p/mp4/file.mp4",
+      "localUrl": "/public/media/projects/deloitte-virtual-factory/asset-f5d861543e1c6d5f.mp4",
+      "bytes": 31475917,
+      "sha256": "f5d861543e1c6d5f0c03995e07458afbd8c1402ac06bbdc2ffd221b2b6ea3f39"
+    },
+    {
+      "document": "content/projects/index.json",
+      "sourceUrl": "https://video.wixstatic.com/video/ace175_ddd2ae888eb746c9b2a62e5035ce85af/720p/mp4/file.mp4",
+      "localUrl": "/public/media/projects/quantum-fiber-speed-zone/asset-f41a81ac69627246.mp4",
+      "bytes": 22580764,
+      "sha256": "f41a81ac69627246c5fead144ae1050fbb7bf5f86132b1314598900de60e9397"
     }
   ],
   "errors": []

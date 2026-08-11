@@ -26,7 +26,7 @@
 .project-reel figcaption{padding:9px 11px;border-top:1px solid var(--line2);background:var(--paper2);color:var(--muted);font-size:8px;line-height:1.55}
 .project-media-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line2);border-left:1px solid var(--line2)}
 .project-media-grid figure{min-width:0;margin:0;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);background:var(--paper2)}
-.project-media-grid img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#111}
+.project-media-grid img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#111}
 .project-media-grid figcaption{min-height:46px;padding:8px 10px;color:var(--muted);font-size:8px;line-height:1.55}
 .project-media-grid figcaption span{display:block;margin-bottom:3px;color:var(--red);font-weight:700}
 .project-results{margin-bottom:18px!important}

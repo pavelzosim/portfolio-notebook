@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd">
+  <meta name="description" content="A USD-based approach to interior scene production, enabling parallel work, asset reuse, and cross-DCC scene management.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Procedural Interior Design Pipeline with Houdini &amp; USD">
+  <meta property="og:description" content="A USD-based approach to interior scene production, enabling parallel work, asset reuse, and cross-DCC scene management.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd">
+  <title>Procedural Interior Design Pipeline with Houdini &amp; USD · Pavel Zosim</title>
+  <link rel="stylesheet" href="/styles/atlas.css">
+  <link rel="stylesheet" href="/styles/posts.css">
+</head>
+<body class="migrated-post">
+  <main class="post-shell">
+    <header class="post-header">
+      <p class="post-path">~/blog/procedural-interior-design-pipeline-houdini-usd.md</p>
+      <h1>Procedural Interior Design Pipeline with Houdini &amp; USD</h1>
+      <p class="post-summary">A USD-based approach to interior scene production, enabling parallel work, asset reuse, and cross-DCC scene management.</p>
+      <div class="post-meta"><span>Pavel Zosim</span><span>2026-01-17</span><span>#houdini</span><span>#usd</span><span>#pipeline</span></div>
+    </header>
+    <article class="atlas-container">
+      <div class="content-block">
+      <h2>Pipeline Overview: Interior Scene Production with Houdini and USD</h2>
+      <p>This post documents a pipeline designed for collaborative interior scene production using Houdini and USD.</p>
+      <p>Rather than focusing on a single final render, the goal is to address a common production problem: how to allow multiple designers to work on the same interior scene in parallel without relying on a single monolithic file.</p>
+      <div class="media-frame"><iframe src="https://www.youtube.com/embed/Wb-L6H2kM5c" title="YouTube video" loading="lazy" allowfullscreen></iframe></div>
+      <h2>USD Interior Design Pipeline: Collaboration Challenges</h2>
+      <p>In many interior design workflows, scenes are stored either as one large scene file or as loosely connected FBX assets.</p>
+      <p>As soon as multiple designers are involved — for example, working on layout, furniture, doors, materials, or lighting — this approach leads to version conflicts, duplicated files, and fragile scene management.</p>
+      <p>The larger the scene becomes, the harder it is to maintain consistency across tools and contributors.</p>
+      <h2>Design Goals for a USD-Based Interior Design Pipeline</h2>
+      <p>The task was to design a workflow that allows several designers to work on the same interior scene simultaneously.</p>
+      <p>The solution needed to:</p>
+      <ul><li>avoid a single shared “master” scene file</li><li>preserve object positions and spatial relationships</li><li>support asset and material variations</li><li>remain usable across different DCC applications and renderers</li></ul>
+      <p>This setup allows modular assets to be combined and updated without rebuilding the scene.</p>
+      <div class="media-frame"><img src="/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-cf88726cc193c7fd.png" alt="USD scene composition shown in a .usda file with asset references and variants used for interior scene assembly." loading="lazy"><div class="media-caption">Layered USD scene described in a .usda file, showing asset references and variants used in the interior design pipeline.</div></div>
+      <div class="media-frame"><img src="/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-0f93b46344999e30.png" alt="USD scene hierarchy displayed in Houdini, showing the same asset structure used for interior scene authoring." loading="lazy"><div class="media-caption">The same USD scene structure visualized in Houdini, used as the main authoring and layout environment.</div></div>
+      <h2>Building a USD Interior Design Pipeline with Houdini</h2>
+      <p>The solution was built around using Houdini as the main authoring hub and USD as the scene composition and management layer.</p>
+      <p>The room structure is created procedurally and controlled through parameters.</p>
+      <p>Walls, floors, ceilings, windows, and doors can be modified or extended without rebuilding geometry.</p>
+      <p>Assets such as furniture, doors, or props remain modular and reusable.</p>
+      <p>In many cases, they continue to exist as FBX files, while USD is used to describe how these assets are assembled into a scene.</p>
+      <p>USD defines:</p>
+      <ul><li>transforms and spatial layout</li><li>references and instances</li><li>material and lighting assignments</li><li>object, material, and lighting variants</li></ul>
+      <p>For example, a door model can be swapped for another variant while preserving its position and orientation. Materials and lighting setups can also be changed through variants without altering the underlying scene structure.</p>
+      <div class="media-frame"><img src="/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-ff691cd386e7e629.png" alt="Door asset variants evaluated in Unreal Engine. Different models are switched using USD variants whi" loading="lazy"></div>
+      <div class="media-frame"><img src="/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-b0c77b806982c09b.png" alt="USD asset variants displayed in Unreal Engine, showing door model changes while preserving position" loading="lazy"></div>
+      <h2>Result — Benefits and Trade-Offs</h2>
+      <p>As a result, multiple designers can work in parallel. One person can focus on furniture, another on doors, while an interior designer adjusts layout and composition.</p>
+      <p>No one needs to load, save, or manage the entire scene file. Only the required parts are pulled from a repository and updated independently.</p>
+      <p>Scene positions and object relationships remain consistent across tools. Adaptation is mainly required at the renderer and material level, since different applications interpret shading models differently.</p>
+      <p>Another trade-off is onboarding. USD-based workflows require training and a shift in how scenes are structured, but this added structure significantly improves organization, scalability, and long-term maintainability.</p>
+      <h2>Cross-DCC and Renderer Usage</h2>
+      <p>The same USD scene structure can be consumed by different applications.</p>
+      <p>Offline renderers and real-time engines can use the same scene description without changing its structure.</p>
+      <p>Houdini remains the main authoring environment, while other tools are used for layout, transformations, and variation management.</p>
+      <p>USD is used here as a scene management system rather than a file replacement.</p>
+      <div class="media-frame"><img src="/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-de666c5151e862be.png" alt="Live USD scene update shown between NVIDIA Omniverse and Unreal Engine, where a transform change is propagated across tools." loading="lazy"><div class="media-caption">The same USD scene opened simultaneously in NVIDIA Omniverse and Unreal Engine.</div></div>
+      <div class="media-frame"><img src="/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-30cbdae0db260a14.png" alt="Another USD interior scene variant displayed in Unreal Engine." loading="lazy"></div>
+      <div class="media-frame"><img src="/public/media/posts/procedural-interior-design-pipeline-houdini-usd/asset-8ca4089d5f273a04.png" alt="USD interior scene variant displayed in NVIDIA Omniverse." loading="lazy"></div>
+      <h2>Scope</h2>
+      <p>This example is presented as a demonstration of the approach rather than a finished or universal solution.</p>
+      <p>The same principles can be adapted to different production contexts, including interior design, games, film, and other scene-based pipelines.</p>
+      <h2>USD Reference</h2>
+      <p>USD (Universal Scene Description) was originally developed at <strong>Pixar Animation Studios</strong> as a framework for managing complex scenes in large productions.</p>
+      <p>For a general overview of USD concepts and design principles, see the reference article:</p>
+      <p>Links:</p>
+      <p><a href="https://openusd.org/release/index.html" rel="external">https://openusd.org/release/index.html</a></p>
+      <p><a href="https://www.sidefx.com/docs/houdini/solaris/usd.html" rel="external">https://www.sidefx.com/docs/houdini/solaris/usd.html</a></p>
+      </div>
+    </article>
+    <footer class="post-end"><a href="/blog/">← Blog index</a><span>Local archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
+  </main>
+</body>
+</html>

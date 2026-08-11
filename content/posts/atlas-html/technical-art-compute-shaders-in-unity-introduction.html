@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction">
+  <meta name="description" content="Introduction to technical art compute shaders in Unity, focusing on GPU-based parallel processing and data workflows.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Technical Art Compute Shaders in Unity">
+  <meta property="og:description" content="Introduction to technical art compute shaders in Unity, focusing on GPU-based parallel processing and data workflows.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction">
+  <title>Technical Art Compute Shaders in Unity · Pavel Zosim</title>
+  <link rel="stylesheet" href="/styles/atlas.css">
+  <link rel="stylesheet" href="/styles/posts.css">
+</head>
+<body class="migrated-post">
+  <main class="post-shell">
+    <header class="post-header">
+      <p class="post-path">~/blog/technical-art-compute-shaders-in-unity-introduction.md</p>
+      <h1>Technical Art Compute Shaders in Unity</h1>
+      <p class="post-summary">Introduction to technical art compute shaders in Unity, focusing on GPU-based parallel processing and data workflows.</p>
+      <div class="post-meta"><span>Pavel Zosim</span><span>2025-03-03</span><span>#unity</span><span>#compute</span><span>#shaders</span></div>
+    </header>
+    <article class="atlas-container">
+      <div class="content-block">
+      <h2>TECHNICAL ART COMPUTE SHADERS IN UNITY OVERVIEW</h2>
+      <p>This article introduces <strong>technical art compute shaders in Unity</strong> and explains how they are used for GPU-based parallel computation.</p>
+      <p>Compute Shaders are specialized tools that enable massively parallel computations on the GPU, bypassing the traditional rendering pipeline. They’re ideal for tasks like real-time texture generation, physics simulations, and complex data processing.</p>
+      <p>By leveraging the GPU’s architecture, compute shaders can accelerate tasks that would bottleneck a CPU, making them indispensable for performance-critical applications in Unity.</p>
+      <h2>WHY USE TECHNICAL ART COMPUTE SHADERS IN UNITY?</h2>
+      <p>Important factor when choosing render pipeline is the shaders. Generally, in both High Definition RP and Universal RP, the shaders are created in Shader Graph—a package that provides a node-based interface to create shaders. While this approach allows us to create shaders visually without writing HLSL code, it has its drawbacks. For example, if you upgrade your Unity version (e.g., from 2019 to 2020), your Shader Graph shaders might stop compiling due to version differences, as Shader Graph updates independently of Unity itself.</p>
+      <p>The best way to create robust shaders in Unity is by writing them in HLSL. This ensures that your shaders will compile correctly across different rendering pipelines and remain stable regardless of Unity upgrades. Furthermore, a major advantage of using HLSL is that it is also supported by Unreal Engine. Since Unreal’s shading language is based on HLSL (especially on DirectX platforms), writing shaders in HLSL allows for easier cross-engine porting and consistency in multi-engine projects.</p>
+      <p>Parallel Processing: Execute thousands of threads simultaneously.</p>
+      <p>Performance Gains: Offload heavy math/logic from the CPU.</p>
+      <p>Versatility: Perfect for non-rendering tasks like physics, AI, or image manipulation.</p>
+      <h3>Key Applications in Unity</h3>
+      <ul><li><strong>Procedural Texture Generation:</strong> Create dynamic textures (e.g., noise, fractals) at runtime.</li><li><strong>Image Processing:</strong> Apply filters or transformations to render textures.</li><li><strong>Physics Simulations: </strong>Simulate particles, fluids, cloth, or other complex systems.</li><li><strong>Advanced Visual Effects: </strong>Generate effects such as procedural fire, water, and more.</li><li><strong>Data Processing:</strong> Execute heavy mathematical operations like matrix multiplications or optimization algorithms.</li></ul>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-bc40451c9d0903bb.gif" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-3735127785b9a335.gif" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-266d1678af70cb87.gif" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <div class="media-frame"><video controls preload="metadata" src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-c2d6b7f03906c8be.mp4"></video></div>
+      <h2>How Compute Shaders Work</h2>
+      <p>Compute shaders run on the GPU independently of the traditional rendering pipeline.</p>
+      <p>The structure is built around <strong>“kernels</strong>” which are functions that execute in parallel over many threads.</p>
+      <p><strong>Kernel Declaration</strong></p>
+      <p>Each kernel starts with a <a href="https://www.pavelzosim.com/blog/hashtags/pragma" rel="external">#pragma</a> kernel directive followed by the kernel function name (e.g., CSMain).</p>
+      <pre><code>#pragma kernel CSMain</code></pre>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg" alt="Diagram of compute shader structure shows dispatch, group, and thread with labeled grids and circles. Text: Compute Shader Structure." loading="lazy"></div>
+      <p>When you invoke a compute shader via <strong>Dispatch</strong>, you specify how many <strong><em>groups</em></strong><strong> </strong>you want along each axis (X, Y, Z). Each group itself contains a fixed number of threads,</p>
+      <p>defined by [numthreads(x, y, z)] in the shader.</p>
+      <ul><li><strong>Total groups</strong> = (groupsX × groupsY × groupsZ)</li><li><strong>Threads per group</strong> = (threadsX × threadsY × threadsZ)</li><li><strong>Total threads</strong> = (total groups) × (threads per group)</li></ul>
+      <p>For example, if you dispatch (4, 4, 1) groups and each group has [numthreads(3, 3, 1)], then the total threads are (4 × 4 × 1) × (3 × 3 × 1) = 16 × 9 = 144 threads in total.</p>
+      <pre><code>Modern GPUs process threads in “warps” or “wavefronts,” typically 32 threads per warp on NVIDIA GPUs or 64 on many AMD GPUs. To maximize efficiency, developers often choose a thread group size (e.g., 64 or 128 threads per group) that aligns with these hardware units. For instance, [numthreads(8, 8, 1)] = 64 threads per group, which can be convenient for certain GPUs.</code></pre>
+      <p><strong>Group-Shared Memory and Synchronization</strong></p>
+      <ul><li><strong>Shared Memory:</strong> Threads within a group can access a fast on-chip shared memory. This is useful for algorithms that require intra-group communication.</li><li><strong>Synchronization:</strong><ul><li>GroupMemoryBarrierWithGroupSync(): Waits for all threads in the current group to finish operations on shared memory.</li><li>AllMemoryBarrierWithGroupSync(): Waits for all threads to finish any memory operation (local or global).</li></ul></li></ul>
+      <p><strong>Group and Thread IDs</strong></p>
+      <ul><li><strong>Group ID (SV_GroupID):</strong> Identifies the current thread group, which is useful when processing large data sets by blocks.</li><li><strong>Thread ID (SV_GroupThreadID or SV_DispatchThreadID):</strong> Provides the per-thread coordinate, often mapping directly to pixel coordinates in a texture.</li></ul>
+      <h2>PRACTICING: Procedural Texture Generation - Triangle Sierpinski</h2>
+      <p>Let’s walk through a simple example that generates a procedural texture (e.g., a Sierpinski triangle pattern) using a compute shader and displays it on a GameObject.</p>
+      <p>Below is a concise explanation of these steps:</p>
+      <ol><li><strong>Create the C# Script</strong><ul><li>In Unity’s Project window, right-click and select <strong>Create → C# Script</strong>.</li><li>Name it something like AssignTexture.cs.</li><li>Open the script, and inside, add a public field of type ComputeShader.</li></ul></li><li><strong>Attach the Script to a Quad</strong>In the Hierarchy, create a <strong>Quad</strong> (or any other geometry you want).Select the Quad and drag the AssignTexture.cs script onto it in the Inspector.Now the script will run on that Quad when you press <strong>Play</strong>.</li><li><strong>Create the Compute Shader</strong><ul><li>In the Project window, right-click and select <strong>Create → Shader → Compute Shader</strong>.</li><li>Give it a name (e.g., ComputeShader.compute).</li></ul></li><li><strong>Assign the Compute Shader to the Script</strong><br><ul><li>Select the Quad (which has the AssignTexture script).</li><li>In the Inspector, locate the <strong>Shader</strong> field (the public ComputeShader shader).</li><li>Drag and drop the newly created .compute file into that field.</li></ul></li></ol>
+      <p><strong>C# Script: AssignTexture.cs</strong></p>
+      <p><strong>Compute Shader Code: ComputeShader.compute</strong></p>
+      <p>This code declares a kernel called CSMain, uses a thread group size of 8×8×1 (totaling 64 threads per group), and writes a color value into the texture at each pixel position given by id.xy.</p>
+      <p><strong>Result:</strong></p>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-9465d3cc21a6c842.png" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <p><strong>Understanding Thread Groups with Table Examples</strong></p>
+      <p>When a compute shader is dispatched, the GPU organizes its work in blocks (or groups) of threads. Here, each group is defined with [numthreads(8,8,1)]—meaning each group covers an 8×8 block of pixels. Let’s visualize how threads are arranged within a single group and across groups.</p>
+      <p><strong>Example 1: Threads in a Single Group (Group ID: 0,0,0) </strong><strong> [numthreads(8,8,1)]</strong></p>
+      <p>Assume that the thread group with ID <strong>(0,0,0)</strong> covers an 8×8 block. The threads within this group have coordinates (id.x, id.y) ranging from 0 to 7. For clarity, here’s a table showing the mapping of thread coordinates for this group (with id.y starting from 7 at the top down to 0):</p>
+      <div class="atlas-table-frame"><table><tr><td>7</td><td>(0,7,0)</td><td>(1,7,0)</td><td>(2,7,0)</td><td>(3,7,0)</td><td>(4,7,0)</td><td>(5,7,0)</td><td>(6,7,0)</td><td>(7,7,0)</td></tr><tr><td>6</td><td>(0,6,0)</td><td>(1,6,0)</td><td>(2,6,0)</td><td>(3,6,0)</td><td>(4,6,0)</td><td>(5,6,0)</td><td>(6,6,0)</td><td>(7,6,0)</td></tr><tr><td>5</td><td>(0,5,0)</td><td>(1,5,0)</td><td>(2,5,0)</td><td>(3,5,0)</td><td>(4,5,0)</td><td>(5,5,0)</td><td>(6,5,0)</td><td>(7,5,0)</td></tr><tr><td>4</td><td>(0,4,0)</td><td>(1,4,0)</td><td>(2,4,0)</td><td>(3,4,0)</td><td>(4,4,0)</td><td>(5,4,0)</td><td>(6,4,0)</td><td>(7,4,0)</td></tr><tr><td>3</td><td>(0,3,0)</td><td>(1,3,0)</td><td>(2,3,0)</td><td>(3,3,0)</td><td>(4,3,0)</td><td>(5,3,0)</td><td>(6,3,0)</td><td>(7,3,0)</td></tr><tr><td>2</td><td>(0,2,0)</td><td>(1,2,0)</td><td>(2,2,0)</td><td>(3,2,0)</td><td>(4,2,0)</td><td>(5,2,0)</td><td>(6,2,0)</td><td>(7,2,0)</td></tr><tr><td>1</td><td>(0,1,0)</td><td>(1,1,0)</td><td>(2,1,0)</td><td>(3,1,0)</td><td>(4,1,0)</td><td>(5,1,0)</td><td>(6,1,0)</td><td>(7,1,0)</td></tr><tr><td>0</td><td>(0,0,0)</td><td>(1,0,0)</td><td>(2,0,0)</td><td>(3,0,0)</td><td>(4,0,0)</td><td>(5,0,0)</td><td>(6,0,0)</td><td>(7,0,0)</td></tr><tr><td>id.y \ id.x</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
+      <p><em>Each cell represents the thread’s unique coordinate within the group, where the third value (0) corresponds to the z-axis.</em></p>
+      <p><strong>Example 2: Threads in a Subsequent Group (Group ID: 1,0,0) </strong> <strong>[numthreads(8,8,1)]</strong></p>
+      <p>If your texture is larger than one 8×8 block, the shader dispatches multiple groups. For example, consider the group with ID <strong>(1,0,0)</strong>. This group will cover an 8×8 block starting at pixel (8,0) and ending at pixel (15,7):</p>
+      <div class="atlas-table-frame"><table><tr><td>7</td><td>(8,7,0)</td><td>(9,7,0)</td><td>(10,7,0)</td><td>(11,7,0)</td><td>(12,7,0)</td><td>(13,7,0)</td><td>(14,7,0)</td><td>(15,7,0)</td></tr><tr><td>6</td><td>(8,6,0)</td><td>(9,6,0)</td><td>(10,6,0)</td><td>(11,6,0)</td><td>(12,6,0)</td><td>(13,6,0)</td><td>(14,6,0)</td><td>(15,6,0)</td></tr><tr><td>5</td><td>(8,5,0)</td><td>(9,5,0)</td><td>(10,5,0)</td><td>(11,5,0)</td><td>(12,5,0)</td><td>(13,5,0)</td><td>(14,5,0)</td><td>(15,5,0)</td></tr><tr><td>4</td><td>(8,4,0)</td><td>(9,4,0)</td><td>(10,4,0)</td><td>(11,4,0)</td><td>(12,4,0)</td><td>(13,4,0)</td><td>(14,4,0)</td><td>(15,4,0)</td></tr><tr><td>3</td><td>(8,3,0)</td><td>(9,3,0)</td><td>(10,3,0)</td><td>(11,3,0)</td><td>(12,3,0)</td><td>(13,3,0)</td><td>(14,3,0)</td><td>(15,3,0)</td></tr><tr><td>2</td><td>(8,2,0)</td><td>(9,2,0)</td><td>(10,2,0)</td><td>(11,2,0)</td><td>(12,2,0)</td><td>(13,2,0)</td><td>(14,2,0)</td><td>(15,2,0)</td></tr><tr><td>1</td><td>(8,1,0)</td><td>(9,1,0)</td><td>(10,1,0)</td><td>(11,1,0)</td><td>(12,1,0)</td><td>(13,1,0)</td><td>(14,1,0)</td><td>(15,1,0)</td></tr><tr><td>0</td><td>(8,0,0)</td><td>(9,0,0)</td><td>(10,0,0)</td><td>(11,0,0)</td><td>(12,0,0)</td><td>(13,0,0)</td><td>(14,0,0)</td><td>(15,0,0)</td></tr><tr><td>id.y \ id.x</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr></table></div>
+      <p><em>Notice how the thread coordinates are offset by 8 in the x-direction compared to the previous group.</em></p>
+      <p><strong>Example 3: Threads in a Subsequent Group (Group ID: 0,1,0) </strong> <strong>[numthreads(8,8,1)]</strong></p>
+      <div class="atlas-table-frame"><table><tr><td>15</td><td>0,15,0</td><td>1,15,0</td><td>2,15,0</td><td>3,15,0</td><td>4,15,0</td><td>5,15,0</td><td>6,15,0</td><td>7,15,0</td></tr><tr><td>14</td><td>0,14,0</td><td>1,14,0</td><td>2,14,0</td><td>3,14,0</td><td>4,14,0</td><td>5,14,0</td><td>6,14,0</td><td>7,14,0</td></tr><tr><td>13</td><td>0,13,0</td><td>1,13,0</td><td>2,13,0</td><td>3,13,0</td><td>4,13,0</td><td>5,13,0</td><td>6,13,0</td><td>7,13,0</td></tr><tr><td>12</td><td>0,12,0</td><td>1,12,0</td><td>2,12,0</td><td>3,12,0</td><td>4,12,0</td><td>5,12,0</td><td>6,12,0</td><td>7,12,0</td></tr><tr><td>11</td><td>0,11,0</td><td>1,11,0</td><td>2,11,0</td><td>3,11,0</td><td>4,11,0</td><td>5,11,0</td><td>6,11,0</td><td>7,11,0</td></tr><tr><td>10</td><td>0,10,0</td><td>1,10,0</td><td>2,10,0</td><td>3,10,0</td><td>4,10,0</td><td>5,10,0</td><td>6,10,0</td><td>7,10,0</td></tr><tr><td>9</td><td>0,9,0</td><td>1,9,0</td><td>2,9,0</td><td>3,9,0</td><td>4,9,0</td><td>5,9,0</td><td>6,9,0</td><td>7,9,0</td></tr><tr><td>8</td><td>0,8,0</td><td>1,8,0</td><td>2,8,0</td><td>3,8,0</td><td>4,8,0</td><td>5,8,0</td><td>6,8,0</td><td>7,8,0</td></tr><tr><td>id.y \ id.x</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr></table></div>
+      <p><strong>Key Points from the Example:</strong></p>
+      <ol><li><strong>Thread Group Size:</strong>Each group contains 64 threads (8 in x × 8 in y).<br></li><li><strong>Total Threads:</strong>The overall number of threads used is determined by the number of groups dispatched multiplied by 64.<br></li><li><strong>Dispatching Strategy:</strong>To cover a texture with a given texResolution, you calculate the number of groups as:groupsX = texResolution / workgroup_sizeXgroupsY = texResolution / workgroup_sizeY<br>For instance, if texResolution is 256 and your workgroup is 16 (using a factor that fits your texture), you may need to dispatch 256 / 16 = 16 groups along both the X and Y axes.<br></li><li><strong>3D Dispatch Requirement:</strong>The Dispatch method requires a non-zero Z value (even if it’s 1) because the threads are defined in three dimensions. Setting Z to 0 means no thread groups are dispatched along that axis.</li></ol>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-324850be4352331c.jpg" alt="Text &quot;Z Parameter&quot; with shader code examples and 3D grid illustrations, demonstrating calculations like 4x4x3=48. Background is light blue." loading="lazy"></div>
+      <p><strong>Example of using: </strong></p>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-ded0f34b3544f3e9.png" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-cdf9af3b8ac6726a.png" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <h2>PRACTICING: Split-Screen Color Effect</h2>
+      <p>We’ll let&#x27;s split the screen into four colored quadrants using the GPU’s parallel threads by using step() function that will determine whether a pixel belongs to a specific region</p>
+      <ol><li>The <strong>step</strong> function in HLSL works as a simple threshold function. It takes two parameters: an edge and a value (x). It returns 1.0 if x is greater than or equal to the edge, and 0.0 otherwise. In other words:</li></ol>
+      <p>step(edge, x) = (x &gt;= edge) ? 1.0 : 0.0;</p>
+      <p>This makes it ideal for deciding which region of your texture or screen a pixel falls into. For example, if you want to split the screen into two halves, you can use the half-resolution value as the edge for the x or y coordinate. Pixels with coordinates equal to or above the edge get one value (1.0), and those below get 0.0.</p>
+      <ol><li>The <strong>shift operator (&gt;&gt;)</strong> is a bitwise operator that shifts the bits of an integer to the right. Shifting right by 1 bit is equivalent to dividing the integer by 2 (using integer division). For example, if you have a texture resolution of 256, its binary representation</li></ol>
+      <p>256 = 0b100000000 // &quot;1&quot; followed by 8 zeros</p>
+      <p>Shifting it right by 1 bit:</p>
+      <p>256 &gt;&gt; 1 = 0b10000000 // equals 128</p>
+      <p>This technique is commonly used to quickly compute half of a value (assuming it’s a power of two).</p>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-b97f50042454c156.png" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <p><strong>How It Works</strong></p>
+      <p>int halfRes = texResolution &gt;&gt; 1;</p>
+      <p>Uses the right shift operator to divide texResolution by 2.</p>
+      <p>So, if texResolution is 256, halfRes becomes 128.</p>
+      <p>step(halfRes, id.x) returns 1.0 if the x-coordinate of the current thread (id.x) is greater than or equal to 128; otherwise, it returns 0.0.</p>
+      <p>Similarly, step(halfRes, id.y) returns 1.0 if the y-coordinate is at least 128, and 0.0 if not.</p>
+      <p><strong>Example Calculation:</strong></p>
+      <p>GroupID: (20, 10, 0)</p>
+      <p>ThreadID (within group): (4, 5, 0)</p>
+      <p>numthreads: (8, 8, 1)</p>
+      <p>Then, the <strong>DispatchThreadID</strong> is calculated as:</p>
+      <p>DispatchThreadID.x = GroupID.x * 8 + ThreadID.x = 20 * 8 + 4 = 164</p>
+      <p>DispatchThreadID.y = GroupID.y * 8 + ThreadID.y = 10 * 8 + 5 = 85</p>
+      <p>DispatchThreadID.z = GroupID.z * 1 + ThreadID.z = 0 * 1 + 0 = 0</p>
+      <p>So, id = (164, 85, 0).</p>
+      <p>If halfRes is 128:</p>
+      <ul><li>step(128, 164) returns 1.0 (because 164 ≥ 128).</li><li>step(128, 85) returns 0.0 (because 85 &lt; 128).</li></ul>
+      <p>Thus, the pixel at (164, 85) is colored red (float4(1, 0, 0, 1)).</p>
+      <p>This example shows how you can use both the <strong>step</strong> function and the <strong>bit shift</strong> operator to quickly compute thresholds and split a texture into regions, which is a common technique in GPU-based procedural effects and multi-screen setups.</p>
+      <p><strong>Alternative Implementation Using If Statements:</strong></p>
+      <h2>PRACTICING: Drawing a circle Defining center of the screen</h2>
+      <p>In this example, we will draw a circle by determining for each pixel whether it lies within a given radius from the center of the screen. We do this by re-centering the texture coordinates and using the HLSL function<strong> length()</strong> to calculate the Euclidean distance from the center.</p>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-50d0353a70658443.png" alt="HLSL function length text with a right triangle diagram labeled a, b, x. Equation: float2v = float2(a,b); length(v) = x on light blue background." loading="lazy"></div>
+      <ol><li><strong>Defining the Circle Center:</strong></li></ol>
+      <p>The texture’s resolution is provided by the variable <strong>texResolution</strong> (for example, 256).</p>
+      <p>We compute <strong>halfRes</strong> by shifting <strong>texResolution</strong> right by 1 bit:</p>
+      <p>int halfRes = texResolution &gt;&gt; 1;</p>
+      <p>This operation is equivalent to dividing by 2. For instance, if <strong>texResolution</strong> is 256, then <strong>halfRes</strong> becomes 128.</p>
+      <p>By subtracting <strong>halfRes</strong> from the thread’s coordinate (<strong>id.xy</strong>), we re-center the coordinate system so that (0,0) corresponds to the center of the texture (instead of the bottom-left corner).</p>
+      <ol><li><strong>The inCircle Function</strong></li></ol>
+      <p>We define a helper function, <strong>inCircle</strong>, that tests whether a point is inside a circle.</p>
+      <p>It takes a 2D point <strong>pt </strong>and a radius as parameters, calculates the Euclidean distance from <strong>pt </strong>using the <strong>length()</strong> function, and returns 1.0 if the point is inside the circle (i.e., its distance is less than the radius) and 0.0 otherwise.</p>
+      <p>float inCircle(float2 pt, float radius) {</p>
+      <p>return (length(pt) &lt; radius) ? 1.0 : 0.0;</p>
+      <p>}</p>
+      <p>Here, <strong>pt</strong> is expected to be given in a coordinate system where the circle’s center is at (0,0).</p>
+      <ol><li><strong>Determining the Radius</strong></li></ol>
+      <p>We set the circle’s radius to be one-fourth of the texture resolution.</p>
+      <p>Using a bit-shift operation, we calculate this as follows:</p>
+      <p>float radius = (float)(texResolution &gt;&gt; 2);</p>
+      <p>For a texture with <strong>texResolution = 256</strong>, shifting right by 2 bits divides by 4, so the radius becomes 64.</p>
+      <ol><li><strong>Coloring the Pixel</strong></li></ol>
+      <p>For each pixel (with coordinate <strong>id.xy</strong>), we subtract <strong>halfRes </strong>from the coordinate to re-center it. This gives a new coordinate relative to the center of the texture.</p>
+      <p>Then, we pass this centered coordinate to <strong>inCircle </strong>along with the computed radius. The result, res, will be 1.0 if the pixel lies within the circle and 0.0 if it does not.</p>
+      <p>Finally, we set the output color of the pixel using res. In this example, the output color is defined as float4(res, res, 0.0, 1.0), which will display as yellow (red and green combined) for pixels inside the circle and black for those outside.</p>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-f7df3522726fa599.png" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <p><strong>Detailed Explanation</strong></p>
+      <ul><li><strong>Centering the Coordinates:</strong>By subtracting <strong>halfRes</strong> from <strong>id.xy</strong>, the original range (0 to <strong>texResolution</strong>) is shifted so that the center becomes (0,0). For a 256×256 texture, the coordinates become approximately –128 to +128.<br></li><li><strong>Determining In-Circle:</strong>The <strong>inCircle</strong> function computes the Euclidean distance using length(pt). If the distance is less than the given radius (here, 64), it returns 1.0. Otherwise, it returns 0.0.<br></li><li><strong>Color Output:</strong>Using the result from <strong>inCircle</strong> (stored in <strong>res</strong>), the pixel’s color is set. Pixels inside the circle get a color value of <strong>(1, 1, 0, 1)</strong> (yellow), while those outside receive <strong>(0, 0, 0, 1)</strong> (black). You can easily adjust these values if you want a different color scheme.<br></li><li><strong>Thread Dispatch:</strong>With [numthreads(8,8,1)], each thread group processes an 8×8 block of pixels. The overall thread index is calculated by combining the group ID and the thread’s local ID, ensuring that every pixel in the texture is evaluated.</li></ul>
+      <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-8ec8c724e24a1584.png" alt="technical art compute shaders in unity example" loading="lazy"></div>
+      <blockquote>the continuation will be posted below...</blockquote>
+      </div>
+    </article>
+    <footer class="post-end"><a href="/blog/">← Blog index</a><span>Local archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
+  </main>
+</body>
+</html>

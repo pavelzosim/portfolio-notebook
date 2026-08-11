@@ -1,0 +1,23 @@
+html{scroll-behavior:smooth}
+body.migrated-post{margin:0;background:var(--atlas-bg);color:var(--atlas-ink)}
+.post-shell{width:min(980px,calc(100% - 32px));margin:32px auto 72px}
+.post-header{padding:26px 30px;border:1px solid var(--atlas-border);border-bottom:0;background:rgba(230,220,210,.96)}
+.post-path{margin:0 0 12px;color:var(--atlas-ink-muted);font:10px var(--atlas-font-mono);text-transform:uppercase}
+.post-header h1{max-width:820px;margin:0 0 14px;font-size:clamp(26px,5vw,44px);line-height:1.08}
+.post-summary{max-width:760px;margin:0;color:var(--atlas-ink-soft);font-size:12px;line-height:1.7}
+.post-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.post-meta span{padding:4px 7px;border:1px solid var(--atlas-border);font:9px var(--atlas-font-mono);text-transform:uppercase}
+.migrated-post .atlas-container{border:1px solid var(--atlas-border);background:rgba(230,220,210,.96)}
+.migrated-post .content-block{padding:30px}
+.migrated-post .content-block>h2:not(:first-child){margin-top:42px}
+.migrated-post .content-block>h3{margin-top:30px}
+.migrated-post .content-block a{color:#0000aa;text-decoration-thickness:1px;text-underline-offset:3px}
+.migrated-post .content-block blockquote{margin:24px 0;padding:12px 16px;border-left:4px solid var(--atlas-crit);background:var(--atlas-bg-alt)}
+.migrated-post .content-block pre{overflow:auto;padding:16px;border:1px solid var(--atlas-border);background:rgba(0,0,0,.04);font:12px/1.6 var(--atlas-font-mono)}
+.migrated-post .content-block table{display:block;overflow-x:auto;margin:24px 0;border-collapse:collapse}
+.migrated-post .content-block th,.migrated-post .content-block td{padding:8px 10px;border:1px solid var(--atlas-border);vertical-align:top}
+.migrated-post .content-block th{background:rgba(0,0,0,.04);text-align:left}
+.migrated-post .content-block .media-frame img,.migrated-post .content-block .media-frame video{max-height:680px;object-fit:contain;background:#111}
+.post-end{display:flex;justify-content:space-between;gap:16px;padding:15px 30px;border:1px solid var(--atlas-border);border-top:0;font:9px var(--atlas-font-mono);text-transform:uppercase}
+.post-end a{color:inherit}
+@media(max-width:640px){.post-shell{width:min(100% - 16px,980px);margin-top:8px}.post-header,.migrated-post .content-block{padding:20px}.post-end{padding-inline:20px}}
