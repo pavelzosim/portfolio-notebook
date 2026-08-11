@@ -1,2 +1,3 @@
 /* Migrated post stylesheet orchestrator. */
-@import url("./posts/shared.css");
+@import url("./posts/navigation.css?v=1");
+@import url("./posts/shared.css?v=2");

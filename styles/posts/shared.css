@@ -18,6 +18,6 @@ body.migrated-post{margin:0;background:var(--atlas-bg);color:var(--atlas-ink)}
 .migrated-post .content-block th,.migrated-post .content-block td{padding:8px 10px;border:1px solid var(--atlas-border);vertical-align:top}
 .migrated-post .content-block th{background:rgba(0,0,0,.04);text-align:left}
 .migrated-post .content-block .media-frame img,.migrated-post .content-block .media-frame video{max-height:680px;object-fit:contain;background:#111}
-.post-end{display:flex;justify-content:space-between;gap:16px;padding:15px 30px;border:1px solid var(--atlas-border);border-top:0;font:9px var(--atlas-font-mono);text-transform:uppercase}
+.post-end{width:auto;min-height:0;margin:0;display:flex;justify-content:space-between;gap:16px;padding:15px 30px;border:1px solid var(--atlas-border);border-top:0;font:9px var(--atlas-font-mono);text-transform:uppercase}
 .post-end a{color:inherit}
 @media(max-width:640px){.post-shell{width:min(100% - 16px,980px);margin-top:8px}.post-header,.migrated-post .content-block{padding:20px}.post-end{padding-inline:20px}}
