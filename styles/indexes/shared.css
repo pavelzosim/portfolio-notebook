@@ -5,6 +5,8 @@ body{padding-bottom:42px}
 .index-filters{margin-top:24px;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
 .index-filters button{padding:2px 0;border:0;background:transparent;color:var(--muted);font:9px var(--mono);cursor:pointer}
 .index-filters button:hover,.index-filters button:focus-visible,.index-filters button.active{color:var(--red);outline:0}
+.index-guide-link{display:inline-block;margin-top:16px;padding:7px 9px;border:1px solid var(--line2);background:var(--paper2);color:var(--red);font:8px var(--mono);text-decoration:none}
+.index-guide-link:hover,.index-guide-link:focus-visible{background:var(--atlas-crit-soft);outline:0}
 .content-index-head{padding:38px 36px 32px;border-bottom:1px solid var(--line2)}
 .content-index-head h1{max-width:700px;margin:20px 0 13px}
 .content-index-head>p:last-of-type{max-width:680px;margin:0;color:var(--muted);font-size:11px;line-height:1.75}

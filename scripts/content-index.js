@@ -49,6 +49,7 @@
 
       document.title = `${config.title} / Pavel Zosim`;
       document.querySelectorAll(`[data-nav="${view}"], [data-rail="${view}"]`).forEach((link) => link.classList.add('active'));
+      document.querySelector('[data-blog-guide]')?.toggleAttribute('hidden', view !== 'blog');
       text('[data-index-file]', config.file);
       text('[data-index-title]', config.title);
       text('[data-list-title]', config.listTitle);

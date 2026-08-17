@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
+  <title>Article Style Guide / Pavel Zosim</title>
+  <link rel="stylesheet" href="/styles/atlas.css?v=47">
+  <link rel="stylesheet" href="/styles/style-guide.css?v=1">
+  <script src="/scripts/site-navigation.js?v=1" defer></script>
+</head>
+<body class="style-guide-page">
+  <a class="skip" href="#content">Skip to content</a>
+  <header class="shellbar">
+    <a class="shell-id" href="/"><b>pavelzosim</b><span>:~/atlas/style-guide</span><i>_</i></a>
+    <nav aria-label="Primary">
+      <a href="/projects/">Projects</a><span class="nav-divider" aria-hidden="true">/</span>
+      <a href="/#notes">Notes</a><span class="nav-divider" aria-hidden="true">/</span>
+      <a href="/tools/">Tools</a><span class="nav-divider" aria-hidden="true">/</span>
+      <a class="active" href="/blog/">Blog</a><span class="nav-divider" aria-hidden="true">/</span>
+      <a href="/#about">About</a><span class="nav-divider" aria-hidden="true">/</span>
+      <a href="/#contacts">Contacts</a>
+    </nav>
+    <a class="shell-status" href="mailto:pavel.zosim@protonmail.com"><span></span>SYS.ONLINE / UTC+3</a>
+  </header>
+
+  <div class="workspace guide-workspace">
+    <aside class="rail" aria-label="Style guide contents">
+      <p class="rail-title">STYLE_GUIDE.md</p>
+      <ol>
+        <li><a href="#principles"><span>01</span> Principles</a></li>
+        <li><a href="#tokens"><span>02</span> Tokens</a></li>
+        <li><a href="#typography"><span>03</span> Typography</a></li>
+        <li><a href="#structure"><span>04</span> Structure &amp; lists</a></li>
+        <li><a href="#callouts"><span>05</span> Callouts</a></li>
+        <li><a href="#code"><span>06</span> Code &amp; comparison</a></li>
+        <li><a href="#tables"><span>07</span> Tables</a></li>
+        <li><a href="#media"><span>08</span> Media</a></li>
+        <li><a href="#actions"><span>09</span> Actions &amp; references</a></li>
+        <li><a href="#contract"><span>10</span> Authoring contract</a></li>
+      </ol>
+      <div class="rail-links"><a href="/blog/">[blog index]</a><a href="/content/guides/article-authoring.md">[LLM source]</a></div>
+    </aside>
+
+    <main id="content">
+      <header class="guide-head">
+        <p class="breadcrumb">/home/pavel/atlas/blog/style-guide.md</p>
+        <div class="guide-flags"><span>STATUS: CANONICAL</span><span>REV: 2026.08</span><span>LANG: EN</span></div>
+        <h1>Atlas article style guide</h1>
+        <p>This page is the visual source of truth for technical articles. Every example below uses the production classes loaded by the blog rather than a disconnected mock component.</p>
+        <div class="guide-command"><span>$</span> compose_article --system atlas --content technical_rnd <b>_</b></div>
+      </header>
+
+      <article class="atlas-container guide-document">
+        <div class="content-block">
+          <section class="guide-section" id="principles">
+            <h2>01 Principles</h2>
+            <p>The notebook is an engineering record, not a product landing page. Layout, hierarchy, and decoration must help a reader inspect implementation details quickly.</p>
+            <div class="guide-rule-grid">
+              <article><b>DO</b><span>Use flat beige paper, visible structure, real media, concise labels, and restrained blue interaction accents.</span></article>
+              <article><b>AVOID</b><span>Gradients, rounded cards, marketing claims, decorative animation, cropped technical images, and invented project data.</span></article>
+            </div>
+          </section>
+
+          <section class="guide-section" id="tokens">
+            <h2>02 Design tokens</h2>
+            <p>Use variables instead of introducing isolated color or spacing values. Content emphasis uses ink and semantic status colors; interactive controls use Commander blue.</p>
+            <div class="token-grid" aria-label="Color tokens">
+              <div><i style="--swatch:#e6dcd2"></i><code>--atlas-bg</code><span>#E6DCD2</span></div>
+              <div><i style="--swatch:#eee7df"></i><code>--atlas-bg-raised</code><span>#EEE7DF</span></div>
+              <div><i style="--swatch:#0a0a0a"></i><code>--atlas-ink</code><span>#0A0A0A</span></div>
+              <div><i style="--swatch:#0000aa"></i><code>--atlas-crit</code><span>#0000AA</span></div>
+              <div><i style="--swatch:#1a4d1a"></i><code>--atlas-ok</code><span>#1A4D1A</span></div>
+              <div><i style="--swatch:#8a5b14"></i><code>--atlas-warn</code><span>#8A5B14</span></div>
+            </div>
+            <div class="atlas-callout atlas-callout--note"><p>Spacing rhythm: 4 / 8 / 22 / 56 px. Borders remain one pixel. Corners remain square.</p></div>
+          </section>
+
+          <section class="guide-section" id="typography">
+            <h2>03 Typography</h2>
+            <p>JetBrains Mono is used for interface, metadata, headings, code, and body copy. Editorial serif is reserved for homepage prose and does not enter technical article records.</p>
+            <div class="type-specimen">
+              <p class="atlas-h1">H1 / Document title</p>
+              <p class="atlas-title">H2 / Editorial title</p>
+              <h2>Content section heading</h2>
+              <h3>Content subsection heading</h3>
+              <h4>Micro heading</h4>
+              <p class="atlas-body">Body copy explains implementation, constraints, decisions, and results. Prefer short paragraphs with concrete technical nouns.</p>
+              <p class="atlas-meta">META / VERSION / PLATFORM / STATUS</p>
+              <p>Inline identifiers use <code class="atlas-code-inline">RenderGraph.Execute()</code>.</p>
+            </div>
+          </section>
+
+          <section class="guide-section" id="structure">
+            <h2>04 Section structure and lists</h2>
+            <p>Each article moves from context to implementation and evidence. Use semantic H2 sections and H3 subsections; the article shell generates its left navigation from them.</p>
+            <ul>
+              <li>Problem or production context</li>
+              <li>Constraints and assumptions<ul><li>Target hardware</li><li>Performance budget</li></ul></li>
+              <li>Implementation and validation</li>
+            </ul>
+            <nav class="atlas-toc" aria-label="Example table of contents"><ul class="atlas-toc__list"><li class="atlas-toc__item atlas-toc__item--h2"><a href="#structure"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Context and constraints</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h3"><a href="#structure"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Target hardware</span><span class="atlas-toc__dots"></span></span></a></li></ul></nav>
+            <div class="atlas-section-break" data-index="§ NEXT"></div>
+            <p class="guide-note">Use <code class="atlas-code-inline">.atlas-section-break</code> only between major conceptual groups, not after every heading.</p>
+          </section>
+
+          <section class="guide-section" id="callouts">
+            <h2>05 Callouts</h2>
+            <p>Callouts carry semantic information. Never use them as decorative cards.</p>
+            <div class="atlas-callout atlas-callout--note"><p>Neutral implementation note or definition.</p></div>
+            <div class="atlas-callout atlas-callout--important"><p>Critical limitation, breaking change, or production risk.</p></div>
+            <div class="atlas-callout atlas-callout--warning"><p>Caution about performance, compatibility, or destructive operations.</p></div>
+            <div class="atlas-callout atlas-callout--success"><p>Validated result, completed check, or confirmed production state.</p></div>
+            <div class="atlas-callout atlas-callout--quote"><p>Attributed external principle or concise reference point.</p></div>
+          </section>
+
+          <section class="guide-section" id="code">
+            <h2>06 Code, math, and comparison</h2>
+            <p>Code samples require a language label, enough surrounding explanation to establish intent, and no screenshots of source code.</p>
+            <pre class="atlas-code-block"><code>// HLSL — use a real, minimal production fragment
+float3 ApplyExposure(float3 color, float exposure)
+{
+    return color * exp2(exposure);
+}</code></pre>
+            <div class="atlas-math-block">frame_time_ms = 1000 / target_fps</div>
+            <div class="comparison-matrix">
+              <div class="comp-col"><span class="comp-label">One-off</span><div class="comp-body">Hard-coded path, manual validation, project-specific output.</div></div>
+              <div class="comp-col"><span class="comp-label">Reusable system</span><div class="comp-body">Declared inputs, automated checks, documented output contract.</div></div>
+            </div>
+          </section>
+
+          <section class="guide-section" id="tables">
+            <h2>07 Tables</h2>
+            <p>Tables are for exact comparisons and measured data. Keep headings short and units explicit.</p>
+            <div class="atlas-table-frame">
+              <table class="atlas-table"><thead><tr><th>Target</th><th>Budget</th><th>Validation</th></tr></thead><tbody><tr><td>Desktop VR</td><td>11.1 ms</td><td>GPU capture</td></tr><tr><td>Mobile XR</td><td>13.8 ms</td><td>Device profile</td></tr></tbody></table>
+            </div>
+            <div class="atlas-uml-diag"><div class="atlas-uml-diag__widget"><div class="atlas-uml-diag__header">// DATA_FLOW // AUTHORING → RUNTIME</div><div class="guide-diagram-row"><div class="atlas-uml-diag__node"><div class="atlas-uml-diag__node-title">SOURCE</div><div class="atlas-uml-diag__node-body">Houdini / DCC</div></div><div class="atlas-uml-diag__arrow-wrapper"><div class="atlas-uml-diag__arrow-line"></div><div class="atlas-uml-diag__arrow-head"></div></div><div class="atlas-uml-diag__node"><div class="atlas-uml-diag__node-title">VALIDATE</div><div class="atlas-uml-diag__node-body">Schema / budget</div></div><div class="atlas-uml-diag__arrow-wrapper"><div class="atlas-uml-diag__arrow-line"></div><div class="atlas-uml-diag__arrow-head"></div></div><div class="atlas-uml-diag__node"><div class="atlas-uml-diag__node-title">RUNTIME</div><div class="atlas-uml-diag__node-body">Unity / Unreal</div></div></div></div></div>
+          </section>
+
+          <section class="guide-section" id="media">
+            <h2>08 Media and galleries</h2>
+            <p>Technical media uses <code class="atlas-code-inline">object-fit: contain</code>. Captions explain what evidence the reader should inspect.</p>
+            <figure class="media-frame">
+              <img src="/public/media/projects/nasa-first-woman/xr-interface-overview.webp" alt="NASA First Woman XR interface production record" loading="lazy">
+              <figcaption class="media-caption">FIG 01 — Environment record showing authored interaction surfaces and realtime display systems.</figcaption>
+            </figure>
+            <figure class="media-frame">
+              <div class="gallery-grid gallery-grid--3col">
+                <img src="/public/media/home/home/asset-bec58259fb369286.jpg" alt="Procedural shader research preview" loading="lazy">
+                <img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Realtime VFX research preview" loading="lazy">
+                <img src="/public/media/home/home/asset-ef33d8a1c9b8b70b.png" alt="Production tool interface preview" loading="lazy">
+              </div>
+              <figcaption class="media-caption">Gallery variants: default auto-fit, <code>.gallery-grid--2col</code>, <code>--3col</code>, <code>--tall</code>, and <code>--thumb</code>.</figcaption>
+            </figure>
+          </section>
+
+          <section class="guide-section" id="actions">
+            <h2>09 Actions and references</h2>
+            <p>Use filled blue only for the primary action. Bracket buttons are navigation or secondary commands. Destructive and success colors must retain their semantics.</p>
+            <div class="atlas-btn-group guide-actions"><a class="atlas-btn" href="#contract">Primary action</a><button class="atlas-btn atlas-btn--active" type="button">Active</button><button class="atlas-btn atlas-btn--ok" type="button">Validated</button><button class="atlas-btn atlas-btn--danger" type="button">Reset</button></div>
+            <p><a class="atlas-btn atlas-btn--ghost atlas-btn--sm" href="/blog/">Ghost link</a> <a class="atlas-btn atlas-btn--bracket atlas-btn--sm" href="/content/guides/article-authoring.md">LLM source</a></p>
+            <div class="atlas-shader-panel"><div class="atlas-shader-panel__header"><span class="atlas-shader-panel__title">Realtime parameter panel</span><span class="atlas-shader-panel__status"><i class="atlas-shader-panel__led"></i>ACTIVE</span></div><div class="atlas-shader-panel__body"><div class="atlas-shader-panel__block"><div class="atlas-shader-panel__block-title"><span>SHADER PARAMETERS</span><span class="atlas-shader-panel__block-hint">interactive component</span></div><div class="atlas-sp-grid"><span class="atlas-sp-prefix">val_</span><span class="atlas-sp-label">Exposure</span><output class="atlas-sp-value">1.00</output><div class="atlas-sp-row-full atlas-sp-slider-wrap"><input class="atlas-sp-slider" type="range" min="0" max="2" step="0.01" value="1" aria-label="Example exposure value"></div></div></div></div></div>
+            <div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">CODE</span><span class="atlas-ref-author">Pavel Zosim</span> — Atlas article framework.<br><a class="atlas-ref-link" href="https://github.com/pavelzosim/atlas-framework">github.com/pavelzosim/atlas-framework</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span>Primary technical documentation used to validate implementation claims.</span></li></ul></div>
+          </section>
+
+          <section class="guide-section" id="contract">
+            <h2>10 Article authoring contract</h2>
+            <p>The canonical machine-readable instructions live beside the content. Future LLM sessions should read that file before drafting or converting an article.</p>
+            <div class="guide-contract">
+              <p><b>Required order</b><span>Context → constraints → implementation → evidence → result → references.</span></p>
+              <p><b>Required assets</b><span>Descriptive alt text, local repository paths, captions, and contain-based presentation.</span></p>
+              <p><b>Required shell</b><span>Shared article navigation, registry entry, metadata, previous/next links, and local footer.</span></p>
+              <p><b>Forbidden</b><span>Invented results, unsupported claims, gradients, rounded product cards, and Wix-only URLs.</span></p>
+            </div>
+            <p><a class="atlas-btn" href="/content/guides/article-authoring.md">Open authoring contract →</a></p>
+          </section>
+
+          <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END STYLE GUIDE // CANONICAL //</span><span class="atlas-eof-divider__line"></span></div>
+        </div>
+      </article>
+    </main>
+
+    <aside class="meta-rail" aria-label="Style guide metadata">
+      <div class="meta-block"><p>[DOCUMENT]</p><dl><dt>TYPE</dt><dd>STYLE GUIDE</dd><dt>STATE</dt><dd>CANONICAL</dd><dt>LANG</dt><dd>EN</dd><dt>REV</dt><dd>2026.08</dd></dl></div>
+      <div class="meta-block"><p>[CANONICAL CSS]</p><ul><li>atlas.css</li><li>records.css</li><li>style-guide.css</li></ul></div>
+      <div class="meta-block"><p>[AUTHORING]</p><ul><li><a href="/content/guides/article-authoring.md">LLM contract</a></li><li><a href="/blog/">Blog index</a></li></ul></div>
+    </aside>
+  </div>
+
+  <footer><span>pavelzosim / article style guide</span><span>CANONICAL RECORD</span><a href="#content">return 0; ↑</a></footer>
+  <nav class="function-bar" aria-label="Keyboard commands"><a class="vc-button" href="/"><kbd>F2</kbd><span>Home</span></a><a class="vc-button" href="/projects/"><kbd>F3</kbd><span>Projects</span></a><a class="vc-button" href="/#notes"><kbd>F4</kbd><span>Notes</span></a><a class="vc-button" href="/tools/"><kbd>F5</kbd><span>Tools</span></a><a class="vc-button" href="/blog/"><kbd>F6</kbd><span>Blog</span></a><a class="vc-button" href="/#about"><kbd>F7</kbd><span>About</span></a><a class="vc-button" href="/#contacts"><kbd>F8</kbd><span>Contacts</span></a><a class="vc-button" href="#content"><kbd>F10</kbd><span>Top</span></a></nav>
+</body>
+</html>

@@ -1,3 +1,5 @@
 /* Migrated post stylesheet orchestrator. */
 @import url("./posts/navigation.css?v=1");
 @import url("./posts/shared.css?v=2");
+@import url("./records.css?v=5");
+@import url("./records.css?v=2");

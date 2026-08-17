@@ -35,6 +35,20 @@
   content: "[ REFERENCE_POINT ]";
 }
 
+/* Keep semantic headers more specific than the base callout header above. */
+.atlas-container .atlas-callout.atlas-callout--important::before {
+  content: "[ IMPORTANT // WARNING ]";
+  color: var(--atlas-crit);
+}
+.atlas-container .atlas-callout.atlas-callout--warning::before {
+  content: "[ WARNING // CAUTION ]";
+  color: var(--atlas-warn);
+}
+.atlas-container .atlas-callout.atlas-callout--success::before {
+  content: "[ STATUS // SUCCESS ]";
+  color: var(--atlas-ok);
+}
+
 /* Параграф внутри callout — изолированный сброс отступов */
 .atlas-container .atlas-callout p {
   margin: 0;
@@ -128,4 +142,3 @@
   overflow-wrap: break-word;
   min-width: 0;
 }
-

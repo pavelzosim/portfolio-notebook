@@ -1,0 +1,38 @@
+/* Live article component catalogue. Production component styles come from atlas.css. */
+.style-guide-page{min-height:100vh;padding-bottom:42px;background-color:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Ccircle cx='1' cy='1' r='.7' fill='%23000' fill-opacity='.10'/%3E%3C/svg%3E")}
+.guide-workspace{grid-template-columns:188px minmax(0,820px) 176px}
+.guide-head{padding:26px 28px 24px;border-bottom:1px solid var(--line2)}
+.guide-head h1{max-width:680px;margin:18px 0 12px;font-size:clamp(26px,3.2vw,34px);letter-spacing:-.025em}
+.guide-head>p:last-of-type{max-width:680px;margin:0;color:var(--muted);font-size:11px;line-height:1.75}
+.guide-flags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.guide-flags span{padding:3px 6px;border:1px solid var(--line);color:var(--muted);font-size:8px}
+.guide-command{margin-top:18px;padding:8px 10px;border:1px solid var(--line2);background:var(--paper2);font-size:9px}
+.guide-command span{color:var(--red);font-weight:700}.guide-command b{font-weight:400;animation:blink 1s steps(2,jump-none) infinite}
+.guide-document{padding:0 28px 36px;background:var(--atlas-bg-raised)}
+.guide-document>.content-block{margin-top:0}
+.guide-section{padding:34px 0 38px;border-bottom:1px solid var(--line2);scroll-margin-top:52px}
+.guide-section:last-of-type{border-bottom:0}
+.guide-section>p:first-of-type{max-width:680px}
+.guide-rule-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line2);border-left:1px solid var(--line2)}
+.guide-rule-grid article{min-height:110px;padding:12px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+.guide-rule-grid b{display:block;margin-bottom:10px;color:var(--red);font-size:9px}.guide-rule-grid span{color:var(--muted);font-size:10px;line-height:1.65}
+.token-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.token-grid>div{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;padding:8px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.token-grid i{width:18px;height:18px;border:1px solid var(--line2);background:var(--swatch)}.token-grid code{font:9px var(--mono)}.token-grid span{color:var(--muted);font-size:8px}
+.type-specimen{padding:16px;border:1px solid var(--line)}.type-specimen>*:last-child{margin-bottom:0}
+.guide-note{color:var(--muted)!important;font-size:10px!important}
+.guide-actions{max-width:100%;overflow-x:auto}
+.guide-contract{border-top:1px solid var(--line2)}
+.guide-contract p{display:grid;grid-template-columns:130px 1fr;margin:0!important;padding:9px 8px;border-bottom:1px solid var(--line);text-align:left!important}
+.guide-contract b{font-size:9px;text-transform:uppercase}.guide-contract span{color:var(--muted);font-size:10px;line-height:1.55}
+.style-guide-page .atlas-container .content-block .media-frame img{max-height:430px;object-fit:contain;background:#111}
+.style-guide-page .atlas-container .content-block .gallery-grid img{height:135px}
+.style-guide-page .comparison-matrix{margin-inline:0;max-width:100%}
+.guide-diagram-row{display:flex;align-items:center;gap:8px;padding:12px}.guide-diagram-row>.atlas-uml-diag__node{flex:1;min-width:0}.guide-diagram-row>.atlas-uml-diag__arrow-wrapper{flex:0 0 38px}
+.style-guide-page .atlas-shader-panel{margin-top:28px;margin-bottom:34px}.style-guide-page .atlas-sp-slider{pointer-events:none}
+.style-guide-page .atlas-section-break{margin-block:3rem}
+.style-guide-page .function-bar{grid-template-columns:repeat(8,minmax(72px,1fr))}
+.style-guide-page .rail-links{flex-direction:column;align-items:flex-start}
+.style-guide-page .meta-block a{text-decoration:none}.style-guide-page .meta-block a:hover{color:var(--red)}
+@media(max-width:1100px){.guide-workspace{grid-template-columns:168px minmax(500px,1fr)}}
+@media(max-width:760px){.guide-workspace{display:block}.guide-head{padding-inline:18px}.guide-document{padding-inline:18px}.guide-rule-grid,.token-grid{grid-template-columns:1fr}.guide-contract p{grid-template-columns:1fr;gap:5px}.style-guide-page .function-bar{grid-template-columns:repeat(4,minmax(68px,1fr))}}
