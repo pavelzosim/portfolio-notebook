@@ -29,8 +29,32 @@
 .highlight-card .card-actions a { color: var(--red); font-size: 8px; font-weight: 700; text-decoration: none; }
 .highlight-card .card-actions a:hover { text-decoration: underline; }
 .section-split { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 8px; color: var(--atlas-ink-faint); font-size: 9px; }
-.section-split a { color: var(--muted); text-decoration: none; }
-.section-split a:hover { color: var(--red); text-decoration: underline; }
+.section-split a,
+.section-foot a {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 29px;
+  padding: 7px 11px;
+  border: 1px solid var(--ink);
+  background: var(--paper2);
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transform: translate(-4px, -4px);
+  transition: transform .05s linear, background .12s ease;
+}
+.section-action { display: inline-block; position: relative; margin: 4px 4px 0 0; background: var(--dither); background-size: 4px 4px; }
+.section-split a:hover,
+.section-split a:focus-visible,
+.section-foot a:hover,
+.section-foot a:focus-visible { background: var(--atlas-crit); color: var(--paper); outline: 1px solid var(--ink); outline-offset: -3px; }
+.section-split a:active,
+.section-foot a:active { transform: translate(0, 0); }
 
 /* Compact working-log rows used for Recent notes. */
 .record-list { border: 1px solid var(--line); }
@@ -39,8 +63,8 @@
   grid-template-columns: 72px 86px minmax(0, 1fr) auto;
   gap: 10px;
   align-items: center;
-  min-height: 58px;
-  padding: 8px 12px;
+  min-height: 50px;
+  padding: 6px 10px;
   border-bottom: 1px solid var(--line);
   color: var(--atlas-ink-soft);
   text-decoration: none;
@@ -62,8 +86,17 @@
 .record-list.project-records > a { grid-template-columns: 72px minmax(0, 1fr) 60px auto; }
 .record-list .record-summary { color: var(--atlas-ink-muted); font-size: 10px; line-height: 1.45; }
 .record-list .record-state { color: var(--atlas-ink-muted); font-size: 9px; text-align: right; }
+.cv-action { display: inline-block; position: relative; margin: 4px 4px 0 0; background: var(--dither); background-size: 4px 4px; }
+.cv-action a { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid var(--ink); background: var(--atlas-crit); color: var(--paper); font-size: 9px; font-weight: 700; text-decoration: none; transform: translate(-4px, -4px); }
+.cv-action a:hover, .cv-action a:focus-visible { background: var(--atlas-crit-hi); color: #fff; outline: 1px solid var(--ink); outline-offset: -3px; }
+.cv-action a:active { transform: translate(0, 0); }
+main .about-layout dl,
+main .contact-layout dl { border-top: 0; }
+main .about-layout dl div { display: block; padding: 8px 0; }
+main .about-layout dt { margin: 0 0 4px; }
+main .about-layout dd { text-align: left; }
 @media (max-width: 760px) {
-  .record-list > a { grid-template-columns: 58px minmax(0, 1fr) auto; gap: 7px; padding: 8px; }
+  .record-list > a { grid-template-columns: 58px minmax(0, 1fr) auto; gap: 7px; padding: 6px 8px; }
   .record-list.project-records > a { grid-template-columns: 58px minmax(0, 1fr) auto; }
   .record-list .record-kind { display: none; }
   .record-list .record-state { display: none; }

@@ -26,12 +26,13 @@
 .contact-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.85fr);gap:36px}
 .contact-layout p{margin:0 0 14px;color:var(--muted);font-size:10px;line-height:1.7}
 .contact-layout .contact-lead{color:var(--ink);font-size:11px}
-.contact-layout dl{margin:0;border-top:1px solid var(--line2)}
+.contact-layout dl{margin:0;border-top:0}
 .contact-layout dl div{padding:7px 0;display:grid;grid-template-columns:72px 1fr;border-bottom:1px solid var(--line)}
 .contact-layout dt{color:var(--muted);font-size:8px}
 .contact-layout dd{margin:0;font-size:9px;text-align:right}
 .contact-layout a:hover{color:var(--red)}
 .about-layout a:hover,.about-layout a:focus-visible,.contact-layout a:focus-visible{color:var(--red);outline:0}
+.about-layout dl{border-top:0}
 .function-bar{grid-template-columns:repeat(8,minmax(72px,1fr))}
 @media(max-width:760px){
   .shellbar nav{overflow-x:auto;white-space:nowrap}
@@ -49,4 +50,3 @@
   .resource-grid img{grid-row:1/4;width:112px;height:84px}
   .contact-layout{grid-template-columns:1fr;gap:20px}
 }
-
