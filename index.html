@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles/atlas.css?v=32">
-  <script src="/scripts/vfx-flipbooks.js?v=32" defer></script>
+  <link rel="stylesheet" href="styles/atlas.css?v=41">
+  <script src="/scripts/vfx-flipbooks.js?v=33" defer></script>
+  <script src="/scripts/home-content.js?v=1" defer></script>
 </head>
 <body>
   <a class="skip" href="#content">Skip to content</a>
@@ -40,14 +41,6 @@
         <li><a href="#about"><span>08</span> About</a></li>
         <li><a href="#contacts"><span>09</span> Contacts</a></li>
       </ol>
-      <div class="tree">
-        <p>atlas/</p>
-        <p>├── projects/</p>
-        <p>├── houdini/</p>
-        <p>├── shaders/</p>
-        <p>├── pipeline/</p>
-        <p>└── notes/</p>
-      </div>
       <div class="rail-links">
         <a href="https://github.com/pavelzosim">[github]</a>
         <a href="https://www.linkedin.com/in/pavelzosim/">[linkedin]</a>
@@ -59,22 +52,20 @@
       <section class="doc-head" id="overview">
         <div class="breadcrumb">/home/pavel/technical-art/index.md</div>
         <div class="doc-flags"><span>STATUS: MAINTAINED</span><span>REV: 2026.08</span></div>
-        <h1>Pavel Zosim<br><span>Technical Artist</span></h1>
+        <h1><span class="title-name">Pavel Zosim</span><span class="title-role">Technical Artist / realtime systems</span></h1>
         <p class="scope-line">ENGINE-AGNOSTIC REAL-TIME SYSTEMS / HARDWARE-AWARE R&amp;D</p>
-        <p class="abstract">Technical Artist with over six years of professional real-time production experience and nearly two decades in computer graphics, working across Houdini, Unity, Unreal Engine, and proprietary engines.</p>
-        <p class="mission">I build scalable systems that bridge art and engineering. I’m especially interested in what happens below the engine abstraction layer: GPU execution, memory, rendering architecture, platform constraints, and the hardware that makes real-time images possible.</p>
-        <p class="site-purpose"><strong>ABOUT THIS SITE:</strong> A technical blog and working notebook for my R&amp;D projects — implementation records, experiments, breakdowns, failures, and reusable production knowledge.</p>
+        <p class="abstract">Technical Artist with 6+ years in real-time production and nearly two decades in computer graphics. I work across Houdini, Unity, Unreal, and proprietary engines — building scalable systems that bridge art and engineering: shaders, procedural workflows, VFX, asset pipelines, and tools that stay performant and practical day to day.</p>
         <dl class="profile-facts">
-          <div><dt>EXPERIENCE</dt><dd>6+ years real-time / ~20 years CG</dd></div>
-          <div><dt>ENGINE CONTEXT</dt><dd>Unity · Unreal · Proprietary engines</dd></div>
-          <div><dt>LOCATION</dt><dd>Chișinău, Moldova · UTC+3</dd></div>
-          <div><dt>COLLABORATION</dt><dd><span>●</span> Open to collaboration</dd></div>
+          <div><dt>Exp</dt><dd>6+ yr RT · ~20 yr CG</dd></div>
+          <div><dt>Stack</dt><dd>Houdini · Unity · Unreal</dd></div>
+          <div><dt>Loc</dt><dd>Chișinău · UTC+3</dd></div>
+          <div><dt>Status</dt><dd><span>●</span> Open to collaborate</dd></div>
         </dl>
         <figure class="media-record">
           <video controls preload="metadata" playsinline aria-label="Pavel Zosim technical art demo reel">
             <source src="/public/media/home/home/asset-80ec1ae328b8d595.mp4" type="video/mp4">
           </video>
-          <figcaption><span>MEDIA / DEMO_REEL_2024.MP4</span><strong>Selected real-time VFX, simulations, and production work.</strong><small>02:00 · play on demand</small></figcaption>
+          <figcaption><span>MEDIA / DEMO_REEL.MP4</span><strong>Selected real-time VFX, simulations, and production work.</strong><small>play on demand</small></figcaption>
         </figure>
         <form class="command" id="searchForm" role="search">
           <label for="siteSearch"><span>$</span> grep -Ri</label>
@@ -85,41 +76,28 @@
 
       <section class="doc-section" id="notes">
         <header class="section-label"><span>§ 02</span><h2>Recent notes</h2><em>UPDATED 2026-08-04</em></header>
-        <div class="log-table" role="list">
-          <a role="listitem" href="/content/posts/atlas-html/from-file-to-pixel-part-01.html">
-            <img src="/public/media/home/home/asset-7c59da9a33eb4d36.jpg" alt="From File to Pixel — GPU systems article" width="160" height="100" loading="lazy">
-            <time>2026.07</time><span class="kind">ARTICLE</span><strong>From File to Pixel · Part 01: The Machine</strong><span class="tags">rendering / gpu</span><i>↗</i>
-          </a>
-          <a role="listitem" href="/content/posts/atlas-html/procedural-sun-ue5-hlsl-compute-shader.html">
-            <img src="/public/media/home/home/asset-bec58259fb369286.jpg" alt="Procedural Sun Surface in Unreal Engine" width="160" height="100" loading="lazy">
-            <time>2026.06</time><span class="kind">R&amp;D LOG</span><strong>Procedural Sun Surface</strong><span class="tags">ue5 / hlsl / niagara</span><i>↗</i>
-          </a>
-          <a role="listitem" href="/content/posts/atlas-html/houdini-procedural-explosion-vfx.html">
-            <img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Houdini procedural explosion VFX" width="160" height="100" loading="lazy">
-            <time>2026.05</time><span class="kind">BREAKDOWN</span><strong>Procedural Explosion VFX</strong><span class="tags">houdini / pyro / vat</span><i>↗</i>
-          </a>
-          <a role="listitem" href="https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd">
-            <img src="/public/media/home/home/asset-b9bb1240178d9cc3.jpg" alt="Procedural interiors with Houdini and USD" width="160" height="100" loading="lazy">
-            <time>2026.04</time><span class="kind">CASE STUDY</span><strong>Procedural Interiors with Houdini &amp; USD</strong><span class="tags">usd / pipeline</span><i>↗</i>
-          </a>
-          <a role="listitem" href="/content/posts/atlas-html/sprite-sheet-assembly-tool.html">
-            <img src="/public/media/home/home/asset-ef33d8a1c9b8b70b.png" alt="Sprite Sheet Assembly Tool interface" width="160" height="100" loading="lazy">
-            <time>2026.03</time><span class="kind">TOOL LOG</span><strong>Sprite Sheet Assembly Tool</strong><span class="tags">python / tooling</span><i>↗</i>
-          </a>
-        </div>
-        <p class="section-foot"><span>05 entries</span><a href="/blog/">open full log →</a></p>
+        <div class="highlight-strip" data-home-highlights aria-label="Featured recent posts"></div>
+        <div class="section-split"><span>Latest · implementation records</span><a href="/blog/">open blog index →</a></div>
+        <div class="record-list" data-home-recent role="list" aria-live="polite"></div>
+        <p class="section-foot"><span>implementation records · experiments</span><a href="/blog/">open blog index →</a></p>
       </section>
 
       <section class="doc-section" id="projects">
-        <header class="section-label"><span>§ 03</span><h2>Projects</h2><em>SELECTED PRODUCTION</em></header>
-        <p class="prose">A project index, not a client wall. Each entry records the production context, my technical scope, and the system-level work that survived beyond a single shot.</p>
-        <div class="project-index">
-          <a href="/projects/nasa-first-woman/"><img src="/public/media/home/home/asset-4eb0f0d1011fdc0d.png" alt="NASA First Woman XR project" width="160" height="100" loading="lazy"><span class="project-id">PRJ-001</span><strong>NASA First Woman</strong><span>XR / technical art</span><small>Production systems and real-time content for lunar exploration education.</small><i>OPEN ↗</i></a>
-          <a href="/projects/meta-blumhouse-xr-experience/"><img src="/public/media/home/home/asset-15dfbd06ef03a5d1.jpg" alt="Meta and Blumhouse XR project" width="160" height="100" loading="lazy"><span class="project-id">PRJ-002</span><strong>Meta × Blumhouse</strong><span>XR / real-time VFX</span><small>Atmospheric effects and engine-facing workflows for an immersive experience.</small><i>OPEN ↗</i></a>
-          <a href="/projects/airport-interaction-screen/"><img src="/public/media/home/home/asset-9bd2f763a7729063.png" alt="FAA airport interaction screen" width="160" height="100" loading="lazy"><span class="project-id">PRJ-003</span><strong>FAA Interaction Screen</strong><span>interactive / real-time</span><small>Responsive visual systems for a large-format public installation.</small><i>OPEN ↗</i></a>
-          <a href="/projects/deloitte-virtual-factory/"><img src="/public/media/home/home/asset-31cf3e41410f3a3c.png" alt="Deloitte Virtual Factory project" width="160" height="100" loading="lazy"><span class="project-id">PRJ-004</span><strong>Deloitte Virtual Factory</strong><span>digital twin / pipeline</span><small>Environment and production workflows for an industrial platform.</small><i>OPEN ↗</i></a>
+        <header class="section-label"><span>§ 03</span><h2>Selected projects</h2><em>HIGHLIGHTS</em></header>
+        <div class="highlight-strip" aria-label="Selected project highlights">
+          <a class="highlight-card" href="/projects/nasa-first-woman/"><img src="/public/media/home/home/asset-4eb0f0d1011fdc0d.png" alt="NASA First Woman XR project" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">XR · AWARDS</span><strong>NASA — First Woman</strong><small>Multi-platform real-time</small></span></a>
+          <a class="highlight-card" href="/projects/meta-blumhouse-xr-experience/"><img src="/public/media/home/home/asset-15dfbd06ef03a5d1.jpg" alt="Meta and Blumhouse XR project" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">XR · EMMY-NOM.</span><strong>Blumhouse Enhanced Cinema</strong><small>Nexus Studios · Meta</small></span></a>
+          <a class="highlight-card" href="/projects/deloitte-virtual-factory/"><img src="/public/media/home/home/asset-31cf3e41410f3a3c.png" alt="Deloitte Virtual Factory project" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">DIGITAL TWIN</span><strong>Virtual Factory</strong><small>Realtime visualization</small></span></a>
+          <a class="highlight-card" href="/projects/quantum-fiber-speed-zone/"><img src="/public/media/projects/quantum-fiber-speed-zone/asset-5525b19ee3974f58.png" alt="Quantum Fiber Speed Zone project" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">REALTIME</span><strong>Fiber Speed Zone</strong><small>Interactive environment</small></span></a>
         </div>
-        <p class="section-foot"><span>04 selected entries</span><a href="/projects/">open project index →</a></p>
+        <div class="section-split"><span>Latest · in progress</span><a href="/projects/">full project index →</a></div>
+        <div class="record-list project-records" role="list">
+          <a role="listitem" href="/projects/airport-interaction-screen/"><span class="record-date">2026.08</span><span class="record-main"><strong>Airport Interaction Screen</strong><span class="record-summary">Realtime UI systems and interaction design for public installation.</span></span><span class="record-state">WIP</span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd"><span class="record-date">2026.06</span><span class="record-main"><strong>Procedural interior pipeline (USD)</strong><span class="record-summary">Cross-DCC collaboration, scene structure, parallel artist workflows.</span></span><span class="record-state">R&amp;D</span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="/projects/airport-interaction-screen/"><span class="record-date">2026.04</span><span class="record-main"><strong>FAA training environment tooling</strong><span class="record-summary">Content validation and export automation for simulation assets.</span></span><span class="record-state">TOOLING</span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="/content/posts/atlas-html/houdini-procedural-explosion-vfx.html"><span class="record-date">2026.02</span><span class="record-main"><strong>Vertex animation texture pipeline</strong><span class="record-summary">Houdini → UE/Unity VAT export path for production VFX.</span></span><span class="record-state">PIPELINE</span><span class="record-arrow">→</span></a>
+        </div>
+        <p class="section-foot"><span>clients include NASA, Meta, FAA, Deloitte</span><a href="/projects/">browse all projects →</a></p>
       </section>
 
       <section class="doc-section vfx-section" id="vfx" data-vfx-section>
@@ -148,26 +126,41 @@
           <figure class="vfx-loop" hidden><video muted loop playsinline preload="none" tabindex="0" poster="/public/media/home/vfx-flipbooks/20-liquids.jpg" data-src="/public/media/home/vfx-flipbooks/20-liquids.mp4" aria-label="Liquids VFX practice loop"></video><figcaption><span>LOOP-020</span><strong>Liquids</strong><small>fluid study · 00:04</small></figcaption></figure>
           <figure class="vfx-loop" hidden><video muted loop playsinline preload="none" tabindex="0" poster="/public/media/home/vfx-flipbooks/21-tire-smoke.jpg" data-src="/public/media/home/vfx-flipbooks/21-tire-smoke.mp4" aria-label="Tire smoke VFX practice loop"></video><figcaption><span>LOOP-021</span><strong>Tire Smoke</strong><small>vehicle VFX study · 00:06</small></figcaption></figure>
         </div>
-        <div class="vfx-controls"><output class="vfx-count" data-vfx-count>08 / 21 loops visible</output><button class="vc-button vfx-more" type="button" data-vfx-more><kbd>+</kbd><span>Load more</span></button></div>
+        <div class="vfx-controls"><output class="vfx-count" data-vfx-count>08 / 21 loops visible</output><span class="vfx-action"><button class="vfx-more" type="button" data-vfx-more><kbd>→</kbd><span>View all flipbooks</span></button></span></div>
       </section>
 
       <section class="doc-section" id="tools">
         <header class="section-label"><span>§ 05</span><h2>Tools and assets</h2><em>QUICK ACCESS</em></header>
         <p class="section-intro">Reusable utilities, production helpers, and game-ready assets. Each entry includes implementation notes rather than only a download link.</p>
-        <div class="resource-grid">
-          <a href="/content/posts/atlas-html/sprite-sheet-assembly-tool.html"><img src="/public/media/home/home/asset-ef33d8a1c9b8b70b.png" alt="Sprite Sheet Assembly Tool interface" loading="lazy"><span>TOOL / PYTHON</span><strong>Sprite Sheet Assembly Tool</strong><small>Arrange sequences, preview animation, optimize grids, and export game-ready PNG sheets.</small></a>
-          <a href="https://www.pavelzosim.com/post/folder-structure-cli-tool"><img src="/public/media/home/home/asset-e04d98152185263d.jpg" alt="FolderTree Parser command line tool" loading="lazy"><span>TOOL / CLI</span><strong>FolderTree.Parser</strong><small>Document and semantically inspect real production directory structures.</small></a>
-          <a href="https://www.pavelzosim.com/post/low-poly-dumpster-3d-model"><img src="/public/media/home/home/asset-e2084d63922cf3bf.png" alt="Low-poly dumpster 3D asset" loading="lazy"><span>ASSET / 3D</span><strong>Low-Poly Dumpster</strong><small>UV-mapped, real-time-ready model with FBX export for production pipelines.</small></a>
+        <div class="highlight-strip" aria-label="Selected tools and assets">
+          <article class="highlight-card"><a class="card-cover" href="/content/posts/atlas-html/sprite-sheet-assembly-tool.html"><img src="/public/media/home/home/asset-ef33d8a1c9b8b70b.png" alt="Sprite Sheet Assembly Tool interface" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">TOOL · PYTHON</span><strong>Sprite Sheet Assembly Tool</strong><small>Game-ready PNG export</small></span></a><span class="card-actions"><a href="/content/posts/atlas-html/sprite-sheet-assembly-tool.html">Download →</a></span></article>
+          <article class="highlight-card"><a class="card-cover" href="https://www.pavelzosim.com/post/folder-structure-cli-tool"><img src="/public/media/home/home/asset-e04d98152185263d.jpg" alt="FolderTree Parser command line tool" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">TOOL · CLI</span><strong>FolderTree.Parser</strong><small>Semantic Markdown export</small></span></a><span class="card-actions"><a href="https://www.pavelzosim.com/post/folder-structure-cli-tool">Download →</a></span></article>
+          <article class="highlight-card"><a class="card-cover" href="https://www.pavelzosim.com/post/low-poly-dumpster-3d-model"><img src="/public/media/home/home/asset-e2084d63922cf3bf.png" alt="Low-poly dumpster 3D asset" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">ASSET · 3D</span><strong>Low-Poly Dumpster</strong><small>Realtime-ready FBX</small></span></a><span class="card-actions"><a href="https://www.pavelzosim.com/post/low-poly-dumpster-3d-model">Download →</a></span></article>
+          <article class="highlight-card"><a class="card-cover" href="/content/posts/atlas-html/houdini-procedural-explosion-vfx.html"><img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Procedural Explosion VFX breakdown" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">HDA · VFX</span><strong>Procedural Explosion</strong><small>Pyro → VAT → Unity</small></span></a><span class="card-actions"><a href="/content/posts/atlas-html/houdini-procedural-explosion-vfx.html">Download →</a></span></article>
         </div>
-        <p class="section-foot"><span>tools / scripts / 3D assets</span><a href="/tools/">browse tools and assets →</a></p>
+        <div class="section-split"><span>Latest · in progress</span><a href="/tools/">all tools &amp; assets →</a></div>
+        <div class="record-list" role="list">
+          <a role="listitem" href="/content/posts/atlas-html/sprite-sheet-assembly-tool.html"><span class="record-date">TOOL</span><span class="record-kind">PYTHON</span><span class="record-main"><strong>Sprite Sheet Assembly Tool</strong><span class="record-tags">animation grids · game-ready PNG export</span></span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="https://www.pavelzosim.com/post/folder-structure-cli-tool"><span class="record-date">TOOL</span><span class="record-kind">CLI</span><span class="record-main"><strong>FolderTree.Parser</strong><span class="record-tags">semantic directory inspection · Markdown export</span></span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="https://www.pavelzosim.com/post/low-poly-dumpster-3d-model"><span class="record-date">ASSET</span><span class="record-kind">3D</span><span class="record-main"><strong>Low-Poly Dumpster</strong><span class="record-tags">realtime-ready FBX · production asset</span></span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="/content/posts/atlas-html/houdini-procedural-explosion-vfx.html"><span class="record-date">R&amp;D</span><span class="record-kind">VFX</span><span class="record-main"><strong>Procedural Explosion</strong><span class="record-tags">pyro · VAT · real-time lighting</span></span><span class="record-arrow">→</span></a>
+        </div>
+        <p class="section-foot"><span>tools · scripts · 3D assets</span><a href="/tools/">browse tools and assets →</a></p>
       </section>
 
       <section class="doc-section" id="blog">
         <header class="section-label"><span>§ 06</span><h2>Blog — Breakdowns and lessons</h2><em>READING INDEX</em></header>
-        <div class="resource-grid blog-grid">
-          <a href="/content/posts/atlas-html/from-file-to-pixel-part-01.html"><img src="/public/media/home/home/asset-7c59da9a33eb4d36.jpg" alt="From File to Pixel article cover" loading="lazy"><span>FOUNDATIONS</span><strong>From File to Pixel</strong><small>Hardware, GPU execution, and the systems behind a rendered frame.</small></a>
-          <a href="/content/posts/atlas-html/houdini-procedural-explosion-vfx.html"><img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Procedural explosion VFX breakdown" loading="lazy"><span>BREAKDOWN</span><strong>Procedural Explosion VFX</strong><small>Layer architecture, Pyro simulation, VAT export, and real-time lighting.</small></a>
-          <a href="https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd"><img src="/public/media/home/home/asset-b9bb1240178d9cc3.jpg" alt="Procedural interiors pipeline breakdown" loading="lazy"><span>PIPELINE</span><strong>Procedural Interiors with Houdini &amp; USD</strong><small>Parallel workflows, scene structure, reuse, and cross-DCC collaboration.</small></a>
+        <div class="highlight-strip" aria-label="Selected blog posts">
+          <a class="highlight-card" href="/content/posts/atlas-html/from-file-to-pixel-part-01.html"><img src="/public/media/home/home/asset-7c59da9a33eb4d36.jpg" alt="From File to Pixel article cover" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">FOUNDATIONS</span><strong>From File to Pixel</strong><small>GPU · memory · frame path</small></span></a>
+          <a class="highlight-card" href="/content/posts/atlas-html/houdini-procedural-explosion-vfx.html"><img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Procedural explosion VFX breakdown" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">BREAKDOWN</span><strong>Procedural Explosion VFX</strong><small>Pyro · VAT · lighting</small></span></a>
+          <a class="highlight-card" href="https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd"><img src="/public/media/home/home/asset-b9bb1240178d9cc3.jpg" alt="Procedural interiors pipeline breakdown" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">PIPELINE</span><strong>Procedural Interiors</strong><small>Houdini · USD · DCC</small></span></a>
+          <a class="highlight-card" href="/content/posts/atlas-html/procedural-sun-ue5-hlsl-compute-shader.html"><img src="/public/media/home/home/asset-bec58259fb369286.jpg" alt="Procedural Sun Surface article cover" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">R&amp;D</span><strong>Procedural Sun Surface</strong><small>UE5 · HLSL · Niagara</small></span></a>
+        </div>
+        <div class="section-split"><span>Latest · recent notes</span><a href="/blog/">complete blog →</a></div>
+        <div class="record-list" role="list">
+          <a role="listitem" href="/content/posts/atlas-html/procedural-sun-ue5-hlsl-compute-shader.html"><span class="record-date">2026.08</span><span class="record-kind">R&amp;D</span><span class="record-main"><strong>UE5 HLSL compute — sun surface R&amp;D</strong><span class="record-tags">Niagara · compute shader · procedural surface</span></span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="https://www.pavelzosim.com/post/folder-structure-cli-tool"><span class="record-date">2026.05</span><span class="record-kind">TOOL</span><span class="record-main"><strong>FolderTree.Parser notes</strong><span class="record-tags">semantic path analysis · Markdown export</span></span><span class="record-arrow">→</span></a>
+          <a role="listitem" href="/content/posts/atlas-html/sprite-sheet-assembly-tool.html"><span class="record-date">2026.03</span><span class="record-kind">TOOL</span><span class="record-main"><strong>Sprite Sheet Assembly Tool</strong><span class="record-tags">practical production tooling reference</span></span><span class="record-arrow">→</span></a>
         </div>
         <p class="section-foot"><span>breakdowns / lessons / R&amp;D</span><a href="/blog/">open complete blog →</a></p>
       </section>
@@ -235,7 +228,7 @@
     (() => {
       const search = document.querySelector('#siteSearch');
       const result = document.querySelector('#searchResult');
-      const records = [...document.querySelectorAll('.log-table > a, .project-index > a, .resource-grid > a')];
+      let records = [...document.querySelectorAll('.record-list > a, .project-index > a, .highlight-card')];
       const help = document.querySelector('#helpDialog');
       const targets = { F3: '#projects', F4: '#notes', F5: '#tools', F6: '#blog', F7: '#about', F8: '#contacts', F10: '#top' };
       const navLinks = [...document.querySelectorAll('.shellbar nav a')];
@@ -245,6 +238,7 @@
         records.forEach(record => { const match = !query || record.textContent.toLowerCase().includes(query); record.hidden = !match; if (match) visible += 1; });
         result.value = `${visible.toString().padStart(2, '0')} records`;
       }
+      function refreshRecords() { records = [...document.querySelectorAll('.record-list > a, .project-index > a, .highlight-card')]; filterRecords(); }
       function go(hash) { const target = document.querySelector(hash); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
       function updateActiveNav() {
         let active = 'projects';
@@ -253,6 +247,7 @@
       }
       search.addEventListener('input', filterRecords);
       document.querySelector('#searchForm').addEventListener('submit', event => event.preventDefault());
+      document.addEventListener('homepage:records-ready', refreshRecords);
       document.querySelector('[data-command="help"]').addEventListener('click', () => help.showModal());
       document.querySelectorAll('[data-close-help]').forEach(button => button.addEventListener('click', () => help.close()));
       filterRecords();

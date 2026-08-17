@@ -16,3 +16,16 @@ This directory is the canonical source for portfolio and blog content. Presentat
 Every post uses YAML front matter with at least `title`, `slug`, `published`, `source`, `status`, `categories`, `tags`, and `mediaStatus`.
 
 During migration, `source` preserves the original Wix URL. Existing files from `atlas-framework` take precedence over scraping Wix again. A post is only marked `ready` after its text, embeds, images, alt text, downloadable files, and internal links have been checked.
+
+## Homepage visibility
+
+`posts/index.json` is the registry for migrated HTML posts. To feature a post on the homepage, add a `homepage` object to its record:
+
+```json
+"homepage": { "highlight": true, "recent": true, "rank": 10, "date": "2026.08" }
+```
+
+- `highlight` places the post in the four-card Highlights strip.
+- `recent` places the post in the compact Recent notes list.
+- `rank` controls the order; lower values appear first.
+- `date` is the short document-style date visible in Recent notes.

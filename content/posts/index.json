@@ -14,7 +14,8 @@
       "image": "/public/media/home/home/asset-7c59da9a33eb4d36.jpg",
       "localPath": "/content/posts/atlas-html/from-file-to-pixel-part-01.html",
       "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-01",
-      "state": "LOCAL"
+      "state": "LOCAL",
+      "homepage": { "highlight": true, "recent": true, "rank": 40, "date": "2026.06" }
     },
     {
       "id": "NOTE-002",
@@ -95,7 +96,8 @@
       "image": "/public/media/home/home/asset-bec58259fb369286.jpg",
       "localPath": "/content/posts/atlas-html/procedural-sun-ue5-hlsl-compute-shader.html",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders",
-      "state": "LOCAL"
+      "state": "LOCAL",
+      "homepage": { "highlight": true, "recent": true, "rank": 30, "date": "2026.07" }
     },
     {
       "id": "RND-002",
@@ -112,7 +114,8 @@
       "image": "/public/media/home/home/asset-d9f1ca6b786259a5.gif",
       "localPath": "/content/posts/atlas-html/houdini-procedural-explosion-vfx.html",
       "sourceUrl": "https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx",
-      "state": "LOCAL"
+      "state": "LOCAL",
+      "homepage": { "highlight": true, "recent": true, "rank": 20, "date": "2026.08" }
     },
     {
       "id": "CASE-001",
@@ -128,7 +131,8 @@
       "image": "/public/media/home/home/asset-b9bb1240178d9cc3.jpg",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd",
       "state": "LOCAL",
-      "localPath": "/content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html"
+      "localPath": "/content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
+      "homepage": { "highlight": true, "recent": true, "rank": 10, "date": "2026.08" }
     },
     {
       "id": "REF-001",

@@ -6,8 +6,8 @@
   const button = section.querySelector('[data-vfx-more]');
   const count = section.querySelector('[data-vfx-count]');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const batchSize = 8;
-  let visibleCount = batchSize;
+  const initialCount = 8;
+  let visibleCount = initialCount;
 
   const activate = video => {
     if (!video.src) video.src = video.dataset.src;
@@ -47,7 +47,7 @@
   };
 
   button.addEventListener('click', () => {
-    visibleCount += batchSize;
+    visibleCount = items.length;
     render();
   });
 

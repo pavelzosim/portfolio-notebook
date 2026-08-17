@@ -1,0 +1,141 @@
+/* Shared visual system adapted from the notebook prototype.
+   Kept flat: no gradients, decorative actors, or placeholder media. */
+:root {
+  --atlas-bg: #e6dcd2;
+  --atlas-bg-raised: #eee7df;
+  --atlas-bg-sunken: #ddd4c8;
+  --atlas-bg-panel: rgba(238, 231, 223, .55);
+  --atlas-ink: #0a0a0a;
+  --atlas-ink-muted: rgba(10, 10, 10, .55);
+  --atlas-ink-faint: rgba(10, 10, 10, .38);
+  --atlas-ink-ghost: rgba(10, 10, 10, .20);
+  --atlas-ink-soft: #1c1c1c;
+  --atlas-crit: #0000aa;
+  --atlas-crit-hi: #0000dd;
+  --atlas-crit-soft: rgba(0, 0, 170, .08);
+  --atlas-crit-border: #000066;
+  --atlas-warn: #8a5b14;
+  --atlas-ok: #1a4d1a;
+  --atlas-border: rgba(10, 10, 10, .12);
+  --atlas-border-strong: rgba(10, 10, 10, .28);
+  --atlas-space-xs: 4px;
+  --atlas-space-sm: 8px;
+  --atlas-space-md: 22px;
+  --atlas-space-xl: 56px;
+  --fs-h1: 26px;
+  --fs-h2: 22px;
+  --fs-h3: 17px;
+  --fs-h4: 14px;
+  --fs-h5: 12px;
+  --fs-h6: 11px;
+  --fs-body: 12px;
+  --fs-code: 11px;
+  --fs-table-th: 12px;
+  --fs-meta: 9px;
+  --fs-status: 8px;
+}
+
+:focus-visible { outline: 2px solid var(--atlas-crit); outline-offset: 2px; }
+
+/* Structural rhythm shared by the notebook, indexes, and project records. */
+body { font: 12px/1.5 var(--atlas-font-mono); }
+body { background-size: 14px 14px; }
+.shellbar {
+  height: 40px;
+  padding-inline: 18px;
+  border-bottom-color: var(--atlas-border-strong);
+  background: rgba(230, 220, 210, .97);
+  font-size: 10px;
+}
+/* Header uses sparse command labels, not a row of large button controls. */
+.shell-id b { color: var(--atlas-ink); }
+.shellbar nav {
+  position: static;
+  isolation: auto;
+  height: auto;
+  padding: 0;
+  gap: 0;
+  border: 0;
+  background: transparent;
+}
+.shellbar nav::after { display: none; }
+.shellbar nav a,
+.shellbar nav a.active {
+  height: auto;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--atlas-ink-soft);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.4;
+  outline: 0;
+}
+.shellbar nav a:hover,
+.shellbar nav a:focus-visible,
+.shellbar nav a.active {
+  border: 0;
+  background: var(--atlas-crit-soft);
+  color: var(--atlas-crit);
+  outline: 0;
+}
+.shellbar .nav-divider { color: var(--atlas-ink-ghost); font-size: 9px; }
+.workspace {
+  width: min(1360px, calc(100vw - 36px));
+  grid-template-columns: 188px minmax(0, 1fr) 176px;
+  gap: 28px;
+  padding-top: 18px;
+  padding-bottom: 48px;
+}
+.rail, .meta-rail {
+  top: 52px;
+  max-height: calc(100vh - 72px);
+  margin-top: 2px;
+  font-size: 10px;
+}
+.rail-title, .meta-block > p { margin-bottom: 8px; }
+.rail li a { padding-block: 4px; }
+.rail-links { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--atlas-border); }
+.rail-links a { text-decoration: none; }
+.tree { margin-block: 18px; padding: 8px 10px; line-height: 1.65; }
+main { background: var(--atlas-bg-raised); box-shadow: none; }
+.doc-head { padding: 22px 22px 18px; }
+.doc-section { padding: 18px 22px 22px; }
+.section-label { min-height: 26px; margin-bottom: 10px; }
+.section-label h2 { font-size: 14px; }
+.section-label em { font-size: 8px; }
+.section-label > span { color: var(--atlas-ink-faint); }
+.command { padding: 7px 10px; }
+
+/* Grok's tighter data-record language, applied to existing real-content cards. */
+.log-table > a { min-height: 60px; padding-block: 8px; }
+.project-index > a { min-height: 70px; padding-block: 8px; }
+.definition-grid article { min-height: 140px; padding: 10px 14px 14px; }
+.definition-grid h3 { margin-bottom: 6px; }
+.definition-grid p { min-height: 0; margin-bottom: 8px; }
+.meta-block { margin-bottom: 18px; }
+
+/* Commander stays functional, but adopts the muted notebook palette. */
+:root { --vc: #0a0a0a; --vc-hi: #161616; --vc-yellow: #ffff55; }
+.function-bar { background: #0a0a0a; border-top-color: #000; }
+.function-bar .vc-button {
+  border-color: rgba(255, 255, 255, .22);
+  background: #1c1c1c;
+  color: #f1ebe4;
+}
+.function-bar .vc-button:hover, .function-bar .vc-button:focus-visible {
+  background: var(--atlas-crit);
+  border-color: var(--atlas-crit-border);
+}
+
+@media (max-width: 1100px) {
+  .workspace { grid-template-columns: 168px minmax(500px, 1fr); gap: 18px; }
+}
+
+@media (max-width: 760px) {
+  .shellbar { min-height: 40px; padding: 8px 12px; }
+  .workspace { width: calc(100vw - 20px); padding-top: 10px; }
+  .doc-head, .doc-section { padding: 18px 14px 24px; }
+  .section-label { margin-bottom: 14px; }
+  .shellbar nav a, .shellbar nav a.active { padding: 5px 8px; }
+}

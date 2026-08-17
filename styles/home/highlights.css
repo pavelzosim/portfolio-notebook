@@ -1,0 +1,74 @@
+/* Image-led scanning blocks. The notebook prototype used labelled placeholders;
+   this implementation keeps that rhythm but always presents the real work. */
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 14px;
+}
+.highlight-strip.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.highlight-card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--atlas-bg-sunken);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color .12s ease, background .12s ease;
+}
+.highlight-card:hover,
+.highlight-card:focus-visible { border-color: var(--red); background: var(--atlas-crit-soft); outline: 0; }
+.highlight-card:focus-visible { box-shadow: 0 0 0 1px var(--red); }
+.highlight-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-bottom: 1px solid var(--line); }
+.highlight-card .highlight-meta { display: grid; gap: 3px; padding: 7px 8px 8px; }
+.highlight-card .highlight-kind { color: var(--atlas-ink-faint); font-size: 8px; }
+.highlight-card strong { font-size: 10px; line-height: 1.35; }
+.highlight-card small { color: var(--muted); font-size: 8px; line-height: 1.45; }
+.highlight-card > .card-cover { display: block; color: inherit; text-decoration: none; }
+.highlight-card > .card-cover img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-bottom: 1px solid var(--line); }
+.highlight-card .card-actions { display: flex; gap: 8px; padding: 0 8px 8px; }
+.highlight-card .card-actions a { color: var(--red); font-size: 8px; font-weight: 700; text-decoration: none; }
+.highlight-card .card-actions a:hover { text-decoration: underline; }
+.section-split { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 8px; color: var(--atlas-ink-faint); font-size: 9px; }
+.section-split a { color: var(--muted); text-decoration: none; }
+.section-split a:hover { color: var(--red); text-decoration: underline; }
+
+/* Compact working-log rows used for Recent notes. */
+.record-list { border: 1px solid var(--line); }
+.record-list > a {
+  display: grid;
+  grid-template-columns: 72px 86px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 58px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--atlas-ink-soft);
+  text-decoration: none;
+}
+.record-list > a:last-child { border-bottom: 0; }
+.record-list > a:hover,
+.record-list > a:focus-visible { background: var(--atlas-crit-soft); color: var(--ink); outline: 0; }
+.record-list > a:hover .record-arrow,
+.record-list > a:focus-visible .record-arrow { color: var(--red); opacity: 1; }
+.record-list .record-date,
+.record-list .record-kind,
+.record-list .record-tags { font-size: 9px; }
+.record-list .record-date { color: var(--atlas-ink-faint); }
+.record-list .record-kind { color: var(--atlas-ink-muted); }
+.record-list .record-main { display: grid; gap: 2px; min-width: 0; }
+.record-list .record-main strong { font-size: 12px; font-weight: 600; }
+.record-list .record-tags { color: var(--atlas-ink-faint); }
+.record-list .record-arrow { color: var(--atlas-ink-ghost); font-size: 12px; }
+.record-list.project-records > a { grid-template-columns: 72px minmax(0, 1fr) 60px auto; }
+.record-list .record-summary { color: var(--atlas-ink-muted); font-size: 10px; line-height: 1.45; }
+.record-list .record-state { color: var(--atlas-ink-muted); font-size: 9px; text-align: right; }
+@media (max-width: 760px) {
+  .record-list > a { grid-template-columns: 58px minmax(0, 1fr) auto; gap: 7px; padding: 8px; }
+  .record-list.project-records > a { grid-template-columns: 58px minmax(0, 1fr) auto; }
+  .record-list .record-kind { display: none; }
+  .record-list .record-state { display: none; }
+}
+@media (max-width: 760px) {
+  .highlight-strip { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .highlight-strip.cols-3 { grid-template-columns: 1fr; }
+}
