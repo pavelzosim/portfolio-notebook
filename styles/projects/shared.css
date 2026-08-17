@@ -7,6 +7,6 @@
 .project-site .record-state{color:var(--green)}
 .project-site .project-back{color:var(--red);text-decoration:none}
 .project-site .project-back:hover{text-decoration:underline}
-.project-site .function-bar{grid-template-columns:repeat(4,minmax(100px,1fr))}
+.project-site .function-bar{grid-template-columns:repeat(8,minmax(72px,1fr))}
 @media(max-width:1100px){.project-site .workspace{grid-template-columns:180px minmax(500px,1fr)}}
 @media(max-width:760px){.project-site .workspace{display:block}.project-site .rail{position:static}.project-site .function-bar{grid-template-columns:repeat(4,1fr)}.project-site .function-bar span{display:none}}

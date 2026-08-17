@@ -48,7 +48,7 @@
       };
 
       document.title = `${config.title} / Pavel Zosim`;
-      document.querySelector(`[data-nav="${view}"]`)?.classList.add('active');
+      document.querySelectorAll(`[data-nav="${view}"], [data-rail="${view}"]`).forEach((link) => link.classList.add('active'));
       text('[data-index-file]', config.file);
       text('[data-index-title]', config.title);
       text('[data-list-title]', config.listTitle);

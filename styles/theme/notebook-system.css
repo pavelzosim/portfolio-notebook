@@ -95,6 +95,8 @@ body { background-size: 14px 14px; }
 }
 .rail-title, .meta-block > p { margin-bottom: 8px; }
 .rail li a { padding-block: 4px; }
+.rail li a.active { color: var(--atlas-crit); background: var(--atlas-crit-soft); box-shadow: inset 2px 0 0 var(--atlas-crit); }
+.rail li a.active span { color: var(--atlas-crit); font-weight: 700; }
 .rail-links { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--atlas-border); }
 .rail-links a { text-decoration: none; }
 .tree { margin-block: 18px; padding: 8px 10px; line-height: 1.65; }
