@@ -1,0 +1,89 @@
+/* Shared shell for long-form records: project case studies and Atlas notes.
+   Content components stay specialised; the page chrome and reading rhythm do not. */
+:root {
+  --record-paper: #eee7df;
+  --record-border: rgba(10, 10, 10, .28);
+  --record-line: rgba(10, 10, 10, .12);
+  --record-muted: rgba(10, 10, 10, .55);
+  --record-blue: #0000aa;
+}
+
+/* Legacy posts use their own header class, but it deliberately mirrors .shellbar. */
+.article-shellbar {
+  min-height: 40px;
+  padding: 0 18px;
+  border-bottom-color: var(--record-border);
+  background: rgba(230, 220, 210, .97);
+  color: #0a0a0a;
+  font-size: 10px;
+  backdrop-filter: none;
+}
+.article-shellbar__id b { color: #0a0a0a; }
+.article-shellbar__id span,
+.article-shellbar__status { color: var(--record-muted) !important; }
+.article-shellbar nav a {
+  padding: 0 10px;
+  border: 0;
+  color: #1c1c1c;
+  font-size: 9px;
+  font-weight: 500;
+}
+.article-shellbar nav a:hover,
+.article-shellbar nav a:focus-visible,
+.article-shellbar nav a[aria-current="page"] {
+  border: 0;
+  background: rgba(0, 0, 170, .08);
+  color: var(--record-blue);
+}
+.article-shellbar__divider { color: rgba(10, 10, 10, .20); }
+
+/* The former iframe canvas becomes the same quiet paper document used by records. */
+html:has(body:not(.migrated-post)) {
+  background-color: #e6dcd2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Ccircle cx='1' cy='1' r='.7' fill='%23000' fill-opacity='.10'/%3E%3C/svg%3E");
+  background-size: 14px 14px;
+}
+body:not(.migrated-post) { padding: 32px 0 64px; }
+body:not(.migrated-post) > .atlas-container {
+  width: min(920px, calc(100% - 48px));
+  border-color: var(--record-border);
+  background: var(--record-paper);
+  box-shadow: none;
+}
+body:not(.migrated-post) > .atlas-container::before {
+  height: 30px;
+  padding: 0 18px;
+  border-bottom-color: var(--record-border);
+  background: rgba(10, 10, 10, .025);
+  color: var(--record-muted);
+  font-size: 8px;
+  line-height: 30px;
+}
+body:not(.migrated-post) > .atlas-container > .content-block { padding-inline: 26px; }
+body:not(.migrated-post) > .atlas-container .passport-title-bar { border-bottom-color: var(--record-border) !important; }
+
+/* Project records use the same restrained document scale as the technical notes. */
+.project-site main { background: var(--record-paper); }
+.project-hero { padding: 26px 28px 0; }
+.project-hero .breadcrumb { margin-bottom: 18px; }
+.project-hero h1 { max-width: 700px; margin-bottom: 10px; font-size: clamp(26px, 3.2vw, 34px); letter-spacing: -.025em; }
+.project-hero .project-dek { max-width: 680px; margin-bottom: 20px; font-size: 11px; line-height: 1.75; }
+.project-cover { margin-inline: -28px; }
+.project-cover img { max-height: 500px; object-fit: contain; }
+.project-facts div { padding: 10px 12px; }
+.project-record { padding: 28px 28px 38px; }
+.project-record section { padding-bottom: 26px; margin-bottom: 26px; }
+.project-record h2 { margin-bottom: 13px; }
+.project-record p { max-width: 700px; line-height: 1.75; }
+.project-record li { padding-top: 7px; padding-bottom: 7px; }
+.project-reel video { object-fit: contain; }
+
+@media (max-width: 760px) {
+  .article-shellbar { min-height: 40px; padding: 8px 12px 7px; }
+  .article-shellbar nav a { padding: 7px 7px 4px; }
+  body:not(.migrated-post) { padding: 10px 0 40px; }
+  body:not(.migrated-post) > .atlas-container { width: calc(100% - 16px); }
+  body:not(.migrated-post) > .atlas-container > .content-block { padding-inline: 18px; }
+  .project-hero, .project-record { padding-inline: 18px; }
+  .project-cover { margin-inline: -18px; }
+}

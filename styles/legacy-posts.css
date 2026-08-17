@@ -1,3 +1,4 @@
 /* Legacy Atlas post stylesheet orchestrator. */
 @import url("./posts/navigation.css?v=1");
 @import url("./posts/legacy-shell.css?v=3");
+@import url("./records.css?v=1");
