@@ -58,6 +58,7 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 | Data table | `.atlas-table-frame > table.atlas-table` |
 | Single image/video | `figure.media-frame` |
 | Gallery | `.media-frame > .gallery-grid` |
+| Image slider | `.media-frame.atlas-image-slider[data-image-slider]` |
 | Primary action | `.atlas-btn` |
 | Secondary action | `.atlas-btn--ghost` or `.atlas-btn--bracket` |
 | References | `.atlas-refs > .atlas-ref-list` |

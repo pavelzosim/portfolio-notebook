@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
-  <link rel="stylesheet" href="/styles/atlas.css?v=48">
-  <link rel="stylesheet" href="/styles/style-guide.css?v=2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles/atlas.css?v=49">
+  <link rel="stylesheet" href="/styles/style-guide.css?v=4">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
+  <script src="/scripts/style-guide.js?v=1" defer></script>
 </head>
 <body class="style-guide-page">
   <a class="skip" href="#content">Skip to content</a>
@@ -127,12 +129,17 @@
           <section class="guide-section" id="code">
             <h2>06 Code, math, and comparison</h2>
             <p>Code samples require a language label, enough surrounding explanation to establish intent, and no screenshots of source code.</p>
-            <pre class="atlas-code-block"><code>// HLSL — use a real, minimal production fragment
+            <pre class="atlas-code-block"><code class="language-hlsl">// HLSL — use a real, minimal production fragment
 float3 ApplyExposure(float3 color, float exposure)
 {
     return color * exp2(exposure);
 }</code></pre>
-            <div class="atlas-math-block">frame_time_ms = 1000 / target_fps</div>
+            <div class="atlas-math-block">\[
+              t_{frame} = \frac{1000}{f_{target}} \; \text{ms}
+            \]</div>
+            <div class="atlas-math-block">\[
+              L_o(p, \omega_o) = \int_{\Omega} f_r(p, \omega_i, \omega_o)\,L_i(p, \omega_i)\,(n \cdot \omega_i)\,d\omega_i
+            \]</div>
             <div class="comparison-matrix">
               <div class="comp-col"><span class="comp-label">One-off</span><div class="comp-body">Hard-coded path, manual validation, project-specific output.</div></div>
               <div class="comp-col"><span class="comp-label">Reusable system</span><div class="comp-body">Declared inputs, automated checks, documented output contract.</div></div>
@@ -162,6 +169,20 @@ float3 ApplyExposure(float3 color, float exposure)
                 <img src="/public/media/home/home/asset-ef33d8a1c9b8b70b.png" alt="Production tool interface preview" loading="lazy">
               </div>
               <figcaption class="media-caption">Gallery variants: default auto-fit, <code>.gallery-grid--2col</code>, <code>--3col</code>, <code>--tall</code>, and <code>--thumb</code>.</figcaption>
+            </figure>
+            <figure class="media-frame atlas-image-slider" data-image-slider>
+              <div class="atlas-image-slider__viewport">
+                <img src="/public/media/projects/nasa-first-woman/xr-interface-overview.webp" alt="NASA First Woman XR interface overview" data-slider-slide>
+                <img src="/public/media/home/home/asset-bec58259fb369286.jpg" alt="Procedural shader research preview" data-slider-slide hidden>
+                <img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Realtime VFX research preview" data-slider-slide hidden>
+                <img src="/public/media/home/home/asset-ef33d8a1c9b8b70b.png" alt="Production tool interface preview" data-slider-slide hidden>
+              </div>
+              <div class="atlas-image-slider__controls">
+                <button class="atlas-btn atlas-btn--bracket atlas-btn--sm" type="button" data-slider-prev aria-label="Previous image">← Previous</button>
+                <output data-slider-status aria-live="polite">01 / 04</output>
+                <button class="atlas-btn atlas-btn--bracket atlas-btn--sm" type="button" data-slider-next aria-label="Next image">Next →</button>
+              </div>
+              <figcaption class="media-caption">Interactive image slider: contain-based technical media, keyboard-operable controls, and a visible position counter.</figcaption>
             </figure>
           </section>
 
@@ -200,5 +221,9 @@ float3 ApplyExposure(float3 color, float exposure)
 
   <footer><span>pavelzosim / article style guide</span><span>CANONICAL RECORD</span><a href="#content">return 0; ↑</a></footer>
   <nav class="function-bar" aria-label="Keyboard commands"><a class="vc-button" href="/"><kbd>F2</kbd><span>Home</span></a><a class="vc-button" href="/projects/"><kbd>F3</kbd><span>Projects</span></a><a class="vc-button" href="/#notes"><kbd>F4</kbd><span>Notes</span></a><a class="vc-button" href="/tools/"><kbd>F5</kbd><span>Tools</span></a><a class="vc-button" href="/blog/"><kbd>F6</kbd><span>Blog</span></a><a class="vc-button" href="/#about"><kbd>F7</kbd><span>About</span></a><a class="vc-button" href="/#contacts"><kbd>F8</kbd><span>Contacts</span></a><a class="vc-button" href="#content"><kbd>F10</kbd><span>Top</span></a></nav>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>
+  <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>

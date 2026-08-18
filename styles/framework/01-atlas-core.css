@@ -142,7 +142,7 @@
 :root {
   /* UI-акцент: Volkov Commander Blue */
   --atlas-accent:   #0000AA;
-  --atlas-accent-h: #0000DD;   /* hover-состояние accent */
+  --atlas-accent-h: #008181;   /* hover-состояние accent */
 
   /* Типографика: математические формулы (MathJax) */
   /* Крупнее --fs-code (12px) но меньше --fs-h3 (20px)                     */
@@ -158,4 +158,3 @@
 .atlas-container .content-block .atlas-math-block {
   font-size: var(--fs-math);
 }
-
