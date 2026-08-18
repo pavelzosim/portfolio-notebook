@@ -41,12 +41,12 @@ body:not(.migrated-post) > .atlas-container > .content-block {
   padding-inline: 32px;
 }
 
-body:not(.migrated-post) > .atlas-container .passport-bp {
-  border: 0 !important;
+body:not(.migrated-post) > .atlas-container #site-passport .passport-bp {
+  border: 0;
 }
 
-body:not(.migrated-post) > .atlas-container .passport-title-bar {
-  border-bottom: 1px solid rgba(0, 0, 0, .28) !important;
+body:not(.migrated-post) > .atlas-container #site-passport .passport-title-bar {
+  border-bottom: 1px solid rgba(0, 0, 0, .28);
 }
 
 @media (max-width: 640px) {

@@ -31,7 +31,7 @@
 .article-shellbar nav a:focus-visible { border-bottom-color: #111; color: #111; outline: 0; }
 .article-shellbar nav a[aria-current="page"] { border-bottom-color: #8b0000; color: #8b0000; }
 .article-shellbar__divider { color: rgba(0, 0, 0, .18); }
-.article-shellbar__status { justify-self: end; color: rgba(0, 0, 0, .48) !important; white-space: nowrap; }
+.article-shellbar a.article-shellbar__status { justify-self: end; color: rgba(0, 0, 0, .48); white-space: nowrap; }
 .article-shellbar__status span { margin-right: 7px; color: #0f692f; }
 
 body:not(.migrated-post) > .article-shellbar {

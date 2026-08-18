@@ -6,8 +6,8 @@
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles/atlas.css?v=51">
-  <link rel="stylesheet" href="/styles/style-guide.css?v=6">
+  <link rel="stylesheet" href="/styles/atlas.css?v=52">
+  <link rel="stylesheet" href="/styles/style-guide.css?v=7">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
   <script src="/scripts/style-guide.js?v=2" defer></script>
 </head>
@@ -112,9 +112,12 @@
               <li>Constraints and assumptions<ul><li>Target hardware</li><li>Performance budget</li></ul></li>
               <li>Implementation and validation</li>
             </ul>
-            <nav class="atlas-toc" aria-label="Example table of contents"><ul class="atlas-toc__list"><li class="atlas-toc__item atlas-toc__item--h2"><a href="#structure"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Context and constraints</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h3"><a href="#structure"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Target hardware</span><span class="atlas-toc__dots"></span></span></a></li></ul></nav>
-            <div class="atlas-section-break" data-index="§ NEXT"></div>
-            <p class="guide-note">Use <code class="atlas-code-inline">.atlas-section-break</code> only between major conceptual groups, not after every heading.</p>
+            <p class="guide-component-rule"><b>Table of contents</b> — place after the article passport in long records. Generate it from unique H2/H3/H4 anchors: numbered H2 entries define primary sections, an em dash marks H3, and a middle dot marks H4. Omit it for short notes where the complete structure is already visible.</p>
+            <nav class="atlas-toc" aria-label="Example table of contents"><ul class="atlas-toc__list"><li class="atlas-toc__item atlas-toc__item--h2"><a href="#structure"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Context and constraints</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h3"><a href="#structure"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Target hardware</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h4"><a href="#structure"><span class="atlas-toc__num">·</span><span class="atlas-toc__row"><span class="atlas-toc__title">Mobile GPU budget</span><span class="atlas-toc__dots"></span></span></a></li></ul></nav>
+            <p class="guide-component-rule"><b>Section break</b> — marks the completed boundary of an H2 content block before the next primary section. Keep the label equal to the section that just ended. Never insert it between ordinary paragraphs or H3 subsections.</p>
+            <div class="atlas-section-break" data-index="// § 04"></div>
+            <p class="guide-component-rule"><b>EOF divider</b> — use once after the final article content and references. It closes the whole document; it is not interchangeable with a section break.</p>
+            <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // EOF</span><span class="atlas-eof-divider__line"></span></div>
           </section>
 
           <section class="guide-section" id="callouts">
@@ -261,6 +264,7 @@ float3 ApplyExposure(float3 color, float exposure)
               <p><b>Required order</b><span>Context → constraints → implementation → evidence → result → references.</span></p>
               <p><b>Required assets</b><span>Descriptive alt text, local repository paths, captions, and contain-based presentation.</span></p>
               <p><b>Required shell</b><span>Shared article navigation, registry entry, metadata, previous/next links, and local footer.</span></p>
+              <p><b>CSS discipline</b><span>No forced declarations. Resolve conflicts through module order, component scope, and explicit state classes.</span></p>
               <p><b>Forbidden</b><span>Invented results, unsupported claims, gradients, rounded product cards, and Wix-only URLs.</span></p>
             </div>
             <p><a class="atlas-btn" href="/content/guides/article-authoring.md">Open authoring contract →</a></p>

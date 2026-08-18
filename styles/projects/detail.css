@@ -29,7 +29,7 @@
 .project-media-grid img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#111}
 .project-media-grid figcaption{min-height:46px;padding:8px 10px;color:var(--muted);font-size:8px;line-height:1.55}
 .project-media-grid figcaption span{display:block;margin-bottom:3px;color:var(--red);font-weight:700}
-.project-results{margin-bottom:18px!important}
+.project-record ul.project-results{margin-bottom:18px}
 .project-nav{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line2)}
 .project-nav a{padding:16px 18px;text-decoration:none;font-size:9px}
 .project-nav a:last-child{text-align:right;border-left:1px solid var(--line)}

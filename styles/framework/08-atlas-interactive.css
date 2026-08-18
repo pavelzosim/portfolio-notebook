@@ -65,7 +65,6 @@
   z-index: 1;
   transition: transform .05s linear, background-color .1s;
 }
-.atlas-container .atlas-btn-shadow > .atlas-btn::after { display: none !important; }
 .atlas-container .atlas-btn-shadow > .atlas-btn:active { transform: translate(4px, 4px); }
 
 /* Quiet navigation action: visible in the layout without competing with content. */

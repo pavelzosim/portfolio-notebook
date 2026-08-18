@@ -7,12 +7,13 @@
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
 
-/* ── СЕКЦИЯ A: RESET — Изоляция от стилей Wix/конструктора ──────────────── */
-/* Единственное место где !important разрешён (подавление CMS-стилей)        */
+/* ── СЕКЦИЯ A: RESET — предсказуемая геометрия компонентов ──────────────── */
 
 .atlas-container,
-.atlas-container * {
-  box-sizing: border-box !important;
+.atlas-container *,
+.atlas-container *::before,
+.atlas-container *::after {
+  box-sizing: border-box;
 }
 
 .atlas-container {

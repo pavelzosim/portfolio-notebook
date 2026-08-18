@@ -20,7 +20,7 @@
 }
 .article-shellbar__id b { color: #0a0a0a; }
 .article-shellbar__id span,
-.article-shellbar__status { color: var(--record-muted) !important; }
+.article-shellbar a.article-shellbar__status { color: var(--record-muted); }
 .article-shellbar nav a {
   padding: 0 10px;
   border: 0;
@@ -60,7 +60,7 @@ body:not(.migrated-post) > .atlas-container::before {
   line-height: 30px;
 }
 body:not(.migrated-post) > .atlas-container > .content-block { padding-inline: 26px; }
-body:not(.migrated-post) > .atlas-container .passport-title-bar { border-bottom-color: var(--record-border) !important; }
+body:not(.migrated-post) > .atlas-container #site-passport .passport-title-bar { border-bottom-color: var(--record-border); }
 
 /* Project records use the same restrained document scale as the technical notes. */
 .project-site main { background: var(--record-paper); }
@@ -89,7 +89,7 @@ body:not(.migrated-post) > .atlas-container .passport-title-bar { border-bottom-
 }
 
 /* Long-form posts join the project-record layout after article-page.js builds its rails. */
-.article-record-page { min-height: 100vh; padding: 0 !important; }
+body.article-record-page:not(.migrated-post) { min-height: 100vh; padding: 0; }
 .article-workspace {
   width: min(1360px, calc(100vw - 36px));
   margin: 0 auto;
@@ -121,7 +121,7 @@ body:not(.migrated-post) > .atlas-container .passport-title-bar { border-bottom-
 .article-outline li a { display: block; padding: 4px 0; color: inherit; text-decoration: none; }
 .article-outline li a:hover,
 .article-outline li a:focus-visible { color: var(--record-blue); }
-.article-outline--sub a { padding-left: 14px !important; font-size: 9px; }
+.article-outline li.article-outline--sub a { padding-left: 14px; font-size: 9px; }
 .article-index-link { display: inline-block; margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--record-line); color: var(--record-blue); text-decoration: none; }
 .article-main { min-width: 0; border-inline: 1px solid var(--record-line); background: var(--record-paper); }
 .article-main > .atlas-container {
@@ -131,6 +131,12 @@ body:not(.migrated-post) > .atlas-container .passport-title-bar { border-bottom-
   border: 0;
   background: var(--record-paper);
   box-shadow: none;
+}
+.article-record-page .article-main > .atlas-container #site-passport .passport-bp {
+  border: 0;
+}
+.article-record-page .article-main > .atlas-container #site-passport .passport-title-bar {
+  border-bottom: 1px solid var(--record-border);
 }
 .article-main > .atlas-container::before {
   content: "~/blog/technical-notes  [ DOCUMENT VIEW ]";

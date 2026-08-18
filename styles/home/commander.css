@@ -14,7 +14,6 @@ body{padding-bottom:38px}
 .command input:focus{border-color:var(--vc);background:var(--paper2)}
 .command kbd{padding:1px 5px;border:1px solid var(--line);color:var(--muted);font:9px var(--mono)}
 .command output{min-width:68px;text-align:right;color:var(--muted);font-size:9px}
-[hidden]{display:none!important}
 .meta-block li a{text-decoration:none}.meta-block li a:hover{color:var(--vc);text-decoration:underline}
 .tag-cloud a{padding:2px 4px;border:1px solid var(--line);text-decoration:none}
 .tag-cloud a:hover,.tag-cloud a:focus-visible{color:#fff;background:var(--vc);border-color:var(--vc)}
@@ -32,5 +31,4 @@ dialog dt,dialog dd{margin:0;padding:6px}dialog dt{color:var(--red);font-weight:
 .dialog-ok{float:right;margin:0 16px 16px;padding:6px 14px;border:1px solid #000066;background:var(--vc);color:#fff;font:10px var(--mono);cursor:pointer}
 .dialog-ok kbd{color:var(--vc-yellow);font:inherit}
 @media(max-width:760px){body{padding-bottom:42px}.shellbar nav{gap:5px;overflow-x:auto;padding-bottom:5px}.shellbar nav a{padding:5px 7px;white-space:nowrap}.shellbar nav kbd{display:inline}.function-bar{height:38px;padding:5px 8px;display:flex;overflow-x:auto}.function-bar .vc-button{flex:0 0 auto}.function-bar .vc-button span{display:none}.command{grid-template-columns:auto 1fr auto}.command output{grid-column:2;text-align:left}.command>kbd{grid-column:3;grid-row:1}}
-
 

@@ -74,6 +74,21 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 | System diagram | `.atlas-uml-diag` |
 | Interactive parameter UI | `.atlas-shader-panel` |
 
+## Navigation and content boundaries
+
+- Place `.atlas-toc` after the article passport only when the record is long enough to require scanning navigation.
+- Build TOC entries from unique heading anchors. H2 uses a numbered index, H3 uses `—`, and H4 uses `·`.
+- Place `.atlas-section-break` at the end of a completed H2 content block before the next H2. Its `data-index` must name the section that just ended, for example `// § 04`.
+- Do not place section breaks between ordinary paragraphs, media belonging to the same section, or H3/H4 subsections.
+- Use `.atlas-eof-divider` exactly once after the final content and references to close the complete article.
+
+## CSS contract
+
+- Do not use forced declarations. Resolve conflicts through module order, component scope, and explicit state or modifier classes.
+- Put reusable component rules in the appropriate `/styles/framework/` module. Keep page-specific CSS limited to composition and demonstration layout.
+- Load framework modules through `/styles/atlas.css`; do not duplicate component rules inside an article.
+- Increase the relevant cache version when a published stylesheet or orchestrator changes.
+
 ## Media rules
 
 - Copy media into `/public/media/posts/<slug>/`.
