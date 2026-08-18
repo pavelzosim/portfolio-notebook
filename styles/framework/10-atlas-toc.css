@@ -76,7 +76,7 @@
 /* Hover: номер и заголовок краснеют */
 .atlas-container .content-block .atlas-toc__item:hover .atlas-toc__num,
 .atlas-container .content-block .atlas-toc__item:hover .atlas-toc__title {
-  color: var(--atlas-crit);
+  color: var(--atlas-accent);
 }
 
 /* ── СЕКЦИЯ C: ЯЧЕЙКИ ────────────────────────────────────────────────────── */
@@ -150,4 +150,3 @@
 .atlas-container .content-block .atlas-toc__item--h4 .atlas-toc__num {
   color: rgba(0, 0, 0, 0.15);
 }
-

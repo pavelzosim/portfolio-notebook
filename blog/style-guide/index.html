@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
-  <link rel="stylesheet" href="/styles/atlas.css?v=47">
-  <link rel="stylesheet" href="/styles/style-guide.css?v=1">
+  <link rel="stylesheet" href="/styles/atlas.css?v=48">
+  <link rel="stylesheet" href="/styles/style-guide.css?v=2">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
 </head>
 <body class="style-guide-page">
@@ -65,29 +65,39 @@
           <section class="guide-section" id="tokens">
             <h2>02 Design tokens</h2>
             <p>Use variables instead of introducing isolated color or spacing values. Content emphasis uses ink and semantic status colors; interactive controls use Commander blue.</p>
+            <div class="guide-table-wrap">
+              <table class="guide-role-table">
+                <thead><tr><th>Token</th><th>Role</th><th>Use on</th></tr></thead>
+                <tbody>
+                  <tr><td><code>--atlas-accent</code> <small>#0000AA</small></td><td>Interaction only</td><td>Buttons, focus, selected navigation, link hover</td></tr>
+                  <tr><td><code>--atlas-crit</code> <small>#8B0000</small></td><td>Content risk</td><td>Breaking changes, errors, critical callouts</td></tr>
+                  <tr><td><code>--atlas-ok</code> / <code>--atlas-warn</code></td><td>Semantic status</td><td>Validated results and caution notes</td></tr>
+                  <tr><td><code>--atlas-ink</code></td><td>Content</td><td>Headings, body and labels — never replace with blue</td></tr>
+                </tbody>
+              </table>
+            </div>
             <div class="token-grid" aria-label="Color tokens">
               <div><i style="--swatch:#e6dcd2"></i><code>--atlas-bg</code><span>#E6DCD2</span></div>
               <div><i style="--swatch:#eee7df"></i><code>--atlas-bg-raised</code><span>#EEE7DF</span></div>
               <div><i style="--swatch:#0a0a0a"></i><code>--atlas-ink</code><span>#0A0A0A</span></div>
-              <div><i style="--swatch:#0000aa"></i><code>--atlas-crit</code><span>#0000AA</span></div>
+              <div><i style="--swatch:#0000aa"></i><code>--atlas-accent</code><span>#0000AA</span></div>
+              <div><i style="--swatch:#8b0000"></i><code>--atlas-crit</code><span>#8B0000</span></div>
               <div><i style="--swatch:#1a4d1a"></i><code>--atlas-ok</code><span>#1A4D1A</span></div>
               <div><i style="--swatch:#8a5b14"></i><code>--atlas-warn</code><span>#8A5B14</span></div>
             </div>
-            <div class="atlas-callout atlas-callout--note"><p>Spacing rhythm: 4 / 8 / 22 / 56 px. Borders remain one pixel. Corners remain square.</p></div>
+            <div class="atlas-callout atlas-callout--note"><p>Spacing rhythm: 4 / 8 / 12 / 16 / 22 / 32 / 56 px. Borders remain one pixel. Corners remain square.</p></div>
           </section>
 
           <section class="guide-section" id="typography">
             <h2>03 Typography</h2>
             <p>JetBrains Mono is used for interface, metadata, headings, code, and body copy. Editorial serif is reserved for homepage prose and does not enter technical article records.</p>
-            <div class="type-specimen">
-              <p class="atlas-h1">H1 / Document title</p>
-              <p class="atlas-title">H2 / Editorial title</p>
-              <h2>Content section heading</h2>
-              <h3>Content subsection heading</h3>
-              <h4>Micro heading</h4>
-              <p class="atlas-body">Body copy explains implementation, constraints, decisions, and results. Prefer short paragraphs with concrete technical nouns.</p>
-              <p class="atlas-meta">META / VERSION / PLATFORM / STATUS</p>
-              <p>Inline identifiers use <code class="atlas-code-inline">RenderGraph.Execute()</code>.</p>
+            <div class="type-scale">
+              <div><span class="type-label">H1 shell</span><span class="type-h1">Document title</span></div>
+              <div><span class="type-label">H2</span><span class="type-h2">Content section heading</span></div>
+              <div><span class="type-label">H3</span><span class="type-h3">Content subsection</span></div>
+              <div><span class="type-label">Body</span><span class="type-body">Implementation, constraints, decisions and results — short paragraphs, concrete nouns.</span></div>
+              <div><span class="type-label">Meta</span><span class="type-meta">VERSION · PLATFORM · STATUS</span></div>
+              <div><span class="type-label">Inline</span><span>Use <code class="atlas-code-inline">RenderGraph.Execute()</code> for identifiers.</span></div>
             </div>
           </section>
 
@@ -158,7 +168,7 @@ float3 ApplyExposure(float3 color, float exposure)
           <section class="guide-section" id="actions">
             <h2>09 Actions and references</h2>
             <p>Use filled blue only for the primary action. Bracket buttons are navigation or secondary commands. Destructive and success colors must retain their semantics.</p>
-            <div class="atlas-btn-group guide-actions"><a class="atlas-btn" href="#contract">Primary action</a><button class="atlas-btn atlas-btn--active" type="button">Active</button><button class="atlas-btn atlas-btn--ok" type="button">Validated</button><button class="atlas-btn atlas-btn--danger" type="button">Reset</button></div>
+            <div class="atlas-btn-group guide-actions"><span class="atlas-btn-shadow"><a class="atlas-btn" href="#contract">Primary action</a></span><button class="atlas-btn atlas-btn--active" type="button">Active</button><button class="atlas-btn atlas-btn--ok" type="button">Validated</button><button class="atlas-btn atlas-btn--danger" type="button">Reset</button></div>
             <p><a class="atlas-btn atlas-btn--ghost atlas-btn--sm" href="/blog/">Ghost link</a> <a class="atlas-btn atlas-btn--bracket atlas-btn--sm" href="/content/guides/article-authoring.md">LLM source</a></p>
             <div class="atlas-shader-panel"><div class="atlas-shader-panel__header"><span class="atlas-shader-panel__title">Realtime parameter panel</span><span class="atlas-shader-panel__status"><i class="atlas-shader-panel__led"></i>ACTIVE</span></div><div class="atlas-shader-panel__body"><div class="atlas-shader-panel__block"><div class="atlas-shader-panel__block-title"><span>SHADER PARAMETERS</span><span class="atlas-shader-panel__block-hint">interactive component</span></div><div class="atlas-sp-grid"><span class="atlas-sp-prefix">val_</span><span class="atlas-sp-label">Exposure</span><output class="atlas-sp-value">1.00</output><div class="atlas-sp-row-full atlas-sp-slider-wrap"><input class="atlas-sp-slider" type="range" min="0" max="2" step="0.01" value="1" aria-label="Example exposure value"></div></div></div></div></div>
             <div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">CODE</span><span class="atlas-ref-author">Pavel Zosim</span> — Atlas article framework.<br><a class="atlas-ref-link" href="https://github.com/pavelzosim/atlas-framework">github.com/pavelzosim/atlas-framework</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span>Primary technical documentation used to validate implementation claims.</span></li></ul></div>

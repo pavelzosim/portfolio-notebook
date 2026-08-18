@@ -83,8 +83,10 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 - Beige paper background and low-opacity dotted grid.
 - Square corners and one-pixel borders.
 - Black/near-black text.
-- Blue `#0000AA` for interactive UI.
+- Use `--atlas-accent` (`#0000AA`) only for interactive UI: buttons, focus, selected navigation, and link hover.
+- Use `--atlas-crit` (`#8B0000`) only for errors, breaking changes, production risks, and critical callouts.
 - Green for confirmed success, amber for caution.
+- Use the spacing rhythm `4 / 8 / 12 / 16 / 22 / 32 / 56` pixels.
 - No decorative gradients, glass effects, floating cards, or marketing hero treatments.
 - Dithering is allowed only as a deliberate Commander-style interaction shadow/pattern.
 

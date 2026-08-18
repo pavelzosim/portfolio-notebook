@@ -16,7 +16,7 @@
   transition: border-color .12s ease, background .12s ease;
 }
 .highlight-card:hover,
-.highlight-card:focus-visible { border-color: var(--red); background: var(--atlas-crit-soft); outline: 0; }
+.highlight-card:focus-visible { border-color: var(--red); background: var(--atlas-accent-soft); outline: 0; }
 .highlight-card:focus-visible { box-shadow: 0 0 0 1px var(--red); }
 .highlight-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-bottom: 1px solid var(--line); }
 .highlight-card .highlight-meta { display: grid; gap: 3px; padding: 7px 8px 8px; }
@@ -52,7 +52,7 @@
 .section-split a:hover,
 .section-split a:focus-visible,
 .section-foot a:hover,
-.section-foot a:focus-visible { background: var(--atlas-crit); color: var(--paper); outline: 1px solid var(--ink); outline-offset: -3px; }
+.section-foot a:focus-visible { background: var(--atlas-accent); color: var(--paper); outline: 1px solid var(--ink); outline-offset: -3px; }
 .section-split a:active,
 .section-foot a:active { transform: translate(0, 0); }
 
@@ -71,7 +71,7 @@
 }
 .record-list > a:last-child { border-bottom: 0; }
 .record-list > a:hover,
-.record-list > a:focus-visible { background: var(--atlas-crit-soft); color: var(--ink); outline: 0; }
+.record-list > a:focus-visible { background: var(--atlas-accent-soft); color: var(--ink); outline: 0; }
 .record-list > a:hover .record-arrow,
 .record-list > a:focus-visible .record-arrow { color: var(--red); opacity: 1; }
 .record-list .record-date,
@@ -87,8 +87,8 @@
 .record-list .record-summary { color: var(--atlas-ink-muted); font-size: 10px; line-height: 1.45; }
 .record-list .record-state { color: var(--atlas-ink-muted); font-size: 9px; text-align: right; }
 .cv-action { display: inline-block; position: relative; margin: 4px 4px 0 0; background: var(--dither); background-size: 4px 4px; }
-.cv-action a { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid var(--ink); background: var(--atlas-crit); color: var(--paper); font-size: 9px; font-weight: 700; text-decoration: none; transform: translate(-4px, -4px); }
-.cv-action a:hover, .cv-action a:focus-visible { background: var(--atlas-crit-hi); color: #fff; outline: 1px solid var(--ink); outline-offset: -3px; }
+.cv-action a { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid var(--ink); background: var(--atlas-accent); color: var(--paper); font-size: 9px; font-weight: 700; text-decoration: none; transform: translate(-4px, -4px); }
+.cv-action a:hover, .cv-action a:focus-visible { background: var(--atlas-accent-hi); color: #fff; outline: 1px solid var(--ink); outline-offset: -3px; }
 .cv-action a:active { transform: translate(0, 0); }
 main .about-layout dl,
 main .contact-layout dl { border-top: 0; }

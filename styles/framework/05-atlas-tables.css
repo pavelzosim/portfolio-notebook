@@ -172,14 +172,14 @@
 .atlas-container .atlas-uml-diag__arrow-line {
   flex: 1;
   height: 1px;
-  background: var(--atlas-crit);
+  background: var(--atlas-ink-muted);
 }
 .atlas-container .atlas-uml-diag__arrow-head {
   width: 0;
   height: 0;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 6px solid var(--atlas-crit);
+  border-left: 6px solid var(--atlas-ink-muted);
 }
 
 /* Легенда */
@@ -191,5 +191,4 @@
   gap: 15px;
   color: var(--atlas-ink-muted);
 }
-
 

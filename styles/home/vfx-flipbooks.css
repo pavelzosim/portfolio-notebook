@@ -12,7 +12,7 @@
 .vfx-count{color:var(--muted);font-size:8px;text-transform:uppercase}
 .vfx-action{display:inline-block;position:relative;margin:4px 4px 0 0;background:var(--dither);background-size:4px 4px}
 .vfx-more{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:164px;padding:8px 12px;border:1px solid var(--ink);background:var(--paper2);color:var(--ink);font:700 10px/1.2 var(--mono);cursor:pointer;transform:translate(-4px,-4px);transition:transform .05s linear}
-.vfx-more:hover,.vfx-more:focus-visible{background:var(--atlas-crit);color:var(--paper);outline:1px solid var(--ink);outline-offset:-3px}
+.vfx-more:hover,.vfx-more:focus-visible{background:var(--atlas-accent);color:var(--paper);outline:1px solid var(--ink);outline-offset:-3px}
 .vfx-more:active{transform:translate(0,0)}
 .vfx-more kbd{color:var(--red);font:inherit;font-weight:700}.vfx-more:hover kbd,.vfx-more:focus-visible kbd{color:var(--vc-yellow)}
 @media(max-width:760px){.vfx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

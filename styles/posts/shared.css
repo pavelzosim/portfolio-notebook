@@ -12,7 +12,7 @@ body.migrated-post{margin:0;background:var(--atlas-bg);color:var(--atlas-ink)}
 .migrated-post .content-block>h2:not(:first-child){margin-top:42px}
 .migrated-post .content-block>h3{margin-top:30px}
 .migrated-post .content-block a{color:#0000aa;text-decoration-thickness:1px;text-underline-offset:3px}
-.migrated-post .content-block blockquote{margin:24px 0;padding:12px 16px;border-left:4px solid var(--atlas-crit);background:var(--atlas-bg-alt)}
+.migrated-post .content-block blockquote{margin:24px 0;padding:12px 16px;border-left:4px solid var(--atlas-ink-muted);background:var(--atlas-bg-alt)}
 .migrated-post .content-block pre{overflow:auto;padding:16px;border:1px solid var(--atlas-border);background:rgba(0,0,0,.04);font:12px/1.6 var(--atlas-font-mono)}
 .migrated-post .content-block table{display:block;overflow-x:auto;margin:24px 0;border-collapse:collapse}
 .migrated-post .content-block th,.migrated-post .content-block td{padding:8px 10px;border:1px solid var(--atlas-border);vertical-align:top}

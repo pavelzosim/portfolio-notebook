@@ -38,7 +38,7 @@
 }
 .atlas-container #site-passport .passport-title-bar b {
   font-weight: 700;
-  color: var(--atlas-crit);
+  color: var(--atlas-ink);
 }
 
 /* Главный заголовок */
@@ -138,7 +138,7 @@
 .atlas-container #site-passport .passport-tag {
   font-size: var(--fs-status);
   font-weight: 700;
-  color: var(--atlas-crit);
+  color: var(--atlas-accent);
   text-decoration: none;
   border: 1px solid var(--atlas-border);
   padding: 2px 6px;
@@ -192,7 +192,7 @@
   white-space: nowrap;
 }
 .atlas-container #atlas-footer .atlas-footer-block__kaomoji {
-  color: var(--atlas-crit);
+  color: var(--atlas-ink-muted);
 }
 
 /* Средняя зона: текст + ссылки поддержки */
@@ -260,7 +260,7 @@
   white-space: nowrap;
 }
 .atlas-container #atlas-footer .atlas-blueprint-link:hover {
-  color: var(--atlas-crit);
+  color: var(--atlas-accent);
 }
 
 /* ── СЕКЦИЯ C: АДАПТИВНОСТЬ ──────────────────────────────────────────────── */
@@ -288,5 +288,4 @@
     gap: 24px;
   }
 }
-
 

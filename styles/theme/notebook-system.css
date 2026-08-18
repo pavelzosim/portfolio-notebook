@@ -10,17 +10,23 @@
   --atlas-ink-faint: rgba(10, 10, 10, .38);
   --atlas-ink-ghost: rgba(10, 10, 10, .20);
   --atlas-ink-soft: #1c1c1c;
-  --atlas-crit: #0000aa;
-  --atlas-crit-hi: #0000dd;
-  --atlas-crit-soft: rgba(0, 0, 170, .08);
-  --atlas-crit-border: #000066;
+  --atlas-accent: #0000aa;
+  --atlas-accent-hi: #0000dd;
+  --atlas-accent-soft: rgba(0, 0, 170, .08);
+  --atlas-accent-border: #000066;
+  --atlas-crit: #8b0000;
+  --red: var(--atlas-accent);
   --atlas-warn: #8a5b14;
   --atlas-ok: #1a4d1a;
   --atlas-border: rgba(10, 10, 10, .12);
   --atlas-border-strong: rgba(10, 10, 10, .28);
   --atlas-space-xs: 4px;
   --atlas-space-sm: 8px;
+  --atlas-space-compact: 12px;
+  --atlas-space-lg: 16px;
   --atlas-space-md: 22px;
+  --atlas-space-section: 22px;
+  --atlas-space-block: 32px;
   --atlas-space-xl: 56px;
   --fs-h1: 26px;
   --fs-h2: 22px;
@@ -35,7 +41,7 @@
   --fs-status: 8px;
 }
 
-:focus-visible { outline: 2px solid var(--atlas-crit); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--atlas-accent); outline-offset: 2px; }
 
 /* Structural rhythm shared by the notebook, indexes, and project records. */
 body { font: 12px/1.5 var(--atlas-font-mono); }
@@ -75,8 +81,8 @@ body { background-size: 14px 14px; }
 .shellbar nav a:focus-visible,
 .shellbar nav a.active {
   border: 0;
-  background: var(--atlas-crit-soft);
-  color: var(--atlas-crit);
+  background: var(--atlas-accent-soft);
+  color: var(--atlas-accent);
   outline: 0;
 }
 .shellbar .nav-divider { color: var(--atlas-ink-ghost); font-size: 9px; }
@@ -95,8 +101,8 @@ body { background-size: 14px 14px; }
 }
 .rail-title, .meta-block > p { margin-bottom: 8px; }
 .rail li a { padding-block: 4px; }
-.rail li a.active { color: var(--atlas-crit); background: var(--atlas-crit-soft); box-shadow: inset 2px 0 0 var(--atlas-crit); }
-.rail li a.active span { color: var(--atlas-crit); font-weight: 700; }
+.rail li a.active { color: var(--atlas-accent); background: var(--atlas-accent-soft); box-shadow: inset 2px 0 0 var(--atlas-accent); }
+.rail li a.active span { color: var(--atlas-accent); font-weight: 700; }
 .rail-links { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--atlas-border); }
 .rail-links a { text-decoration: none; }
 .tree { margin-block: 18px; padding: 8px 10px; line-height: 1.65; }
@@ -126,8 +132,8 @@ main { background: var(--atlas-bg-raised); box-shadow: none; }
   color: #f1ebe4;
 }
 .function-bar .vc-button:hover, .function-bar .vc-button:focus-visible {
-  background: var(--atlas-crit);
-  border-color: var(--atlas-crit-border);
+  background: var(--atlas-accent);
+  border-color: var(--atlas-accent-border);
 }
 
 @media (max-width: 1100px) {

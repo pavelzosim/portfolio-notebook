@@ -95,7 +95,7 @@
 
 .atlas-container .atlas-code-inline {
   font-size: var(--fs-code);
-  color: var(--atlas-crit);
+  color: var(--atlas-ink);
   background: var(--atlas-bg-alt);
   padding: 2px 4px;
   border: 1px solid var(--atlas-border);
@@ -131,7 +131,7 @@
 }
 .atlas-container .content-block h2::before {
   content: "» ";
-  color: var(--atlas-crit);
+  color: var(--atlas-ink-faint, var(--atlas-ink-muted));
   margin-right: 8px;
   font-weight: 400;
 }
@@ -192,7 +192,7 @@
   padding: 0 0.6rem;
   font-size: var(--fs-meta);
   font-weight: 700;
-  color: var(--atlas-crit);
+  color: var(--atlas-ink-muted);
 }
 
 /* Финальный EOF-разделитель в конце статьи */
@@ -249,7 +249,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--atlas-crit);
+  color: var(--atlas-ink-muted);
   font-weight: 700;
 }
 
@@ -282,5 +282,4 @@
   color: var(--atlas-ink-muted);
   font-size: 9px;
 }
-
 

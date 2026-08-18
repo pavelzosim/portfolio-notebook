@@ -13,7 +13,7 @@
 
 /* Красная левая полоса — фирменный идентификатор кодового блока */
 .atlas-container .content-block pre.atlas-code-block {
-  border-left: 3px solid var(--atlas-crit);
+  border-left: 3px solid var(--atlas-ink-muted);
   overflow-x: auto;
 }
 
@@ -80,7 +80,7 @@
 .atlas-container .content-block pre.atlas-code-block code .token.char       { color: var(--atlas-ok); }
 .atlas-container .content-block pre.atlas-code-block code .token.keyword,
 .atlas-container .content-block pre.atlas-code-block code .token.class-name { color: var(--atlas-ink); font-weight: 700; }
-.atlas-container .content-block pre.atlas-code-block code .token.function   { color: var(--atlas-crit); font-weight: 700; }
+.atlas-container .content-block pre.atlas-code-block code .token.function   { color: var(--atlas-ink); font-weight: 700; }
 .atlas-container .content-block pre.atlas-code-block code .token.operator   { color: var(--atlas-ink); }
 
 /* ── СЕКЦИЯ E: OVERFLOW FIX — Код внутри составных компонентов ──────────── */
@@ -114,7 +114,7 @@
   box-sizing: border-box;
   margin: 4px 0;
   padding: 6px 8px;
-  border-left: 2px solid var(--atlas-crit);
+  border-left: 2px solid var(--atlas-ink-muted);
   font-size: var(--fs-code);
   line-height: 1.5;
 }
@@ -153,4 +153,3 @@
 .atlas-container .content-block .atlas-table-frame {
   overflow-x: auto;
 }
-
