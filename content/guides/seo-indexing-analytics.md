@@ -176,6 +176,16 @@ Recommended first release:
 4. Add a short privacy notice and a consent implementation appropriate to the selected provider and visitor regions before enabling non-essential cookies.
 5. Never send names, email addresses, CV-download query data containing identity, or other personally identifiable information as analytics parameters.
 
+Current implementation:
+
+- GA4 Measurement ID: `G-LX3PFT5QR4` (a public tag identifier, not a secret).
+- `/scripts/analytics.js` is the single analytics entry point.
+- The build injects that entry point into every generated HTML page.
+- Localhost is excluded from collection.
+- Basic Consent Mode blocks the Google tag until the visitor allows analytics.
+- Analytics storage may be granted; advertising storage, advertising user data, personalization, and Google Signals remain disabled.
+- The visitor's choice is stored locally as `atlas.analytics.consent.v1` and can be reset from `/privacy/`.
+
 A static `/admin/` page on GitHub Pages can be hidden from Google with `noindex`, but it cannot be made private. Source files, JavaScript, and embedded credentials remain downloadable. If a custom Atlas-styled dashboard is required later, host it behind real authentication and fetch aggregated analytics through a server-side API. It must also use `noindex`, be absent from the sitemap and public navigation, and expose no credentials to the browser.
 
 ## Per-page migration gate

@@ -1,0 +1,151 @@
+/* Optional analytics consent. Loaded independently so cached page CSS cannot hide it. */
+.atlas-consent,
+.atlas-consent * {
+  box-sizing: border-box;
+}
+
+.atlas-consent {
+  position: fixed;
+  z-index: 1000;
+  right: 18px;
+  bottom: 18px;
+  width: min(560px, calc(100vw - 36px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: end;
+  padding: 16px;
+  border: 1px solid #000;
+  background: rgb(238, 231, 223);
+  color: #000;
+  box-shadow: 6px 6px 0 #000;
+  font: 11px/1.5 'JetBrains Mono', 'Courier New', monospace;
+  transition: opacity 0.12s linear, transform 0.12s linear;
+}
+
+.atlas-consent[data-closing='true'] {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.atlas-consent__copy strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #0000aa;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.atlas-consent__copy p {
+  margin: 0 0 6px;
+}
+
+.atlas-consent__copy a {
+  color: rgba(0, 0, 0, 0.62);
+  font-size: 9px;
+  text-decoration: none;
+}
+
+.atlas-consent__copy a:hover,
+.atlas-consent__copy a:focus-visible {
+  color: #008181;
+  text-decoration: underline;
+}
+
+.atlas-consent__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.atlas-consent__actions button,
+.analytics-reset {
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid #000;
+  border-radius: 0;
+  background: rgb(238, 231, 223);
+  color: #000;
+  cursor: pointer;
+  font: 10px/1.2 'JetBrains Mono', 'Courier New', monospace;
+  text-align: left;
+}
+
+.atlas-consent__actions button:first-child {
+  background: #0000aa;
+  color: #fff;
+}
+
+.atlas-consent__actions button:hover,
+.atlas-consent__actions button:focus-visible,
+.analytics-reset:hover,
+.analytics-reset:focus-visible {
+  outline: 2px solid #008181;
+  outline-offset: 2px;
+}
+
+.privacy-page {
+  min-height: 100vh;
+  margin: 0;
+  padding: 32px 16px;
+  background: rgb(230, 220, 210);
+  color: #000;
+  font: 12px/1.7 'JetBrains Mono', 'Courier New', monospace;
+}
+
+.privacy-document {
+  width: min(780px, 100%);
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background: rgba(238, 231, 223, 0.72);
+}
+
+.privacy-document h1 {
+  margin: 0 0 24px;
+  font-size: clamp(24px, 5vw, 38px);
+  line-height: 1.1;
+}
+
+.privacy-document h2 {
+  margin: 32px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+}
+
+.privacy-document a {
+  color: #0000aa;
+}
+
+.privacy-path,
+.privacy-revision {
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 10px;
+}
+
+@media (max-width: 620px) {
+  .atlas-consent {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .atlas-consent__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .privacy-document {
+    padding: 22px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-consent {
+    transition: none;
+  }
+}

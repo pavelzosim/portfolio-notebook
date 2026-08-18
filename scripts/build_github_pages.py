@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
-SITE_DIRECTORIES = ("blog", "content", "projects", "public", "styles", "tools")
+SITE_DIRECTORIES = ("blog", "content", "privacy", "projects", "public", "styles", "tools")
 SITE_FILES = ("index.html", "home.css")
 TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".xml", ".txt"}
 
@@ -29,6 +29,22 @@ def add_noindex(document: str) -> str:
     return re.sub(
         r"(<head(?:\s[^>]*)?>)",
         r'\1<meta name="robots" content="noindex, nofollow">',
+        document,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+
+
+def add_analytics(document: str) -> str:
+    if 'data-atlas-analytics' in document:
+        return document
+    analytics_assets = ''
+    if '11-atlas-consent.css' not in document:
+        analytics_assets += '<link rel="stylesheet" href="/styles/framework/11-atlas-consent.css?v=1">'
+    analytics_assets += '<script src="/scripts/analytics.js?v=1" defer data-atlas-analytics></script>'
+    return re.sub(
+        r"</head>",
+        analytics_assets + "</head>",
         document,
         count=1,
         flags=re.IGNORECASE,
@@ -75,9 +91,11 @@ def transform_site(base_path: str, noindex: bool) -> None:
         if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
             continue
         text = path.read_text(encoding="utf-8")
+        if path.suffix.lower() == ".html":
+            text = add_analytics(text)
+            if noindex:
+                text = add_noindex(text)
         text = rewrite_root_paths(text, base_path, path.suffix.lower())
-        if noindex and path.suffix.lower() == ".html":
-            text = add_noindex(text)
         path.write_text(text, encoding="utf-8", newline="\n")
     (OUTPUT / ".nojekyll").write_text("", encoding="utf-8")
 
@@ -91,6 +109,8 @@ def validate_site(base_path: str, noindex: bool) -> None:
         text = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html" and re.search(r"<head(?:\s|>)", text, re.IGNORECASE):
             html_documents += 1
+            if 'data-atlas-analytics' not in text:
+                raise RuntimeError(f"Missing analytics loader in {path.relative_to(OUTPUT)}")
             if noindex and 'name="robots" content="noindex, nofollow"' not in text:
                 raise RuntimeError(f"Missing noindex in {path.relative_to(OUTPUT)}")
         if not base_path:

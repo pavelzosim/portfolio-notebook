@@ -28,6 +28,8 @@ This folder is the single place to start before designing, writing, migrating, p
 - Content registry: `/content/posts/index.json`
 - Article template: `/content/templates/atlas-post.html`
 - Project template: `/content/templates/project-page.html`
+- Analytics entry point: `/scripts/analytics.js`
+- Public privacy notice: `/privacy/`
 
 The rendered Style Guide is the visual reference. The Markdown contracts in this directory are the implementation and review rules. When they disagree, stop and reconcile them before creating another page-specific exception.
 
