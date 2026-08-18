@@ -6,6 +6,12 @@ Revision: 2026.08
 
 Visual reference: `/blog/style-guide/`
 
+Rules index: `/content/guides/README.md`
+
+UI and UX contract: `/content/guides/ui-ux-design-system.md`
+
+SEO and publication contract: `/content/guides/seo-indexing-analytics.md`
+
 Read this document before drafting, converting, or editing a technical article in this repository.
 
 ## Purpose
@@ -148,6 +154,7 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 
 ## Validation checklist
 
+- [ ] The SEO and indexing migration gate passes.
 - [ ] Registry entry, title, description, slug, canonical URL, and tags agree.
 - [ ] Heading hierarchy is sequential and produces a useful sidebar.
 - [ ] All media is local, uncropped, captioned, and accessible.

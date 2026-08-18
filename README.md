@@ -32,3 +32,6 @@ Then open `http://127.0.0.1:8765/`.
 YouTube players and external technical references remain remote by design.
 See [ARCHITECTURE.md](ARCHITECTURE.md) for module boundaries and the Wix
 migration workflow.
+
+All authoring, UI/UX, SEO, indexing, and analytics rules start at the
+[Atlas Rules Index](content/guides/README.md).
