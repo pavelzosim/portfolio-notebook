@@ -6,10 +6,10 @@
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles/atlas.css?v=49">
-  <link rel="stylesheet" href="/styles/style-guide.css?v=4">
+  <link rel="stylesheet" href="/styles/atlas.css?v=50">
+  <link rel="stylesheet" href="/styles/style-guide.css?v=5">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
-  <script src="/scripts/style-guide.js?v=1" defer></script>
+  <script src="/scripts/style-guide.js?v=2" defer></script>
 </head>
 <body class="style-guide-page">
   <a class="skip" href="#content">Skip to content</a>
@@ -39,7 +39,8 @@
         <li><a href="#tables"><span>07</span> Tables</a></li>
         <li><a href="#media"><span>08</span> Media</a></li>
         <li><a href="#actions"><span>09</span> Actions &amp; references</a></li>
-        <li><a href="#contract"><span>10</span> Authoring contract</a></li>
+        <li><a href="#article-shell"><span>10</span> Article shell</a></li>
+        <li><a href="#contract"><span>11</span> Authoring contract</a></li>
       </ol>
       <div class="rail-links"><a href="/blog/">[blog index]</a><a href="/content/guides/article-authoring.md">[LLM source]</a></div>
     </aside>
@@ -129,7 +130,7 @@
           <section class="guide-section" id="code">
             <h2>06 Code, math, and comparison</h2>
             <p>Code samples require a language label, enough surrounding explanation to establish intent, and no screenshots of source code.</p>
-            <pre class="atlas-code-block"><code class="language-hlsl">// HLSL — use a real, minimal production fragment
+            <pre class="atlas-code-block" data-language="HLSL / C GRAMMAR"><code class="language-c">// HLSL — use a real, minimal production fragment
 float3 ApplyExposure(float3 color, float exposure)
 {
     return color * exp2(exposure);
@@ -195,8 +196,42 @@ float3 ApplyExposure(float3 color, float exposure)
             <div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">CODE</span><span class="atlas-ref-author">Pavel Zosim</span> — Atlas article framework.<br><a class="atlas-ref-link" href="https://github.com/pavelzosim/atlas-framework">github.com/pavelzosim/atlas-framework</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span>Primary technical documentation used to validate implementation claims.</span></li></ul></div>
           </section>
 
+          <section class="guide-section" id="article-shell">
+            <h2>10 Article header and footer</h2>
+            <p>Every long-form technical record uses the same document passport and closing navigation matrix. Replace values and links, but preserve the structure and production class names.</p>
+            <p class="guide-note">ARTICLE HEADER / PASSPORT</p>
+            <div id="site-passport" class="guide-passport-example">
+              <div class="passport-bp">
+                <div class="passport-title-bar"><div>pavelzosim : ~ # cat article_slug.log</div><div>[ SYS_STATUS: <b>STABLE</b> ]</div></div>
+                <div class="passport-main-title">TECHNICAL ARTICLE TITLE</div>
+                <div class="passport-grid">
+                  <div class="passport-cell"><div class="passport-cell-line" data-key="project">Project / system name</div><div class="passport-cell-line" data-key="module">Houdini / HLSL / Runtime</div></div>
+                  <div class="passport-cell"><div class="passport-cell-line" data-key="version">v1.0.0</div><div class="passport-cell-line" data-key="log_id">RND_01</div></div>
+                </div>
+                <div class="passport-meta"><div class="passport-meta-item" data-meta="auth">Pavel Zosim</div><div class="passport-meta-item" data-meta="created">2026.08.18</div><div class="passport-meta-item" data-meta="read">8 MIN</div></div>
+                <div class="passport-tags"><a class="passport-tag" href="/blog/?tag=hlsl">#HLSL</a><a class="passport-tag" href="/blog/?tag=realtime">#REALTIME</a><a class="passport-tag" href="/blog/?tag=rnd">#R&amp;D</a></div>
+              </div>
+            </div>
+
+            <p class="guide-note">ARTICLE FOOTER / SYSTEM NAVIGATION</p>
+            <div id="atlas-footer" class="guide-footer-example">
+              <div class="atlas-footer-wrapper">
+                <div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">( ´◔ ω◔`) ノシ&nbsp; [ SYSTEM_ATLAS // EOF ]</span><span>LET'S STAY IN TOUCH</span></div>
+                <div class="atlas-footer-block__support-content">
+                  <div class="atlas-footer-block__support-text">Have a project or a pipeline bottleneck? Let's build something deterministic.</div>
+                  <div class="atlas-footer-block__support-links"><a class="atlas-blueprint-link" href="https://t.me/tlon_exz">TELEGRAM</a><span class="atlas-footer-block__support-divider">|</span><a class="atlas-blueprint-link" href="https://www.linkedin.com/in/pavelzosim/">LINKEDIN</a><span class="atlas-footer-block__support-divider">|</span><a class="atlas-blueprint-link" href="mailto:pavel.zosim@protonmail.com">EMAIL</a></div>
+                </div>
+                <div class="atlas-footer-block__matrix-zone">
+                  <div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">PROD_PIPELINES</span><div class="atlas-footer-block__column-items"><a class="atlas-blueprint-link" href="/tools/?tag=houdini">/ Houdini HDAs</a><a class="atlas-blueprint-link" href="/blog/?tag=vfx">/ Real-time VFX</a><a class="atlas-blueprint-link" href="/blog/?tag=procedural">/ Procedural Systems</a></div></div>
+                  <div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">R&amp;D_LOGS</span><div class="atlas-footer-block__column-items"><a class="atlas-blueprint-link" href="/blog/?tag=unity">/ Unity Shaders</a><a class="atlas-blueprint-link" href="/blog/?tag=unreal">/ Unreal Engine</a><a class="atlas-blueprint-link" href="/blog/?tag=gpu">/ GPU Optimization</a></div></div>
+                  <div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">SYSTEM_ROOT</span><div class="atlas-footer-block__column-items"><a class="atlas-blueprint-link" href="/public/documents/pavel-zosim-technical-artist-cv-2026.pdf">/ Curriculum Vitae</a><a class="atlas-blueprint-link" href="https://github.com/pavelzosim">/ GitHub Profile</a></div></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section class="guide-section" id="contract">
-            <h2>10 Article authoring contract</h2>
+            <h2>11 Article authoring contract</h2>
             <p>The canonical machine-readable instructions live beside the content. Future LLM sessions should read that file before drafting or converting an article.</p>
             <div class="guide-contract">
               <p><b>Required order</b><span>Context → constraints → implementation → evidence → result → references.</span></p>
@@ -223,6 +258,7 @@ float3 ApplyExposure(float3 color, float exposure)
   <nav class="function-bar" aria-label="Keyboard commands"><a class="vc-button" href="/"><kbd>F2</kbd><span>Home</span></a><a class="vc-button" href="/projects/"><kbd>F3</kbd><span>Projects</span></a><a class="vc-button" href="/#notes"><kbd>F4</kbd><span>Notes</span></a><a class="vc-button" href="/tools/"><kbd>F5</kbd><span>Tools</span></a><a class="vc-button" href="/blog/"><kbd>F6</kbd><span>Blog</span></a><a class="vc-button" href="/#about"><kbd>F7</kbd><span>About</span></a><a class="vc-button" href="/#contacts"><kbd>F8</kbd><span>Contacts</span></a><a class="vc-button" href="#content"><kbd>F10</kbd><span>Top</span></a></nav>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>
   <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>

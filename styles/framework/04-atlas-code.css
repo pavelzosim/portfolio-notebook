@@ -27,6 +27,9 @@
 .atlas-container .content-block pre.atlas-code-block::before {
   content: "[ CODE_LISTING // TRANSPILED_ALGORITHM ]";
 }
+.atlas-container .content-block pre.atlas-code-block[data-language]::before {
+  content: "[ CODE_LISTING // " attr(data-language) " ]";
+}
 .atlas-container .content-block .atlas-math-block::before {
   content: "[ MATH_MODEL // МАТЕМАТИЧЕСКИЙ АППАРАТ ]";
 }
@@ -78,10 +81,13 @@
 .atlas-container .content-block pre.atlas-code-block code .token.boolean    { color: var(--atlas-warn); }
 .atlas-container .content-block pre.atlas-code-block code .token.string,
 .atlas-container .content-block pre.atlas-code-block code .token.char       { color: var(--atlas-ok); }
-.atlas-container .content-block pre.atlas-code-block code .token.keyword,
-.atlas-container .content-block pre.atlas-code-block code .token.class-name { color: var(--atlas-ink); font-weight: 700; }
-.atlas-container .content-block pre.atlas-code-block code .token.function   { color: var(--atlas-ink); font-weight: 700; }
-.atlas-container .content-block pre.atlas-code-block code .token.operator   { color: var(--atlas-ink); }
+.atlas-container .content-block pre.atlas-code-block code .token.keyword    { color: var(--atlas-accent); font-weight: 700; }
+.atlas-container .content-block pre.atlas-code-block code .token.class-name,
+.atlas-container .content-block pre.atlas-code-block code .token.builtin    { color: #6b3f00; font-weight: 700; }
+.atlas-container .content-block pre.atlas-code-block code .token.function   { color: #008181; font-weight: 700; }
+.atlas-container .content-block pre.atlas-code-block code .token.operator   { color: var(--atlas-crit); }
+.atlas-container .content-block pre.atlas-code-block code .token.property,
+.atlas-container .content-block pre.atlas-code-block code .token.constant   { color: #5c2d91; }
 
 /* ── СЕКЦИЯ E: OVERFLOW FIX — Код внутри составных компонентов ──────────── */
 /* Проблема: pre.atlas-code-block внутри .comparison-matrix и              */

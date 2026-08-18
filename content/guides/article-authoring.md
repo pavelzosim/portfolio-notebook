@@ -59,6 +59,8 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 | Single image/video | `figure.media-frame` |
 | Gallery | `.media-frame > .gallery-grid` |
 | Image slider | `.media-frame.atlas-image-slider[data-image-slider]` |
+| Article header | `#site-passport > .passport-bp` |
+| Article footer | `#atlas-footer > .atlas-footer-wrapper` |
 | Primary action | `.atlas-btn` |
 | Secondary action | `.atlas-btn--ghost` or `.atlas-btn--bracket` |
 | References | `.atlas-refs > .atlas-ref-list` |

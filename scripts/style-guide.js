@@ -38,4 +38,10 @@
     });
     render();
   });
+
+  if (window.Prism) {
+    document.querySelectorAll('pre.atlas-code-block code[class*="language-"]').forEach((code) => {
+      window.Prism.highlightElement(code);
+    });
+  }
 })();

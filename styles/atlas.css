@@ -3,7 +3,7 @@
 @import url("./framework/01-atlas-core.css?v=2");
 @import url("./framework/02-atlas-typography.css");
 @import url("./framework/03-atlas-header.css");
-@import url("./framework/04-atlas-code.css");
+@import url("./framework/04-atlas-code.css?v=2");
 @import url("./framework/05-atlas-tables.css");
 @import url("./framework/06-atlas-callout.css?v=2");
 @import url("./framework/07-atlas-media.css");
