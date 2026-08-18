@@ -44,6 +44,47 @@
   transform: translateY(1px);
 }
 
+/* Dither shadow wrapper. Keep the pattern behind the button face. */
+.atlas-container .atlas-btn-shadow {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  margin: 0 4px 4px 0;
+}
+.atlas-container .atlas-btn-shadow::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 4px -4px -4px 4px;
+  background: var(--atlas-dither);
+  background-size: 4px 4px;
+  pointer-events: none;
+}
+.atlas-container .atlas-btn-shadow > .atlas-btn {
+  position: relative;
+  z-index: 1;
+  transition: transform .05s linear, background-color .1s;
+}
+.atlas-container .atlas-btn-shadow > .atlas-btn::after { display: none !important; }
+.atlas-container .atlas-btn-shadow > .atlas-btn:active { transform: translate(4px, 4px); }
+
+/* Quiet navigation action: visible in the layout without competing with content. */
+.atlas-container .atlas-btn--quiet {
+  border: 1px solid var(--atlas-ink);
+  background: var(--atlas-bg-raised);
+  color: var(--atlas-ink);
+  font-size: var(--fs-meta);
+  text-transform: none;
+  letter-spacing: .02em;
+}
+.atlas-container .atlas-btn--quiet:hover,
+.atlas-container .atlas-btn--quiet:focus-visible {
+  background: #008181;
+  color: #fff;
+  outline: 1px solid var(--atlas-ink);
+  outline-offset: -3px;
+}
+
 /* ── СЕКЦИЯ B: КНОПКИ — Семантические модификаторы ──────────────────────── */
 
 /* Активное/выбранное состояние (например: выбранный таб, текущий фильтр) */

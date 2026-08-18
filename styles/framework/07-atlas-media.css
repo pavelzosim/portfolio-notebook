@@ -56,6 +56,41 @@
   align-self: center;
 }
 
+/* Live WebGL / shader / interactive document embedded as evidence. */
+.atlas-container .content-block .atlas-interactive-frame {
+  margin: var(--atlas-space-md) 0;
+  border: 1px solid var(--atlas-border);
+  background: var(--atlas-bg-alt);
+}
+.atlas-container .content-block .atlas-interactive-frame::before {
+  content: "[ INTERACTIVE // LIVE_PREVIEW ]";
+  display: block;
+  min-height: 24px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--atlas-border);
+  color: var(--atlas-ink-muted);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  letter-spacing: .06em;
+  box-sizing: border-box;
+}
+.atlas-container .content-block .atlas-interactive-frame iframe {
+  display: block;
+  width: 100%;
+  min-height: 420px;
+  border: 0;
+}
+.atlas-container .content-block .atlas-interactive-frame__fallback {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 24px;
+  background: #171513;
+  color: rgba(255,255,255,.62);
+  font-size: var(--fs-code);
+  text-align: center;
+}
+
 /* ── СЕКЦИЯ B: GALLERY GRID — Адаптивная сетка внутри media-frame ────────── */
 /* Используется ВНУТРИ .media-frame для галерей.                             */
 /* Auto-fit: 1 фото = full width, 2 = 2 col, 3+ = 2–3 col авто.            */

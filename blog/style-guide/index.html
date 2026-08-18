@@ -6,8 +6,8 @@
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles/atlas.css?v=50">
-  <link rel="stylesheet" href="/styles/style-guide.css?v=5">
+  <link rel="stylesheet" href="/styles/atlas.css?v=51">
+  <link rel="stylesheet" href="/styles/style-guide.css?v=6">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
   <script src="/scripts/style-guide.js?v=2" defer></script>
 </head>
@@ -36,7 +36,7 @@
         <li><a href="#structure"><span>04</span> Structure &amp; lists</a></li>
         <li><a href="#callouts"><span>05</span> Callouts</a></li>
         <li><a href="#code"><span>06</span> Code &amp; comparison</a></li>
-        <li><a href="#tables"><span>07</span> Tables</a></li>
+        <li><a href="#tables"><span>07</span> Data &amp; diagrams</a></li>
         <li><a href="#media"><span>08</span> Media</a></li>
         <li><a href="#actions"><span>09</span> Actions &amp; references</a></li>
         <li><a href="#article-shell"><span>10</span> Article shell</a></li>
@@ -141,19 +141,39 @@ float3 ApplyExposure(float3 color, float exposure)
             <div class="atlas-math-block">\[
               L_o(p, \omega_o) = \int_{\Omega} f_r(p, \omega_i, \omega_o)\,L_i(p, \omega_i)\,(n \cdot \omega_i)\,d\omega_i
             \]</div>
+            <p class="guide-component-rule"><b>Comparison matrix</b> — use for two competing approaches, before/after states, or done/in-progress status. Use a data table instead when values have units or must be compared row by row.</p>
             <div class="comparison-matrix">
-              <div class="comp-col"><span class="comp-label">One-off</span><div class="comp-body">Hard-coded path, manual validation, project-specific output.</div></div>
-              <div class="comp-col"><span class="comp-label">Reusable system</span><div class="comp-body">Declared inputs, automated checks, documented output contract.</div></div>
+              <div class="comp-col"><span class="comp-label">Δ1 // STATIC TEXTURE</span><div class="comp-body">Locked resolution · fixed response · high <span class="atlas-param">VRAM</span> footprint.</div></div>
+              <div class="comp-col"><span class="comp-label">Δ2 // PROCEDURAL SYSTEM</span><div class="comp-body">Runtime control · field-aware response · <span class="atlas-param">ALU</span>-bound generation.</div></div>
             </div>
           </section>
 
           <section class="guide-section" id="tables">
-            <h2>07 Tables</h2>
-            <p>Tables are for exact comparisons and measured data. Keep headings short and units explicit.</p>
-            <div class="atlas-table-frame">
+            <h2>07 Data tables and diagrams</h2>
+            <p>Tables are for exact comparisons and measured data. Keep headings short and units explicit. Diagrams explain topology, ownership, flow, or spatial relationships that prose cannot scan quickly.</p>
+            <div class="atlas-table-frame atlas-table-frame--solid">
+              <div class="atlas-table-header-solid">[ PERFORMANCE_BUDGET // MEASURED_DATA ]</div>
               <table class="atlas-table"><thead><tr><th>Target</th><th>Budget</th><th>Validation</th></tr></thead><tbody><tr><td>Desktop VR</td><td>11.1 ms</td><td>GPU capture</td></tr><tr><td>Mobile XR</td><td>13.8 ms</td><td>Device profile</td></tr></tbody></table>
             </div>
+            <p class="guide-component-rule"><b>Architecture diagram</b> — use nodes and arrows for data flow or ownership. Keep one reading direction, label every scope, and highlight only an actual risk or critical execution layer.</p>
             <div class="atlas-uml-diag"><div class="atlas-uml-diag__widget"><div class="atlas-uml-diag__header">// DATA_FLOW // AUTHORING → RUNTIME</div><div class="guide-diagram-row"><div class="atlas-uml-diag__node"><div class="atlas-uml-diag__node-title">SOURCE</div><div class="atlas-uml-diag__node-body">Houdini / DCC</div></div><div class="atlas-uml-diag__arrow-wrapper"><div class="atlas-uml-diag__arrow-line"></div><div class="atlas-uml-diag__arrow-head"></div></div><div class="atlas-uml-diag__node"><div class="atlas-uml-diag__node-title">VALIDATE</div><div class="atlas-uml-diag__node-body">Schema / budget</div></div><div class="atlas-uml-diag__arrow-wrapper"><div class="atlas-uml-diag__arrow-line"></div><div class="atlas-uml-diag__arrow-head"></div></div><div class="atlas-uml-diag__node"><div class="atlas-uml-diag__node-title">RUNTIME</div><div class="atlas-uml-diag__node-body">Unity / Unreal</div></div></div></div></div>
+            <p class="guide-component-rule"><b>Geometric schematic</b> — draw as inline SVG with a responsive <code>viewBox</code>. Use design tokens for strokes, dashed lines for secondary volumes, direct labels plus a text legend, and never rely on color alone.</p>
+            <figure class="atlas-schematic">
+              <div class="atlas-schematic__header">[ GEOMETRIC_SCHEMATIC // CONCENTRIC_LAYERING ]</div>
+              <div class="atlas-schematic__canvas">
+                <svg viewBox="0 0 240 150" role="img" aria-labelledby="solar-schematic-title solar-schematic-desc">
+                  <title id="solar-schematic-title">Cross-section of three concentric solar layers</title><desc id="solar-schematic-desc">Photosphere at the center, a thin chromosphere shell, and an extended corona volume.</desc>
+                  <circle class="atlas-schematic__secondary" cx="104" cy="75" r="62" fill="none" stroke-width="1"/>
+                  <circle class="atlas-schematic__critical" cx="104" cy="75" r="41" fill="none" stroke-width="1.2"/>
+                  <path class="atlas-schematic__primary" d="M104 75 L140 75 A36 36 0 1 0 68 75 L104 75" fill="var(--atlas-bg)" stroke-width="1.2"/>
+                  <line class="atlas-schematic__leader" x1="140" y1="75" x2="175" y2="42" stroke-width=".7"/><text class="atlas-schematic__label" x="178" y="40">PHOTOSPHERE</text>
+                  <line class="atlas-schematic__critical" x1="139" y1="88" x2="174" y2="80" stroke-width=".7"/><text class="atlas-schematic__label atlas-schematic__label--critical" x="178" y="82">CHROMOSPHERE</text>
+                  <line class="atlas-schematic__leader" x1="145" y1="118" x2="174" y2="130" stroke-width=".7"/><text class="atlas-schematic__label" x="178" y="133">CORONA</text>
+                </svg>
+              </div>
+              <div class="atlas-schematic__legend"><div><b>Photosphere</b><span>Base radius ×1.0 · primary procedural surface.</span></div><div class="is-critical"><b>Chromosphere</b><span>Scale ×1.005–1.015 · thin transition layer.</span></div><div><b>Corona</b><span>Scale ×1.5–3.0 · extended atmospheric volume.</span></div></div>
+              <figcaption class="atlas-schematic__note"><b>SYNC_STAMP</b><span>All layers sample the same field texture, so surface features and atmospheric responses remain spatially aligned.</span></figcaption>
+            </figure>
           </section>
 
           <section class="guide-section" id="media">
@@ -185,15 +205,19 @@ float3 ApplyExposure(float3 color, float exposure)
               </div>
               <figcaption class="media-caption">Interactive image slider: contain-based technical media, keyboard-operable controls, and a visible position counter.</figcaption>
             </figure>
+            <p class="guide-component-rule"><b>Interactive embed</b> — use only when interaction is evidence. Provide a title, lazy loading, a fixed minimum height, and a fallback link or explanation.</p>
+            <div class="atlas-interactive-frame"><div class="atlas-interactive-frame__fallback">LIVE_SHADER_PREVIEW<br>WebGL / iframe component boundary</div></div>
           </section>
 
           <section class="guide-section" id="actions">
             <h2>09 Actions and references</h2>
-            <p>Use filled blue only for the primary action. Bracket buttons are navigation or secondary commands. Destructive and success colors must retain their semantics.</p>
+            <p>Use filled blue only for the primary action. The quiet white dither action is the default for index navigation and supporting links: visible as part of the interface, but subordinate to the article. Bracket buttons are compact secondary commands.</p>
             <div class="atlas-btn-group guide-actions"><span class="atlas-btn-shadow"><a class="atlas-btn" href="#contract">Primary action</a></span><button class="atlas-btn atlas-btn--active" type="button">Active</button><button class="atlas-btn atlas-btn--ok" type="button">Validated</button><button class="atlas-btn atlas-btn--danger" type="button">Reset</button></div>
+            <p><span class="atlas-btn-shadow"><a class="atlas-btn atlas-btn--quiet" href="/blog/">open blog index →</a></span></p>
             <p><a class="atlas-btn atlas-btn--ghost atlas-btn--sm" href="/blog/">Ghost link</a> <a class="atlas-btn atlas-btn--bracket atlas-btn--sm" href="/content/guides/article-authoring.md">LLM source</a></p>
             <div class="atlas-shader-panel"><div class="atlas-shader-panel__header"><span class="atlas-shader-panel__title">Realtime parameter panel</span><span class="atlas-shader-panel__status"><i class="atlas-shader-panel__led"></i>ACTIVE</span></div><div class="atlas-shader-panel__body"><div class="atlas-shader-panel__block"><div class="atlas-shader-panel__block-title"><span>SHADER PARAMETERS</span><span class="atlas-shader-panel__block-hint">interactive component</span></div><div class="atlas-sp-grid"><span class="atlas-sp-prefix">val_</span><span class="atlas-sp-label">Exposure</span><output class="atlas-sp-value">1.00</output><div class="atlas-sp-row-full atlas-sp-slider-wrap"><input class="atlas-sp-slider" type="range" min="0" max="2" step="0.01" value="1" aria-label="Example exposure value"></div></div></div></div></div>
-            <div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">CODE</span><span class="atlas-ref-author">Pavel Zosim</span> — Atlas article framework.<br><a class="atlas-ref-link" href="https://github.com/pavelzosim/atlas-framework">github.com/pavelzosim/atlas-framework</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span>Primary technical documentation used to validate implementation claims.</span></li></ul></div>
+            <p class="guide-component-rule"><b>References</b> — place after the final content section. Number sources in citation order; identify the source type, author or organization, title, year when relevant, and a stable direct URL. Do not use a references block as a generic link list.</p>
+            <div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">CODE</span><span class="atlas-ref-author">Pavel Zosim</span> — Atlas article framework.<br><a class="atlas-ref-link" href="https://github.com/pavelzosim/atlas-framework">github.com/pavelzosim/atlas-framework</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">PAPER</span><span class="atlas-ref-author">Nordlund Å., Stein R.F., Asplund M.</span> — Solar Surface Convection. Living Reviews in Solar Physics, 2009.<br><a class="atlas-ref-link" href="https://link.springer.com/article/10.12942/lrsp-2009-2">link.springer.com/article/10.12942/lrsp-2009-2</a></span></li></ul></div>
           </section>
 
           <section class="guide-section" id="article-shell">

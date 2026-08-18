@@ -61,6 +61,10 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 | Image slider | `.media-frame.atlas-image-slider[data-image-slider]` |
 | Article header | `#site-passport > .passport-bp` |
 | Article footer | `#atlas-footer > .atlas-footer-wrapper` |
+| Quiet dither action | `.atlas-btn-shadow > .atlas-btn.atlas-btn--quiet` |
+| Geometry schematic | `figure.atlas-schematic` with inline accessible SVG and text legend |
+| Live interactive embed | `.atlas-interactive-frame` |
+| Inline technical parameter | `.atlas-param` |
 | Primary action | `.atlas-btn` |
 | Secondary action | `.atlas-btn--ghost` or `.atlas-btn--bracket` |
 | References | `.atlas-refs > .atlas-ref-list` |

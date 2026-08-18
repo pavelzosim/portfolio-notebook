@@ -101,6 +101,14 @@
   border: 1px solid var(--atlas-border);
 }
 
+/* Named runtime value inside prose or a comparison cell. */
+.atlas-container .atlas-param {
+  font-family: var(--atlas-font-mono);
+  font-size: .92em;
+  font-weight: 700;
+  color: var(--atlas-ink);
+}
+
 /* ── СЕКЦИЯ C: КОНТЕНТНЫЙ БЛОК — Заголовки и разделители ───────────────── */
 /* ВАЖНО: h2/h3/h4 внутри .content-block — это КОНТЕНТНЫЕ заголовки        */
 /* (малые, с префиксами). Они НЕ конфликтуют с семантическими h2=24px      */
@@ -282,4 +290,3 @@
   color: var(--atlas-ink-muted);
   font-size: 9px;
 }
-

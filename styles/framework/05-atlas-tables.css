@@ -192,3 +192,76 @@
   color: var(--atlas-ink-muted);
 }
 
+/* ── Explanatory geometry / cross-section schematic ───────────────────── */
+.atlas-container .atlas-schematic {
+  margin: var(--atlas-space-md) 0;
+  border: 1px solid var(--atlas-border);
+  background: var(--atlas-bg-alt);
+}
+.atlas-container .atlas-schematic__header {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--atlas-border);
+  color: var(--atlas-ink-muted);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+.atlas-container .atlas-schematic__canvas {
+  display: flex;
+  justify-content: center;
+  padding: var(--atlas-space-md);
+  border-bottom: 1px dashed var(--atlas-border);
+}
+.atlas-container .atlas-schematic__canvas svg {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+}
+.atlas-container .atlas-schematic__primary { stroke: var(--atlas-ink); }
+.atlas-container .atlas-schematic__secondary { stroke: var(--atlas-ink-muted); stroke-dasharray: 3 2; }
+.atlas-container .atlas-schematic__critical { stroke: var(--atlas-crit); }
+.atlas-container .atlas-schematic__leader { stroke: var(--atlas-ink-muted); }
+.atlas-container .atlas-schematic__label { fill: var(--atlas-ink); font: 700 6px var(--atlas-font-mono); }
+.atlas-container .atlas-schematic__label--critical { fill: var(--atlas-crit); }
+.atlas-container .atlas-schematic__legend {
+  display: grid;
+  gap: 8px;
+  padding: var(--atlas-space-sm);
+}
+.atlas-container .atlas-schematic__legend > div {
+  padding-left: 12px;
+  border-left: 2px solid var(--atlas-ink);
+}
+.atlas-container .atlas-schematic__legend > .is-critical { border-left-color: var(--atlas-crit); }
+.atlas-container .atlas-schematic__legend b {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--fs-code);
+  text-transform: uppercase;
+}
+.atlas-container .atlas-schematic__legend span {
+  color: var(--atlas-ink-soft);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+}
+.atlas-container .atlas-schematic__note {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: var(--atlas-space-sm);
+  border-top: 1px solid var(--atlas-border);
+  color: var(--atlas-ink-soft);
+  font-size: var(--fs-code);
+  line-height: 1.5;
+}
+.atlas-container .atlas-schematic__note b {
+  padding: 2px 6px;
+  background: var(--atlas-ink);
+  color: var(--atlas-bg);
+  font-size: var(--fs-status);
+}
+@media (max-width: 640px) {
+  .atlas-container .atlas-schematic__note { grid-template-columns: 1fr; }
+}
