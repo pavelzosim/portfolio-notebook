@@ -752,7 +752,7 @@
       "slug": "technical-art-basics-coordinate-transformation-systems",
       "kind": "article",
       "group": "technical-art",
-      "summary": "Technical art basics article explaining coordinate and transformation systems, including local, world, and view spaces in computer graphics.",
+      "summary": "A practical technical-art guide to coordinate spaces, transformation order, vector operations, and stable 3D rotations.",
       "tags": [
         "technical art",
         "coordinate systems",
@@ -766,7 +766,7 @@
       "sourceUrl": "https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems",
       "publicUrl": "https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems",
       "datePublished": "2025-02-17",
-      "dateModified": "2026-03-15",
+      "dateModified": "2026-08-24",
       "state": "published",
       "indexable": true
     },

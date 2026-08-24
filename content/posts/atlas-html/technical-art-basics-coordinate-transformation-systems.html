@@ -2,477 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1"><title>Technical Art Coordinate Transformation Systems · Pavel Zosim</title><meta name="description" content="Technical art basics article explaining coordinate and transformation systems, including local, world, and view spaces in computer graphics."><link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems"><meta property="og:type" content="article"><meta property="og:title" content="Technical Art Coordinate Transformation Systems"><meta property="og:description" content="Technical art basics article explaining coordinate and transformation systems, including local, world, and view spaces in computer graphics."><meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-9ca24a98c2ba2a35.png"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-9ca24a98c2ba2a35.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Technical Art Coordinate Transformation Systems"><meta name="twitter:description" content="Technical art basics article explaining coordinate and transformation systems, including local, world, and view spaces in computer graphics."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Technical Art Coordinate Transformation Systems", "description": "Technical art basics article explaining coordinate and transformation systems, including local, world, and view spaces in computer graphics.", "url": "https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems", "mainEntityOfPage": "https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems", "image": "https://www.pavelzosim.com/public/media/posts/index/asset-9ca24a98c2ba2a35.png", "datePublished": "2025-02-17", "dateModified": "2026-03-15", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
-
-
-
-
-
-
-  <link rel="stylesheet" href="/styles/atlas.css?v=53"><link rel="stylesheet" href="/styles/posts.css?v=14">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Technical Art Coordinate Transformation Systems · Pavel Zosim</title>
+  <meta name="description" content="A practical technical-art guide to coordinate spaces, transformation order, vector operations, and stable 3D rotations.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Technical Art Coordinate Transformation Systems">
+  <meta property="og:description" content="A practical technical-art guide to coordinate spaces, transformation order, vector operations, and stable 3D rotations.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-9ca24a98c2ba2a35.png">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-9ca24a98c2ba2a35.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Technical Art Coordinate Transformation Systems">
+  <meta name="twitter:description" content="A practical technical-art guide to coordinate spaces, transformation order, vector operations, and stable 3D rotations.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Technical Art Coordinate Transformation Systems","description":"A practical technical-art guide to coordinate spaces, transformation order, vector operations, and stable 3D rotations.","url":"https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems","mainEntityOfPage":"https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems","image":"https://www.pavelzosim.com/public/media/posts/index/asset-9ca24a98c2ba2a35.png","datePublished":"2025-02-17","dateModified":"2026-08-24","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=53">
+  <link rel="stylesheet" href="/styles/posts.css?v=15">
 </head>
-<body class="migrated-post" id="top">
+<body id="top">
+  <h1 class="seo-heading">Technical Art Coordinate Transformation Systems</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
-  <main class="post-shell">
-    <header class="post-header"><p class="post-path">~/blog/technical-art-basics-coordinate-transformation-systems.md</p><h1>Technical Art Coordinate Transformation Systems</h1><p class="post-summary">Technical art basics article explaining coordinate and transformation systems, including local, world, and view spaces in computer graphics.</p><div class="post-meta"><span>Pavel Zosim</span><span>2025-02-17</span><span>#technical-art</span><span>#coordinate-systems</span><span>#transformation-systems</span><span>#computer-graphics</span><span>#math</span></div></header>
-    <article class="atlas-container"><div class="content-block"><h2>Technical Art Coordinate Transformation Systems Overview</h2>
-<p>This article examines the technical art coordinate transformation systems utilized in computer graphics.</p>
-<p>&nbsp;</p>
-<p>In the realm of 3D graphics and technical art, a solid grasp of mathematical principles is crucial. This post <strong>provides an in-depth analysis of</strong> essential topics—from <strong>coordinate systems</strong> to transformation hierarchies and conventions (right- vs. left-handed)—all of which are vital for <strong>rigging</strong>, <strong>shader scripting</strong>, <strong>physics simulation</strong>, and ensuring <strong>cross-software consistency</strong>.</p>
-<hr>
-<h2> 1. Core coordinate Systems </h2>
-<p>A coordinate system maps points in space using axes. In 3D work you typically encounter:</p>
-<ol><li><strong>Local Space (Object Space):</strong> Coordinates relative to an object’s pivot (used in modeling and animation).</li><li><strong>World Space:</strong> A global coordinate system where every object’s position is defined via transformation matrices (usually built from translation, rotation, and scaling).</li><li><strong>View Space (Camera Space): </strong>Coordinates relative to the camera’s position and orientation (derived via the view matrix).</li><li><strong>Projection &amp; Screen Space: </strong>Steps that map view-space coordinates to clip-space and finally to 2D pixel coordinates via the projection matrix and viewport scaling.</li></ol>
-<p>&nbsp;</p>
-<p>The full journey of a vertex from creation to rendering:</p>
-<ul><li><strong>Local → World: </strong>world_position = model_matrix * local_position</li><li><strong>World → View:</strong> view_position = view_matrix * world_position</li><li><strong>View → Clip→ Screen:</strong> The projection matrix converts view space into clip space followed by a perspective divide and viewport scaling.</li></ul>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-9ca24a98c2ba2a35.png" alt="Diagram of coordinate transformations in 3D graphics, showing a cube&#x27;s position through model, world, view, clip, and image coordinates." loading="lazy"></div>
-<p>&nbsp;</p>
-<pre><code>Challenges &amp; Solutions: Issues may arise if pivot points or matrix orders are incorrect. For example, an object may appear misaligned if its local transformation isn’t combined properly with its parent’s world matrix. To solve this, use debugging tools (like Houdini or Blender) to inspect each matrix stage and verify the order of multiplication.</code></pre>
-<p>&nbsp;</p>
-<h3>Coordinate Conventions: Right-Handed vs. Left-Handed Systems</h3>
-<p>A coordinate system maps points in space using axes. In 2D, you have two axes (typically X and Y); in 3D, you add a Z-axis. Two primary conventions exist: <strong>right-handed (RHS) </strong>and<strong> left-handed (LHS)</strong>. While the underlying math remains the same, the orientation of the axes affects rotations, transformations, and asset imports.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><div class="gallery-grid"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-6d18130d2e508b2a.png" alt="Technical art coordinate transformation systems diagram" loading="lazy"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-72d276b96bf30c41.gif" alt="Technical art coordinate transformation systems diagram" loading="lazy"></div></div>
-<p>&nbsp;</p>
-<h3>1.1 Right-Handed Systems [RHS] </h3>
-<p>Preferred in rigorous mathematical contexts because it adheres to the right-hand rule—a foundational concept in physics. This consistency leads to <strong>predictable behavior in computations and simulations</strong>. Tools like <strong>OpenGL</strong>, <strong>Houdini</strong>, and <strong>Blender </strong>typically use <strong>RHS</strong>.</p>
-<p>&nbsp;</p>
-<p><strong>	Orientation:</strong></p>
-<ul><li>Thumb = <strong>X-axis</strong>: Typically points forward.</li><li>Index Finger = <strong>Y-axis</strong>: Points upward.</li><li>Middle Finger = <strong>Z-axis</strong>: Points to the right (orthogonal to both X and Y).</li></ul>
-<p>	</p>
-<p><strong>Practical Example: </strong>Imagine aligning a character: In an RHS, rotating a cube 45° about its Y-axis (using the right-hand rule) will consistently align its front with the positive X direction. In an LHS, the same rotation might require adjustments (often a flip in the Z-axis) to maintain correct asset orientation.</p>
-<p>&nbsp;</p>
-<pre><code>Challenges &amp; Solutions: When transferring assets between systems, normals, texture coordinates, and rotations may become inconsistent. A common issue is “mirroring” of parts or flipped normals. To resolve this, explicitly convert coordinates (and associated rotation matrices) by applying a conversion matrix or by adjusting texture coordinate origins (bottom-left in OpenGL vs. top-left in DirectX). Testing and unit conversions are key to catching these errors early.</code></pre>
-<p>&nbsp;</p>
-<h3>1.2 Left-Handed Systems (LHS) </h3>
-<p>Adopted by specific graphics APIs and software (such as <strong>DirectX </strong>and, by default, some game engines like <strong>Unity </strong>and <strong>Unreal</strong>) for historical reasons, ease of integration, or interface design considerations. Although the <strong>underlying math remains the same</strong>, the <strong>axes’ orientation is flipped</strong> relative to RHS, and this must be accounted for during asset transfers and rendering.</p>
-<p>&nbsp;</p>
-<p>Frequently <strong>used</strong> in<strong> DirectX,</strong> and in some cases (by default) in<strong> game engines</strong> like <strong>Unity </strong>and <strong>Unreal.</strong></p>
-<p>&nbsp;</p>
-<p><strong>	Orientation:</strong></p>
-<ul><li>Thumb = <strong>X-axis</strong>: Typically points forward.</li><li>Index Finger = <strong>Y-axis</strong>: Points upward.</li><li>Middle Finger = <strong>Z-axis</strong>: Points toward the viewer (inward), opposite to the RHS direction.</li></ul>
-<p>	</p>
-<p><strong>Shader Tip:</strong> In HLSL, you might need to flip texture coordinates manually:</p>
-<div class="atlas-embed"><!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
-2
-3</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #60a0b0; font-style: italic">// HLSL example: Flip V coordinate to match bottom-left origin</span>
-float2 flippedUV = float2(input.UV.x, <span style="color: #40a070">1.0</span> - input.UV.y);
-float4 color = tex2D(TextureSampler, flippedUV);
-</pre></td></tr></table></div>
-</div>
-<p>&nbsp;</p>
-<h3>Key Difference Summary:</h3>
-<div class="atlas-table-frame"><table><tr><th><p>Feature</p></th><th><p>Right-Handed</p></th><th><p>Left-Handed</p></th></tr><tr><td><p>Z-axis direction</p></td><td><p>Away from viewer (depth)</p></td><td><p>Toward viewer (screen)</p></td></tr><tr><td><p>Common Use Cases</p></td><td><p>OpenGL, Houdini, Blender</p></td><td><p>DirectX, Unity (default)</p></td></tr><tr><td><p>Artist Impact</p></td><td><p>Affects camera orientation, mesh <strong>normals</strong>, and interoperability between tools. Asset export/import may require axis flipping.</p></td><td><p>Requires adjustments during asset transfers, especially for normals and texture coordinates</p></td></tr></table></div>
-<p>&nbsp;</p>
-<h3>1.3 World vs. Local Coordinates </h3>
-<p>Local coordinates define positions relative to an object’s own pivot. These are later transformed into world coordinates using the parent’s transformation matrix. The relationship is often expressed as: <strong>World_Matrix = Parent_World_Matrix × Local_Transform_Matrix</strong></p>
-<p>This ensures that—even if an object is far from the world origin—its final world position is correctly computed from its local transform combined with that of its parent.</p>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-7f5e532b5910a0c3.png" alt="Diagram of coordinate axes showing transformations from World Space (x,y,z) to multiple Model Spaces (x₁,y₁,z₁) with explanatory text." loading="lazy"></div>
-<p><strong>Note: </strong>All these <strong>transformations are performed at the program level</strong> by the graphics engine using matrix multiplication.</p>
-<p>&nbsp;</p>
-<ul><li><strong>Houdini/Blender:</strong> Allow you to inspect both local and world transformations, making it easier to debug issues.</li><li><strong>Unity/Unreal:</strong> Typically handle these transformations in the engine core, making the multiplication order critical.</li></ul>
-<p>&nbsp;</p>
-<p><strong>Practical Example: </strong>For instance, if a character is placed at (1000, 0, 0) in world space and its sword has a local offset of (1, 0, 0), the sword’s final world position becomes approximately (1001, 0, 0) after transformation.</p>
-<p>&nbsp;</p>
-<pre><code>Challenges &amp; Solutions: Errors such as misaligned animations can occur if pivot points are misconfigured or if parent–child relationships are incorrect. The solution is to double-check the transformation hierarchy and verify that local transforms are being multiplied in the proper order.</code></pre>
-<hr>
-<p>&nbsp;</p>
-<h2> 2. Matrix Transformation Order (ROT, SCALE, POS) </h2>
-<p>The order in which transformations are applied is critical; the same operations in a different sequence can yield completely different results.</p>
-<p>&nbsp;</p>
-<p>Transforming objects in 3D space involves applying <strong>rotation (ROT)</strong>, <strong>scaling (SCALE)</strong>, and<strong> position (POS) </strong>matrices. The <strong>order of these operations is critical</strong>, as different sequences yield different results.</p>
-<p>&nbsp;</p>
-<p><strong>Final_Matrix = Translation × Rotation × Scale </strong>This order means that scaling occurs first, then rotation is applied, and finally the object is translated. Note that some engines (like Unity) might internally follow a different order (e.g., Scale → Rotate → Translate), so be sure to check documentation.</p>
-<p>&nbsp;</p>
-<p><strong>ROT × SCALE ≠ SCALE × ROT</strong> — rotating a scaled object distorts its orientation.</p>
-<p>In <strong>RHS</strong>, a <strong>positive rotation</strong> around the Z-axis <strong>is</strong> <strong>clockwise</strong>, while in<strong> LHS</strong>, <strong>it’s counterclockwise</strong>.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><div class="gallery-grid"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-eea0e54e1a6ba50f.png" alt="Technical art coordinate transformation systems diagram" loading="lazy"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-0a551c2bc6eec595.png" alt="Technical art coordinate transformation systems diagram" loading="lazy"></div></div>
-<p><em>Scaling an object and then rotating it produces a different outcome than rotating before scaling.</em></p>
-<p>&nbsp;</p>
-<p><strong>Practical Example: </strong>Scaling an object and then rotating it produces a different outcome than rotating before scaling. In many engines:</p>
-<p>&nbsp;</p>
-<ul><li><strong>Unity:</strong> Often applies Scale, then Rotate, then Translate for the local transformation matrix.</li><li><strong>Unreal Engine:</strong> Uses a similar order but may represent rotations internally with <strong>quaternions</strong>, <strong>affecting interpretation</strong>.</li><li><p><strong>3D Modeling Software (e.g., Houdini, Blender):</strong></p><ul><li>These applications often allow users to inspect and adjust the local transformation order.</li><li><p>They may also offer options for customizing the transformation hierarchy, affecting the final orientation and position in world space.</p><p>&nbsp;</p></li></ul></li></ul>
-<div class="atlas-embed"><!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
-2
-3
-4
-5</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #666666">//</span> Pseudo<span style="color: #666666">-</span>code <span style="color: #007020; font-weight: bold">for</span> transformation order:
-mat4 scaleMatrix <span style="color: #666666">=</span> createScaleMatrix(sx, sy, sz);
-mat4 rotationMatrix <span style="color: #666666">=</span> createRotationMatrix(angle, axis);
-mat4 translationMatrix <span style="color: #666666">=</span> createTranslationMatrix(tx, ty, tz);
-mat4 finalMatrix <span style="color: #666666">=</span> translationMatrix <span style="color: #666666">*</span> rotationMatrix <span style="color: #666666">*</span> scaleMatrix;
-</pre></td></tr></table></div>
-</div>
-<p><em>This order ensures the object is first </em><em><strong>scaled</strong></em><em>, then </em><em><strong>rotated</strong></em><em>, and finally moved into </em><em><strong>position</strong></em><em>.</em></p>
-<p>&nbsp;</p>
-<pre><code>Challenges &amp; Solutions: A common problem is an unexpected distortion or misorientation. Debugging can include printing out intermediate matrices or using visualization tools to step through the transformation pipeline and confirm that the applied order matches the intended design.</code></pre>
-<hr>
-<h2>3. Matrices and Coordinate Systems</h2>
-<p>Matrices are the <strong>workhorses of 3D transformations</strong>.They convert vertex positions between different coordinate spaces (object, world, view, clip) by encoding <strong>translation, rotation, and scaling</strong>. Understanding their structure and multiplication rules is essential for <strong>shader writing, rigging, and asset integration</strong>.</p>
-<p>&nbsp;</p>
-<h2>Unity Transformation Matrices</h2>
-<p>Unity provides several built-in matrices for spatial transformations:</p>
-<p>&nbsp;</p>
-<ul><li><strong>UNITY_MATRIX_MVP</strong></li><li><strong>UNITY_MATRIX_MV</strong></li><li><strong>UNITY_MATRIX_V</strong></li><li><strong>UNITY_MATRIX_P</strong></li><li><strong>UNITY_MATRIX_VP</strong></li><li><strong>UNITY_MATRIX_T_MV</strong></li><li><strong>UNITY_MATRIX_IT_MV</strong></li><li><strong>unity_ObjectToWorld</strong></li><li><p><strong>unity_WorldToObject</strong></p><p>&nbsp;</p></li></ul>
-<p>All of these are <strong>4×4 matrices</strong> (four rows × four columns).</p>
-<h3>Conceptual representation:</h3>
-<pre><code>UNITY_MATRIX
-(
-Xx, Yx, Zx, Tx,
-Xy, Yy, Zy, Ty,
-Xz, Yz, Zz, Tz,
-Xt, Yt, Zt, Tw
-);
-</code></pre>
-<h4>Object-Space and the Model Matrix</h4>
-<p>In Maya, a polygon object has two nodes: <strong>transform</strong> and <strong>shape</strong>.They calculate vertex positions in <strong>object-space</strong> — relative to the object’s center.</p>
-<ul><li>Each vertex is multiplied by the <strong>model matrix (UNITY_MATRIX_M)</strong>.</li><li>When the object is <strong>moved, rotated, or scaled</strong>, the model matrix updates accordingly.</li></ul>
-<p><strong>Example:</strong>  A cube vertex in object-space:([0.5f, -0.5f, -0.5f, 1])</p>
-<p>&nbsp;</p>
-<h4>Homogeneous Coordinates (W Channel)</h4>
-<ul><li><strong>W = 1</strong> → point in space (X, Y, Z, 1)</li><li><strong>W = 0</strong> → direction in space (X, Y, Z, 0)</li></ul>
-<p>&nbsp;</p>
-<p>This system allows points and vectors to be handled uniformly in matrix operations.</p>
-<p>&nbsp;</p>
-<h4>Matrix Multiplication</h4>
-<ul><li>Multiplication is valid when <strong>columns of the first matrix = rows of the second</strong>.</li><li>Model matrix (4×4) × Vertex (4×1) → Result (4×1).</li><li><p>This process is applied to all vertices in the <strong>vertex shader stage</strong>.</p><p>&nbsp;</p></li></ul>
-<h4>Coordinate Spaces</h4>
-<ul><li><strong>Object-Space</strong> → relative to the object’s center.</li><li><p><strong>World-Space</strong> → relative to the world’s origin.</p><ul><li>Use: unity_ObjectToWorld</li></ul></li><li><p><strong>View-Space</strong> → relative to the camera’s position and orientation.</p><ul><li>Use: UNITY_MATRIX_V</li></ul></li><li><p><strong>Clip-Space (Projection-Space)</strong> → relative to the camera’s frustum (near/far clipping planes, field of view).</p><ul><li>Use: UNITY_MATRIX_P</li></ul></li></ul>
-<p>&nbsp;</p>
-<h4>Combined Transformations</h4>
-<ul><li><p><strong>UNITY_MATRIX_MVP = M × V × P</strong></p><ul><li>M → Model</li><li>V → View</li><li><p>P → Projection</p><p>&nbsp;</p></li></ul></li></ul>
-<p>This matrix transforms vertices from <strong>object-space → clip-space</strong>, preparing them for rendering on a <strong>2D screen</strong>.</p>
-<p>&nbsp;</p>
-<h4>Key Shader Function</h4>
-<p>Unity provides a helper function:<strong>UnityObjectToClipPos</strong>  Used in the <strong>vertex shader stage</strong> to perform this transformation.</p>
-<hr>
-<p>&nbsp;</p>
-<h2> 4. The Cross Product </h2>
-<p>The cross product <strong>takes two vectors and produces a third vector perpendicular to both</strong>. It is used to compute surface normals and determine rotation axes.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-91da9cbcd200515a.png" alt="Vectors on a red background: blue Vector 1 and yellow Vector 2 forming a cross product shown by a purple arrow." loading="lazy"><div class="media-caption">Illustration showing how to find the third cross product vector</div></div>
-<p><strong>Right-Handed System:</strong> (1, 0, 0) × (0, 1, 0) = (0, 0, 1)</p>
-<p><strong>Left-Handed System: </strong>(1, 0, 0) × (0, 1, 0) = (0, 0, -1)</p>
-<p>&nbsp;</p>
-<div class="media-frame"><iframe src="https://www.youtube.com/embed/eu6i7WJeinw" title="Cross products | Chapter 10, Essence of linear algebra" loading="lazy" allowfullscreen></iframe><div class="media-caption">Cross products | Chapter 10, Essence of linear algebra</div></div>
-<p>&nbsp;</p>
-<p><strong>Practical Example:</strong>: In a game, an auto turret might use the cross product to compute the direction perpendicular to a surface, helping it track a target accurately.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><div class="gallery-grid"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-a7eccc0d6ee8dcbc.png" alt="Technical art coordinate transformation systems diagram" loading="lazy"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-8f69b151dbb38571.webp" alt="Technical art coordinate transformation systems diagram" loading="lazy"></div></div>
-<p>&nbsp;</p>
-<div class="atlas-embed"><!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
-2
-3</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #007020; font-weight: bold">void</span> <span style="color: #06287e">Update</span> () {
-	Vector3 toTarget = target.position - transform.position;
-	Vector3 crossProduct = Vector3.Cross (transform.forward, toTarget);
-</pre></td></tr></table></div>
-</div>
-<p>&nbsp;</p>
-<p>If you have a surface defined by two vectors (e.g., local_tangent and local_bitangent), their cross product gives the surface normal. This normal is then transformed into world space using the engine’s normal matrix—critical for proper lighting and shading.</p>
-<p>&nbsp;</p>
-<pre><code>Challenges &amp; Solutions: Incorrect normal calculations can lead to lighting errors or misaligned rotations. Validate your cross product computations in both shader code and transformation matrices. Use debugging tools to ensure the calculated normals match expected results.</code></pre>
-<hr>
-<p>&nbsp;</p>
-<h2> 5. The DOT Product </h2>
-<p>The dot product takes two vectors and returns a single scalar value. This scalar represents the cosine of the angle between the vectors multiplied by their magnitudes, making it essential for determining how much one vector "points in the direction" of another.</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-26c36f855f3450ea.png" alt="Group of women in colorful dresses dance joyfully outdoors. Background shows trees and blue sky. The mood is festive and lively." loading="lazy"><div class="media-caption">Illustration showing how to find the angle between vectors using the dot product</div></div>
-<div class="media-frame"><iframe src="https://www.youtube.com/embed/C0sPtQ3wX9o" title="The dot product" loading="lazy" allowfullscreen></iframe><div class="media-caption">The dot product</div></div>
-<p>&nbsp;</p>
-<p><strong>Practical Example: </strong></p>
-<p>Consider a boost pad where the red arrow represents speed and the blue arrow represents the pad’s orientation.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-83a0e05cad1e0e24.png" alt="Blue duck on water racing game track, arrows guide direction. Timer shows 00:28. Bright colors, boost button on right, Deloitte Digital logo." loading="lazy"></div>
-<p>The effective boost is calculated as: <strong>boost effect = |speed| * |boost| * cos(θ)</strong></p>
-<p>where <strong>cos(θ) </strong>is the <strong>result of the dot product.</strong></p>
-<p>&nbsp;</p>
-<p>The dot product allows you to calculate:</p>
-<ul><li><strong>Lighting Calculations: </strong>Used to compute the intensity of diffuse lighting by taking the dot product between a surface normal and the light direction.</li><li><strong>Angle Measurement: </strong>Since it yields a cosine value, the dot product helps determine the angle between vectors—<strong>useful for backface culling and collision detection</strong>.</li></ul>
-<p>&nbsp;</p>
-<div class="atlas-embed"><!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
-2
-3
-4</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #60a0b0; font-style: italic">// Pseudo-code for a diffuse lighting calculation:</span>
-vec3 normal = normalize(surfaceNormal);
-vec3 lightDir = normalize(lightDirection);
-<span style="color: #902000">float</span> diffuseIntensity = max(dot(normal, lightDir), <span style="color: #40a070">0.0</span>);
-</pre></td></tr></table></div>
-</div>
-<p>&nbsp;</p>
-<pre><code>Challenges &amp; Solutions: Without normalizing vectors, the dot product might yield incorrect values, affecting lighting or boost calculations. Always normalize vectors before computing the dot product. Check for consistency in coordinate systems when transferring assets between tools.</code></pre>
-<hr>
-<p>&nbsp;</p>
-<h2> 6. Quaternions &amp; Euler Angles </h2>
-<p><strong>Quaternions </strong>represent rotation in 3D space using four numbers – <strong>𝑤,𝑥,𝑦,𝑧</strong>.</p>
-<p>Here, w is the scalar part, and x, y, z form the vector part. Together, they encode information about the rotation angle and axis in a compact form, avoiding problems inherent in describing rotations with successive <strong>Euler angles </strong>(<strong>pitch</strong>, <strong>yaw</strong>, <strong>roll</strong>).</p>
-<p>&nbsp;</p>
-<p><strong>Euler Angles: </strong>Represent rotations via <strong>pitch</strong>, <strong>yaw</strong>, and <strong>roll </strong>but can suffer from <strong>gimbal lock</strong>—a loss of one degree of freedom.</p>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-1998d1b06fd40ddd.gif" alt="Three colorful gyroscope illustrations on a white background; each gyroscope has red, green, and blue rings with various alignments." loading="lazy"><div class="media-caption">Gimbals above provide yaw, roll, and pitch movements. Image credit: Mark Hughes (made with Mathematica)</div></div>
-<p>The<strong> rotation axes </strong>are <strong>not always independent</strong>, and solutions are not always unique. It is possible for the plane of two gimbals to align, and a condition known as gimbal lock occurs. In gimbal lock, two of three gimbals are parallel or very nearly parallel, and what began as three degrees of freedom (yaw, pitch, and roll) reduces to two degrees of freedom—two axes of rotation can describe the same rotational motion. At the same time, one degree of freedom is lost and that information disappears. Once gimbal lock occurs, it is impossible to reorient the axes without an external reference.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-8b3eee1a063414bb.gif" alt="Two colorful gyroscopes with red, green, and blue rings on a white background. The setting is minimalistic and technical." loading="lazy"><div class="media-caption">When the green circle is aligned or close to aligned with the red circle, movements of the red circle and the blue circle coincide and "gimbal-lock" occurs. Image credit: Mark Hughes.</div></div>
-<p>When using <strong>Euler angles</strong>, you describe rotation as a series of consecutive rotations around fixed axes (e.g., <strong>first around the X-axis (pitch), then the Y-axis (yaw), and finally the Z-axis (roll)).</strong> </p>
-<p>&nbsp;</p>
-<p><strong>This approach has two main drawbacks:</strong></p>
-<ul><li><strong>The order of rotations matters.</strong> Different sequences of rotations can result in different final orientations.</li><li><strong>Gimbal Lock.</strong> At certain angles, rotation axes can align, resulting in the loss of one degree of freedom.</li></ul>
-<p>&nbsp;</p>
-<p>In contrast, quaternions combine all rotation information into a single entity, preventing gimbal lock and allowing for <strong>smooth interpolation between orientations (slerp)</strong>. This is particularly important in animations and simulations, where stable and predictable rotations are needed.</p>
-<p>&nbsp;</p>
-<p><strong>What do w, x, y, z mean?</strong></p>
-<p>For a rotation angle θ around a normalized axis (uₓ, u_y, u_z), the quaternion is defined as follows:</p>
-<p><strong>w = cos(θ/2)  </strong></p>
-<p><strong>x = uₓ · sin(θ/2)  </strong></p>
-<p><strong>y = u_y · sin(θ/2)  </strong></p>
-<p><strong>z = u_z · sin(θ/2)</strong></p>
-<p>&nbsp;</p>
-<p><strong>Here:</strong></p>
-<ul><li><strong>w </strong>– the scalar part, defining the "scale" of the rotation via the cosine of half the rotation angle.</li><li><strong>x, y, z</strong> – the components of the vector part, defining the rotation axis, multiplied by the sine of half the rotation angle.</li></ul>
-<div class="media-frame"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-40e352b2f6ba6cf8.png" alt="Three 3D vectors intersect at an origin: Vector 1 is blue, Vector 2 is orange, and Vector 3 is purple. Red arc shows angle θ." loading="lazy"><div class="media-caption">Every rotation operation can be written as a rotation of some angle, \theta, around some vector (ux1, uy1, u_z):</div></div>
-<p><strong>Quaternions: </strong>A quaternion is an ordered set of four real numbers (𝑤,𝑥,𝑦,𝑧),</p>
-<p>often written as<strong> 𝑤 + 𝑥</strong><strong>𝑖</strong><strong> + 𝑦</strong><strong>𝑗</strong><strong> + 𝑧</strong><strong>𝑘, </strong>where 𝑖,𝑗,𝑘 are not variables but basis elements for 3D space. Quaternions are crucial in 3D graphics because:</p>
-<p>&nbsp;</p>
-<ul><li><strong>They represent rotations in 3D</strong>—analogous to how multiplying complex numbers can represent rotations in 2D.</li><li><strong>They avoid gimbal lock</strong>, a problem where one rotational axis can become “lost” when using Euler angles (pitch, yaw, roll).</li><li><strong>They allow for smooth interpolation</strong> (slerp) between orientations, which is vital for animations and camera movements.</li></ul>
-<p>&nbsp;</p>
-<div class="media-frame"><iframe src="https://www.youtube.com/embed/zjMuIxRvygQ" title="Quaternions and 3d rotation, explained interactively" loading="lazy" allowfullscreen></iframe><div class="media-caption">Quaternions and 3d rotation, explained interactively</div></div>
-<p>&nbsp;</p>
-<h2>Key Mathematical Properties</h2>
-<p><strong>Defining property: </strong></p>
-<p>&nbsp;</p>
-<div class="atlas-embed"><style>
-    .formula {
-        font-size: 18px;
-    }
-</style>
 
-<center><i>
-    <b class="formula">
-        i<sup>2</sup> = j<sup>2</sup> = k<sup>2</sup> = ijk = -1
-    </b>
-</center>
-</div>
-<p>&nbsp;</p>
-<p><strong>Non-commutative multiplication:</strong></p>
-<p>The order of multiplication matters, much like matrix multiplication.</p>
-<p>&nbsp;</p>
-<div class="atlas-embed"><style>
-    .formula {
-        font-size: 18px;
-    }
-</style>
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+      <h2 id="pipeline">01 Coordinate-space pipeline</h2>
+      <p>A 3D point has meaning only inside a coordinate space. During rendering, a vertex moves through a sequence of spaces: from the model's local frame to the world, then to the camera, clip space, and finally the image.</p>
 
-<center><i>
-    <b class="formula">
-        ij = k but ji = -k</div>
-<p><strong>Unit Quaternions:</strong></p>
-<p>When using quaternions to represent rotations, we typically use <strong>unit quaternions</strong>, i.e., quaternions normalized to have a magnitude (norm) of 1:</p>
-<p>&nbsp;</p>
-<div class="atlas-embed"><style>
-    .formula {
-        font-size: 18px;
-    }
-</style>
+      <figure class="media-frame">
+        <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-9ca24a98c2ba2a35.png" alt="Vertex transformation pipeline from model coordinates through world, view, clip, and image coordinates" loading="eager">
+        <figcaption class="media-caption">The same vertex expressed in successive coordinate spaces.</figcaption>
+      </figure>
 
-<center><i>
-    <b class="formula">
-        N(q) = √w<sup>2</sup> + x<sup>2</sup> + y<sup>2</sup> + z<sup>2</sup> = 1
-    </b>
-</center></div>
-<p>&nbsp;</p>
-<p>Normalizing after certain operations helps avoid floating-point errors accumulating over time.</p>
-<div class="atlas-embed"><!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
-2
-3
-4
-5
-6
-7
-8</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #007020; font-weight: bold">public</span> <span style="color: #902000">float</span> <span style="color: #06287e">Norm</span>(){
-  <span style="color: #007020; font-weight: bold">return</span> Mathf.Sqrt (w * w + x * x + y * y + z * z);
-}
+      <div class="atlas-table-frame atlas-table-frame--solid">
+        <div class="atlas-table-header-solid">[ SPACE_PIPELINE // REFERENCE ]</div>
+        <table class="atlas-table">
+          <thead><tr><th>Space</th><th>Relative to</th><th>Typical use</th></tr></thead>
+          <tbody>
+            <tr><td>Local / object</td><td>The object's pivot and axes</td><td>Modeling, rigging, procedural deformation</td></tr>
+            <tr><td>World</td><td>The scene origin</td><td>Placement, physics, object-to-object queries</td></tr>
+            <tr><td>View / camera</td><td>The active camera</td><td>Lighting and view-dependent effects</td></tr>
+            <tr><td>Clip / NDC</td><td>The camera frustum</td><td>Clipping and projection</td></tr>
+            <tr><td>Screen</td><td>The viewport or image</td><td>Pixels, UI, post-processing</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-<span style="color: #007020; font-weight: bold">public</span> Quat <span style="color: #06287e">Normalize</span>(){
-  <span style="color: #902000">float</span> m = Norm ();
-  <span style="color: #007020; font-weight: bold">return</span> <span style="color: #007020; font-weight: bold">new</span> <span style="color: #06287e">Quat</span> (w / m, x / m, y / m, z / m);
-}
-</pre></td></tr></table></div>
-</div>
-<p>&nbsp;</p>
-<p>Since multiplication is not commutative, I made this function static to avoid confusing left and right multiplication. Also, I normalize the product so that floating point errors don’t accumulate.</p>
-<div class="atlas-embed"><!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
-2
-3
-4
-5
-6
-7
-8</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #60a0b0; font-style: italic">// Returns a*b</span>
-<span style="color: #007020; font-weight: bold">public</span> <span style="color: #007020; font-weight: bold">static</span> Quat <span style="color: #06287e">Multiply</span>(Quat a, Quat b){
-  <span style="color: #902000">float</span> w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
-  <span style="color: #902000">float</span> x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
-  <span style="color: #902000">float</span> y = a.w * b.y + a.y * b.w - a.x * b.z + a.z * b.x;
-  <span style="color: #902000">float</span> z = a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.x;
-  <span style="color: #007020; font-weight: bold">return</span> <span style="color: #007020; font-weight: bold">new</span> <span style="color: #06287e">Quat</span> (w,x,y,z).Normalize();
-}
-</pre></td></tr></table></div>
-</div>
-<p>&nbsp;</p>
-<div class="media-frame"><iframe src="https://www.youtube.com/embed/MYRtwY-DQV8" title="[VEX for Algorithmic Design] E14 _ Quaternion Basics" loading="lazy" allowfullscreen></iframe><div class="media-caption">[VEX for Algorithmic Design] E14 _ Quaternion Basics</div></div>
-<p>&nbsp;</p>
-<p><strong>Practical Example: </strong></p>
-<p>Imagine modeling an airplane's movement. Its <strong>position </strong>is represented as a point in 3D space, while its orientation (pitch, yaw, roll) is typically defined using <strong>Euler angles</strong>.</p>
-<div class="media-frame"><div class="gallery-grid"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-ff4fb8bb25084dc3.png" alt="Technical art coordinate transformation systems diagram" loading="lazy"><img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-98de60ab3b9bab2b.gif" alt="Technical art coordinate transformation systems diagram" loading="lazy"></div></div>
-<p><em>When real pilots talk about their orientation, they talk about </em><em><strong>roll, yaw, pitch</strong></em><em>. Pitch is going up or down, yaw is going left or right, roll is, well, roll.</em></p>
-<p>&nbsp;</p>
-<p>However, as the airplane pitches upward, approaching a vertical position (nose up), a problem arises: when the pitch reaches 90°, the yaw and roll axes align. This leads to gimbal lock, resulting in the loss of one degree of freedom.</p>
-<p>&nbsp;</p>
-<p><strong>Consequences of gimbal lock:</strong></p>
-<ul><li>Instead of rotating freely in three dimensions, rotation is constrained to just two.</li><li>Roll starts behaving like yaw, causing unpredictable behavior.</li></ul>
-<p>&nbsp;</p>
-<p>By using <strong>quaternions</strong>, this issue is avoided. Quaternions encode rotation without breaking orientation, ensuring stable and correct movement regardless of angles.</p>
-<p>&nbsp;</p>
-<p>The problem becomes more and more severe when the pitch of the plane becomes higher and higher. The worst case is when the airplane is pointing straight up: then roll and yaw become the same thing! This is called <strong>gimbal lock:</strong> we have lost a degree of freedom and <strong>we can only rotate in 2 dimensions</strong>. As long as we use Euler Angles, there is one direction where if we turn too far.</p>
-<p>&nbsp;</p>
-<p><strong>Below is an implementation of a Quat class for working with quaternions:</strong></p>
-<div class="atlas-embed"><!-- HTML generated using hilite.me --><div style="background: #f0f0f0; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #007020; font-weight: bold">using</span> <span style="color: #0e84b5; font-weight: bold">UnityEngine</span>;
+      <pre><code>world = modelMatrix * localPosition
+view  = viewMatrix  * world
+clip  = projectionMatrix * view
+ndc   = clip.xyz / clip.w</code></pre>
 
-<span style="color: #007020; font-weight: bold">public</span> <span style="color: #007020; font-weight: bold">class</span> <span style="color: #0e84b5; font-weight: bold">Quat</span>
-{
-    <span style="color: #60a0b0; font-style: italic">// Fields representing the quaternion (w + xi + yj + zk)</span>
-    <span style="color: #007020; font-weight: bold">public</span> <span style="color: #902000">float</span> w, x, y, z;
+      <div class="atlas-callout atlas-callout--note">
+        <p><strong>Debugging rule:</strong> label the space of every position, vector, normal, and matrix. Most transformation bugs begin when two values from different spaces are combined as if they shared one basis.</p>
+      </div>
 
-    <span style="color: #60a0b0; font-style: italic">// Constructor to initialize the quaternion</span>
-    <span style="color: #007020; font-weight: bold">public</span> <span style="color: #06287e">Quat</span>(<span style="color: #902000">float</span> w, <span style="color: #902000">float</span> x, <span style="color: #902000">float</span> y, <span style="color: #902000">float</span> z)
-    {
-        <span style="color: #007020; font-weight: bold">this</span>.w = w;
-        <span style="color: #007020; font-weight: bold">this</span>.x = x;
-        <span style="color: #007020; font-weight: bold">this</span>.y = y;
-        <span style="color: #007020; font-weight: bold">this</span>.z = z;
-    }
+      <div class="atlas-section-break" data-index="// § 01"></div>
 
-    <span style="color: #60a0b0; font-style: italic">// Method to compute the norm (magnitude) of the quaternion</span>
-    <span style="color: #007020; font-weight: bold">public</span> <span style="color: #902000">float</span> <span style="color: #06287e">Norm</span>()
-    {
-        <span style="color: #007020; font-weight: bold">return</span> Mathf.Sqrt(w * w + x * x + y * y + z * z);
-    }
+      <h2 id="handedness">02 Handedness and interchange</h2>
+      <p>A coordinate system is right-handed or left-handed according to the orientation of its basis vectors. Handedness changes how positive directions, rotations, triangle winding, and cross products are interpreted. The mathematics remains valid in either convention; the danger is an incomplete conversion between them.</p>
 
-    <span style="color: #60a0b0; font-style: italic">// Method to normalize the quaternion (scale it to unit length)</span>
-    <span style="color: #007020; font-weight: bold">public</span> Quat <span style="color: #06287e">Normalize</span>()
-    {
-        <span style="color: #902000">float</span> magnitude = Norm();
-        <span style="color: #007020; font-weight: bold">return</span> <span style="color: #007020; font-weight: bold">new</span> <span style="color: #06287e">Quat</span>(w / magnitude, x / magnitude, y / magnitude, z / magnitude);
-    }
+      <figure class="media-frame">
+        <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-6d18130d2e508b2a.png" alt="Comparison of left-handed and right-handed 3D coordinate systems" loading="lazy">
+        <figcaption class="media-caption">Left- and right-handed bases. Axis labels alone are insufficient; their orientation as a set defines the convention.</figcaption>
+      </figure>
 
-    <span style="color: #60a0b0; font-style: italic">// Static method to multiply two quaternions and return the normalized result</span>
-    <span style="color: #007020; font-weight: bold">public</span> <span style="color: #007020; font-weight: bold">static</span> Quat <span style="color: #06287e">Multiply</span>(Quat a, Quat b)
-    {
-        <span style="color: #902000">float</span> w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
-        <span style="color: #902000">float</span> x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
-        <span style="color: #902000">float</span> y = a.w * b.y + a.y * b.w - a.x * b.z + a.z * b.x;
-        <span style="color: #902000">float</span> z = a.w * b.z + a.z * b.w + a.x * b.y - a.y * b.x;
-        <span style="color: #007020; font-weight: bold">return</span> <span style="color: #007020; font-weight: bold">new</span> <span style="color: #06287e">Quat</span>(w, x, y, z).Normalize();
-    }
+      <p>When moving an asset between a DCC, an engine, and a graphics API, verify the complete exchange contract:</p>
+      <ul>
+        <li>up and forward axes;</li>
+        <li>handedness and rotation convention;</li>
+        <li>matrix layout and vector multiplication order;</li>
+        <li>triangle winding, normals, and tangent-space sign;</li>
+        <li>UV origin and texture orientation;</li>
+        <li>distance and angle units.</li>
+      </ul>
 
-    <span style="color: #60a0b0; font-style: italic">// Method to convert the custom quaternion to Unity&#39;s built-in Quaternion class</span>
-    <span style="color: #007020; font-weight: bold">public</span> Quaternion <span style="color: #06287e">ToUnityQuaternion</span>()
-    {
-        <span style="color: #007020; font-weight: bold">return</span> <span style="color: #007020; font-weight: bold">new</span> <span style="color: #06287e">Quaternion</span>(w, x, y, z);
-    }
-}
-</pre></td></tr></table></div>
-</div>
-<p>&nbsp;</p>
-<pre><code>Challenge 1: Gimbal Lock in Euler Angles
-Euler angles define rotations through sequential rotations around fixed axes (pitch, yaw, roll). However, at certain orientations (e.g., when pitch = ±90°), two axes align, leading to **gimbal lock**, where one degree of freedom is lost.
+      <div class="atlas-section-break" data-index="// § 02"></div>
 
-Solution: Use quaternions instead of Euler angles. Quaternions store rotation as a single entity, avoiding gimbal lock and ensuring smooth interpolation (slerp).
+      <h2 id="hierarchy">03 Local, world, and hierarchy</h2>
+      <p>Local space makes an object's data independent of scene placement. A child transform is evaluated through its parent hierarchy, so moving a character also moves the prop attached to the character's hand.</p>
 
-Challenge 2: Order-Dependent Rotations
-The final orientation of an object depends on the order of Euler rotations, which can lead to unintended results.
+      <pre><code>childWorldMatrix = parentWorldMatrix * childLocalMatrix</code></pre>
 
-Solution: Quaternions apply rotation as a whole transformation rather than step-by-step rotations, ensuring consistent behavior.
+      <figure class="media-frame">
+        <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-7f5e532b5910a0c3.png" alt="Several model spaces placed inside a shared world coordinate system" loading="lazy">
+        <figcaption class="media-caption">Each object keeps its own model space while the scene supplies a shared world space.</figcaption>
+      </figure>
 
-Challenge 3: Interpolation Issues
-Interpolating between Euler angles (e.g., using linear interpolation) can cause abrupt motion, flipping, or unexpected paths.
+      <p>A point uses homogeneous coordinate <code>w = 1</code>, so translation affects it. A direction uses <code>w = 0</code>, so translation is ignored. Normals need special treatment under non-uniform scale: transform them with the inverse-transpose of the relevant linear transform, then normalize.</p>
 
-Solution: Use spherical linear interpolation (slerp) with quaternions for smooth and natural rotation transitions.
+      <div class="atlas-section-break" data-index="// § 03"></div>
 
-Challenge 4: Converting Between Systems
-Switching between Euler angles and quaternions requires careful attention to coordinate system conventions to ensure consistency across different tools (e.g., Unity, Houdini, Unreal).
+      <h2 id="order">04 Transformation order</h2>
+      <p>Matrix multiplication is not commutative. Applying scale, rotation, and translation in a different order changes the result—especially when scale is non-uniform or the pivot is away from the origin.</p>
 
-Solution: Always verify axis orientations and ensure correct conversion formulas when transferring rotations between different software.  </code></pre>
-<p> </p>
-<hr>
-<p>&nbsp;</p>
-<p><em><strong>References: </strong></em></p>
-<p><em>Dot Product:</em></p>
-<p><u><a href="https://www.khanacademy.org/math/multivariable-calculus/thinking-about-multivariable-function/x786f2022:vectors-and-matrices/a/dot-products-mvc" target="_blank" rel="noopener noreferrer"><em>https://www.khanacademy.org/math/multivariable-calculus/thinking-about-multivariable-function/x786f2022:vectors-and-matrices/a/dot-products-mvc</em></a></u></p>
-<p><u><a href="https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/" target="_blank" rel="noopener noreferrer"><em>https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/</em></a></u></p>
-<p>&nbsp;</p>
-<p><em>Matrix Decomposition in Unity</em><em>:</em></p>
-<p><u><a href="https://pixel.engineer/posts/matrix-decomposition-unity/" target="_blank" rel="noopener noreferrer"><em>https://pixel.engineer/posts/matrix-decomposition-unity/</em></a></u></p>
-<p>&nbsp;</p>
-<p><em>Cross Product:</em></p>
-<p><u><a href="https://andytech.art/the-cross-product-for-3d-artists" target="_blank" rel="noopener noreferrer"><em>https://andytech.art/the-cross-product-for-3d-artists</em></a></u></p>
-<p><u><a href="https://joshcgblog.wordpress.com/2016/02/23/coding-with-cross-products/" target="_blank" rel="noopener noreferrer"><em>https://joshcgblog.wordpress.com/2016/02/23/coding-with-cross-products/</em></a></u></p>
-<p>&nbsp;</p>
-<p><em>Quaternions &amp; Euler Angles:</em></p>
-<p><u><a href="https://www.allaboutcircuits.com/technical-articles/dont-get-lost-in-deep-space-understanding-quaternions/" target="_blank" rel="noopener noreferrer"><em>https://www.allaboutcircuits.com/technical-articles/dont-get-lost-in-deep-space-understanding-quaternions/</em></a></u></p>
-<p><u><a href="https://luckytoilet.wordpress.com/2014/11/24/visualizing-quaternions-with-unity/" target="_blank" rel="noopener noreferrer"><em>https://luckytoilet.wordpress.com/2014/11/24/visualizing-quaternions-with-unity/</em></a></u></p>
-<p>&nbsp;</p>
-<hr>
-<p>&nbsp;</p>
-<p><strong>Like this post? </strong>( ´◔ ω◔`) ノシ </p>
-<p><strong>Support:</strong> <u><a href="https://buymeacoffee.com/pavel.zosim" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a></u> | <u><a href="https://www.patreon.com/c/pavel_zosim" target="_blank" rel="noopener noreferrer">Patreon</a></u> | <u><a href="https://github.com/pavelzosim" target="_blank" rel="noopener noreferrer">GitHub</a></u> | <u><a href="https://pavelzosim.gumroad.com/" target="_blank" rel="noopener noreferrer">Gumroad</a></u><u> </u>| <u><a href="https://www.youtube.com/@VFX_PavelZosim/videos" target="_blank" rel="noopener noreferrer">YouTube</a></u> </p></div></article>
-    <footer class="post-end"><a href="/blog/">← Blog index</a><span>Wix archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
-  </main>
+      <div class="media-frame">
+        <div class="gallery-grid">
+          <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-eea0e54e1a6ba50f.png" alt="Object shown near its local origin before a change in transformation order" loading="lazy">
+          <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-0a551c2bc6eec595.png" alt="Object displaced after applying transformations in a different order" loading="lazy">
+        </div>
+        <p class="media-caption">The same transforms composed in different orders produce different positions and orientations.</p>
+      </div>
+
+      <pre><code>// Column-vector convention: the rightmost operation runs first.
+modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+worldPosition = modelMatrix * localPosition;</code></pre>
+
+      <div class="atlas-callout atlas-callout--warning">
+        <p><strong>Convention matters:</strong> the expression above assumes column vectors. Row-vector systems write the composition in the opposite order. Confirm the convention before copying matrix code between tools or APIs.</p>
+      </div>
+
+      <div class="atlas-section-break" data-index="// § 04"></div>
+
+      <h2 id="vectors">05 Dot and cross products</h2>
+      <p>Dot and cross products answer different spatial questions. Both assume that the input vectors are expressed in the same coordinate space.</p>
+
+      <div class="atlas-table-frame atlas-table-frame--solid">
+        <div class="atlas-table-header-solid">[ VECTOR_OPERATIONS // QUICK_REFERENCE ]</div>
+        <table class="atlas-table">
+          <thead><tr><th>Operation</th><th>Returns</th><th>Technical-art use</th></tr></thead>
+          <tbody>
+            <tr><td><code>dot(a, b)</code></td><td>A scalar</td><td>Angles, facing tests, projection, diffuse lighting</td></tr>
+            <tr><td><code>cross(a, b)</code></td><td>A perpendicular vector</td><td>Normals, tangent frames, side tests, orientation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <pre><code>dot(a, b) = |a| |b| cos(theta)
+cross(a, b) = perpendicular(a, b) with magnitude |a| |b| sin(theta)</code></pre>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-91da9cbcd200515a.png" alt="Two input vectors and the perpendicular vector produced by their cross product" loading="lazy">
+        <figcaption class="media-caption">The cross product produces a vector perpendicular to the plane of the two inputs; its sign follows the coordinate convention and input order.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 05"></div>
+
+      <h2 id="rotations">06 Euler angles and quaternions</h2>
+      <p>Euler angles are readable and useful for authoring, but they represent a sequence of axis rotations. Their order matters, and certain orientations align two axes, causing gimbal lock and the loss of one effective degree of freedom.</p>
+
+      <div class="media-frame">
+        <div class="gallery-grid">
+          <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-1998d1b06fd40ddd.gif" alt="Three-axis gimbals demonstrating yaw, pitch, and roll" loading="lazy">
+          <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-8b3eee1a063414bb.gif" alt="Gimbals with two axes aligned in a gimbal-lock configuration" loading="lazy">
+        </div>
+        <p class="media-caption">Independent gimbal axes at left; two aligned axes and one lost degree of freedom at right. Animation credit: Mark Hughes.</p>
+      </div>
+
+      <p>A unit quaternion stores an orientation as four components. For a normalized axis <code>u = (ux, uy, uz)</code> and rotation angle <code>θ</code>:</p>
+
+      <pre><code>q = (w, x, y, z)
+w = cos(theta / 2)
+(x, y, z) = u * sin(theta / 2)
+|q| = 1</code></pre>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-40e352b2f6ba6cf8.png" alt="Axis-angle rotation represented by a vector and angle theta" loading="lazy">
+        <figcaption class="media-caption">Axis-angle is the bridge between an intuitive rotation description and quaternion components.</figcaption>
+      </figure>
+
+      <p>Quaternions avoid the singularity of Euler-angle parameterization and support smooth spherical interpolation. They do not make rotation order commutative: quaternion multiplication still depends on order. Normalize accumulated rotations when numerical drift is possible.</p>
+
+      <div class="atlas-section-break" data-index="// § 06"></div>
+
+      <h2 id="debugging">07 Debugging checklist</h2>
+      <ol>
+        <li>Write the source and destination space beside every transformation.</li>
+        <li>Test with a point on each positive axis, not only at the origin.</li>
+        <li>Visualize basis vectors and normals in the viewport.</li>
+        <li>Inspect every parent matrix when a child appears offset.</li>
+        <li>Use a non-uniformly scaled test object to expose order and normal errors.</li>
+        <li>Verify handedness, units, winding, UV origin, and rotation order at import boundaries.</li>
+        <li>Compare intermediate values before debugging the final image.</li>
+      </ol>
+
+      <div class="atlas-callout atlas-callout--note">
+        <p><strong>Practical takeaway:</strong> transformations become easier to reason about when space, convention, and multiplication order are treated as part of each value's type—not as undocumented context.</p>
+      </div>
+
+      <div class="atlas-section-break" data-index="// § 07"></div>
+
+      <h2 id="references">08 References</h2>
+      <ul class="atlas-refs">
+        <li><a href="https://www.khanacademy.org/math/multivariable-calculus/thinking-about-multivariable-function/x786f2022:vectors-and-matrices/a/dot-products-mvc" target="_blank" rel="noopener noreferrer">Khan Academy — Dot products</a></li>
+        <li><a href="https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/" target="_blank" rel="noopener noreferrer">BetterExplained — Understanding the dot product</a></li>
+        <li><a href="https://pixel.engineer/posts/matrix-decomposition-unity/" target="_blank" rel="noopener noreferrer">Pixel Engineer — Matrix decomposition in Unity</a></li>
+        <li><a href="https://andytech.art/the-cross-product-for-3d-artists" target="_blank" rel="noopener noreferrer">Andy Green — The cross product for 3D artists</a></li>
+        <li><a href="https://joshcgblog.wordpress.com/2016/02/23/coding-with-cross-products/" target="_blank" rel="noopener noreferrer">JoshCG — Coding with cross products</a></li>
+        <li><a href="https://www.allaboutcircuits.com/technical-articles/dont-get-lost-in-deep-space-understanding-quaternions/" target="_blank" rel="noopener noreferrer">All About Circuits — Understanding quaternions</a></li>
+        <li><a href="https://luckytoilet.wordpress.com/2014/11/24/visualizing-quaternions-with-unity/" target="_blank" rel="noopener noreferrer">Lucky's Notes — Visualizing quaternions with Unity</a></li>
+      </ul>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // COORDINATE_TRANSFORMS // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
   <script src="/scripts/article-page.js?v=14"></script>
 </body>
 </html>
