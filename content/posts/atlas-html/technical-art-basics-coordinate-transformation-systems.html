@@ -16,6 +16,7 @@
   <meta name="twitter:title" content="Technical Art Coordinate Transformation Systems">
   <meta name="twitter:description" content="A practical technical-art guide to coordinate spaces, transformation order, vector operations, and stable 3D rotations.">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Technical Art Coordinate Transformation Systems","description":"A practical technical-art guide to coordinate spaces, transformation order, vector operations, and stable 3D rotations.","url":"https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems","mainEntityOfPage":"https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems","image":"https://www.pavelzosim.com/public/media/posts/index/asset-9ca24a98c2ba2a35.png","datePublished":"2025-02-17","dateModified":"2026-08-24","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
   <link rel="stylesheet" href="/styles/atlas.css?v=53">
   <link rel="stylesheet" href="/styles/posts.css?v=15">
 </head>
@@ -26,6 +27,19 @@
   <div class="atlas-container">
     <div id="site-passport"></div>
     <div class="content-block">
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#pipeline"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Coordinate-space pipeline</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#handedness"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Handedness and interchange</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#hierarchy"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Local, world, and hierarchy</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#order"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Transformation order</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#vectors"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Dot and cross products</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#rotations"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Euler angles and quaternions</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#debugging"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Debugging checklist</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#references"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">References</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
       <h2 id="pipeline">01 Coordinate-space pipeline</h2>
       <p>A 3D point has meaning only inside a coordinate space. During rendering, a vertex moves through a sequence of spaces: from the model's local frame to the world, then to the camera, clip space, and finally the image.</p>
 
@@ -48,7 +62,7 @@
         </table>
       </div>
 
-      <pre><code>world = modelMatrix * localPosition
+      <pre class="atlas-code-block" data-language="TRANSFORM PIPELINE / PSEUDOCODE"><code class="language-c">world = modelMatrix * localPosition
 view  = viewMatrix  * world
 clip  = projectionMatrix * view
 ndc   = clip.xyz / clip.w</code></pre>
@@ -82,14 +96,16 @@ ndc   = clip.xyz / clip.w</code></pre>
       <h2 id="hierarchy">03 Local, world, and hierarchy</h2>
       <p>Local space makes an object's data independent of scene placement. A child transform is evaluated through its parent hierarchy, so moving a character also moves the prop attached to the character's hand.</p>
 
-      <pre><code>childWorldMatrix = parentWorldMatrix * childLocalMatrix</code></pre>
+      <div class="atlas-math-block">\[
+        M_{child}^{world} = M_{parent}^{world} M_{child}^{local}
+      \]</div>
 
       <figure class="media-frame">
         <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-7f5e532b5910a0c3.png" alt="Several model spaces placed inside a shared world coordinate system" loading="lazy">
         <figcaption class="media-caption">Each object keeps its own model space while the scene supplies a shared world space.</figcaption>
       </figure>
 
-      <p>A point uses homogeneous coordinate <code>w = 1</code>, so translation affects it. A direction uses <code>w = 0</code>, so translation is ignored. Normals need special treatment under non-uniform scale: transform them with the inverse-transpose of the relevant linear transform, then normalize.</p>
+      <p>A point uses homogeneous coordinate <span class="atlas-code-inline">w = 1</span>, so translation affects it. A direction uses <span class="atlas-code-inline">w = 0</span>, so translation is ignored. Normals need special treatment under non-uniform scale: transform them with the inverse-transpose of the relevant linear transform, then normalize.</p>
 
       <div class="atlas-section-break" data-index="// § 03"></div>
 
@@ -104,7 +120,7 @@ ndc   = clip.xyz / clip.w</code></pre>
         <p class="media-caption">The same transforms composed in different orders produce different positions and orientations.</p>
       </div>
 
-      <pre><code>// Column-vector convention: the rightmost operation runs first.
+      <pre class="atlas-code-block" data-language="COLUMN VECTORS / C GRAMMAR"><code class="language-c">// Column-vector convention: the rightmost operation runs first.
 modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 worldPosition = modelMatrix * localPosition;</code></pre>
 
@@ -122,14 +138,17 @@ worldPosition = modelMatrix * localPosition;</code></pre>
         <table class="atlas-table">
           <thead><tr><th>Operation</th><th>Returns</th><th>Technical-art use</th></tr></thead>
           <tbody>
-            <tr><td><code>dot(a, b)</code></td><td>A scalar</td><td>Angles, facing tests, projection, diffuse lighting</td></tr>
-            <tr><td><code>cross(a, b)</code></td><td>A perpendicular vector</td><td>Normals, tangent frames, side tests, orientation</td></tr>
+            <tr><td><span class="atlas-code-inline">dot(a, b)</span></td><td>A scalar</td><td>Angles, facing tests, projection, diffuse lighting</td></tr>
+            <tr><td><span class="atlas-code-inline">cross(a, b)</span></td><td>A perpendicular vector</td><td>Normals, tangent frames, side tests, orientation</td></tr>
           </tbody>
         </table>
       </div>
 
-      <pre><code>dot(a, b) = |a| |b| cos(theta)
-cross(a, b) = perpendicular(a, b) with magnitude |a| |b| sin(theta)</code></pre>
+      <div class="atlas-math-block">\[
+        a \cdot b = \lVert a \rVert \lVert b \rVert \cos\theta
+        \qquad
+        \lVert a \times b \rVert = \lVert a \rVert \lVert b \rVert \sin\theta
+      \]</div>
 
       <figure class="media-frame">
         <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-91da9cbcd200515a.png" alt="Two input vectors and the perpendicular vector produced by their cross product" loading="lazy">
@@ -149,12 +168,12 @@ cross(a, b) = perpendicular(a, b) with magnitude |a| |b| sin(theta)</code></pre>
         <p class="media-caption">Independent gimbal axes at left; two aligned axes and one lost degree of freedom at right. Animation credit: Mark Hughes.</p>
       </div>
 
-      <p>A unit quaternion stores an orientation as four components. For a normalized axis <code>u = (ux, uy, uz)</code> and rotation angle <code>θ</code>:</p>
+      <p>A unit quaternion stores an orientation as four components. For a normalized axis <span class="atlas-code-inline">u = (u<sub>x</sub>, u<sub>y</sub>, u<sub>z</sub>)</span> and rotation angle <span class="atlas-code-inline">θ</span>:</p>
 
-      <pre><code>q = (w, x, y, z)
-w = cos(theta / 2)
-(x, y, z) = u * sin(theta / 2)
-|q| = 1</code></pre>
+      <div class="atlas-math-block">\[
+        q = \left(\cos\frac{\theta}{2},\; u_x\sin\frac{\theta}{2},\; u_y\sin\frac{\theta}{2},\; u_z\sin\frac{\theta}{2}\right),
+        \qquad \lVert q \rVert = 1
+      \]</div>
 
       <figure class="media-frame">
         <img src="/public/media/posts/technical-art-basics-coordinate-transformation-systems/asset-40e352b2f6ba6cf8.png" alt="Axis-angle rotation represented by a vector and angle theta" loading="lazy">
@@ -183,19 +202,25 @@ w = cos(theta / 2)
       <div class="atlas-section-break" data-index="// § 07"></div>
 
       <h2 id="references">08 References</h2>
-      <ul class="atlas-refs">
-        <li><a href="https://www.khanacademy.org/math/multivariable-calculus/thinking-about-multivariable-function/x786f2022:vectors-and-matrices/a/dot-products-mvc" target="_blank" rel="noopener noreferrer">Khan Academy — Dot products</a></li>
-        <li><a href="https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/" target="_blank" rel="noopener noreferrer">BetterExplained — Understanding the dot product</a></li>
-        <li><a href="https://pixel.engineer/posts/matrix-decomposition-unity/" target="_blank" rel="noopener noreferrer">Pixel Engineer — Matrix decomposition in Unity</a></li>
-        <li><a href="https://andytech.art/the-cross-product-for-3d-artists" target="_blank" rel="noopener noreferrer">Andy Green — The cross product for 3D artists</a></li>
-        <li><a href="https://joshcgblog.wordpress.com/2016/02/23/coding-with-cross-products/" target="_blank" rel="noopener noreferrer">JoshCG — Coding with cross products</a></li>
-        <li><a href="https://www.allaboutcircuits.com/technical-articles/dont-get-lost-in-deep-space-understanding-quaternions/" target="_blank" rel="noopener noreferrer">All About Circuits — Understanding quaternions</a></li>
-        <li><a href="https://luckytoilet.wordpress.com/2014/11/24/visualizing-quaternions-with-unity/" target="_blank" rel="noopener noreferrer">Lucky's Notes — Visualizing quaternions with Unity</a></li>
-      </ul>
+      <div class="atlas-refs">
+        <ul class="atlas-ref-list">
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">COURSE</span><span class="atlas-ref-author">Khan Academy</span> — Dot products.<br><a class="atlas-ref-link" href="https://www.khanacademy.org/math/multivariable-calculus/thinking-about-multivariable-function/x786f2022:vectors-and-matrices/a/dot-products-mvc" target="_blank" rel="noopener noreferrer">khanacademy.org/math/multivariable-calculus/dot-products</a></span></li>
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">BetterExplained</span> — Understanding the dot product.<br><a class="atlas-ref-link" href="https://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/" target="_blank" rel="noopener noreferrer">betterexplained.com/articles/vector-calculus-understanding-the-dot-product</a></span></li>
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[03]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">Pixel Engineer</span> — Matrix decomposition in Unity.<br><a class="atlas-ref-link" href="https://pixel.engineer/posts/matrix-decomposition-unity/" target="_blank" rel="noopener noreferrer">pixel.engineer/posts/matrix-decomposition-unity</a></span></li>
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[04]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">Andy Green</span> — The cross product for 3D artists.<br><a class="atlas-ref-link" href="https://andytech.art/the-cross-product-for-3d-artists" target="_blank" rel="noopener noreferrer">andytech.art/the-cross-product-for-3d-artists</a></span></li>
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[05]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">JoshCG</span> — Coding with cross products.<br><a class="atlas-ref-link" href="https://joshcgblog.wordpress.com/2016/02/23/coding-with-cross-products/" target="_blank" rel="noopener noreferrer">joshcgblog.wordpress.com/coding-with-cross-products</a></span></li>
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[06]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">All About Circuits</span> — Understanding quaternions.<br><a class="atlas-ref-link" href="https://www.allaboutcircuits.com/technical-articles/dont-get-lost-in-deep-space-understanding-quaternions/" target="_blank" rel="noopener noreferrer">allaboutcircuits.com/technical-articles/understanding-quaternions</a></span></li>
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[07]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">Lucky's Notes</span> — Visualizing quaternions with Unity.<br><a class="atlas-ref-link" href="https://luckytoilet.wordpress.com/2014/11/24/visualizing-quaternions-with-unity/" target="_blank" rel="noopener noreferrer">luckytoilet.wordpress.com/visualizing-quaternions-with-unity</a></span></li>
+        </ul>
+      </div>
 
       <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // COORDINATE_TRANSFORMS // EOF</span><span class="atlas-eof-divider__line"></span></div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script src="/scripts/article-page.js?v=14"></script>
 </body>
 </html>
