@@ -1,6 +1,15 @@
 (() => {
   const view = document.body.dataset.contentIndex || 'blog';
   const pageConfig = {
+    projects: {
+      file: 'PROJECTS.md',
+      title: 'Selected production records',
+      listTitle: 'Projects',
+      dek: 'A working index of commercial real-time projects. Each record documents the production context, technical-art scope, and constraints that shaped the implementation.',
+      breadcrumb: '/home/pavel/technical-art/projects/index.md',
+      footer: 'pavelzosim / project index',
+      scope: ['XR systems', 'Real-time VFX', 'Interaction', 'Digital twins']
+    },
     blog: {
       file: 'BLOG_INDEX.md',
       title: 'Technical notes index',
@@ -28,16 +37,29 @@
     return element;
   };
 
+  const registryPath = view === 'projects' ? '/content/projects/index.json' : '/content/posts/index.json';
+
   Promise.all([
-    fetch('/content/templates/content-index.html'),
-    fetch('/content/posts/index.json')
+    fetch('/content/templates/content-index.html?v=2', { cache: 'no-store' }),
+    fetch(registryPath, { cache: 'no-store' })
   ])
     .then(async ([templateResponse, indexResponse]) => {
       if (!templateResponse.ok) throw new Error(`Index template: ${templateResponse.status}`);
       if (!indexResponse.ok) throw new Error(`Content index: ${indexResponse.status}`);
       const [template, data] = await Promise.all([templateResponse.text(), indexResponse.json()]);
       document.body.insertAdjacentHTML('afterbegin', template);
-      return data.records;
+      if (view !== 'projects') return data.records;
+      return data.projects.map((project) => ({
+        id: project.id,
+        title: project.title,
+        kind: 'project',
+        group: 'projects',
+        summary: project.summary,
+        tags: [...project.type.split('/'), ...project.tools.slice(0, 3)].map((tag) => tag.trim().toLowerCase()),
+        image: project.image,
+        localPath: `/projects/${project.slug}/`,
+        state: project.status
+      }));
     })
     .then((allRecords) => {
       const config = pageConfig[view];
@@ -49,7 +71,6 @@
 
       document.title = `${config.title} / Pavel Zosim`;
       document.querySelectorAll(`[data-nav="${view}"], [data-rail="${view}"]`).forEach((link) => link.classList.add('active'));
-      document.querySelector('[data-blog-guide]')?.toggleAttribute('hidden', view !== 'blog');
       text('[data-index-file]', config.file);
       text('[data-index-title]', config.title);
       text('[data-list-title]', config.listTitle);

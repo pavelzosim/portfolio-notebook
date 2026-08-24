@@ -108,6 +108,7 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 - Every evidentiary image or video needs a caption explaining what to inspect.
 - Use `object-fit: contain`; do not crop technical evidence.
 - Use `loading="lazy"` except for the first important image.
+- Set every native `<video>` to `muted` by default; controls may still let the reader opt into sound.
 - Prefer WebM/MP4 for video loops and PNG/JPEG/WebP/GIF only when appropriate to the source.
 - Never hotlink Wix media in a finished local record.
 
