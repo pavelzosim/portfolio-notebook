@@ -772,8 +772,8 @@
       "id": "WIX-21E8821F",
       "title": "Water Cooler 3D Model",
       "slug": "water-cooler-3d-model",
-      "kind": "article",
-      "group": "3d-assets",
+      "kind": "asset",
+      "group": "assets",
       "summary": "Game-ready water cooler 3D model with clean topology and predictable structure for real-time engines and production pipelines.",
       "tags": [
         "3D Models",
@@ -791,6 +791,7 @@
       "datePublished": "2025-01-04",
       "dateModified": "2026-08-24",
       "state": "published",
+      "resource": true,
       "indexable": true
     }
   ]
