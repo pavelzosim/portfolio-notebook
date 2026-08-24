@@ -411,7 +411,7 @@
       "title": "Low-Poly Dumpster",
       "kind": "asset",
       "group": "assets",
-      "summary": "UV-mapped, real-time-ready model with FBX export for production pipelines.",
+      "summary": "Low-poly dumpster with clean geometry and UV-mapped textures for real-time urban environments.",
       "tags": [
         "3d",
         "realtime",
@@ -426,7 +426,7 @@
       "slug": "low-poly-dumpster-3d-model",
       "imageAlt": "Low-Poly Dumpster",
       "datePublished": "2025-01-30",
-      "dateModified": "2025-01-30",
+      "dateModified": "2026-08-24",
       "indexable": true
     },
     {
@@ -434,7 +434,7 @@
       "title": "Modular Market Shelf",
       "kind": "asset",
       "group": "assets",
-      "summary": "Modular real-time environment asset prepared for repeatable layout work.",
+      "summary": "High-detail modular market shelf asset for retail visualization, rendering, and reusable scene layouts.",
       "tags": [
         "3d",
         "modular",
@@ -449,7 +449,7 @@
       "slug": "modular-market-shelf-3d-model",
       "imageAlt": "Modular Market Shelf",
       "datePublished": "2025-01-06",
-      "dateModified": "2025-01-06",
+      "dateModified": "2026-08-24",
       "indexable": true
     },
     {
@@ -499,9 +499,9 @@
       "id": "WIX-65636616",
       "title": "Low-Poly Piggy Bank 3D Model",
       "slug": "3d-model-low-poly-piggy-bank",
-      "kind": "article",
-      "group": "3d-assets",
-      "summary": "Low poly piggy bank 3d model with low, high, and fractured mesh variants.",
+      "kind": "asset",
+      "group": "assets",
+      "summary": "Piggy bank asset with low- and mid-poly variants for games, VR/AR, rendering, and visualization.",
       "tags": [
         "game assets",
         "real-time",
@@ -517,8 +517,9 @@
       "sourceUrl": "https://www.pavelzosim.com/post/3d-model-low-poly-piggy-bank",
       "publicUrl": "https://www.pavelzosim.com/post/3d-model-low-poly-piggy-bank",
       "datePublished": "2025-01-06",
-      "dateModified": "2026-03-18",
+      "dateModified": "2026-08-24",
       "state": "published",
+      "resource": true,
       "indexable": true
     },
     {
@@ -671,11 +672,11 @@
     },
     {
       "id": "WIX-530E383D",
-      "title": "Low-poly slot machine 3d model",
+      "title": "Low Poly Slot Machine 3D Model",
       "slug": "low-poly-slot-machine-3d-model",
-      "kind": "article",
-      "group": "3d-assets",
-      "summary": "Low-poly slot machine 3D model with clean topology, full rig, and FBX format. Prepared for real-time animation and game engine integration.",
+      "kind": "asset",
+      "group": "assets",
+      "summary": "Game-ready low-poly slot machine with a mechanical rig, spinning animation, clean UVs, and PBR textures.",
       "tags": [
         "Game Development",
         "Assets",
@@ -688,8 +689,9 @@
       "sourceUrl": "https://www.pavelzosim.com/post/low-poly-slot-machine-3d-model",
       "publicUrl": "https://www.pavelzosim.com/post/low-poly-slot-machine-3d-model",
       "datePublished": "2025-01-06",
-      "dateModified": "2026-03-18",
+      "dateModified": "2026-08-24",
       "state": "published",
+      "resource": true,
       "indexable": true
     },
     {
@@ -774,7 +776,7 @@
       "slug": "water-cooler-3d-model",
       "kind": "asset",
       "group": "assets",
-      "summary": "Game-ready water cooler 3D model with clean topology and predictable structure for real-time engines and production pipelines.",
+      "summary": "Low-poly water cooler with clean geometry, UV-mapped textures, and FBX/Cinema 4D delivery for real-time scenes.",
       "tags": [
         "3D Models",
         "game assets",
