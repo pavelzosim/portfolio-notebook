@@ -30,10 +30,12 @@
   };
   const configureVideo = (video, record) => {
     if (!video || !record?.src) return false;
-    video.src = record.src;
     video.muted = true;
     video.defaultMuted = true;
+    video.preload = 'none';
     if (record.poster) video.poster = record.poster;
+    else video.removeAttribute('poster');
+    video.src = record.src;
     return true;
   };
   const activateProjectRail = () => {
