@@ -17,10 +17,6 @@ body{padding-bottom:38px}
 .meta-block li a{text-decoration:none}.meta-block li a:hover{color:var(--vc);text-decoration:underline}
 .tag-cloud a{padding:2px 4px;border:1px solid var(--line);text-decoration:none}
 .tag-cloud a:hover,.tag-cloud a:focus-visible{color:#fff;background:var(--vc);border-color:var(--vc)}
-.function-bar{position:fixed;z-index:30;left:0;right:0;bottom:0;height:34px;padding:4px 12px;display:grid;grid-template-columns:repeat(6,minmax(90px,1fr));gap:7px;background:#111;border-top:1px solid #000;color:#fff}
-.function-bar .vc-button{min-width:0;padding:3px 9px;display:flex;justify-content:flex-start;gap:7px;align-items:center;border:1px solid #000066;background:var(--vc);color:#fff;text-decoration:none;font:10px var(--mono);cursor:pointer}
-.function-bar .vc-button:hover,.function-bar .vc-button:focus-visible{background:var(--vc-hi);outline:1px solid #fff;outline-offset:-3px}
-.function-bar kbd{min-width:25px;color:var(--vc-yellow);font:inherit;font-weight:700}
 dialog{width:min(480px,calc(100vw - 32px));padding:0;border:1px solid #000;background:var(--paper2);color:var(--ink);box-shadow:8px 8px 0 transparent;font:11px/1.5 var(--mono)}
 dialog::backdrop{background-color:rgba(0,0,0,.42);background-image:var(--dither);background-size:4px 4px}
 .dialog-title{padding:7px 9px;display:flex;justify-content:space-between;background:var(--vc);color:#fff}
@@ -30,5 +26,4 @@ dialog dl div{display:grid;grid-template-columns:55px 1fr;border-bottom:1px soli
 dialog dt,dialog dd{margin:0;padding:6px}dialog dt{color:var(--red);font-weight:700}
 .dialog-ok{float:right;margin:0 16px 16px;padding:6px 14px;border:1px solid #000066;background:var(--vc);color:#fff;font:10px var(--mono);cursor:pointer}
 .dialog-ok kbd{color:var(--vc-yellow);font:inherit}
-@media(max-width:760px){body{padding-bottom:42px}.shellbar nav{gap:5px;overflow-x:auto;padding-bottom:5px}.shellbar nav a{padding:5px 7px;white-space:nowrap}.shellbar nav kbd{display:inline}.function-bar{height:38px;padding:5px 8px;display:flex;overflow-x:auto}.function-bar .vc-button{flex:0 0 auto}.function-bar .vc-button span{display:none}.command{grid-template-columns:auto 1fr auto}.command output{grid-column:2;text-align:left}.command>kbd{grid-column:3;grid-row:1}}
-
+@media(max-width:760px){body{padding-bottom:42px}.shellbar nav{gap:5px;overflow-x:auto;padding-bottom:5px}.shellbar nav a{padding:5px 7px;white-space:nowrap}.shellbar nav kbd{display:inline}.command{grid-template-columns:auto 1fr auto}.command output{grid-column:2;text-align:left}.command>kbd{grid-column:3;grid-row:1}}

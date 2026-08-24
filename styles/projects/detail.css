@@ -197,35 +197,8 @@
 }
 .project-site-footer a { justify-self: end; color: var(--ink); text-underline-offset: 2px; }
 
-/* Project-record rails keep the shared coordinates but use a denser inspector language. */
-.project-site .rail,
+/* Project-only inspector data; rail navigation is shared by notebook-layout.css. */
 .project-site .meta-rail { scrollbar-width: thin; }
-.project-site .rail-title,
-.project-site .meta-block > p {
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--line2);
-  font-size: 8px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-.project-site .rail ol { margin-bottom: 16px; }
-.project-site .rail li a {
-  grid-template-columns: 24px minmax(0, 1fr);
-  gap: 4px;
-  margin-left: -8px;
-  padding: 4px 6px;
-  border-left: 2px solid transparent;
-  background: transparent;
-  box-shadow: none;
-  color: var(--muted);
-  line-height: 1.35;
-}
-.project-site .rail li a:hover,
-.project-site .rail li a:focus-visible { border-left-color: var(--atlas-accent-hi); background: rgba(0, 129, 129, .06); color: var(--atlas-accent-hi); box-shadow: none; }
-.project-site .rail li a.active { border-left-color: var(--atlas-accent); background: var(--atlas-accent-soft); color: var(--atlas-accent); box-shadow: none; }
-.project-site .rail li a span { color: var(--atlas-ink-faint); font-variant-numeric: tabular-nums; }
-.project-site .rail li a.active span { color: var(--atlas-accent); }
 .project-site .rail-note { margin-top: 14px; padding: 10px; color: var(--atlas-ink-faint); font-size: 8px; line-height: 1.5; }
 .project-site .meta-block { margin-bottom: 16px; }
 .project-site .meta-block dl { grid-template-columns: minmax(0, 1fr) auto; }
@@ -233,27 +206,7 @@
 .project-site .meta-block dd { padding: 4px 0; font-size: 8px; }
 .project-site .meta-block dt { overflow: hidden; color: var(--atlas-ink-faint); text-overflow: ellipsis; white-space: nowrap; }
 .project-site .meta-block dd { padding-left: 8px; color: var(--ink); }
-/* Grok's compact contextual command strip, adapted to the Atlas button states. */
-.project-site .function-bar {
-  height: 32px;
-  padding: 3px 10px;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 5px;
-  border-top: 0;
-}
-.project-site .function-bar .vc-button {
-  padding: 0 8px;
-  gap: 6px;
-  border: 0;
-  background: #161616;
-  color: #ddd;
-  font-size: 9px;
-}
-.project-site .function-bar .vc-button:hover,
-.project-site .function-bar .vc-button:focus-visible { border: 0; background: var(--atlas-accent); color: #fff; outline: 0; }
-.project-site .function-bar kbd { color: #888; }
-.project-site .function-bar .vc-button:hover kbd,
-.project-site .function-bar .vc-button:focus-visible kbd { color: #ffff55; }
+.project-site .function-bar { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 
 @media (prefers-reduced-motion: reduce) {
   .project-carousel-track { transition: none; }

@@ -106,18 +106,8 @@ main { background: var(--atlas-bg-raised); box-shadow: none; }
 .definition-grid p { min-height: 0; margin-bottom: 8px; }
 .meta-block { margin-bottom: 18px; }
 
-/* Commander stays functional, but adopts the muted notebook palette. */
+/* Commander color tokens are consumed by the canonical notebook layout. */
 :root { --vc: #0a0a0a; --vc-hi: #161616; --vc-yellow: #ffff55; }
-.function-bar { background: #0a0a0a; border-top-color: #000; }
-.function-bar .vc-button {
-  border-color: rgba(255, 255, 255, .22);
-  background: #1c1c1c;
-  color: #f1ebe4;
-}
-.function-bar .vc-button:hover, .function-bar .vc-button:focus-visible {
-  background: var(--atlas-accent);
-  border-color: var(--atlas-accent-border);
-}
 
 @media (max-width: 760px) {
   .shellbar { min-height: 40px; padding: 8px 12px; }

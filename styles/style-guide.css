@@ -1,6 +1,6 @@
 /* Live article component catalogue. Production component styles come from atlas.css. */
 .style-guide-page{min-height:100vh;padding-bottom:42px;background-color:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Ccircle cx='1' cy='1' r='.7' fill='%23000' fill-opacity='.10'/%3E%3C/svg%3E")}
-.guide-workspace{grid-template-columns:168px minmax(0,820px) 176px}
+.guide-workspace{grid-template-columns:var(--notebook-rail-width) minmax(0,820px) var(--notebook-meta-width)}
 .guide-head{padding:22px 24px 18px;border-bottom:1px solid var(--line2)}
 .guide-head h1{max-width:680px;margin:8px 0;font-size:22px;line-height:1.15;letter-spacing:-.02em}
 .guide-head>p:last-of-type{max-width:64ch;margin:0 0 12px;color:var(--ink);font-size:12px;line-height:1.55}

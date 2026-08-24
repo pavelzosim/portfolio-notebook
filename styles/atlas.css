@@ -12,13 +12,13 @@
 @import url("./framework/10-atlas-toc.css?v=2");
 @import url("./framework/11-atlas-consent.css?v=1");
 @import url("./home/core.css?v=2");
-@import url("./home/commander.css?v=2");
+@import url("./home/commander.css?v=3");
 @import url("./home/media-index.css");
 @import url("./home/vfx-flipbooks.css?v=2");
 @import url("./home/profile.css");
-@import url("./home/navigation.css");
+@import url("./home/navigation.css?v=2");
 @import url("./home/content.css");
 @import url("./home/highlights.css?v=8");
 @import url("./home/overview.css?v=2");
 @import url("./theme/notebook-system.css?v=3");
-@import url("./notebook-layout.css?v=1");
+@import url("./notebook-layout.css?v=2");

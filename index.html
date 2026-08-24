@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles/atlas.css?v=47">
+  <link rel="stylesheet" href="styles/atlas.css?v=53">
   <script src="/scripts/vfx-flipbooks.js?v=33" defer></script>
   <script src="/scripts/home-content.js?v=1" defer></script>
   <script src="/scripts/section-actions.js?v=1" defer></script>
@@ -233,6 +233,7 @@
       const help = document.querySelector('#helpDialog');
       const targets = { F3: '#projects', F4: '#notes', F5: '#tools', F6: '#blog', F7: '#about', F8: '#contacts', F10: '#top' };
       const navLinks = [...document.querySelectorAll('.shellbar nav a')];
+      const railLinks = [...document.querySelectorAll('.rail ol a')];
       function filterRecords() {
         const query = search.value.trim().toLowerCase();
         let visible = 0;
@@ -245,6 +246,9 @@
         let active = 'projects';
         navLinks.forEach(link => { const section = document.querySelector(link.hash); if (section && section.getBoundingClientRect().top <= 100) active = section.id; });
         navLinks.forEach(link => link.classList.toggle('active', link.hash === `#${active}`));
+        let activeRail = 'overview';
+        railLinks.forEach(link => { const section = document.querySelector(link.hash); if (section && section.getBoundingClientRect().top <= 100) activeRail = section.id; });
+        railLinks.forEach(link => link.classList.toggle('active', link.hash === `#${activeRail}`));
       }
       search.addEventListener('input', filterRecords);
       document.querySelector('#searchForm').addEventListener('submit', event => event.preventDefault());

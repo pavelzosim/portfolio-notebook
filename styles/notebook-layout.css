@@ -85,9 +85,121 @@
 .rail-title,
 .meta-block > p,
 .article-rail-title,
-.article-meta-block > p { margin-bottom: 8px; }
+.article-meta-block > p {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line2, rgba(10, 10, 10, .28));
+  font-size: 8px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
 .article-rail-context-title,
 .project-context-title { margin-top: 22px; }
+
+/* One navigation language for home, indexes, projects, and long-form records. */
+.rail,
+.article-rail { scrollbar-width: thin; }
+
+.rail ol,
+.article-global-nav,
+.article-outline { margin-bottom: 16px; }
+
+.rail li a,
+.article-global-nav a,
+.article-outline li a {
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 4px;
+  margin-left: -8px;
+  padding: 4px 6px;
+  border-left: 2px solid transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--atlas-ink-muted);
+  line-height: 1.35;
+}
+
+.rail li a:hover,
+.rail li a:focus-visible,
+.article-global-nav a:hover,
+.article-global-nav a:focus-visible,
+.article-outline li a:hover,
+.article-outline li a:focus-visible {
+  border-left-color: var(--atlas-accent-hi);
+  background: rgba(0, 129, 129, .06);
+  color: var(--atlas-accent-hi);
+  box-shadow: none;
+  outline: 0;
+}
+
+.rail li a.active,
+.article-global-nav a.active,
+.article-outline li a.active {
+  border-left-color: var(--atlas-accent);
+  background: var(--atlas-accent-soft);
+  color: var(--atlas-accent);
+  box-shadow: none;
+}
+
+.rail li a span,
+.article-global-nav a span,
+.article-outline li a span {
+  color: var(--atlas-ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail li a.active span,
+.article-global-nav a.active span,
+.article-outline li a.active span { color: var(--atlas-accent); }
+
+/* Context changes the commands, never the footer-command visual system. */
+body > .function-bar {
+  position: fixed;
+  z-index: 30;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 32px;
+  padding: 3px 10px;
+  display: grid;
+  gap: 5px;
+  border-top: 0;
+  background: #0a0a0a;
+  color: #fff;
+}
+
+body > .function-bar .vc-button {
+  min-width: 0;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  border: 0;
+  background: #161616;
+  color: #ddd;
+  font: 9px/1.4 var(--atlas-font-mono);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+body > .function-bar .vc-button::after { display: none; }
+body > .function-bar .vc-button:hover,
+body > .function-bar .vc-button:focus-visible {
+  border: 0;
+  background: var(--atlas-accent);
+  color: #fff;
+  outline: 0;
+}
+
+body > .function-bar kbd {
+  min-width: 25px;
+  color: #888;
+  font: inherit;
+  font-weight: 700;
+}
+
+body > .function-bar .vc-button:hover kbd,
+body > .function-bar .vc-button:focus-visible kbd { color: #ffff55; }
 
 @media (max-width: 1100px) {
   .workspace,
@@ -130,6 +242,16 @@
     padding-inline: 0;
     box-shadow: none;
   }
+
+  body > .function-bar {
+    height: 38px;
+    padding: 5px 8px;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  body > .function-bar .vc-button { flex: 0 0 auto; }
+  body > .function-bar .vc-button span { display: none; }
 
   .rail li a span,
   .article-global-nav a span,
