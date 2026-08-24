@@ -209,7 +209,7 @@ def article_html(post: dict, tags: list[str]) -> str:
   <meta property="og:type" content="article"><meta property="og:title" content="{esc(title, True)}"><meta property="og:description" content="{esc(description, True)}"><meta property="og:url" content="{canonical}">{image_tags}
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title, True)}"><meta name="twitter:description" content="{esc(description, True)}">
   <script type="application/ld+json">{json_ld}</script>
-  <link rel="stylesheet" href="/styles/atlas.css?v=54"><link rel="stylesheet" href="/styles/posts.css?v=16">
+  <link rel="stylesheet" href="/styles/atlas.css?v=55"><link rel="stylesheet" href="/styles/posts.css?v=17">
 </head>
 <body class="migrated-post" id="top">
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>

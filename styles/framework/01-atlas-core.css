@@ -146,10 +146,10 @@
   --atlas-accent-h: #008181;   /* hover-состояние accent */
 
   /* Типографика: математические формулы (MathJax) */
-  /* Display formulas are intentionally three times the 12px code scale.   */
+  /* Display formulas use a readable 18px scale without overpowering text. */
   /* MathJax рендерит собственные элементы — переменная задаёт             */
   /* font-size контейнера .atlas-math-block для масштабирования            */
-  --fs-math: 36px;
+  --fs-math: 18px;
 
   /* Dither SVG-паттерн: 4×4px шахматка для теней и OFF-состояний         */
   --atlas-dither: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="2" height="2" x="0" y="0" fill="black"/><rect width="2" height="2" x="2" y="2" fill="black"/></svg>');

@@ -105,6 +105,9 @@ body.article-record-page:not(.migrated-post) { min-height: 100vh; padding: 0 0 4
   letter-spacing: .05em;
   text-transform: uppercase;
 }
+.article-main > .atlas-container #site-passport {
+  padding: 18px var(--notebook-record-inset, 28px) 0;
+}
 .article-main > .atlas-container > .content-block { padding-inline: var(--notebook-record-inset, 28px); }
 .article-main > .post-shell { width: auto; margin: 0; }
 .article-main .post-header { padding: 26px var(--notebook-record-inset, 28px); background: var(--record-paper); }
@@ -233,6 +236,7 @@ body.article-record-page:not(.migrated-post) { min-height: 100vh; padding: 0 0 4
 
 @media (max-width: 760px) {
   .article-main { border: 1px solid var(--record-line); }
+  .article-main > .atlas-container #site-passport { padding: 14px 18px 0; }
   .article-main > .atlas-container > .content-block,
   .article-main .post-header { padding-inline: 18px; }
   .article-record-page .article-main #atlas-footer { margin-inline: 18px; }

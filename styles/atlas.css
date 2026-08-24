@@ -1,6 +1,6 @@
 /* Atlas portfolio stylesheet orchestrator.
    Framework modules are canonical; homepage modules only compose the index UI. */
-@import url("./framework/01-atlas-core.css?v=4");
+@import url("./framework/01-atlas-core.css?v=5");
 @import url("./framework/02-atlas-typography.css?v=3");
 @import url("./framework/03-atlas-header.css?v=2");
 @import url("./framework/04-atlas-code.css?v=3");
