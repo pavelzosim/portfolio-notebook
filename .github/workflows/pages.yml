@@ -2,7 +2,7 @@ name: Deploy preview to GitHub Pages
 
 on:
   push:
-    branches: [main, codex/wix-migration-preview]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
