@@ -1,0 +1,140 @@
+/* Canonical Atlas page geometry.
+   Indexes, project records, and long-form articles share this one shell. */
+:root {
+  --notebook-shell-width: 1360px;
+  --notebook-page-edge: 36px;
+  --notebook-rail-width: 188px;
+  --notebook-meta-width: 176px;
+  --notebook-column-gap: 28px;
+  --notebook-shell-top: 18px;
+  --notebook-shell-bottom: 48px;
+  --notebook-record-inset: 28px;
+}
+
+.workspace,
+.article-workspace {
+  width: min(var(--notebook-shell-width), calc(100vw - var(--notebook-page-edge)));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: var(--notebook-rail-width) minmax(0, 1fr) var(--notebook-meta-width);
+  gap: var(--notebook-column-gap);
+  align-items: start;
+  padding: var(--notebook-shell-top) 0 var(--notebook-shell-bottom);
+}
+
+.rail,
+.article-rail,
+.meta-rail,
+.article-meta {
+  position: sticky;
+  top: 52px;
+  max-height: calc(100vh - 72px);
+  margin-top: 2px;
+  overflow: auto;
+  color: var(--atlas-ink-muted);
+  font: 10px/1.5 var(--atlas-font-mono);
+}
+
+.rail ol,
+.article-global-nav,
+.article-outline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail li a,
+.article-global-nav a,
+.article-outline li a {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  padding: 4px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.rail li a:hover,
+.rail li a:focus-visible,
+.rail li a.active,
+.article-global-nav a:hover,
+.article-global-nav a:focus-visible,
+.article-global-nav a.active,
+.article-outline li a:hover,
+.article-outline li a:focus-visible,
+.article-outline li a.active {
+  color: var(--atlas-accent);
+  background: var(--atlas-accent-soft);
+  box-shadow: inset 2px 0 0 var(--atlas-accent);
+  outline: 0;
+}
+
+.rail li a span,
+.article-global-nav a span,
+.article-outline li a span {
+  color: var(--atlas-accent);
+}
+
+.rail li a b,
+.article-global-nav a b,
+.article-outline li a b {
+  min-width: 0;
+  font-weight: 400;
+}
+
+.rail li a.active span { font-weight: 700; }
+.rail-title,
+.meta-block > p,
+.article-rail-title,
+.article-meta-block > p { margin-bottom: 8px; }
+.article-rail-context-title,
+.project-context-title { margin-top: 22px; }
+
+@media (max-width: 1100px) {
+  .workspace,
+  .article-workspace {
+    grid-template-columns: 168px minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .meta-rail,
+  .article-meta { display: none; }
+}
+
+@media (max-width: 760px) {
+  .workspace,
+  .article-workspace {
+    width: calc(100vw - 20px);
+    display: block;
+    padding-top: 10px;
+  }
+
+  .rail,
+  .article-rail {
+    position: static;
+    max-height: none;
+    margin: 0 0 12px;
+  }
+
+  .rail ol,
+  .article-global-nav,
+  .article-outline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .rail li a,
+  .article-global-nav a,
+  .article-outline li a {
+    display: block;
+    padding-inline: 0;
+    box-shadow: none;
+  }
+
+  .rail li a span,
+  .article-global-nav a span,
+  .article-outline li a span {
+    display: inline;
+    margin-right: 4px;
+  }
+}

@@ -32,6 +32,8 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 ## Canonical shell
 
 - Use the shared top navigation from the site.
+- Keep the article rail contextual: a stable `INDEX.md` block links to Projects, Tools and assets, and Blog; the current article outline remains directly below it under the record's `.md` label.
+- Do not copy the homepage's full `CONTENTS.md` into article rails.
 - Register the article in `/content/posts/index.json`.
 - Load `/styles/atlas.css` and the appropriate article stylesheet.
 - Load `/scripts/article-page.js`; it builds article contents, metadata, tags, adjacent-article navigation, the article-end marker, Share and Related/Latest blocks, footer link groups, and the global command bar.

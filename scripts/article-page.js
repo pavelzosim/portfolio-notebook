@@ -45,19 +45,42 @@
     const meta = make('aside', 'article-meta');
     meta.setAttribute('aria-label', 'Article metadata');
 
-    const railTitle = make('p', 'article-rail-title', `${record?.id || 'ARTICLE'}.md`);
+    const globalTitle = make('p', 'article-rail-title', 'INDEX.md');
+    const globalNav = make('ol', 'article-global-nav');
+    [
+      ['00', 'Home / Overview', '/#overview'],
+      ['01', 'Projects', '/projects/'],
+      ['02', 'Tools and assets', '/tools/'],
+      ['03', 'Blog — Breakdowns and lessons', '/blog/']
+    ].forEach(([number, label, href]) => {
+      const item = make('li');
+      const link = makeLink(href);
+      link.append(make('span', null, number), make('b', null, label));
+      if (number === '03') {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      }
+      item.append(link);
+      globalNav.append(item);
+    });
+
+    const railTitle = make('p', 'article-rail-title article-rail-context-title', `${record?.id || 'ARTICLE'}.md`);
     const outline = make('ol', 'article-outline');
     const headings = [...document.querySelectorAll('.content-block h2, .content-block h3')];
     headings.forEach((heading, index) => {
       if (!heading.id) heading.id = `section-${String(index + 1).padStart(2, '0')}`;
       const item = make('li');
       const title = heading.textContent.trim().replace(/^(?:§\s*)?\d+(?:[.\s]+)?/, '');
-      const label = `${String(index + 1).padStart(2, '0')} ${title}`;
-      item.append(makeLink(`#${heading.id}`, label));
+      const link = makeLink(`#${heading.id}`);
+      link.append(
+        make('span', null, String(index + 1).padStart(2, '0')),
+        make('b', null, title)
+      );
+      item.append(link);
       if (heading.tagName === 'H3') item.classList.add('article-outline--sub');
       outline.append(item);
     });
-    rail.append(railTitle);
+    rail.append(globalTitle, globalNav, railTitle);
     if (headings.length) rail.append(outline);
     const indexLink = makeLink('/blog/', '← blog index', 'article-index-link');
     rail.append(indexLink);
