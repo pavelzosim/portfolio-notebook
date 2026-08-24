@@ -10,9 +10,17 @@
       "status": "PRODUCTION",
       "client": "NASA",
       "metaType": "XR",
-      "stack": { "engine": "Unity", "dcc": "Houdini", "motion": "After Effects" },
-      "reach": { "web": "1.5M", "app": "325K+", "print": "350K+" },
-      "image": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
+      "stack": {
+        "engine": "Unity",
+        "dcc": "Houdini",
+        "motion": "After Effects"
+      },
+      "reach": {
+        "web": "1.5M",
+        "app": "325K+",
+        "print": "350K+"
+      },
+      "image": "/public/media/projects/nasa-first-woman/ui/exploration_comicenv.jpg",
       "summary": "Real-time XR educational platform for STEM, space exploration, and NASA’s Artemis program narrative.",
       "overview": "NASA First Woman combines a graphic novel, an AR-enabled mobile application, a website, and interactive educational content. The platform expands the Artemis program narrative through immersive storytelling and lets a public audience explore spaceflight concepts through augmented reality.",
       "scope": [
@@ -62,55 +70,144 @@
       ],
       "video": {
         "src": "/public/media/projects/nasa-first-woman/video-nasa-first-woman-project.mp4",
-        "poster": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
+        "poster": "/public/media/projects/nasa-first-woman/ui/exploration_comicenv.jpg",
         "caption": "NASA First Woman — selected XR project footage.",
         "featured": true
       },
       "metrics": [
-        { "value": "1.5M", "label": "web page views" },
-        { "value": "325K+", "label": "app downloads" },
-        { "value": "350K+", "label": "graphic novels" }
+        {
+          "value": "1.5M",
+          "label": "web page views"
+        },
+        {
+          "value": "325K+",
+          "label": "app downloads"
+        },
+        {
+          "value": "350K+",
+          "label": "graphic novels"
+        }
       ],
       "media": [
         {
-          "src": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
-          "alt": "NASA First Woman XR interior with screen-space and world-space interfaces",
-          "caption": "XR interior and unified interface language"
+          "src": "/public/media/projects/nasa-first-woman/ui/exploration_comicenv.jpg",
+          "alt": "NASA First Woman — XR Educational Platform — UI / exploration comicenv",
+          "caption": "UI / exploration comicenv"
         },
         {
-          "src": "/public/media/projects/nasa-first-woman/xr-interface-system.webp",
-          "alt": "NASA First Woman interface system study",
-          "caption": "Early interface-system study and control hierarchy"
+          "src": "/public/media/projects/nasa-first-woman/bages/mission-specialist-animation.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Badges / mission specialist animation",
+          "caption": "Badges / mission specialist animation"
         },
         {
-          "src": "/public/media/projects/nasa-first-woman/ui-lunar-navigation.webp",
-          "alt": "Lunar navigation interface concept",
-          "caption": "Lunar navigation and terrain-readout study"
+          "src": "/public/media/projects/nasa-first-woman/bages/mission-specialist-orbit-patch.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Badges / mission specialist orbit patch",
+          "caption": "Badges / mission specialist orbit patch"
         },
         {
-          "src": "/public/media/projects/nasa-first-woman/ui-mission-map.webp",
-          "alt": "Lunar rover diagnostic interface",
-          "caption": "Vehicle telemetry and diagnostic UI"
+          "src": "/public/media/projects/nasa-first-woman/bages/mission-specialist-patch.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Badges / mission specialist patch",
+          "caption": "Badges / mission specialist patch"
         },
         {
-          "src": "/public/media/projects/nasa-first-woman/mission-specialist-orbit-patch.gif",
-          "alt": "Animated First Woman Mission Specialist orbit patch",
-          "caption": "Animated mission-badge state"
+          "src": "/public/media/projects/nasa-first-woman/robot-emotions/ace175_166f5e2bbe134d22b0fa5830fd70ecb9~mv2_5e4x.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Robot emotions / ace175 166f5e2bbe134d22b0fa5830fd70ecb9~mv2 5e4x",
+          "caption": "Robot emotions / ace175 166f5e2bbe134d22b0fa5830fd70ecb9~mv2 5e4x"
         },
         {
-          "src": "/public/media/projects/nasa-first-woman/mission-specialist-animation.gif",
-          "alt": "Animated First Woman Mission Specialist badge variation",
-          "caption": "Cross-media badge animation variation"
+          "src": "/public/media/projects/nasa-first-woman/robot-emotions/ace175_18a16c74be834dbc8dcdda38b6f15539~mv2_5e4x.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Robot emotions / ace175 18a16c74be834dbc8dcdda38b6f15539~mv2 5e4x",
+          "caption": "Robot emotions / ace175 18a16c74be834dbc8dcdda38b6f15539~mv2 5e4x"
         },
         {
-          "src": "/public/media/projects/nasa-first-woman/robot-eye-animation.gif",
-          "alt": "Animated robot eye and eyelid motion",
-          "caption": "Robot eye and eyelid motion state"
+          "src": "/public/media/projects/nasa-first-woman/robot-emotions/ace175_531caedd42a34a3b94abbe7b25252b1e~mv2_5e4x.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Robot emotions / ace175 531caedd42a34a3b94abbe7b25252b1e~mv2 5e4x",
+          "caption": "Robot emotions / ace175 531caedd42a34a3b94abbe7b25252b1e~mv2 5e4x"
         },
         {
-          "src": "/public/media/projects/nasa-first-woman/mission-specialist-patch.gif",
-          "alt": "First Woman Mission Specialist animated patch",
-          "caption": "Cross-media mission badge and achievement asset"
+          "src": "/public/media/projects/nasa-first-woman/robot-emotions/ace175_94743d6cd12f47a49e66d1928a72c2ab~mv2_5e4x.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Robot emotions / ace175 94743d6cd12f47a49e66d1928a72c2ab~mv2 5e4x",
+          "caption": "Robot emotions / ace175 94743d6cd12f47a49e66d1928a72c2ab~mv2 5e4x"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/robot-emotions/ace175_98b8ce303072463b94e01ac5cca1ff4a~mv2_5e4x.gif",
+          "alt": "NASA First Woman — XR Educational Platform — Robot emotions / ace175 98b8ce303072463b94e01ac5cca1ff4a~mv2 5e4x",
+          "caption": "Robot emotions / ace175 98b8ce303072463b94e01ac5cca1ff4a~mv2 5e4x"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/T_ui_Orion_ScreenGraph_01.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / T ui Orion ScreenGraph 01",
+          "caption": "UI / T ui Orion ScreenGraph 01"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/T_ui_Orion_ScreenGraph_02.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / T ui Orion ScreenGraph 02",
+          "caption": "UI / T ui Orion ScreenGraph 02"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/T_ui_Orion_ScreenGraph_03.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / T ui Orion ScreenGraph 03",
+          "caption": "UI / T ui Orion ScreenGraph 03"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_camAssemble_Cupola02.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 camAssemble Cupola02",
+          "caption": "UI / UI ScreenGraph 19dec2020 camAssemble Cupola02"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_camAssemble_Display_04.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 camAssemble Display 04",
+          "caption": "UI / UI ScreenGraph 19dec2020 camAssemble Display 04"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_camAssemble_Display_05.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 camAssemble Display 05",
+          "caption": "UI / UI ScreenGraph 19dec2020 camAssemble Display 05"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_camAssemble_Display_10.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 camAssemble Display 10",
+          "caption": "UI / UI ScreenGraph 19dec2020 camAssemble Display 10"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_camAssemble_Display_11.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 camAssemble Display 11",
+          "caption": "UI / UI ScreenGraph 19dec2020 camAssemble Display 11"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_camAssemble_sideDisplay_03.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 camAssemble sideDisplay 03",
+          "caption": "UI / UI ScreenGraph 19dec2020 camAssemble sideDisplay 03"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_cc_centralDisplay.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 cc centralDisplay",
+          "caption": "UI / UI ScreenGraph 19dec2020 cc centralDisplay"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_cc_ctrlDisplay_01.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 cc ctrlDisplay 01",
+          "caption": "UI / UI ScreenGraph 19dec2020 cc ctrlDisplay 01"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_cc_ctrlDisplay_02.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 cc ctrlDisplay 02",
+          "caption": "UI / UI ScreenGraph 19dec2020 cc ctrlDisplay 02"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_cc_ctrlDisplay_03.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 cc ctrlDisplay 03",
+          "caption": "UI / UI ScreenGraph 19dec2020 cc ctrlDisplay 03"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_19dec2020_vegLab_Display_03.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph 19dec2020 vegLab Display 03",
+          "caption": "UI / UI ScreenGraph 19dec2020 vegLab Display 03"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/ui/UI_ScreenGraph_SleepingArea01.png",
+          "alt": "NASA First Woman — XR Educational Platform — UI / UI ScreenGraph SleepingArea01",
+          "caption": "UI / UI ScreenGraph SleepingArea01"
         }
       ],
       "outcome": "The platform shipped publicly across multiple media formats and developed into a long-running educational initiative. The production record combines technical-art systems with art direction and practical delivery across real-time, web, video, and print.",
@@ -126,8 +223,16 @@
       "status": "PRODUCTION",
       "client": "Meta / Blumhouse",
       "metaType": "XR cinema",
-      "stack": { "engine": "Unity", "dcc": "Houdini", "stream": "HISPlayer" },
-      "reach": { "premiere": "Meta Connect", "release": "Quest Store", "recognition": "Emmy-nominated" },
+      "stack": {
+        "engine": "Unity",
+        "dcc": "Houdini",
+        "stream": "HISPlayer"
+      },
+      "reach": {
+        "premiere": "Meta Connect",
+        "release": "Quest Store",
+        "recognition": "Emmy-nominated"
+      },
       "summary": "XR cinematic experience combining streamed 4K content, spatial audio, and synchronized real-time VFX on standalone Meta Quest hardware.",
       "overview": "The experience reimagined Blumhouse films including M3GAN and The Black Phone as immersive XR cinema. Real-time environmental effects extended beyond the streamed screen while spatial audio increased presence. It premiered at Meta Connect and was later released publicly on the Meta Quest Store.",
       "scope": [
@@ -174,22 +279,34 @@
       ],
       "outcome": "The project demonstrated that streamed cinematic content, spatial audio, and synchronized real-time effects can form a convincing XR cinema experience within strict standalone-headset constraints.",
       "sourceUrl": "https://www.pavelzosim.com/projects/meta-blumhouse-xr-experience",
-      "image": "/public/media/projects/meta-blumhouse-xr-experience/asset-9340fc6655b8a14f.gif",
+      "image": "/public/media/projects/meta-blumhouse-xr-experience/Blumhouse-Enhanced-Cinema-1.webp",
       "media": [
         {
-          "src": "/public/media/projects/meta-blumhouse-xr-experience/asset-9340fc6655b8a14f.gif",
-          "alt": "Meta × Blumhouse — Enhanced Cinema production image 01",
-          "caption": "Production record / image 01"
+          "src": "/public/media/projects/meta-blumhouse-xr-experience/Blumhouse-Enhanced-Cinema-1.webp",
+          "alt": "Meta × Blumhouse — Enhanced Cinema — Blumhouse Enhanced Cinema 1",
+          "caption": "Blumhouse Enhanced Cinema 1"
         },
         {
-          "src": "/public/media/projects/meta-blumhouse-xr-experience/asset-bebb879776368d64.jpg",
-          "alt": "Meta × Blumhouse — Enhanced Cinema production image 02",
-          "caption": "Production record / image 02"
+          "src": "/public/media/projects/meta-blumhouse-xr-experience/Meta-Connect-2025-Opening-Keynote-Meta-CLIP-FOR-GIF.gif",
+          "alt": "Meta × Blumhouse — Enhanced Cinema — Meta Connect 2025 Opening Keynote Meta CLIP FOR GIF",
+          "caption": "Meta Connect 2025 Opening Keynote Meta CLIP FOR GIF"
+        },
+        {
+          "src": "/public/media/projects/meta-blumhouse-xr-experience/Nexus_Studios_Meta_Connect_2025_Still_01.jpg",
+          "alt": "Meta × Blumhouse — Enhanced Cinema — Nexus Studios Meta Connect 2025 Still 01",
+          "caption": "Nexus Studios Meta Connect 2025 Still 01"
+        },
+        {
+          "src": "/public/media/projects/meta-blumhouse-xr-experience/Nexus_Studios_Meta_Connect_2025_Still_03.jpg",
+          "alt": "Meta × Blumhouse — Enhanced Cinema — Nexus Studios Meta Connect 2025 Still 03",
+          "caption": "Nexus Studios Meta Connect 2025 Still 03"
         }
       ],
       "video": {
-        "src": "/public/media/projects/meta-blumhouse-xr-experience/asset-f51ecfc17cc2ea50.mp4",
-        "caption": "Meta × Blumhouse Enhanced Cinema — selected XR production footage."
+        "src": "/public/media/projects/meta-blumhouse-xr-experience/03%20-%20blumhouse_horizontv.mp4",
+        "poster": "/public/media/projects/meta-blumhouse-xr-experience/Blumhouse-Enhanced-Cinema-1.webp",
+        "caption": "Meta × Blumhouse Enhanced Cinema — selected XR production footage.",
+        "featured": true
       }
     },
     {
@@ -202,8 +319,16 @@
       "status": "PRODUCTION",
       "client": "Internal R&D",
       "metaType": "Interactive",
-      "stack": { "engine": "Unity HDRP", "dcc": "Houdini", "motion": "Cinema 4D" },
-      "reach": { "runtime": "24/7", "state": "validated", "scope": "R&D" },
+      "stack": {
+        "engine": "Unity HDRP",
+        "dcc": "Houdini",
+        "motion": "Cinema 4D"
+      },
+      "reach": {
+        "runtime": "24/7",
+        "state": "validated",
+        "scope": "R&D"
+      },
       "summary": "Interactive airport-operations visualization combining a timeline-driven aircraft lifecycle, video playback, and touch-controlled camera navigation.",
       "overview": "An internal R&D interaction screen visualizing the complete aircraft lifecycle from taxi and takeoff through flight and landing. Synchronized animation, video playback, and an interactive camera created a continuous operational presentation.",
       "scope": [
@@ -251,32 +376,99 @@
       ],
       "outcome": "The resulting system functioned as both a stable continuous presentation and a proof of concept for larger aviation-focused interactive visualization tools.",
       "sourceUrl": "https://www.pavelzosim.com/projects/airport-interaction-screen",
-      "image": "/public/media/projects/airport-interaction-screen/asset-1f799418e32a7664.png",
+      "image": "/public/media/projects/airport-interaction-screen/FAA_3DAirport_D_arnold.png",
       "media": [
         {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_3DAirport_D_arnold.png",
+          "alt": "Airport Operations Interaction Screen — FAA 3DAirport D arnold",
+          "caption": "FAA 3DAirport D arnold"
+        },
+        {
           "src": "/public/media/projects/airport-interaction-screen/asset-1f799418e32a7664.png",
-          "alt": "Airport Operations Interaction Screen production image 01",
-          "caption": "Production record / image 01"
+          "alt": "Airport Operations Interaction Screen — asset 1f799418e32a7664",
+          "caption": "asset 1f799418e32a7664"
         },
         {
-          "src": "/public/media/projects/airport-interaction-screen/asset-93ea597abb7f525d.png",
-          "alt": "Airport Operations Interaction Screen production image 02",
-          "caption": "Production record / image 02"
+          "src": "/public/media/projects/airport-interaction-screen/FAA_airport.png",
+          "alt": "Airport Operations Interaction Screen — FAA airport",
+          "caption": "FAA airport"
         },
         {
-          "src": "/public/media/projects/airport-interaction-screen/asset-266db4cf554ea001.png",
-          "alt": "Airport Operations Interaction Screen production image 03",
-          "caption": "Production record / image 03"
+          "src": "/public/media/projects/airport-interaction-screen/FAA_markings.png",
+          "alt": "Airport Operations Interaction Screen — FAA markings",
+          "caption": "FAA markings"
         },
         {
-          "src": "/public/media/projects/airport-interaction-screen/asset-54cae7605ab964e3.png",
-          "alt": "Airport Operations Interaction Screen production image 04",
-          "caption": "Production record / image 04"
+          "src": "/public/media/projects/airport-interaction-screen/FAA_R21Arnold.png",
+          "alt": "Airport Operations Interaction Screen — FAA R21Arnold",
+          "caption": "FAA R21Arnold"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb1.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb1",
+          "caption": "FAA sb1"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb2.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb2",
+          "caption": "FAA sb2"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb3.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb3",
+          "caption": "FAA sb3"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb4.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb4",
+          "caption": "FAA sb4"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb5.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb5",
+          "caption": "FAA sb5"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb6.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb6",
+          "caption": "FAA sb6"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb7.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb7",
+          "caption": "FAA sb7"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_sb8.png",
+          "alt": "Airport Operations Interaction Screen — FAA sb8",
+          "caption": "FAA sb8"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_scheme.png",
+          "alt": "Airport Operations Interaction Screen — FAA scheme",
+          "caption": "FAA scheme"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/FAA_ui.png",
+          "alt": "Airport Operations Interaction Screen — FAA ui",
+          "caption": "FAA ui"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/Screenshot%202024-06-18%20120155.png",
+          "alt": "Airport Operations Interaction Screen — Screenshot 2024 06 18 120155",
+          "caption": "Screenshot 2024 06 18 120155"
+        },
+        {
+          "src": "/public/media/projects/airport-interaction-screen/Screenshot%202025-11-24%20125049.png",
+          "alt": "Airport Operations Interaction Screen — Screenshot 2025 11 24 125049",
+          "caption": "Screenshot 2025 11 24 125049"
         }
       ],
       "video": {
-        "src": "/public/media/projects/airport-interaction-screen/asset-c54e56ddb0333c6f.mp4",
-        "caption": "Airport Operations Interaction Screen — selected installation footage."
+        "src": "/public/media/projects/airport-interaction-screen/17%20-%20wix_faa.mp4",
+        "poster": "/public/media/projects/airport-interaction-screen/FAA_3DAirport_D_arnold.png",
+        "caption": "Airport Operations Interaction Screen — selected installation footage.",
+        "featured": true
       }
     },
     {
@@ -289,8 +481,16 @@
       "status": "PRODUCTION",
       "client": "Deloitte",
       "metaType": "AR / digital twin",
-      "stack": { "engine": "Unity", "dcc": "Houdini", "motion": "After Effects" },
-      "reach": { "visitors": "thousands", "leads": "500+", "recognition": "ADDY" },
+      "stack": {
+        "engine": "Unity",
+        "dcc": "Houdini",
+        "motion": "After Effects"
+      },
+      "reach": {
+        "visitors": "thousands",
+        "leads": "500+",
+        "recognition": "ADDY"
+      },
       "summary": "AR-based digital-twin and multiplayer racing experience translating complex IoT concepts into a multi-zone public installation.",
       "overview": "The Virtual Factory was designed as an interactive sales-enablement and experiential-learning platform. It combined physical space, synchronized mobile devices, real-time visuals, and a story-driven representation of IoT concepts. The project evolved through several releases and culminated in Virtual Factory 3.0.",
       "scope": [
@@ -341,32 +541,189 @@
       ],
       "outcome": "The installation made complex digital-twin and IoT concepts approachable through a stable, public-facing AR experience and established reusable UI and procedural workflows for later productions.",
       "sourceUrl": "https://www.pavelzosim.com/projects/deloitte-virtual-factory",
-      "image": "/public/media/projects/deloitte-virtual-factory/asset-5c9650392948a0e3.png",
+      "image": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
       "media": [
         {
-          "src": "/public/media/projects/deloitte-virtual-factory/asset-5c9650392948a0e3.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 01",
-          "caption": "Production record / image 01"
+          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo1",
+          "caption": "Promo / DF promo1"
         },
         {
-          "src": "/public/media/projects/deloitte-virtual-factory/asset-dbe0074aa2bc36b8.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 02",
-          "caption": "Production record / image 02"
+          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_01.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 01",
+          "caption": "Environments / DF 01"
         },
         {
-          "src": "/public/media/projects/deloitte-virtual-factory/asset-05fc9fc1152a74ae.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 03",
-          "caption": "Production record / image 03"
+          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_02.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 02",
+          "caption": "Environments / DF 02"
         },
         {
-          "src": "/public/media/projects/deloitte-virtual-factory/asset-894a4ddfd9e2db67.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin production image 04",
-          "caption": "Production record / image 04"
+          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_03.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 03",
+          "caption": "Environments / DF 03"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_04.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 04",
+          "caption": "Environments / DF 04"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_05.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 05",
+          "caption": "Environments / DF 05"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_06.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 06",
+          "caption": "Environments / DF 06"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_07.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 07",
+          "caption": "Environments / DF 07"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/fvx/duckinstorm.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / duckinstorm",
+          "caption": "VFX / duckinstorm"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/fvx/image_044_0000.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / image 044 0000",
+          "caption": "VFX / image 044 0000"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/fvx/modeling.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / modeling",
+          "caption": "VFX / modeling"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/posters/A3_Poster_Print_BubbleDuck.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / A3 Poster Print BubbleDuck",
+          "caption": "Posters / A3 Poster Print BubbleDuck"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/posters/A3_Poster_Print_DuckKola.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / A3 Poster Print DuckKola",
+          "caption": "Posters / A3 Poster Print DuckKola"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/posters/Poster_RoboDuck_A3_v1.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / Poster RoboDuck A3 v1",
+          "caption": "Posters / Poster RoboDuck A3 v1"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo2.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo2",
+          "caption": "Promo / DF promo2"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo3.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo3",
+          "caption": "Promo / DF promo3"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo4.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo4",
+          "caption": "Promo / DF promo4"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/Bubblmaker2000.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / Bubblmaker2000",
+          "caption": "World-space UI / Bubblmaker2000"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/CC_Display_03.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / CC Display 03",
+          "caption": "World-space UI / CC Display 03"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/CC_Display_06.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / CC Display 06",
+          "caption": "World-space UI / CC Display 06"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DF_02.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DF 02",
+          "caption": "World-space UI / DF 02"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DigitalProductRealization_Display01.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DigitalProductRealization Display01",
+          "caption": "World-space UI / DigitalProductRealization Display01"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DynamicCrewPlanning_Display_01.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DynamicCrewPlanning Display 01",
+          "caption": "World-space UI / DynamicCrewPlanning Display 01"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_008_0000.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 008 0000",
+          "caption": "World-space UI / image 008 0000"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_010_0000.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 010 0000",
+          "caption": "World-space UI / image 010 0000"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_034_0030.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 034 0030",
+          "caption": "World-space UI / image 034 0030"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_035_0030.jpg",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 035 0030",
+          "caption": "World-space UI / image 035 0030"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/Scanner_approval.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / Scanner approval",
+          "caption": "World-space UI / Scanner approval"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/seq_display0266.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / seq display0266",
+          "caption": "World-space UI / seq display0266"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/StoreSubmission_AppStore_2208x1242_09.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / StoreSubmission AppStore 2208x1242 09",
+          "caption": "World-space UI / StoreSubmission AppStore 2208x1242 09"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/StoreSubmission_AppStore_2208x1242_10.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / StoreSubmission AppStore 2208x1242 10",
+          "caption": "World-space UI / StoreSubmission AppStore 2208x1242 10"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_display_Configuration.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T display Configuration",
+          "caption": "World-space UI / T display Configuration"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_display_DesignerTable_02.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T display DesignerTable 02",
+          "caption": "World-space UI / T display DesignerTable 02"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_ui_DisScrGraph_DesignPhase_Display01.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T ui DisScrGraph DesignPhase Display01",
+          "caption": "World-space UI / T ui DisScrGraph DesignPhase Display01"
+        },
+        {
+          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_ui_DisScrGraph_DesignPhase_Display02_phase01.png",
+          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T ui DisScrGraph DesignPhase Display02 phase01",
+          "caption": "World-space UI / T ui DisScrGraph DesignPhase Display02 phase01"
         }
       ],
       "video": {
-        "src": "/public/media/projects/deloitte-virtual-factory/asset-f5d861543e1c6d5f.mp4",
-        "caption": "Deloitte Virtual Factory — selected AR digital-twin footage."
+        "src": "/public/media/projects/deloitte-virtual-factory/Environments/01%20-%20image_023_[0030-0090].mp4",
+        "poster": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
+        "caption": "Deloitte Virtual Factory — selected AR digital-twin footage.",
+        "featured": true
       }
     },
     {
@@ -379,8 +736,16 @@
       "status": "PRODUCTION",
       "client": "Quantum Fiber",
       "metaType": "Installation",
-      "stack": { "engine": "Unreal", "input": "AI gesture", "backend": "CMS" },
-      "reach": { "engagement": "5×", "conversations": "3×", "recognition": "ADDY Gold / Silver" },
+      "stack": {
+        "engine": "Unreal",
+        "input": "AI gesture",
+        "backend": "CMS"
+      },
+      "reach": {
+        "engagement": "5×",
+        "conversations": "3×",
+        "recognition": "ADDY Gold / Silver"
+      },
       "summary": "Gesture-driven 100-yard digital dash for live Seahawks game days, combining real-time gameplay, branded VFX, and live leaderboard feedback.",
       "overview": "The Speed Zone was a public real-time installation at Lumen Field. Fans ran in place while AI-driven webcam gesture recognition propelled a virtual player through a recreated stadium environment, with large-screen feedback and a live leaderboard.",
       "scope": [
@@ -429,28 +794,30 @@
       "media": [
         {
           "src": "/public/media/projects/quantum-fiber-speed-zone/asset-5525b19ee3974f58.png",
-          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 01",
-          "caption": "Production record / image 01"
-        },
-        {
-          "src": "/public/media/projects/quantum-fiber-speed-zone/asset-3064c7741ec0b06a.png",
-          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 02",
-          "caption": "Production record / image 02"
+          "alt": "Quantum Fiber × Seahawks — Speed Zone — asset 5525b19ee3974f58",
+          "caption": "asset 5525b19ee3974f58"
         },
         {
           "src": "/public/media/projects/quantum-fiber-speed-zone/asset-0291707f1b6ef133.png",
-          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 03",
-          "caption": "Production record / image 03"
+          "alt": "Quantum Fiber × Seahawks — Speed Zone — asset 0291707f1b6ef133",
+          "caption": "asset 0291707f1b6ef133"
+        },
+        {
+          "src": "/public/media/projects/quantum-fiber-speed-zone/asset-3064c7741ec0b06a.png",
+          "alt": "Quantum Fiber × Seahawks — Speed Zone — asset 3064c7741ec0b06a",
+          "caption": "asset 3064c7741ec0b06a"
         },
         {
           "src": "/public/media/projects/quantum-fiber-speed-zone/asset-fcf5a02835cf9480.png",
-          "alt": "Quantum Fiber × Seahawks — Speed Zone production image 04",
-          "caption": "Production record / image 04"
+          "alt": "Quantum Fiber × Seahawks — Speed Zone — asset fcf5a02835cf9480",
+          "caption": "asset fcf5a02835cf9480"
         }
       ],
       "video": {
         "src": "/public/media/projects/quantum-fiber-speed-zone/asset-f41a81ac69627246.mp4",
-        "caption": "Quantum Fiber Speed Zone — selected live installation footage."
+        "poster": "/public/media/projects/quantum-fiber-speed-zone/asset-5525b19ee3974f58.png",
+        "caption": "Quantum Fiber Speed Zone — selected live installation footage.",
+        "featured": true
       }
     }
   ]

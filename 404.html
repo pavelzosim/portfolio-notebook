@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f3ebe3">
+  <title>404 — path not found / Pavel Zosim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/pages/404.css?v=2">
+</head>
+<body>
+  <canvas id="game" aria-label="Notebook Arkanoid"></canvas>
+
+  <div class="hud">
+    <span><b>pavelzosim</b> :~/404</span>
+    <span class="score">
+      <span class="lives" id="lives" aria-label="Lives">♥ ♥ ♥</span>
+      <span class="sep">·</span>
+      SCORE <b id="score">0000</b>
+      <span class="sep">·</span>
+      BRICKS <b id="bricksLeft">—</b>
+      <span class="sep">·</span>
+      LIVES <b id="livesNum">3</b>
+    </span>
+    <span>ARROWS / A · D</span>
+  </div>
+
+  <div class="panel" id="panel">
+    <div class="panel-head">
+      <span>SYS.FILE_NOT_FOUND</span>
+      <span class="code">404</span>
+    </div>
+    <div class="panel-body">
+      <p class="err">404</p>
+      <h1>Path not in this notebook</h1>
+      <p>
+        Break the blocks while you’re here.<br>
+        Move the paddle. Don’t drop the ball.
+      </p>
+      <div class="actions">
+        <span class="btn-wrap">
+          <button type="button" id="btnPlay">→ Clear the blocks</button>
+        </span>
+        <a class="ghost-link" href="/">Back to home</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/scripts/404-game.js?v=2"></script>
+</body>
+</html>

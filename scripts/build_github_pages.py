@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
 SITE_DIRECTORIES = ("blog", "content", "privacy", "projects", "public", "styles", "tools")
-SITE_FILES = ("index.html", "home.css")
+SITE_FILES = ("index.html", "404.html", "home.css")
 TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".xml", ".txt"}
 
 
@@ -105,6 +105,8 @@ def validate_site(base_path: str, noindex: bool) -> None:
     html_documents = 0
     for path in OUTPUT.rglob("*"):
         if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
+            continue
+        if path.is_relative_to(OUTPUT / "content" / "migration"):
             continue
         text = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html" and re.search(r"<head(?:\s|>)", text, re.IGNORECASE):
