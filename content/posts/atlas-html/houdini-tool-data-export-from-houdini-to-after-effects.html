@@ -97,7 +97,7 @@
     .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
     .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
   </style>
-  <link rel="stylesheet" href="/styles/legacy-posts.css?v=7">
+  <link rel="stylesheet" href="/styles/legacy-posts.css?v=12">
 </head>
 <body>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
@@ -407,6 +407,6 @@ function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.titl
 document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="/scripts/article-page.js?v=5"></script>
+  <script src="/scripts/article-page.js?v=10"></script>
 </body>
 </html>

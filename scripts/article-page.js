@@ -6,7 +6,9 @@
   const currentPath = cleanPath(window.location.pathname);
   const siteHref = (href) => {
     if (!href || href.startsWith('#') || /^[a-z]+:/i.test(href) || href.startsWith('//')) return href;
-    return href.startsWith('/') ? `${basePath}${href}` : href;
+    if (!href.startsWith('/')) return href;
+    if (basePath && (href === basePath || href.startsWith(`${basePath}/`))) return href;
+    return `${basePath}${href}`;
   };
   const make = (tag, className, text) => {
     const node = document.createElement(tag);
@@ -88,11 +90,23 @@
       meta.append(neighbours);
     }
 
-    const footer = document.querySelector('#atlas-footer');
+    let footer = document.querySelector('#atlas-footer');
+    if (!footer) {
+      footer = make('footer');
+      footer.id = 'atlas-footer';
+      content.append(footer);
+    }
     const canonicalUrl = document.querySelector('link[rel="canonical"]')?.href || window.location.href.split('#')[0];
     const articleTitle = record?.title || document.querySelector('h1')?.textContent?.trim() || document.title;
     const afterword = make('section', 'article-afterword');
     afterword.setAttribute('aria-label', 'Share and continue reading');
+
+    if (!content.querySelector('.atlas-eof-divider')) {
+      const endMarker = make('div', 'article-end-marker');
+      endMarker.setAttribute('aria-label', 'End of article');
+      endMarker.append(make('span'), make('strong', null, '// ARTICLE END //'), make('span'));
+      afterword.append(endMarker);
+    }
 
     const share = make('section', 'article-share');
     const shareHeader = make('div', 'article-afterword__header');
@@ -202,9 +216,37 @@
       new MutationObserver(renderLocalFooter).observe(footer, { childList: true });
     }
 
+    if (!document.querySelector('.article-function-bar')) {
+      const functionBar = make('nav', 'function-bar article-function-bar');
+      functionBar.setAttribute('aria-label', 'Keyboard commands');
+      [
+        ['F2', 'Home', '/'],
+        ['F3', 'Projects', '/projects/'],
+        ['F4', 'Notes', '/#notes'],
+        ['F5', 'Tools', '/tools/'],
+        ['F6', 'Blog', '/blog/'],
+        ['F7', 'About', '/#about'],
+        ['F8', 'Contacts', '/#contacts'],
+        ['F10', 'Top', '#content']
+      ].forEach(([key, label, href]) => {
+        const link = makeLink(href, null, 'vc-button');
+        link.append(make('kbd', null, key), make('span', null, label));
+        functionBar.append(link);
+      });
+      document.body.append(functionBar);
+    }
+
     content.before(workspace);
     main.append(content);
     workspace.append(rail, main, meta);
+
+    const siteFooter = make('footer', 'article-site-footer');
+    siteFooter.append(
+      make('span', null, 'pavelzosim / technical systems notebook'),
+      make('span', null, 'CC BY-NC-ND 4.0'),
+      makeLink('/#top', 'return 0; ↑')
+    );
+    workspace.after(siteFooter);
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
