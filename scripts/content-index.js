@@ -3,7 +3,11 @@
   const loader = document.currentScript || [...document.scripts].find((script) => script.src.includes('/scripts/content-index.js'));
   const loaderPath = new URL(loader?.src || location.href, location.href).pathname;
   const basePath = loaderPath.replace(/\/scripts\/content-index\.js$/, '');
-  const withBase = (path) => path?.startsWith('/') && !path.startsWith('//') ? `${basePath}${path}` : path;
+  const withBase = (path) => {
+    if (!path?.startsWith('/') || path.startsWith('//')) return path;
+    if (basePath && (path === basePath || path.startsWith(`${basePath}/`))) return path;
+    return `${basePath}${path}`;
+  };
   const pageConfig = {
     projects: {
       file: 'PROJECTS.md',
