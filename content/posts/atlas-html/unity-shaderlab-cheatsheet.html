@@ -1,48 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.8.0">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Unity ShaderLab Cheatsheet · Pavel Zosim</title><meta name="description" content="Production-oriented ShaderLab and rendering-state reference."><link rel="canonical" href="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet"><meta property="og:type" content="article"><meta property="og:title" content="Unity ShaderLab Cheatsheet"><meta property="og:description" content="Production-oriented ShaderLab and rendering-state reference."><meta property="og:url" content="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Unity ShaderLab Cheatsheet"><meta name="twitter:description" content="Production-oriented ShaderLab and rendering-state reference."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Unity ShaderLab Cheatsheet", "description": "Production-oriented ShaderLab and rendering-state reference.", "url": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet", "mainEntityOfPage": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet", "image": "https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png", "datePublished": null, "dateModified": null, "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&amp;display=swap">
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.2.9/cdn/atlas-framework.css"><!--<link rel="stylesheet" href="https://rawcdn.githack.com/pavelzosim/atlas-framework/master/cdn/atlas-framework.css">  -->
-
-  <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Прячем скроллбары самого iframe-контейнера Wix */
-            background: transparent;
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        h1, h2, h3, h4, h5, h6, p, span, div, li, td, th {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        .atlas-container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
-  </style>
-  <link rel="stylesheet" href="/styles/legacy-posts.css?v=15">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Unity ShaderLab Cheatsheet — Fundamentals &amp; Properties · Pavel Zosim</title>
+  <meta name="description" content="ShaderLab fundamentals: file anatomy, CG and HLSL execution, shader identity, Properties syntax, data types, and Inspector drawers.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Unity ShaderLab Cheatsheet — Fundamentals &amp; Properties">
+  <meta property="og:description" content="ShaderLab fundamentals: file anatomy, CG and HLSL execution, shader identity, Properties syntax, data types, and Inspector drawers.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unity ShaderLab Cheatsheet — Fundamentals &amp; Properties">
+  <meta name="twitter:description" content="ShaderLab fundamentals: file anatomy, CG and HLSL execution, shader identity, Properties syntax, data types, and Inspector drawers.">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Unity ShaderLab Cheatsheet — Fundamentals & Properties","description":"ShaderLab fundamentals: file anatomy, CG and HLSL execution, shader identity, Properties syntax, data types, and Inspector drawers.","url":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet","mainEntityOfPage":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet","image":"https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png","dateModified":"2026-08-24","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"},"isPartOf":{"@type":"CreativeWorkSeries","name":"Unity ShaderLab Cheatsheet"}}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles/atlas.css?v=55">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
 </head>
-<body><h1 class="seo-heading">Unity ShaderLab Cheatsheet</h1>
+<body id="top">
+  <h1 class="seo-heading">Unity ShaderLab Cheatsheet — Fundamentals &amp; Properties</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
   <div class="atlas-container">
-    <header id="site-passport"></header>
-    <main id="atlas-body">
-      <div class="content-block">
+    <div id="site-passport"></div>
+    <div class="content-block">
+      <nav class="atlas-series-nav" aria-label="Unity ShaderLab Cheatsheet series">
+        <span>[ SERIES // UNITY_SHADERLAB ]</span>
+        <a href="/post/unity-shaderlab-cheatsheet/" aria-current="page">01 Fundamentals &amp; Properties</a>
+        <a href="/post/unity-shaderlab-cheatsheet-render-states/">02 Tags &amp; Render States</a>
+        <a href="/post/unity-shaderlab-cheatsheet-depth-stencil-passes/">03 Depth, Stencil &amp; Passes</a>
+        <a href="/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization/">04 HLSL, Pipelines &amp; Optimization</a>
+      </nav>
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#unity-shaderlab-cheatsheet-introduction"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Unity ShaderLab Cheatsheet – Introduction</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#how-shaderlab-works-with-cg-and-hlsl-in-unity"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">How ShaderLab Works with CG and HLSL in Unity</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shader-identity-property-binding"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Shader Identity &amp; Property Binding</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#properties-syntax-data-types"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Properties Syntax &amp; Data Types</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shaderlab-attribute-drawers"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">ShaderLab Attribute Drawers</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
 <div class="atlas-compare">
   <div class="atlas-compare-blueprint-nodes"></div>
 
@@ -62,12 +64,9 @@
     </div>
   </div>
 </div>
-
-
-        <!--- H2 SECTION START --->
-        <h2>1. Unity ShaderLab Cheatsheet – Introduction</h2>
+<h2 id="unity-shaderlab-cheatsheet-introduction">01 Unity ShaderLab Cheatsheet – Introduction</h2>
         <p>This Unity ShaderLab cheatsheet provides a structured, production-oriented reference for technical artists working with hand-written shaders in Unity. Whether you’re transitioning from ShaderGraph or diving into hand-written shaders, this guide provides you with an in-depth look at shader code structure, property declaration, and how the GPU processes shader code. We’ll also explore special ShaderLab features such as drawer attributes, tags, and SubShaders, and discuss how these concepts vary across render pipelines (Built-in, URP, HDRP).</p>
-        <h3>Unity ShaderLab Cheatsheet: What is ShaderLab in Unity?</h3>
+        <h3 id="unity-shaderlab-cheatsheet-what-is-shaderlab-in-unity">Unity ShaderLab Cheatsheet: What is ShaderLab in Unity?</h3>
         <p>ShaderLab is Unity’s shader definition language used to structure passes, render states and connect CG/HLSL code.</p>
         <div class="atlas-compare">
           <div class="atlas-compare__column">
@@ -94,8 +93,8 @@
           <span class="atlas-notice__header">[ SYSTEM NOTICE: RENDER PIPELINES STRATEGY SHIFT ]</span>
           <p><strong>IMPORTANT (2026):</strong> Unity has officially shifted its core development strategy. <strong>URP</strong> is now the primary scalable foundation for all future graphics investments, while <strong>HDRP</strong> enters maintenance mode, and <strong>BiRP</strong> deprecation officially begins in Unity 6.5.</p>
         </div>
-        <h3>Timeline & Major Pipeline Iterations</h3>
-        <h3>[ 2024 ] Legacy Cleansing & Core Convergence</h3>
+        <h3 id="timeline-major-pipeline-iterations">Timeline &amp; Major Pipeline Iterations</h3>
+        <h3 id="2024-legacy-cleansing-core-convergence">[ 2024 ] Legacy Cleansing &amp; Core Convergence</h3>
         <p>Focus on stabilizing Scriptable Render Pipelines (SRP) under the hood and phasing out old workflows:</p>
         <ul>
           <li><strong>CGPROGRAM Deprecation:</strong> Legacy blocks are fully deprecated in URP/HDRP. Writing <code>HLSLPROGRAM / ENDHLSL</code> is mandatory to ensure modern shader target compatibility and avoid compilation faults in SRP.</li>
@@ -103,7 +102,7 @@
           <li><strong>Render Graph Architecture:</strong> Initial framework convergence under the hood to align URP and HDRP execution passes.</li>
         </ul>
         <p><b>Key Resources:</b> <a class="atlas-blueprint-link" href="https://docs.unity3d.com/Manual/shader-shaderlab-code-blocks.html" target="_blank">ShaderLab Code Blocks</a></p>
-        <h3>[ 2025 ] Unity 6 Production Lifecycle</h3>
+        <h3 id="2025-unity-6-production-lifecycle">[ 2025 ] Unity 6 Production Lifecycle</h3>
         <p>The release of Unity 6 brings architectural optimization and high-fidelity rendering paths to URP:</p>
         <ul>
           <li><strong>GPU Resident Drawer & Render Graph:</strong> Massive draw-call and CPU-overhead reduction via hardware-driven data residency and automatic frame-graph optimization.</li>
@@ -111,7 +110,7 @@
           <li><strong>Advanced Feature Reflow:</strong> Motion Vector passes, Lights 2D upgrades, and enhanced Alpha Processing bring URP closer to feature parity with old HDRP standards.</li>
         </ul>
         <p><b>Key Resources:</b> <a class="atlas-blueprint-link" href="https://docs.unity3d.com/6000.0/Documentation/Manual/WhatsNewUnity6.html" target="_blank">Unity 6 What's New</a> <span class="atlas-footer-block__support-divider">|</span> <a class="atlas-blueprint-link" href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/changelog/CHANGELOG.html" target="_blank">URP Changelog 17.0.x</a></p>
-        <h3>[ 2026 ] The Single Architecture Push</h3>
+        <h3 id="2026-the-single-architecture-push">[ 2026 ] The Single Architecture Push</h3>
         <p>The definitive pivot. Unity consolidates all graphic engineering resources into a single scalable engine:</p>
         <ul>
           <li><strong>URP as the Master Pipeline:</strong> Receives high-end extensions previously locked to HDRP: Physical Light Units, Auto-Exposure, Physical Sky managers, Screen Space Reflections (SSR), and real-time Global Illumination.</li>
@@ -119,10 +118,10 @@
           <li><strong>BiRP EOL (End of Life):</strong> Deprecation formally begins in Unity 6.5. Legacy projects are supported through Unity 6.7 LTS (until late 2028/2029 for Enterprise), but all Asset Store assets and documentation transition to URP defaults.</li>
         </ul>
         <p><b>Official Sources:</b> <a class="atlas-blueprint-link" href="https://unity.com/topics/render-pipelines-strategy-for-2026" target="_blank">Strategy Roadmap</a> <span class="atlas-footer-block__support-divider">|</span> <a class="atlas-blueprint-link" href="https://discussions.unity.com/t/render-pipelines-strategy-for-2026/1710004" target="_blank">Unity Forum Discussion</a></p>
-        <hr class="atlas-section-break" data-index="DEPLOYMENT">
-        <h3>Production Architecture Matrix (2026+)</h3>
+        <div class="atlas-section-break" data-index="// SECTION"></div>
+        <h3 id="production-architecture-matrix-2026">Production Architecture Matrix (2026+)</h3>
         <p>Cross-reference checklist for active technical artists and tools engineers starting new codebases:</p>
-        <div class="atlas-table-responsive">
+        <div class="atlas-table-frame atlas-table-frame--solid">
           <table class="atlas-table">
             <thead>
               <tr>
@@ -154,7 +153,7 @@
             </tbody>
           </table>
         </div>
-        <div class="atlas-table-responsive">
+        <div class="atlas-table-frame atlas-table-frame--solid">
           <table class="atlas-table">
             <thead>
               <tr>
@@ -285,9 +284,9 @@
             </tbody>
           </table>
         </div>
-        <div class="atlas-section-break" data-index="x1"></div><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>2. How ShaderLab Works with CG and HLSL in Unity</h2>
+        <div class="atlas-section-break" data-index="x1"></div>
+
+<h2 id="how-shaderlab-works-with-cg-and-hlsl-in-unity">02 How ShaderLab Works with CG and HLSL in Unity</h2>
         <p>The GPU reads shader code sequentially — from top to bottom. The typical structure of a execution pipeline block inside <code>CGPROGRAM</code> / <code>HLSLPROGRAM</code> environments follows this strict sequence:</p>
         <div class="atlas-pipeline-stack">
           <div class="atlas-pipeline-step">
@@ -345,7 +344,7 @@
             <li><strong>No Fixed Sorting:</strong> There is zero hardware guarantee regarding the chronological processing order of individual fragments.</li>
           </ul>
         </div>
-        <h3>Shader Execution Data Flow</h3>
+        <h3 id="shader-execution-data-flow">Shader Execution Data Flow</h3>
         <p>Architectural data flow graph from local application memory down to the hardware frame display buffer:</p>
         <div class="atlas-data-flow">
           <div class="atlas-flow-row">
@@ -386,9 +385,9 @@
             </div>
           </div>
         </div>
-        <h3>Code Example: Basic Color Shader</h3>
+        <h3 id="code-example-basic-color-shader">Code Example: Basic Color Shader</h3>
         <p>Below is a production-ready blueprint of a basic unlit color shader. It demonstrates how properties declared in the ShaderLab interface are bound to uniform variables within the programmable HLSL stages to output a solid color fragment.</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/Pipeline/BasicColor"
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/Pipeline/BasicColor"
     {
         Properties
         {
@@ -449,7 +448,7 @@
             }
         }
     }</code></pre>
-        <h3>Explanation of Architectural Stages</h3>
+        <h3 id="explanation-of-architectural-stages">Explanation of Architectural Stages</h3>
         <ul>
           <li><strong>Properties Block:</strong><br>
           Declares <code>_Color</code> with the display name “Main Color” and a default solid white value. Remember: no semicolons at the end of properties lines in ShaderLab syntax!</li>
@@ -458,9 +457,9 @@
           <li><strong>Shader Stages:</strong><br>
           The vertex shader (<code>vert</code>) runs first to transform local polygon vertices into raw clip space data. The fixed-function hardware then rasterizes the primitives, handing off pixel fragments to the fragment shader (<code>frag</code>) which evaluates the final <code>_Color</code> token onto the target frame buffer.</li>
         </ul>
-        <div class="atlas-section-break" data-index="x2"></div><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>3. Shader Identity & Property Binding</h2>
+        <div class="atlas-section-break" data-index="x2"></div>
+
+<h2 id="shader-identity-property-binding">03 Shader Identity &amp; Property Binding</h2>
         <p>Before you dive into writing low-level execution logic, it is essential to declare your shader’s namespace and define its data interface. This section serves as the primary configuration entry point for both the compiler and the Unity Editor UI, handling two critical architecture tasks:</p>
         <ul>
           <li><strong>Establish the Shader’s Identity:</strong><br>
@@ -473,7 +472,7 @@
           <p><strong>Initialization Rule:</strong> Define the immutable shader namespace path and initialize the inspector-visible memory properties. Semicolons are strictly prohibited at the end of ShaderLab block declarations.</p>
         </div>
         <p>First Step: Define shader name and inspector-visible properties. Syntax rule declaration:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/Pipeline/ExampleFlow"
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/Pipeline/ExampleFlow"
                     {
                         Properties
                         {
@@ -487,28 +486,28 @@
                     }</code></pre>
 
 
-        <div class="atlas-media-node">
+        <div class="media-frame">
           <div class="atlas-media-node__wrapper"><img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-9145ab9079dff35f.png" alt="Unity Material Inspector Property Binding Mapping"></div>
-          <div class="atlas-media-node__caption">
+          <div class="media-caption">
             <strong>[ Hardware Capture 01.A ]</strong>
           </div>
-        </div><!--- H2 SECTION END --->
-        <p>The root string identifier of any ShaderLab file determines its unique hierarchical token and location within the Unity material shader dropdown selection menus. This organizational path controls how the engine's internal asset database parses, references, and presents the compiled binary compile target to technical users.</p>
+        </div>
+<p>The root string identifier of any ShaderLab file determines its unique hierarchical token and location within the Unity material shader dropdown selection menus. This organizational path controls how the engine's internal asset database parses, references, and presents the compiled binary compile target to technical users.</p>
         <ul>
           <li><strong>Default Compiler Path:</strong> Standard global registration without custom grouping (e.g., automatically placing the compiled state under hidden or system-defined directories).</li>
-          <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "CustomPath/ShaderName_simpleColor"</code></pre>
+          <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "CustomPath/ShaderName_simpleColor"</code></pre>
           <li><strong>Custom Namespace Path:</strong> Utilizing a forward-slash syntax to declare explicit sub-folders and maintain strict organization within production pipelines:</li>
-          <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "CustomPath/ShaderName_simpleColor" PropertyName("Display Name", DataType) = DefaultValue</code></pre>
+          <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "CustomPath/ShaderName_simpleColor" PropertyName("Display Name", DataType) = DefaultValue</code></pre>
         </ul>
-        <div class="atlas-media-node">
+        <div class="media-frame">
           <div class="atlas-media-node__wrapper"><img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-5767efede1a8468d.png" alt="Unity Shader Dropdown Hierarchy Menu Mapping"></div>
-          <div class="atlas-media-node__caption">
+          <div class="media-caption">
             <strong>[ Hardware Capture 01.B ]</strong> Inspector namespace resolution. The compiler tokenizes the string literal <code>"CustomPath/ShaderName_simpleColor"</code>, dynamically instantiating the <code>CustomPath</code> folder hierarchy within the Material Selector viewport dropdown.
           </div>
-        </div><!--- H2 SECTION START --->
-        <h2>3.2 Properties Syntax & Data Types</h2>
+        </div>
+<h2 id="properties-syntax-data-types">04 Properties Syntax &amp; Data Types</h2>
         <p>Within the shader declaration, the Properties block allows you to expose parameters to the user. The basic syntax for each property is:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">PropertyName("Display Name", DataType) = DefaultValue</code></pre>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">PropertyName("Display Name", DataType) = DefaultValue</code></pre>
         <ul>
           <li><strong><code>PropertyName</code>:</strong><br>
           This is the internal identifier (e.g., _MainTex), which the shader code uses to reference the property.</li>
@@ -519,7 +518,7 @@
           <li><strong><code>Default Value</code>:</strong><br>
           This is the initial value assigned to the property when the shader is first used. For textures, this might be a reference like "white" or "defaultTexture".</li>
         </ul>
-        <h3>3.2.1 Numeric Data Types</h3>
+        <h3 id="numeric-data-types">Numeric Data Types</h3>
         <p>These properties control scalar values such as factors, intensity, or other numerical parameters.</p>
         <ul>
           <li><strong><code>Float</code>:</strong><br>
@@ -529,7 +528,7 @@
           <li><strong><code>Range</code>:</strong><br>
           A float that’s constrained between a minimum and maximum value and is displayed as a slider in the Inspector. Ideal for values where you want to restrict input to a specific range.</li>
         </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">_Factor ("Factor", Float) = 0.1                // Float property
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">_Factor ("Factor", Float) = 0.1                // Float property
                         _Name ("Name", Int) = 1                        // Integer property
                         _Specular ("Specularity", Range(0,1)) = 0.0   // Range property
                         _VPos ("Position", Vector) = (0, 0, 0, 1)</code></pre>
@@ -539,7 +538,7 @@
           <li><strong><code>[HDR]</code>:</strong><br>
           For HDR effects in HDRP, (Attribute Drawer sec. 3.3.4) - When using high-intensity colors (e.g., for emission), the [HDR] attribute is required to ensure proper tonemapping.</li>
         </ul>
-        <h3>3.2.3 Texture Types</h3>
+        <h3 id="texture-types">Texture Types</h3>
         <p>Textures provide image-based data for surfaces. Unity includes several texture types with built-in defaults (e.g., "white", "black", "gray", "bump").</p>
         <ul>
           <li><strong><code>2D</code>:</strong><br>
@@ -548,15 +547,15 @@
           A cubemap used for environmental mapping or reflections.</li>
           <li><strong><code>3D</code>:</strong><br>
           A volumetric texture, used less frequently. May have additional constraints; consult HDRP documentation for detailed behavior.</li>
-        </ul><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>3.3 ShaderLab Attribute Drawers</h2>
+        </ul>
+
+<h2 id="shaderlab-attribute-drawers">05 ShaderLab Attribute Drawers</h2>
         <p>Attribute drawers in ShaderLab allow you to customize how properties appear in the Unity Inspector and how they affect shader variants without needing to swap materials. They serve two main purposes:</p>
         <ul>
           <li><strong>Inspector Organization:</strong> They help arrange properties visually for better usability and clarity.</li>
           <li><strong>Shader Functionality & Variants:</strong> They can automatically generate shader keywords for conditional compilation, ensuring that toggled effects are efficiently managed.</li>
         </ul>
-        <h3>3.3.1 Organization Drawers</h3>
+        <h3 id="organization-drawers">Organization Drawers</h3>
         <p>Organization drawers control the visibility and layout of properties in the Inspector.</p>
         <ul>
           <li><strong><code>[HideInInspector]</code>:</strong><br>
@@ -566,7 +565,7 @@
           <li><strong><code>[Header] & [Space]</code>:</strong><br>
           Organize properties with headers and spacing.</li>
         </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">// Example implementation of Organization Drawers
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">// Example implementation of Organization Drawers
                             [NoScaleOffset] _MainTex ("Main Texture", 2D) = "white" {}
 
                             [Header(Specular Properties)]
@@ -581,7 +580,7 @@
           <span class="atlas-notice__header">[ PIPELINE INTEGRITY NOTE ]</span>
           <p>These organization attributes work consistently across Built-in, URP, and HDRP. However, clarity in grouping and hiding properties is especially valuable in complex HDRP shaders where many technical settings are involved.</p>
         </div>
-        <h3>3.3.2 Range & Numeric Drawers</h3>
+        <h3 id="range-numeric-drawers">Range &amp; Numeric Drawers</h3>
         <p>These drawers customize how numeric inputs are displayed, offering more control than a standard slider.</p>
         <ul>
           <li><strong><code>[PowerSlider]</code>:</strong><br>
@@ -589,15 +588,15 @@
           <li><strong><code>[IntRange]</code>:</strong><br>
           Generates a slider for integer values.</li>
         </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">[PowerSlider(3.0)] _Brightness ("Brightness", Range(0.01, 1)) = 0.08
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">[PowerSlider(3.0)] _Brightness ("Brightness", Range(0.01, 1)) = 0.08
                                 [IntRange] _Samples ("Samples", Range(0, 255)) = 100</code></pre>
-        <h3>3.3.3 Shader Variant Drawers</h3>
+        <h3 id="shader-variant-drawers">Shader Variant Drawers</h3>
         <p>These drawers enable the creation of shader variants and toggle features without needing multiple materials. Since ShaderLab doesn’t support booleans directly, these attributes simulate boolean toggles using float properties.</p>
         <ul>
           <li><strong><code>[Toggle]</code>:</strong><br>
           Simulates a boolean toggle (0 = Off, 1 = On) and auto-generates a corresponding shader keyword (e.g., ENABLEFANCY_ON).</li>
         </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">[Toggle(ENABLE_FANCY)] _Fancy ("Fancy?", Float) = 0
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">[Toggle(ENABLE_FANCY)] _Fancy ("Fancy?", Float) = 0
 
                             // Then in your shader code:
                             #pragma shader_feature _ENABLE_FANCY_ON
@@ -611,7 +610,7 @@
           <li><strong><code>[KeywordEnum]</code>:</strong><br>
           Creates a dropdown with multiple options that generate keywords, such as for blend modes or other multi-option settings.</li>
         </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">[KeywordEnum(None, Add, Multiply)] _Overlay ("Overlay Mode", Float) = 0
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">[KeywordEnum(None, Add, Multiply)] _Overlay ("Overlay Mode", Float) = 0
 
                             // Then in your shader code:
                             #pragma multi_compile _OVERLAY_NONE _OVERLAY_ADD _OVERLAY_MULTIPLY</code></pre>
@@ -619,14 +618,14 @@
           <li><strong><code>[Enum]</code>:</strong><br>
           Generates dropdown menus for selecting from a list of options like blend modes, depth testing functions, or culling modes.</li>
         </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">[Enum(UnityEngine.Rendering.BlendMode)] _Blend ("Blend Mode", Float) = 1
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">[Enum(UnityEngine.Rendering.BlendMode)] _Blend ("Blend Mode", Float) = 1
                             [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("ZTest", Float) = 0
                             [Enum(UnityEngine.Rendering.CullMode)] _CullMode ("Cull Mode", Int) = 0</code></pre>
         <div class="atlas-notice">
           <span class="atlas-notice__header">[ PIPELINE INTEGRITY NOTE ]</span>
           <p><strong>Pipeline Note:</strong> Shader variant drawers work similarly across render pipelines. However, when working with HDRP, you might have additional keywords or variant controls to handle advanced features (like volumetric lighting) that require conditional compilation.</p>
         </div>
-        <h3>3.3.4 Texture & Color Specific Drawers</h3>
+        <h3 id="texture-color-specific-drawers">Texture &amp; Color Specific Drawers</h3>
         <p>These drawers tailor the display and handling of texture and color properties to match their intended use.</p>
         <ul>
           <li><strong><code>[Normal]</code>:</strong><br>
@@ -645,1563 +644,21 @@
           Signals that the property may be overridden per renderer, for example using a MaterialPropertyBlock, allowing for instance-specific data.</li>
         </ul>
         <p>Syntax specification mapping:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">
                         [Normal] _BumpMap ("Normal Map", 2D) = "bump" {}
                         [HDR] _Emission ("Emission Color", Color) = (1, 1, 1, 1)
                         [Gamma] _Tint ("Tint Color", Color) = (1, 1, 1, 1)
                         [PerRendererData] _DetailTex ("Detail Texture", 2D) = "gray" {}</code></pre>
-        <div class="atlas-section-break" data-index="x3"></div><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>4. SubShader Setup in ShaderLab</h2>
-        <p>Every shader must include at least one SubShader. In the SubShader, you define one or more passes (each of which contains your actual shader code) and specify metadata that informs Unity how and when to use that SubShader. This setup is crucial because Unity selects the most compatible SubShader based on your target hardware and active render pipeline.</p>
-        <p>Basic Structure Example:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {
-    Tags { "RenderType" = "Opaque" }
-    LOD 100
+        <div class="atlas-section-break" data-index="x3"></div>
 
-    Pass {
-        // For Built-in RP, you might see CGPROGRAM/ENDCG,
-        // while URP/HDRP typically use HLSLPROGRAM/ENDHLSL.
-        CGPROGRAM
-            // Compiler directives and shader code go here...
-        ENDCG
-    }
-}</code></pre>
-        <h3>4.1 Subshader Tags</h3>
-        <p>Tags are key–value pairs that provide essential metadata for a SubShader. They affect shader behavior, drawing order, and how the shader interacts with replacement systems or post-processing. Below is an overview of the main tags and their pipeline-specific nuances.</p>
-        <h3>4.1.1 ShaderLab Queue Tags</h3>
-        <p>Queue tags determine the order in which objects are drawn by the GPU. The render queue affects layering, transparency, and masking. The GPU sorts draw calls by these numerical values:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Tags { "Queue" = "Geometry" }</code></pre>
-        <ul>
-          <li><strong><code>Background</code>:</strong><br>
-          This render queue is rendered before any others. You’d typically use this for things that really need to be in the background.<br>
-          <i>Range: 0–1499 (default 1000)</i></li>
-          <li><strong><code>Geometry</code>:</strong><br>
-          For opaque objects; the default for most shaders.<br>
-          <i>Range: 1500–2399 (default 2000)</i></li>
-          <li><strong><code>AlphaTest</code>:</strong><br>
-          Suitable for objects with cutout transparency (e.g., foliage, vegetation) that need to be rendered after opaque objects.<br>
-          <i>Range: 2400–2699 (default 2450)</i></li>
-          <li><strong><code>Transparent</code>:</strong><br>
-          For transparent objects; drawn back-to-front.<br>
-          <i>Range: 2700–3599 (default 3000)</i></li>
-          <li><strong><code>Overlay</code>:</strong><br>
-          For UI or overlay elements rendered last.<br>
-          <i>Range: 3600–5000 (default 4000)</i></li>
-        </ul>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ PIPELINE EXECUTION: QUEUE ]</span>
-          <p><strong>Pipeline-Specific Notes:</strong><br>
-          <strong>Built-in & URP:</strong> Queue tags are set directly in the shader and appear in the material Inspector.<br>
-          <strong>HDRP (2024/2025):</strong> Queue tags can be overridden by Material Settings (Rendering Priority). To enforce draw order in HDRP, set the queue in the SubShader tags and adjust Material Order in the Inspector.</p>
-        </div>
-        <h3>4.1.2 ShaderLab RenderType Tags</h3>
-        <p>The RenderType tag categorizes shaders into logical groups for global replacements or post-processing. This tag helps Unity identify which shaders can be replaced at runtime (e.g., via Camera.RenderWithShader).</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Tags { "RenderType"="Opaque" }</code></pre>
-        <p>Common RenderType Values:</p>
-        <ul>
-          <li><strong><code>Opaque</code>:</strong><br>
-          Default for most non-transparent materials. (Normal, Self Illuminated, Reflective, terrain shaders)</li>
-          <li><strong><code>Transparent</code>:</strong><br>
-          Used for shaders with blending, such as glass or particles. (Transparent, Particle, Font, terrain additive pass shaders).</li>
-          <li><strong><code>TransparentCutout</code>:</strong><br>
-          For materials that use alpha testing (masked transparency , Transparent Cutout, two pass vegetation shaders).</li>
-          <li><strong><code>Background</code>:</strong><br>
-          For skyboxes and distant scenery.</li>
-          <li><strong><code>Overlay</code>:</strong><br>
-          For UI and similar overlay elements. (GUITexture, Halo, Flare shaders.)</li>
-        </ul>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ PIPELINE EXECUTION: RENDERTYPE ]</span>
-          <p><strong>Built-in & URP:</strong> Directly specified and visible.<br>
-          <strong>HDRP:</strong> Although still used, HDRP may manage some transparency or advanced effects via additional material settings.</p>
-        </div>
-        <h3>4.1.3 Specialized Tags</h3>
-        <p>Beyond Queue and RenderType, several other tags refine shader behavior:</p>
-        <ul>
-          <li><strong><code>TreeOpaque</code>:</strong> Used for opaque tree bark.</li>
-          <li><strong><code>TreeTransparentCutout</code>:</strong> Used for tree leaves that use alpha cutout.</li>
-          <li><strong><code>TreeBillboard</code>:</strong> Used for trees rendered as billboards.</li>
-          <li><strong><code>Grass</code>:</strong> For full 3D grass models.</li>
-          <li><strong><code>GrassBillboard</code>:</strong> For grass rendered as billboards to improve performance.</li>
-        </ul>
-        <h3>4.1.4 Additional Tags</h3>
-        <p>Beyond Queue and RenderType, several other tags refine shader behavior:</p>
-        <ul>
-          <li><strong><code>RequireOptions</code>:</strong><br>
-          Ensures a pass is rendered only if specific quality settings (e.g., SoftVegetation) are enabled.</li>
-          <li><strong><code>DisableBatching</code>:</strong><br>
-          Controls whether dynamic batching is allowed (values: True, False, LODFading).</li>
-          <li>
-            <strong><code>ForceNoShadowCasting</code>:</strong><br>
-            Prevents the shader from casting shadows. <i>(Note: In HDRP, this does not prevent contact shadows.)</i>
-            <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Tags { "ForceNoShadowCasting" = "True" }</code></pre>
-          </li>
-          <li><strong><code>IgnoreProjector</code>:</strong><br>
-          Excludes the shader from being affected by projectors. <i>(Built-in only)</i> Tells Unity to ignore projectors when rendering this geometry.</li>
-          <li><strong><code>CanUseSpriteAtlas</code>:</strong><br>
-          Indicates that the shader supports batching through a Sprite Atlas.</li>
-          <li><strong><code>PreviewType</code>:</strong><br>
-          Specifies how the shader should be previewed in the editor (e.g., Sphere, Plane, Skybox).</li>
-          <li>
-            <strong><code>GrabPass</code>:</strong><br>
-            Captures current screen contents into a texture will grab current screen contents into a texture. The texture can be accessed in further passes by _GrabTexture name. Note: this form of grab pass will do the expensive screen grabbing operation for each object that uses it! GrabPass { "TextureName" } will grab screen contents into a texture, but will only do that once per frame for the first object that uses the given texture name. The texture can be accessed in further passes by the given texture name. This is a more performant way when you have multiple objects using grab pass in the scene. Additionally, GrabPass can use Name and Tags commands.
-            <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">GrabPass { "TextureName" }</code></pre>
-          </li>
-          <li>
-            <strong><code>UsePass</code>:</strong><br>
-            Reuses passes from another shade. Inserts all passes with a given name from a given shader. Shader/Name contains the name of the shader and the name of the pass, separated by a slash character. Note that only first supported subshader is taken into account.
-            <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">UsePass "Shader/PassName"</code></pre>
-          </li>
-        </ul>
-        <p>Usage: RenderType tags help with shader replacement systems (e.g., using Camera.RenderWithShader) and enable filtering when applying post-processing effects.</p>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ PIPELINE SELECTION: ADVANCED TAGS ]</span>
-          <p><strong>Pipeline-Specific Notes:</strong><br>
-          <strong>Built-in & URP:</strong> RenderType tags work as defined and help organize shader behavior.<br>
-          <strong>HDRP:</strong> Although available, HDRP’s advanced material system often uses additional parameters to control transparency and rendering effects.<br>
-          <br>
-          <i>(Works only with URP/Built-in RP)</i> Tags are labels that show how and when our shaders are processed. Like a GameObject Tag, these can be used to recognize how a shader will be rendered or how a group of shaders will behave graphically.</p>
-        </div><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>4.2 ShaderLab Blending Modes</h2>
-        <p>Blending is the cornerstone of creating visually rich materials like glass, fire, smoke, and holograms. Let’s break down this critical stage in the rendering pipeline.</p>
-        <p>Blending combines the fragment shader’s output color (SrcValue) with the color already in the render target (DstValue). Think of it as layering in Photoshop—but in real-time 3D. This “merging” stage occurs after the fragment shader and is responsible for incorporating transparency, depth, and stencil data into the final pixel color.</p>
-        <p>Blending options can be written in different fields: within the SubShader field or the Pass field, the position will depend on the number of passes and the final result that we need.</p>
-        <ul>
-          <li><strong>Default Behavior:</strong> When blending is disabled (default: Blend Off), Source color overwrites the destination (no transparency).</li>
-          <li><strong>Activating Blending:</strong> Enable blending + set "Queue"="Transparent" to render after opaque objects.</li>
-        </ul>
-        <p>Blending combines fragment shader output (SrcValue) with the existing render target color (DstValue) using the equation:</p>
-        <p><code>FinalColor = SrcFactor * SrcValue [OP] DstFactor * DstValue</code></p>
-        <p>Default operation ([OP]) is Add, making the typical equation:</p>
-        <p><code>FinalColor = SrcFactor * SrcValue + DstFactor * DstValue</code></p>
-        <h3>Blend Factors Cheat Sheet</h3>
-        <table class="atlas-data-table">
-          <thead>
-            <tr>
-              <th>Factor</th>
-              <th>RGB Value</th>
-              <th>Use Case</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>One</strong></td>
-              <td><code>(1,1,1)</code></td>
-              <td>Full color contribution (e.g., additive glow).</td>
-            </tr>
-            <tr>
-              <td><strong>SrcAlpha</strong></td>
-              <td><code>(A,A,A)</code></td>
-              <td>Standard transparency (UI, glass).</td>
-            </tr>
-            <tr>
-              <td><strong>OneMinusSrcAlpha</strong></td>
-              <td><code>(1-A,1-A,1-A)</code></td>
-              <td>Inverse alpha masking (soft particles).</td>
-            </tr>
-            <tr>
-              <td><strong>DstColor</strong></td>
-              <td><code>(R,G,B)</code></td>
-              <td>Multiplicative effects (stained glass).</td>
-            </tr>
-          </tbody>
-        </table>
-        <h3>Numerical Example</h3>
-        <p>Let’s say we have an RGB pixel with the following destination values:<br>
-        <code>DstValue = [0.5R, 0.45G, 0.35B]</code></p>
-        <ul>
-          <li><strong>Step 1:</strong> Multiply DstValue by SrcFactor One (which is [1, 1, 1]):<br>
-          Result: <code>[0.5R, 0.45G, 0.35B]</code></li>
-          <li><strong>Step 2:</strong> Assume the DstFactor also equals the current DstValue ([0.5, 0.45, 0.35]). Multiply each component:<br>
-          Calculation:<br>
-          R: $$0.5 \times 0.5 = 0.25$$<br>
-          G: $$0.45 \times 0.45 \approx 0.20$$<br>
-          B: $$0.35 \times 0.35 \approx 0.12$$<br>
-          Result: <code>[0.25R, 0.20G, 0.12B]</code></li>
-          <li><strong>Step 3:</strong> Add the two results (using Add as [OP]):<br>
-          Calculation:<br>
-          R: $$0.5 + 0.25 = 0.75$$<br>
-          G: $$0.45 + 0.20 = 0.65$$<br>
-          B: $$0.35 + 0.12 \approx 0.47$$<br>
-          Final Result: <code>[0.75R, 0.65G, 0.47B]</code></li>
-        </ul>
-        <h3>Common Blend Factors</h3>
-        <p>Some frequently used blend factors include:</p>
-        <ul>
-          <li><strong><code>Off</code>:</strong> Disables blending.</li>
-          <li><strong><code>One</code>:</strong> (1, 1, 1) – Leaves the value unchanged.</li>
-          <li><strong><code>Zero</code>:</strong> (0, 0, 0) – Eliminates the value.</li>
-          <li><strong><code>SrcColor / SrcAlpha</code>:</strong> Uses the corresponding components from the source.</li>
-          <li><strong><code>OneMinusSrcColor / OneMinusSrcAlpha</code>:</strong> Uses (1 - source component) values.</li>
-          <li><strong><code>DstColor / DstAlpha</code>:</strong> Uses the destination color or alpha.</li>
-          <li><strong><code>OneMinusDstColor / OneMinusDstAlpha</code>:</strong> Uses (1 - destination component) values.</li>
-        </ul>
-        <p>To use blending in your shader, you'll need to modify the “Queue” tag—by default, it’s set to “Geometry” (making the object opaque). Change it to “Transparent” to indicate that the object should be rendered after opaque objects and blended accordingly.</p>
-        <p>Blend presets provide standard configurations for frequently used blending effects. The table below outlines these presets, the associated Blend command, and a brief description of their typical usage.</p>
-        <h3>Blend Presets</h3>
-        <table class="atlas-data-table">
-          <thead>
-            <tr>
-              <th>Blend Preset</th>
-              <th>Blend Command</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Traditional Alpha Blending</strong></td>
-              <td><code>Blend SrcAlpha OneMinusSrcAlpha</code></td>
-              <td>The classic method for transparent materials, where the source’s alpha determines transparency.</td>
-            </tr>
-            <tr>
-              <td><strong>Additive Blending</strong></td>
-              <td><code>Blend One One</code></td>
-              <td>Often used for particles or glow effects, as it adds color values, making bright effects stand out.</td>
-            </tr>
-            <tr>
-              <td><strong>Mild Additive Blending</strong></td>
-              <td><code>Blend OneMinusDstColor One</code></td>
-              <td>A softer additive effect where the influence of the destination color is partially accounted for.</td>
-            </tr>
-            <tr>
-              <td><strong>Multiplicative Blending</strong></td>
-              <td><code>Blend DstColor Zero</code></td>
-              <td>Multiplies the source with the destination, useful for effects like stained glass.</td>
-            </tr>
-            <tr>
-              <td><strong>Multiplicative Blending x2</strong></td>
-              <td><code>Blend DstColor SrcColor</code></td>
-              <td>An intensified version of multiplicative blending, doubling the effect for richer colors.</td>
-            </tr>
-            <tr>
-              <td><strong>Overlay Blending</strong></td>
-              <td><code>Blend SrcColor One</code></td>
-              <td>Uses the source color as the dominant factor, creating an overlay effect.</td>
-            </tr>
-            <tr>
-              <td><strong>Soft Light Blending</strong></td>
-              <td><code>Blend OneMinusSrcColor One</code></td>
-              <td>Produces a soft lighting effect, ideal for subtle highlights and shadows.</td>
-            </tr>
-            <tr>
-              <td><strong>Negative Color Blending</strong></td>
-              <td><code>Blend Zero OneMinusSrcColor</code></td>
-              <td>Creates a negative color effect by inverting the source color’s contribution.</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ PIPELINE INTEGRITY: BLENDING ]</span>
-          <p><strong>Pipeline-Specific Notes on Blending:</strong><br>
-          <strong>Built-in Render Pipeline:</strong> Blending commands are written directly in the shader. Depth writes (ZWrite) are typically disabled for transparent materials.<br>
-          <strong>URP (2024):</strong> You can set blend factors in the shader; however, URP’s material system may also allow artists to adjust these settings via the Inspector. Use HLSLPROGRAM/ENDHLSL blocks in URP shaders.<br>
-          <strong>HDRP:</strong> Blending is often managed indirectly via material settings—especially for transparency. In HDRP, you might not see explicit Blend commands in the shader code because transparency is handled through the Surface Type setting (Opaque vs. Transparent) in the material Inspector.</p>
-        </div>
-        <p>Common Blend Presets quick reference:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">// 1. Traditional Alpha Blending (Transparent Materials)
-Blend SrcAlpha OneMinusSrcAlpha
-
-// 2. Additive Blending (Fire, Lasers)
-Blend One One
-
-// 3. Multiplicative Blending (Projectors, Shadows)
-Blend DstColor Zero</code></pre>
-        <p><strong>Option 1: Hardcode in the shader</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {
-    Tags { "Queue" = "Transparent" }
-    Blend SrcAlpha OneMinusSrcAlpha
-    ZWrite Off // Disable depth writes for proper transparency
-    Pass {
-        // Shader code here...
-    }
-}</code></pre>
-        <p><strong>Option 2: Let artists control blending via the Material Inspector</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Properties {
-    [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src Factor", Float) = 1
-    [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Dst Factor", Float) = 0
-}
-SubShader {
-    Blend [_SrcBlend] [_DstBlend]
-    Pass {
-        // Shader code here...
-    }
-}</code></pre>
-        <p>Pipeline-specific architectural blocks comparison:</p>
-        <p><strong>Built-in Render Pipeline</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {
-    Tags { "Queue"="Transparent" }
-    Blend SrcAlpha OneMinusSrcAlpha
-    ZWrite Off  // Disable depth writes for correct transparency
-}</code></pre>
-        <p><strong>URP (2024)</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {
-    Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" }
-    Blend [_SrcBlend] [_DstBlend]
-    ZWrite Off
-}</code></pre>
-        <h3>Troubleshooting Blending</h3>
-        <table class="atlas-data-table">
-          <thead>
-            <tr>
-              <th>Issue</th>
-              <th>Fix</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>HDRP Transparency Not Working</strong></td>
-              <td>Set Surface Type → Transparent in Material Inspector.</td>
-            </tr>
-            <tr>
-              <td><strong>URP Additive Artifacts</strong></td>
-              <td>Adjust render queue: <code>Tags { "Queue"="Transparent+100" }</code>.</td>
-            </tr>
-            <tr>
-              <td><strong>Depth Sorting Issues</strong></td>
-              <td>Use <code>Offset -1, -1</code> to manually adjust depth in Built-in Pipeline.</td>
-            </tr>
-          </tbody>
-        </table><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>4.3 ShaderLab AlphaToMask</h2>
-        <p>In some cases, standard blending (such as using the "SrcAlpha OneMinusSrcAlpha" blend mode) produces smooth gradients of transparency using fractional alpha values. However, for certain effects—like vegetation cutouts or space portal effects—you might require a binary (on/off) approach to transparency. This is where AlphaToMask comes into play.</p>
-        <h3>How AlphaToMask Works</h3>
-        <ul>
-          <li><strong>Purpose:</strong> AlphaToMask forces the shader to treat the alpha channel as a binary mask rather than a continuous gradient. That means the alpha output can only be 0 or 1 (off or on), producing a harsher, more defined transparency edge.</li>
-          <li><strong>Usage:</strong> This technique is particularly useful when you need crisp, hard-edged transparency (for example, for foliage or portal effects) that blending cannot provide.</li>
-          <li><strong>Declaration:</strong> The command accepts only two values: On or Off (with the default being Off). It can be declared at either the SubShader or Pass level. When enabled, the shader automatically converts the alpha output to a binary mask.</li>
-        </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/AlphaToMaskExample" {
-    Properties {
-        // Define your texture and other properties here
-        _MainTex ("Texture", 2D) = "white" {}
-    }
-    SubShader {
-        Tags { "RenderType" = "Opaque" }
-        // Activate the AlphaToMask command
-        AlphaToMask On
-
-        Pass {
-            // Shader code that writes to the alpha channel
-            CGPROGRAM
-                // Your shader code here...
-            ENDCG
-        }
-    }
-}</code></pre>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ MASK CHANNELS SPECIFICATION ]</span>
-          <p><strong>Note:</strong> Unlike blending, you don't need to modify the Render Queue or add additional transparency tags when using AlphaToMask. The fourth color channel “A” is automatically treated as a binary mask.</p>
-        </div>
-        <h3>Pipeline-Specific Considerations for AlphaToMask</h3>
-        <ul>
-          <li><strong>General Behavior:</strong><br>
-          AlphaToMask forces the shader’s alpha channel to be treated as a binary mask (0 or 1) rather than allowing smooth gradients. This produces hard-edged transparency effects, which are ideal for vegetation, portals, or any scenario where crisp cutouts are needed.</li>
-          <li><strong>Built-in Render Pipeline:</strong><br>
-          Works as expected when enabled. Simply adding <code>AlphaToMask On</code> in the SubShader or Pass converts the alpha output into a binary mask without any further changes.</li>
-          <li><strong>URP (2024/2025):</strong><br>
-          In URP, AlphaToMask is fully supported. Just as in the Built-in pipeline, you declare it (preferably within an HLSLPROGRAM block for full compatibility), and it forces the alpha channel into a binary state. No additional transparency tags are needed.</li>
-          <li><strong>HDRP (2024/2025):</strong><br>
-          HDRP primarily manages transparency via material settings (like the Surface Type property). Although HDRP often relies on these high-level controls for transparency, AlphaToMask remains available for cases where a hard, masked transparency is required. The command works the same way as in other pipelines, but you might see it used less often because HDRP typically employs its own transparency workflow.</li>
-        </ul><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>4.4 ShaderLab ColorMask</h2>
-        <p>The <code>ColorMask</code> command allows you to restrict the GPU to writing only specific color channels (Red, Green, Blue, or Alpha). By default, the GPU writes all channels (RGBA), but you might want to limit the output for certain effects or optimizations.</p>
-        <h3>How ColorMask Works</h3>
-        <p><strong>Purpose:</strong> ColorMask lets you select which components of the output color should be written to the render target. This is useful, for example, if you want to create a red-only effect or isolate one channel for debugging.</p>
-        <p><strong>Usage Examples:</strong></p>
-        <ul>
-          <li><strong><code>ColorMask R</code>:</strong> Only the red channel is written, so the output appears red.</li>
-          <li><strong><code>ColorMask G</code>:</strong> Only the green channel is written.</li>
-          <li><strong><code>ColorMask B</code>:</strong> Only the blue channel is written.</li>
-          <li><strong><code>ColorMask A</code>:</strong> Only the alpha channel is written, which can be used to debug transparency.</li>
-          <li><strong><code>ColorMask RG</code>:</strong> Writes both red and green channels, allowing for channel mixing.</li>
-        </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/ColorMaskExample" {
-    Properties {
-        _MainTex ("Texture", 2D) = "white" {}
-    }
-    SubShader {
-        Tags { "Queue"="Geometry" }
-        // Limit output to the RGB channels (no alpha)
-        ColorMask RGB
-
-        Pass {
-            CGPROGRAM
-                // Your shader code here...
-            ENDCG
-        }
-    }
-}</code></pre>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ PIPELINE INTEGRITY: COLOR MASK ]</span>
-          <p><strong>Pipeline Note:</strong> The ColorMask command is compatible with both the Built-in Render Pipeline and Scriptable Render Pipelines (URP/HDRP). You can declare it at either the SubShader or Pass level, depending on the desired scope.</p>
-        </div>
-        <h3>Pipeline-Specific Considerations for ColorMask</h3>
-        <ul>
-          <li><strong>General Behavior:</strong><br>
-          The ColorMask command restricts the GPU to writing only specific color channels (R, G, B, and/or A). By default, all channels (RGBA) are written, but you can limit this to isolate or blend specific outputs (e.g., output only the red channel).</li>
-          <li><strong>Built-in Render Pipeline:</strong><br>
-          ColorMask works identically to how it’s defined in ShaderLab—its syntax and function are the same. It’s commonly used for effects like channel isolation or performance optimizations.</li>
-          <li><strong>URP (2024/2025):</strong><br>
-          URP supports ColorMask without any changes. When writing custom shaders using HLSLPROGRAM blocks, you can still use ColorMask in the SubShader or Pass as usual. Artists can also control these settings via the material’s inspector if exposed.</li>
-          <li><strong>HDRP (2024/2025):</strong><br>
-          HDRP fully supports ColorMask as well. However, HDRP’s advanced color management (including HDR tonemapping and color space conversion) means that if you’re isolating channels or mixing them, you may need to ensure that your shader’s color values are correctly tagged (e.g., using the [HDR] attribute) so that the final output appears as expected.</li>
-        </ul><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>4.5 ShaderLab Culling and Depth Testing</h2>
-        <p>To fully grasp culling and depth testing, you must first understand how the Z-Buffer (or Depth Buffer) works. Every pixel rendered on screen has an associated depth value stored in the Z-Buffer. This value determines whether an object appears in front of or behind another. In simple terms, objects are rendered from the closest to the farthest from the camera, which allows the GPU to discard pixels that should remain hidden when geometry overlaps.</p>
-        <p>Before processing a given pixel, the GPU compares the pixel’s depth against the existing value in the Z-Buffer. If the new pixel is closer than the stored value (or meets the specified comparison criteria), it is drawn and its depth is updated; otherwise, it is discarded.</p>
-        <p>By manipulating depth-related commands, you can generate various visual effects. Three important ShaderLab commands related to this are Cull, ZWrite, and ZTest.</p>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-ec788dfeadedb294.png" alt="Depth Testing Comparison Pipeline"> <span class="atlas-media-caption">[ Diagram: Hardware Depth Test Comparison Stages ]</span>
-        </div>
-        <h3>Core Concepts</h3>
-        <ul>
-          <li><strong><code>Z-Buffer / Depth Buffer</code>:</strong><br>
-          A dedicated memory space that holds depth values for each pixel. The closer an object is to the camera, the lower (or sometimes higher, depending on the device) its depth value will be. Each rendered pixel has a depth value representing its distance from the camera. The closer an object is, the lower its depth value. When multiple objects contribute to the same pixel, the one with the lowest depth value (closest to the camera) overwrites the others.</li>
-        </ul>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-82739a98f50c33d2.png" alt="Z-Buffer and Color Buffer relationship"> <span class="atlas-media-caption">[ Diagram: The Z-Buffer stores the depth of the object in the scene, and the Color Buffer stores the RGBA color information ]</span>
-        </div>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-a397ff8603fe0e24.png" alt="Depth Testing Conditional Check Pipeline"> <span class="atlas-media-caption">[ Diagram: Depth Testing Conditional Check and Z-Buffer Evaluation ]</span>
-        </div>
-        <ul>
-          <li><strong>Depth Testing:</strong><br>
-          A conditional check that determines whether a pixel should be drawn based on its depth value relative to what’s already stored in the Z-Buffer. The most common depth test is "Less" or "LEqual," meaning that only pixels closer (or at the same distance) to the camera will overwrite existing ones. This is the process where the GPU checks each pixel against the Z-Buffer value. If a pixel passes the depth test (for example, if it’s closer than what is already stored), it gets drawn and its depth value is written to the Z-Buffer.</li>
-          <li><strong>Rendering Order:</strong><br>
-          For opaque objects, a front-to-back order ensures that only the visible (closest) pixels are processed. For transparent objects, Unity (by default) uses a back-to-front order so that blending occurs correctly.</li>
-        </ul>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-cf5af1cd11491b24.png" alt="SubShader and Pass Scope Placement"> <span class="atlas-media-caption">[ Diagram: GPU Sorting Pipeline — Front-to-Back vs. Back-to-Front Layouts ]</span>
-        </div>
-        <p>Like Tags, culling and depth testing options can be written in different fields: within the SubShader field or the Pass field. The position will depend on the result we want to achieve and the number of passes we want to work with.</p>
-        <h3>Additional Notes on Transparent Shaders and Depth Buffer Management</h3>
-        <p>Transparent shaders introduce additional complexity in depth management due to the blending process. Here are key points and challenges:</p>
-        <ul>
-          <li><strong>Opaque vs. Transparent Rendering:</strong><br>
-          Opaque objects are rendered in a front-to-back order, which allows the Z-Buffer to correctly discard hidden pixels. Transparent objects are typically rendered in a back-to-front order (though with Scriptable Render Pipelines, this can be customized) to blend correctly.</li>
-          <li><strong>Depth Buffer Behavior in Transparent Objects:</strong><br>
-          Transparent shaders often do not update the Z-Buffer (using ZWrite Off) to prevent artifacts. This is because updating the depth buffer could cause partially overlapped transparent pixels to be incorrectly discarded, leading to issues like parts of an object not being rendered.<br>
-          <br>
-          For example, consider a cube with a semi-transparent material and two-sided rendering. If the cube is composed of quads (for simplicity), the GPU might render some polygons later even though a closer polygon should have prevented them via ZTest. If depth values were updated, pixels of later-drawn (but farther) polygons might incorrectly overwrite the closer ones.</li>
-          <li><strong>Sorting Transparent Objects:</strong><br>
-          When rendering two transparent objects (e.g., with alpha = 0.5), the expected outcome is that the first object blends with the opaque background, and then the second object blends with the updated background. This requires careful management of the Z-Buffer—if updated, artifacts can appear (e.g., parts of one object may vanish behind another).</li>
-        </ul>
-        <p><strong>Practical Solutions:</strong> There is no one-size-fits-all fix. Some approaches include:</p>
-        <ul>
-          <li><strong>Shader Variants:</strong> Write separate shader variants that use different ZWrite settings depending on the object's alpha. For instance, one variant with ZWrite On for alpha values in [1.0, 0.5) (to render an "external shell") and another with ZWrite Off for alpha values in [0.5, 0].</li>
-          <li><strong>Two Different Shaders:</strong> Use two shaders (one with ZWrite On and one with ZWrite Off) and combine their output to handle different transparency levels.</li>
-          <li><strong>Custom Render Pipeline Adjustments:</strong> With Scriptable Render Pipelines, you can sometimes modify the transparent rendering order (for example, using front-to-back transparent rendering) to better suit your needs.</li>
-        </ul>
-        <p><strong>Example Problem Scenario:</strong> Imagine placing one transparent object (e.g., a helmet) inside another (e.g., a wall) so that the helmet appears on both sides of the wall. If ZWrite is enabled (writing depth), half of the helmet might not render because the wall’s depth overrides it. With ZWrite Off, both objects blend correctly, though this may affect overall scene depth sorting.</p>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ NODE INTERFACES PIPELINE NOTE ]</span>
-          <p><strong>Shader Graph Consideration:</strong> Unfortunately, Shader Graph currently does not offer easy access to change subshader properties like ZWrite directly (unlike some alternatives such as Amplify Shader Editor). In such cases, you may need to create a custom shader (for example, by starting with a Standard Surface Shader and modifying the generated code) to achieve the desired depth behavior.</p>
-        </div>
-        <h3>4.1.5 ShaderLab Cull Mode</h3>
-        <p>Controls which faces of a polygon are rendered (Back, Front, or Off). Works consistently across pipelines; additional HDRP material settings may enhance its usage. In 3D models, each polygon has a front and a back face:</p>
-        <ul>
-          <li><strong><code>Cull Back</code> (default):</strong> Only the front faces are rendered. This is typically more efficient.</li>
-          <li><strong><code>Cull Front</code>:</strong> Only the back faces are rendered.</li>
-          <li><strong><code>Cull Off</code>:</strong> Both faces are rendered. This can be useful when you need to display double-sided materials, such as thin cloth or foliage.</li>
-        </ul>
-        <p><strong>Static Implementation Example:</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/CullExample" {
-    Properties { /* ... */ }
-    SubShader {
-        // Render only the front faces (default behavior)
-        Cull Back
-        Pass {
-            CGPROGRAM
-                // Shader code...
-            ENDCG
-        }
-    }
-}</code></pre>
-        <p><strong>Dynamic Implementation via Material Inspector Enum:</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/DynamicCullExample" {
-    Properties {
-        [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull Mode", Float) = 0
-    }
-    SubShader {
-        // Use the value of _Cull for culling
-        Cull [_Cull]
-        Pass {
-            CGPROGRAM
-                // Shader code...
-            ENDCG
-        }
-    }
-}</code></pre>
-        <p>Another helpful option occurs through the semantics <code>SV_IsFrontFace</code>, which allows us to project different colors and textures on both mesh faces. To do so, we simply declare a boolean variable and assign such semantics as an argument in the fragment shader stage.</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">fixed4 frag (v2f i, bool face : SV_IsFrontFace) : SV_Target
-{
-    fixed4 colFront = tex2D(_FrontTexture, i.uv);
-    fixed4 colBack = tex2D(_BackTexture, i.uv);
-
-    return face ? colFront : colBack;
-}</code></pre>
-        <h3>4.5.2 ShaderLab ZWrite</h3>
-        <p><code>ZWrite</code> controls whether a shader writes depth information (i.e., the pixel’s distance to the camera) into the Z-Buffer. This command controls the writing of the surface pixels of an object to the Z-Buffer, that is, it allows us to ignore or respect the depth distance between the camera and an object. This is especially important when dealing with transparency e.g., when we activate the Blending options. Typically On for opaque objects and Off for transparent ones to avoid Z-fighting.</p>
-        <ul>
-          <li><strong><code>ZWrite On</code> (default):</strong> The shader writes depth information. This is typical for opaque materials.</li>
-          <li><strong><code>ZWrite Off</code>:</strong> Depth values are not written. This is usually used for transparent materials to prevent issues like Z-fighting (flickering when objects overlap).</li>
-        </ul>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "InspectorPath/shaderName"
-{
-    Properties { /* ... */ }
-    SubShader
-    {
-        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
-        Blend SrcAlpha OneMinusSrcAlpha
-        ZWrite Off
-
-        Pass {
-            // Shader code here...
-        }
-    }
-}</code></pre>
-        <p>The Z-fighting occurs when we have two or more objects at the same distance from the camera, causing identical values in the Z-Buffer.</p>
-        <p>This effect occurs when trying to render a pixel at the end of the rendering pipeline. Since the Z-Buffer cannot determine which element is behind the other, it produces flickering lines that change shape depending on the camera’s position. To correct this issue, we simply need to disable the Z-Buffer using the “ZWrite off” command.</p>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-aee9bd917a8542e6.png" alt="Z-fighting artifact demonstration"> <span class="atlas-media-caption">[ Diagram: Planar Co-planar Geometry Conflict Resulting in Z-Fighting Artifacts ]</span>
-        </div>
-        <h3>4.5.3 ShaderLab ZTest</h3>
-        <p><code>ZTest</code> defines how depth testing is performed by comparing each pixel’s depth to the Z-Buffer. It supports several comparison functions:</p>
-        <ul>
-          <li><strong><code>Less</code> (&lt;):</strong> Draws the pixel if its depth is less than the stored depth.</li>
-          <li><strong><code>Greater</code> (&gt;):</strong> Draws if its depth is greater.</li>
-          <li><strong><code>LEqual</code> (≤):</strong> (Default) Draws if the pixel’s depth is less than or equal to the stored depth.</li>
-          <li><strong><code>GEqual</code> (≥):</strong> Draws if the pixel’s depth is greater than or equal.</li>
-          <li><strong><code>Equal</code> (==):</strong> Draws if the depths are exactly equal.</li>
-          <li><strong><code>NotEqual</code> (!=):</strong> Draws if the depths differ.</li>
-          <li><strong><code>Always</code>:</strong> Ignores depth testing and draws every pixel regardless of depth.</li>
-        </ul>
-        <p><code>ZTest Less</code>: (&lt;) Draws the objects in front. It ignores objects that are at the same distance or behind the shader object.</p>
-        <p>To understand this command, we will do the following exercise: Let’s suppose we have two objects in our scene; a Cube and a Sphere. The Sphere is in front of the Cube relative to the camera, and the pixel depth is as expected.</p>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-fc0df59bedebdc74.png" alt="Sphere in front of the Cube execution"> <span class="atlas-media-caption">[ Diagram: Standard Depth Verification — Sphere Positioned In Front of the Cube Scope ]</span>
-        </div>
-        <p>If we position the Sphere behind the Cube then again, the depth values will be as expected, why? Because the Z-Buffer is storing depth values for each pixel on the screen. The depth values are calculated concerning the proximity of an object to the camera.</p>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-19a855d6e225e7f9.png" alt="Sphere behind the Cube execution"> <span class="atlas-media-caption">[ Diagram: Standard Depth Verification — Sphere Occluded by the Cube Volume ]</span>
-        </div>
-        <p>Now, what would happen if we activated <code>ZTest Always</code>? In this case, Depth Testing would not be done, therefore, all pixels would appear at the same depth on screen.</p>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-5275d551580d9573.png" alt="ZTest Always execution override"> <span class="atlas-media-caption">[ Diagram: Depth Buffer Evaluation Overridden via ZTest Always Command ]</span>
-        </div>
-        <p>Example implementation:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/ZTestExample" {
-    Properties { /* ... */ }
-    SubShader {
-        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
-        ZTest LEqual  // Default behavior
-        Pass {
-            CGPROGRAM
-                // Shader code...
-            ENDCG
-        }
-    }
-}</code></pre>
-        <h3>4.5.4 ShaderLab Stencil</h3>
-        <p>The <code>Stencil Buffer</code> is a specialized buffer that stores an 8-bit integer (values 0–255) for each pixel in the Frame Buffer. Before executing the fragment shader for a pixel, the GPU can perform a Stencil Test — comparing the current value in the Stencil Buffer with a specified reference value. If the test passes, the GPU then performs the depth test; if it fails, the GPU skips further processing for that pixel. Essentially, the Stencil Buffer acts as a mask, letting you control which pixels are drawn and which are discarded.</p>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-8c56a0413b263e5c.png" alt="Stencil Buffer Pipeline Masking"> <span class="atlas-media-caption">[ Diagram: Fragment Rejection Pipeline via Hardware Stencil Evaluation ]</span>
-        </div>
-        <h3>How the Stencil Buffer Works</h3>
-        <ul>
-          <li><strong>Storage:</strong> The Stencil Buffer is like a “texture” that covers the entire frame, with each pixel storing an integer between 0 and 255.</li>
-          <li><strong>Stencil Test:</strong> Before a fragment is processed, the GPU compares the pixel’s current stencil value (from the buffer) with a reference value that you supply (StencilRef), using a mask (StencilReadMask) and a comparison function (Comp).</li>
-        </ul>
-        <p>The test can be conceptually described as:</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">if ( (StencilRef & StencilReadMask) [Comp] (StencilBufferValue & StencilReadMask) ) {
-    Accept Pixel.
-} else {
-    Discard Pixel.
-}</code></pre>
-        <ul>
-          <li><strong><code>StencilRef</code>:</strong> The reference value you want to compare against. Think of it as an ID you write into the Stencil Buffer.</li>
-          <li><strong><code>StencilReadMask</code>:</strong> A mask that determines which bits to consider during the comparison.</li>
-          <li><strong><code>Comp</code>:</strong> A comparison function that evaluates to true or false (see below).</li>
-        </ul>
-        <h3>Available Comparison Functions</h3>
-        <p>The following operators can be used for the stencil comparison:</p>
-        <ul>
-          <li><strong><code>Comp Never</code>:</strong> Always fails the test.</li>
-          <li><strong><code>Comp Less</code>:</strong> Passes if the reference is less than the buffer value.</li>
-          <li><strong><code>Comp Equal</code>:</strong> Passes if the values are equal.</li>
-          <li><strong><code>Comp LEqual</code>:</strong> Passes if the reference is less than or equal to the buffer value.</li>
-          <li><strong><code>Comp Greater</code>:</strong> Passes if the reference is greater than the buffer value.</li>
-          <li><strong><code>Comp NotEqual</code>:</strong> Passes if the values are not equal.</li>
-          <li><strong><code>Comp GEqual</code>:</strong> Passes if the reference is greater than or equal to the buffer value.</li>
-          <li><strong><code>Comp Always</code>:</strong> Always passes the test.</li>
-        </ul>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-eb8a8a1974625e1a.png" alt="Stencil Comparison Functions Matrix"> <span class="atlas-media-caption">[ Diagram: Matrix of Hardware Stencil Comparison Operations ]</span>
-        </div>
-        <h3>Practical Example</h3>
-        <p>Suppose you have three objects in your scene—a Cube, a Sphere, and a Square—and you want to use the Square as a mask so that only the Sphere inside the Cube is visible.</p>
-        <p><strong>1. Mask Shader (USB_stencil_ref)</strong></p>
-        <p>This shader writes a reference value (for example, 2) into the Stencil Buffer for all pixels covered by the mask (the Square). Since we only need to mark the pixels without drawing any color, we disable color output and depth writing.</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/USB_stencil_ref" {
-    Properties { /* No visible properties needed */ }
-    SubShader {
-        Tags { "Queue" = "Geometry-1" }  // Process before default geometry (default Geometry=2000, so here it's 1999)
-        ZWrite Off                       // Do not update the depth buffer for the mask
-        ColorMask 0                      // Discard color output (make it invisible)
-        Stencil {
-            Ref 2                        // StencilRef = 2; marks the mask with value 2
-            Comp Always                  // Always pass the stencil test, so all pixels covered by the mask get set to 2
-            Pass Replace                 // Replace the current stencil value with the reference value
-        }
-        Pass {
-            CGPROGRAM
-                // Minimal shader code; even an empty pass is enough since no color is drawn
-            ENDCG
-        }
-    }
-    FallBack "Diffuse"
-}</code></pre>
-        <p><strong>2. Masked Object Shader (USB_stencil_value)</strong></p>
-        <p>This shader renders the object (e.g., the Cube) but only where the Stencil Test indicates it is not part of the mask. It compares the current Stencil Buffer value with the reference value (2) and uses a comparison function to decide whether to draw a pixel.</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "Custom/USB_stencil_value" {
-    Properties {
-        _Color ("Color", Color) = (1, 1, 1, 1)
-    }
-    SubShader {
-        Tags { "Queue" = "Geometry" }
-        // Keep ZWrite on so depth is properly updated for this object
-        ZWrite On
-        Stencil {
-            Ref 2                        // Must match the mask's reference value
-            Comp NotEqual                // Pass the test only if the stencil value is NOT equal to 2
-            Pass Keep                    // Keep the existing stencil buffer value
-        }
-        Pass {
-            CGPROGRAM
-                // Your regular shader code to render the object
-                #pragma vertex vert
-                #pragma fragment frag
-                fixed4 _Color;
-                struct appdata { float4 vertex : POSITION; };
-                struct v2f { float4 pos : SV_POSITION; };
-                v2f vert (appdata v) {
-                    v2f o;
-                    o.pos = UnityObjectToClipPos(v.vertex);
-                    return o;
-                }
-                fixed4 frag (v2f i) : SV_Target {
-                    return _Color;
-                }
-            ENDCG
-        }
-    }
-    FallBack "Diffuse"
-}</code></pre>
-        <p>In this example:</p>
-        <ul>
-          <li>The mask shader (USB_stencil_ref) writes a stencil value of 2 over the area of the Square.</li>
-          <li>The masked object shader (USB_stencil_value) renders only where the stencil value is not equal to 2—hiding the Cube where the mask is applied, allowing the Sphere behind it to be visible.</li>
-        </ul>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-6bb3b8de593ecc73.png" alt="Stencil Masking Result Step 1"> <span class="atlas-media-caption">[ Diagram: Stencil Space Exclusion Test Setup — Geometry Queue (Geometry - 1) Execution ]</span>
-        </div>
-        <p>We configured “Queue” to “Geometry minus one”. Since Geometry defaults to 2000, this equals 1999, processing our mask in the Z-Buffer. Unity processes objects based on their scene position relative to the camera. To disable this, set “ZWrite to Off”. Set “ColorMask to zero” to discard mask pixels in the Frame Buffer, making them transparent.</p>
-        <div class="atlas-media-container">
-          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png" alt="Stencil Masking Final Composite"> <span class="atlas-media-caption">[ Diagram: Frame Buffer Result with ColorMask 0 Masking Enabled ]</span>
-        </div>
-        <h2>4.5.5 ShaderLab Pass</h2>
-        <p>A Pass in rendering refers to generating different layers (e.g., color, light, occlusion) separately in 3D software like Maya or Blender. Each Pass renders one object at a time, equivalent to a draw call, so minimizing passes is crucial to avoid significant graphic load.</p>
-        <p>A Pass in ShaderLab represents a single render pass—a discrete set of rendering instructions executed by the GPU for an object. By default, Unity adds one pass inside the SubShader. However, you can define multiple passes if needed. Each pass is equivalent to one draw call, which means that an object with multiple passes is rendered multiple times. This can be useful for creating layered visual effects (such as separate passes for base color, lighting, and occlusion) but can also significantly increase the rendering workload.</p>
-        <p>Since each pass equals a draw call, increasing the number of passes can lead to a heavier GPU load. It's best to use the minimum number of passes necessary for your effect.</p>
-        <p>Below is an example of a simple shader with a single pass, similar to a basic color shader:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "InspectorPath/USB_simple_color" {
-    Properties {
-        _MainTex ("Texture", 2D) = "white" {}
-        _Color ("Color", Color) = (1,1,1,1)
-    }
-    SubShader {
-        Tags { "RenderType"="Opaque" }
-        Pass {
-            CGPROGRAM
-                #pragma vertex vert
-                #pragma fragment frag
-                // Enable fog support
-                #pragma multi_compile_fog
-                #include "UnityCG.cginc"
-
-                struct appdata {
-                    float4 vertex : POSITION;
-                    float2 uv : TEXCOORD0;
-                };
-
-                struct v2f {
-                    float4 pos : SV_POSITION;
-                    float2 uv : TEXCOORD0;
-                    UNITY_FOG_COORDS(1)
-                };
-
-                sampler2D _MainTex;
-                float4 _Color;
-
-                v2f vert (appdata v) {
-                    v2f o;
-                    o.pos = UnityObjectToClipPos(v.vertex);
-                    o.uv = v.uv;
-                    UNITY_TRANSFER_FOG(o,o.pos);
-                    return o;
-                }
-
-                fixed4 frag (v2f i) : SV_Target {
-                    fixed4 col = tex2D(_MainTex, i.uv) * _Color;
-                    UNITY_APPLY_FOG(i.fogCoord, col);
-                    return col;
-                }
-            ENDCG
-        }
-    }
-    FallBack "Diffuse"
-}</code></pre>
-        <p>If you want to create a shader with two passes (for example, one pass for the base color and another for an additional effect), you would structure your shader like this:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "InspectorPath/DoublePassShader" {
-    Properties { /* ... */ }
-    SubShader {
-        Tags { "RenderType"="Opaque" }
-        Pass {
-            // First pass: base color
-            CGPROGRAM
-                // Base shader code here...
-            ENDCG
-        }
-        Pass {
-            // Second pass: additional effect (e.g., shine, outline)
-            CGPROGRAM
-                // Additional effect shader code here...
-            ENDCG
-        }
-    }
-}</code></pre>
-        <h3>Render Pipeline Considerations (2024/2025)</h3>
-        <ul>
-          <li><strong>Built-in Render Pipeline:</strong> Passes are typically written using <code>CGPROGRAM</code>/<code>ENDCG</code>. This is the classic method.</li>
-          <li><strong>URP/HDRP:</strong> For Scriptable Render Pipelines, it is recommended to use <code>HLSLPROGRAM</code>/<code>ENDHLSL</code> instead. Although the concept of a pass remains the same, the newer syntax provides better compatibility with modern shader targets. Regardless of the pipeline, the idea of each pass representing a separate draw call stays consistent.</li>
-        </ul>
-        <div class="atlas-section-break" data-index="x4"></div><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>5. CGPROGRAM Section</h2>
-        <p>The sections we have examined earlier are composed in the ShaderLab declarative language. The true challenge in graphics programming begins here with the CGPROGRAM or HLSLPROGRAM declaration.</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "CustomPath/ShaderName_simpleColor"
-{
-    // ====================================================
-    // 1. MATERIAL PROPERTIES - Inspector Interface
-    // ====================================================
-    Properties
-    {
-        _MainTex ("Texture", 2D) = "white" {}
-        _Color ("Color", Color) = (1, 1, 1, 1)
-    }
-
-    // ====================================================
-    // 2. SUBSHADER - Render Pipeline Configuration
-    // ====================================================
-    SubShader
-    {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
-        // ====================================================
-        // 3. PASS - Contains the shader program code
-        // ====================================================
-        Pass
-        {
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            #pragma multi_compile_fog
-
-            #include "UnityCG.cginc"
-
-            // Global Uniforms
-            sampler2D _MainTex;
-            fixed4 _Color;
-
-            // ====================================================
-            // 4. DATA STRUCTURES (Vertex Input / Output)
-            // ====================================================
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f
-            {
-                float4 vertex : SV_POSITION;
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
-            };
-
-            // ====================================================
-            // 5. VERTEX SHADER STAGE
-            // ====================================================
-            v2f vert (appdata v)
-            {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o, o.vertex);
-                return o;
-            }
-
-            // ====================================================
-            // 6. FRAGMENT SHADER STAGE
-            // ====================================================
-            fixed4 frag (v2f i) : SV_Target
-            {
-                fixed4 col = tex2D(_MainTex, i.uv) * _Color;
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
-            }
-            ENDCG
-        }
-    }
-
-    // ====================================================
-    // 7. SHADER FALLBACK
-    // ====================================================
-    FallBack "Diffuse"
-}</code></pre>
-        <hr>
-        <!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>Shader Architecture Technical Reference</h2>
-        <div class="atlas-notice">
-          <span class="atlas-notice__header">[ 3.0 Component of the shader: Pass ]</span>
-          <p>A Pass refers to a Render Pass literally. For those who have worked with rendering in 3D software (e.g., Maya or Blender), this concept will be easier to understand since when an image is being processed, it can generate different layers or passes separately (e.g., color Pass, light Pass, occlusion Pass, etc.) and thus obtain a separate composition in different layers.<br>
-          <strong>!Each Pass renders one object at a time:</strong> That is, if we have two passes in our shader, the object will be rendered twice on the GPU and the equivalent of that would be two draw calls.</p>
-        </div>
-        <h3>3.1 CGPROGRAM / ENDCG</h3>
-        <p>Shader will appear with the declaration of <code>HLSLPROGRAM</code> instead of <code>CGPROGRAM</code> since HLSL is currently the official graphics programming language (in fact, Shader Graph is based on it). Anyway, we can update our shader simply by replacing the word CGPROGRAM for HLSLPROGRAM and ENDCG for ENDHLSL, and then our program will compile both in Built-in RP as in Universal RP and High Definition RP.</p>
-        <h3>3.2 HLSL Pragma</h3>
-        <p>The pragma is a directive that is used to give instructions to the compiler. In the case of shaders, it is used to indicate the vertex and fragment functions that we will use in shader. Their function is to help our shader recognize and compile certain functions that could not otherwise be recognized as such.</p>
-        <ul>
-          <li><code>#pragma vertex vert</code> — indicates the vertex function that we will use in the shader.</li>
-          <li><code>#pragma fragment frag</code> — indicates the fragment function that we will use in the shader.</li>
-        </ul>
-        <p><strong>Multi-compile Pragma Variant Flags:</strong></p>
-        <ul>
-          <li><code>#pragma multi_compile_fwdbase</code> — indicates that the shader will be compiled in the forward base pass.</li>
-          <li><code>#pragma multi_compile_fwdadd</code> — indicates that the shader will be compiled in the forward add pass.</li>
-          <li><code>#pragma multi_compile_fwdaddfullshadows</code> — indicates that the shader will be compiled in the forward add full shadows pass.</li>
-          <li><code>#pragma multi_compile_fwdaddshadow</code> — indicates that the shader will be compiled in the forward add shadow pass.</li>
-          <li><code>#pragma multi_compile_fwdaddshadowcaster</code> — indicates that the shader will be compiled in the forward add shadow caster pass.</li>
-          <li><code>#pragma multi_compile_fwdaddshadowcasterfullshadows</code> — indicates that the shader will be compiled in the forward add shadow caster full shadows pass.</li>
-          <li><code>#pragma multi_compile_fog</code> — indicates that the shader will be compiled with fog.</li>
-        </ul>
-        <h3>3.3 HLSL Include</h3>
-        <p>The include is a directive that is used to include a file in the shader. This is useful when we want to use a function that is already defined in another file and we do not want to write it again in the current shader. In Unity, the most common include is “UnityCG.cginc”, which contains a series of functions that are used in the shader (e.g. lighting, texture sampling, etc.).</p>
-        <ul>
-          <li><code>UNITY_FOG_COORDS(texcoordindex)</code></li>
-          <li><code>UnityObjectToClipPos(inputVertex)</code></li>
-          <li><code>TRANSFORM_TEX(tex, name)</code></li>
-          <li><code>UNITY_TRANSFER_FOG(outputStruct, clipSpacePos)</code></li>
-          <li><code>UNITY_APPLY_FOG(inputCoords, colorOutput)</code></li>
-        </ul>
-        <p>Another defined function that we can find in UnityCG.cginc is <code>UNITY_PI</code>, which equals <code>3.14159265359f</code>. The latter is not included in our default shader because it is used only in specific cases (e.g. when calculating a triangle or Sphere).</p>
-        <blockquote>
-          <strong>Review Path:</strong><br>
-          Windows: <code>{unity install path}/Data/CGIncludes/UnityCG.cginc</code>
-        </blockquote>
-        <p>We can create our own directives using ".cginc" files, which will help us to organize our code and make it more readable. For example, we can create a file called "MyFunctions.cginc" and inside it, we can define the functions that we will use in our shader.</p>
-        <h3>4.1 HLSL vertex input & vertex output</h3>
-        <p>A data type that we will use frequently in the creation of our shaders is “struct”. For those who know the C language, a struct is a compound data type declaration, which defines a grouped list of multiple elements of the same type and allows access to different variables through a single pointer. We will use structs to define both inputs and outputs in our shader.</p>
-        <p>Its syntax is as follows:</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">struct name
-{
-    vector[n] name : SEMANTIC[n];
-};</code></pre>
-        <ul>
-          <li><strong>Appdata:</strong> Corresponds to the “vertex input” the place where we store our object properties (e.g. position of vertices, normals, etc.) as an “entrance” to take them to the “vertex shader stage”.</li>
-          <li><strong>v2f:</strong> Refers to the “vertex output”. The rasterized properties to take them to the “fragment shader stage”.</li>
-        </ul>
-        <p>A semantic is a chain connected to a shader input or output that transmits usage information of the intended use of a parameter:</p>
-        <ul>
-          <li><code>POSITION[n]</code> — Vertex position semantics.</li>
-          <li><code>TEXCOORD[n]</code> — allows access to the UV coordinates of our primitive and has up to four dimensions (x, y, z, w).</li>
-          <li><code>TANGENT[n]</code> — gives access to the tangents of our primitive. If we want to create normal maps, it will be necessary to work with a semantic that has up to four dimensions as well.</li>
-          <li><code>NORMAL[n]</code> — we can access the normals of our primitive, and it has up to four dimensions. We must use this semantic if we want to work with lighting within our shader.</li>
-          <li><code>COLOR[n]</code> — Vertex color allocation channels.</li>
-          <li><code>BINORMAL[n]</code> — corresponds to the binormal of the vertices.</li>
-        </ul>
-        <h3>System Value (SV) Semantics Matrix</h3>
-        <table class="atlas-data-table">
-          <thead>
-            <tr>
-              <th>Semantic</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>SV_POSITION</code></td>
-              <td>Corresponds to the position of the vertices in screen space.</td>
-            </tr>
-            <tr>
-              <td><code>SV_TARGET</code></td>
-              <td>Corresponds to the target of the vertices (Render Target / Frame Buffer color output).</td>
-            </tr>
-            <tr>
-              <td><code>SV_DEPTH</code></td>
-              <td>Corresponds to the depth of the vertices.</td>
-            </tr>
-            <tr>
-              <td><code>SV_COVERAGE</code></td>
-              <td>Corresponds to the coverage of the vertices.</td>
-            </tr>
-            <tr>
-              <td><code>SV_CLIPDISTANCE</code></td>
-              <td>Corresponds to the clipping distance of the vertices.</td>
-            </tr>
-            <tr>
-              <td><code>SV_STENCILREF</code></td>
-              <td>Corresponds to the stencil reference of the vertices.</td>
-            </tr>
-            <tr>
-              <td><code>SV_VERTEXID</code></td>
-              <td>Corresponds to the vertex ID.</td>
-            </tr>
-            <tr>
-              <td><code>SV_PRIMITIVEID</code></td>
-              <td>Corresponds to the primitive ID.</td>
-            </tr>
-            <tr>
-              <td><code>SV_INSTANCEID</code></td>
-              <td>Corresponds to the instance ID.</td>
-            </tr>
-            <tr>
-              <td><code>SV_ISFRONTFACE</code></td>
-              <td>Corresponds to the front face of the vertices.</td>
-            </tr>
-            <tr>
-              <td><code>SV_SAMPLEINDEX</code></td>
-              <td>Corresponds to the sample index of the vertices.</td>
-            </tr>
-            <tr>
-              <td><code>SV_DISPATCHTHREADID</code></td>
-              <td>Corresponds to the dispatch thread ID.</td>
-            </tr>
-            <tr>
-              <td><code>SV_GROUPID</code></td>
-              <td>Corresponds to the group ID.</td>
-            </tr>
-            <tr>
-              <td><code>SV_GROUPINDEX</code></td>
-              <td>Corresponds to the group index.</td>
-            </tr>
-            <tr>
-              <td><code>SV_GROUPTHREADID</code></td>
-              <td>Corresponds to the group thread ID.</td>
-            </tr>
-            <tr>
-              <td><code>SV_GROUPTHREADFLATTENED</code></td>
-              <td>Corresponds to the group thread flattened.</td>
-            </tr>
-            <tr>
-              <td><code>SV_RENDERTARGETARRAYINDEX</code></td>
-              <td>Corresponds to the render target array index.</td>
-            </tr>
-            <tr>
-              <td><code>SV_VIEWPORTARRAYINDEX</code></td>
-              <td>Corresponds to the viewport array index.</td>
-            </tr>
-          </tbody>
-        </table>
-        <h3>5.1 Cg / HLSL vertex shader stage</h3>
-        <p>The vertex shader corresponds to a rendering pipeline’s programmable stage, where the vertices are transformed from a 3D space to a two-dimensional projection on the screen. Its smallest unit of calculation corresponds to an independent vertex.</p>
-        <p>"vert" is the name of the function that we will use to transform the vertices which corresponds to the vertex shader stage. Vertex shader was declared as such in the <code>#pragma vertex</code>.</p>
-        <p>This Shader in an Unlit type means it doesn't have light it includes a function for the vertex shader and another for the fragment shader <code>#pragma fragment frag</code>. It is essential to mention this since Unity provides a quick way to write shaders in the form of “Surface Shader” (surf) that generates Cg code automatically, exclusively for materials that are affected by lighting.</p>
-        <p>The first operation that occurs within the vertex shader stage is the transformation of the object vertices from object-space to clip-space through the “UnityObjectToClipPos” method. Let’s remember that our objects are within a three-dimensional space in the scene, and we must transform those coordinates into a two-dimensional projection of pixels on the screen. That transformation occurs precisely within the “UnityObjectToClipPos” function.</p>
-        <p>This function multiplies the matrix of the current model (unity_ObjectToWorld) by the factor of the multiplication between the current view and the projection matrix (UNITY_MATRIX_VP):</p>$$UnityObjectToClipPos = mul(\text{UNITY\_MATRIX\_VP}, mul(\text{unity\_ObjectToWorld}, float4(\text{pos}, 1.0)))$$
-        <h3>6.1 Cg / HLSL fragment shader stage</h3>
-        <p>Our next and last function in the Pass corresponds to the fragment shader stage that appears in our shader with the name “frag”. The reason we can tell that frag is the function of the fragment shader stage is because it has been declared as such in the <code>#pragma fragment</code>.</p>
-        <p>The word “fragment” refers to a pixel on the screen; to an individual fragment or to a group that together cover an object area. This means that the fragment shader stage will process every pixel on the computer screen concerning the object we are viewing.</p>
-        <p>This shader is currently written in Cg, so it will only compile in Built-in RP. If we want our shader to compile both in Universal RP and High Definition RP, we will have to change this data type for “half4 or float4”, otherwise our program could generate an error.</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// Cg language architecture configuration
-fixed4 frag (v2f i) : SV_Target { … }
-
-// HLSL language architecture configuration
-half4 frag (v2f i) : SV_Target { … }</code></pre>
-        <p>Unlike the vertex shader stage, this function has an output called “SV_Target”, which allows us to render our scene in an intermediate buffer (render target) instead of sending the data to the Frame Buffer. In previous versions of Direct3D (version 9 and lower), the color output in the fragment shader appeared with the <code>COLOR</code> semantic. However, in modern GPUs (version 10 onwards), this semantics is updated to <code>SV_Target</code>, which means “system value target”. It can apply additional effects to the image before projecting them on the computer screen.</p>
-        <p>Inside the fragment shader stage we can find a fixed4 vector type called “col” which is the same as the tex2D function, where, as an argument, it receives the _MainTex texture and UV coordinate input. Basically what this operation does is store a texture within the col vector.</p>
-        <h3>8. Data Types Precision & Optimization</h3>
-        <ul>
-          <li><strong>“Float” (Cg and HLSL):</strong> A high-precision data type, it is 32 bit and generally used in calculating positions in world-space, texture coordinates (UV), or scalar calculations involving complex functions such as trigonometry or exponentiation.</li>
-          <li><strong>“Half” (Cg and HLSL):</strong> Half-precision, is 16 bit and is mostly used in the calculation of low magnitude vectors, directions, object-space positions, and high dynamic range colors.</li>
-          <li><strong>“Fixed” (Cg):</strong> Low precision, it is only 11 bits and is mainly used in the calculation of simple operations (e.g. basic color storage).</li>
-        </ul>
-        <p><strong>Note:</strong> A high-precision data type has more decimals, therefore, the GPU will take longer to calculate it, increasing times and generating heat. It is essential to use vectors and/or variables in their required data type, thus we can optimize our program, reducing the graphic load on the GPU.</p>
-        <p>“Sampler” refers to the sampling state of a texture. Within this type of data, we can store a texture and its UV coordinates. Scalar values are real number integers or floating-point numbers (float, half, fixed, etc.) and vectors are a set of scalar values (float2, half3, fixed4, etc.). Matrix types are used mainly for shearing, rotation and changes of vertex positions:</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// three rows and three columns matrix execution layout
-float3x3 name = float3x3(
-    1, 0, 0,
-    0, 1, 0,
-    0, 0, 1
-);
-
-// two rows and two columns matrix execution layout
-half2x2 name = half2x2(
-    1, 0,
-    0, 1
-);
-
-// four rows and four columns matrix execution layout
-fixed4x4 name = fixed4x4(
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
-);</code></pre>
-        <p>The data type “sampler” allows us to store both the texture and the sampling status in a single variable:</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// declare the _MainTex texture as a global variable
-Texture2D _MainTex;
-// declare the _MainTex sampler as a global variable
-SamplerState sampler_MainTex;
-
-half4 frag(v2f i) : SV_Target {
-    // inside the col vector sample the texture in UV coordinates.
-    half4 col = _MainTex.Sample(sampler_MainTex, i.uv);
-    return col;
-}</code></pre>
-        <p>The above process can be optimized by simply using a unified legacy structural macro assignment statement:</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// declare the sampler for _MainTex
-sampler2D _MainTex;
-
-half4 frag(v2f i) : SV_Target {
-    // sample the texture in UV coordinates using the function tex2D().
-    half4 col = tex2D(_MainTex, i.uv);
-    return col;
-}</code></pre>
-        <h3>9. Intrinsic Functions Reference Matrix</h3>
-        <table class="atlas-data-table">
-          <thead>
-            <tr>
-              <th>Function</th>
-              <th>Description Evaluation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>abs(x)</code></td>
-              <td>returns the absolute value of a scalar or vector.</td>
-            </tr>
-            <tr>
-              <td><code>ceil(x)</code></td>
-              <td>returns the smallest integer value greater than or equal to the input value.</td>
-            </tr>
-            <tr>
-              <td><code>clamp(x, min, max)</code></td>
-              <td>restricts the value of a scalar or vector to a range.</td>
-            </tr>
-            <tr>
-              <td><code>cos(x)</code></td>
-              <td>returns the cosine of a scalar or vector.</td>
-            </tr>
-            <tr>
-              <td><code>sin(x)</code></td>
-              <td>returns the sine of a scalar or vector.</td>
-            </tr>
-            <tr>
-              <td><code>tan(x)</code></td>
-              <td>returns the tangent of a scalar or vector.</td>
-            </tr>
-            <tr>
-              <td><code>exp(x)</code></td>
-              <td>returns the exponential value of a scalar or vector.</td>
-            </tr>
-            <tr>
-              <td><code>exp2(x)</code></td>
-              <td>returns the exponential value of a scalar or vector in base 2.</td>
-            </tr>
-            <tr>
-              <td><code>floor(x)</code></td>
-              <td>returns the largest integer value less than or equal to the input value.</td>
-            </tr>
-            <tr>
-              <td><code>step(edge, x)</code></td>
-              <td>returns 0.0 if the value is less than the edge, and 1.0 if the value is greater than or equal to the edge.</td>
-            </tr>
-            <tr>
-              <td><code>smoothstep(min, max, x)</code></td>
-              <td>returns a smooth interpolation between 0.0 and 1.0 when the value is between the minimum and maximum values.</td>
-            </tr>
-            <tr>
-              <td><code>frac(x)</code></td>
-              <td>returns the fractional part of a scalar or vector.</td>
-            </tr>
-            <tr>
-              <td><code>length(v)</code></td>
-              <td>returns the length of a vector.</td>
-            </tr>
-            <tr>
-              <td><code>lerp(a, b, t)</code></td>
-              <td>returns the linear interpolation between two values.</td>
-            </tr>
-            <tr>
-              <td><code>min(a, b)</code></td>
-              <td>returns the minimum value between two values.</td>
-            </tr>
-            <tr>
-              <td><code>max(a, b)</code></td>
-              <td>returns the maximum value between two values.</td>
-            </tr>
-            <tr>
-              <td><code>pow(x, y)</code></td>
-              <td>returns the value of the first parameter raised to the power of the second parameter.</td>
-            </tr>
-          </tbody>
-        </table><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>6. Unity Render Pipeline Fundamentals</h2>
-        <p>Unity utilizes three distinct rendering architectures, each tailored to different performance requirements, hardware targets, and pipeline capabilities.</p>
-        <h3>Key Unity Rendering Architectures</h3>
-        <ul>
-          <li><strong>Built-In Render Pipeline (BIRP):</strong> The legacy rendering system using Cg/HLSL. It relies on <code>CGPROGRAM</code> blocks and includes <code>UnityCG.cginc</code>. Best suited for legacy projects or older mobile hardware where optimization must be manually tuned.</li>
-          <li><strong>Universal Render Pipeline (URP):</strong> The modern, highly scalable replacement for BIRP. It requires <code>HLSLPROGRAM</code> blocks and utilizes modern HLSL includes (such as <code>Core.hlsl</code>). Features include a single-pass forward renderer, a dedicated 2D Renderer, and native Shader Graph support. Highly recommended for cross-platform deployments spanning mobile, PC, and consoles.</li>
-          <li><strong>High Definition Render Pipeline (HDRP):</strong> A physically-based rendering (PBR) pipeline built specifically for high-end fidelity. It heavily utilizes compute shaders, advanced lighting models, and volumetric effects. Best suited for AAA-grade visual productions on high-performance PC and console hardware.</li>
-        </ul>
-        <h3>Pipeline Comparison Table</h3>
-        <table class="atlas-data-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th>BIRP</th>
-              <th>URP</th>
-              <th>HDRP</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Shader Language</strong></td>
-              <td>Cg / HLSL</td>
-              <td>HLSL</td>
-              <td>HLSL</td>
-            </tr>
-            <tr>
-              <td><strong>Base Include File</strong></td>
-              <td><code>UnityCG.cginc</code></td>
-              <td><code>Core.hlsl</code></td>
-              <td><code>Common.hlsl</code></td>
-            </tr>
-            <tr>
-              <td><strong>Lightmap Support</strong></td>
-              <td>✓</td>
-              <td>✓</td>
-              <td>✓</td>
-            </tr>
-            <tr>
-              <td><strong>Deferred Rendering</strong></td>
-              <td>✓</td>
-              <td>Limited</td>
-              <td>✓</td>
-            </tr>
-            <tr>
-              <td><strong>Shader Graph Support</strong></td>
-              <td>No</td>
-              <td>✓</td>
-              <td>✓</td>
-            </tr>
-          </tbody>
-        </table>
-        <hr>
-        <!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>5. GPU Optimization Essentials for Shaders</h2>
-        <p>Writing efficient shader code requires understanding how modern GPU hardware executes logic at the silicon level. Minor syntax adjustments can drastically alter instruction latency and register pressure.</p>
-        <h3>Math Operations & Instruction Latency</h3>
-        <p>GPUs are optimized for parallel multiply-accumulate (MAC) operations, which form the structural building blocks of linear algebra:</p>
-        <ul>
-          <li><strong>Multiplication:</strong> Implemented directly in dedicated ALU hardware silicon, executing in 1–2 cycles.</li>
-          <li><strong>Division:</strong> Requires iterative approximation algorithms (such as the Newton-Raphson method) or internal hardware lookup tables. This introduces significant pipeline latency, taking 5–20 cycles.</li>
-        </ul>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// BAD: Division is expensive and stalls the ALU pipeline
-float result = value / 2.0;
-
-// GOOD: Use multiplication by a precalculated reciprocal literal
-float result = value * 0.5;</code></pre>
-        <h4>When to Actually Use Division</h4>
-        <p>While multiplication should always be favored, division is structurally unavoidable under the following mathematical conditions:</p>
-        <ul>
-          <li>
-            <strong>Dynamic Divisors:</strong> When values alter dynamically per-fragment or per-vertex, making reciprocal precomputation impossible:
-            <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">float t = saturate(time / duration);</code></pre>
-          </li>
-          <li>
-            <strong>Reciprocal Interdependence:</strong> When the divisor is derived from dynamic evaluations:
-            <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">float specular = energy / (distance * distance);</code></pre>
-          </li>
-          <li>
-            <strong>Numerical Stability & Precision Preservation:</strong> Normalizing operations require division to maintain bounds accurately without risking structural clipping:
-            <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">float3 normalized = vector / length(vector);</code></pre>
-          </li>
-        </ul>
-        <h3>Data Type Precision Optimization</h3>
-        <p>Choosing the correct variable precision directly influences register allocation and memory bandwidth usage on mobile and embedded architectures:</p>
-        <ul>
-          <li><code>float4 position;</code> — 32-bit high precision. Mandatory for world-space coordinates, transform matrices, and complex texture coordinates (UVs).</li>
-          <li><code>half4 color;</code> — 16-bit medium precision. Optimal for lighting vectors, localized directions, normal maps, and high dynamic range (HDR) colors.</li>
-          <li><code>fixed4 light;</code> — 11-bit low precision. Legacy data type (Cg only) restricted to simple low-magnitude color math and basic UI masks. In modern HLSL pipelines, this automatically maps to <code>min16float</code> or <code>half</code>.</li>
-        </ul>
-        <h3>Texture Sampling Optimizations</h3>
-        <ul>
-          <li><strong>Explicit Level-of-Detail:</strong> Prefer utilizing <code>tex2Dlod</code> with explicit mipmap levels for sampling distant objects, or inside loops/vertex functions where automatic derivative calculation is disabled.</li>
-          <li><strong>Texture Compression:</strong> Target standardized hardware compression profiles such as ASTC (for cross-platform mobile architectures) or ETC2 to optimize cache locality.</li>
-          <li><strong>Lookup Minimization:</strong> Eliminate redundant sample calls in fragment stages; instead, pack scalar masks into combined vector channels (e.g., RGBA packing for Metallic, Roughness, and Ambient Occlusion).</li>
-        </ul>
-        <h3>Branching Efficiency & Conditional Overhead</h3>
-        <p>Dynamic branching in a fragment shader causes divergent execution paths within a warp/wavefront, forcing the GPU to execute both paths sequentially while masking off threads.</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// BAD: Dynamic branch causing execution divergence in fragment stages
-if (distance &gt; threshold) {
-    // Code path A
-} else {
-    // Code path B
-}
-
-// GOOD: Mathematical interpolation eliminating physical branch execution
-float lerpFactor = saturate(distance / threshold);
-return lerp(a, b, lerpFactor);</code></pre>
-        <h3>SRP Batcher Compatibility</h3>
-        <p>To leverage the Scriptable Render Pipeline (SRP) Batcher and eliminate CPU-side draw call overhead, all material properties must be grouped within a standardized constant buffer block named <code>UnityPerMaterial</code>.</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">// Proper constant buffer declaration for SRP Batcher compliance
-CBUFFER_START(UnityPerMaterial)
-    float4 _MainTex_ST;
-    half4 _Color;
-CBUFFER_END</code></pre>
-        <ul>
-          <li>Keep all custom material parameters restricted to a single unified <code>CBUFFER</code> block.</li>
-          <li>Declare parameters using the minimum necessary data precision to conserve GPU constant buffer cache slots.</li>
-        </ul>
-        <h3>Vectorization Tips</h3>
-        <p>Modern GPUs run vectorized instructions efficiently. Consolidate your linear algebra into parallel vector calculations rather than component-by-component scalar operations.</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// GOOD: Unified parallel vector math (processed simultaneously by SIMD hardware)
-float3 result = a * b + c;
-
-// Swizzling: Reconstructing component layouts efficiently via native routing
-float4 color = texture.rrrg; // Maps channels natively to create float4(r, r, r, g)</code></pre>
-        <h3>Manual Mipmap Calculations</h3>
-        <p>When implementing custom screen-space mappings or procedural patterns, automatic mipmap generation fails due to missing texture coordinates. Screen-space partial derivatives must be evaluated manually:</p>
-        <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// Manual mip selection based on screen-space coordinate differentials
-float2 derivatives = ddx(uv) + ddy(uv);
-float mip = 0.5 * log2(max(dot(derivatives, derivatives), 1e-6));
-
-// Sample texture with explicitly resolved mip level
-color = tex2Dlod(_MainTex, float4(uv, 0, mip));</code></pre>
-        <h3>Shader Variant Reduction</h3>
-        <p>Shaders generate massive keyword combinations (permutations) that can explode compile times and memory footprints. Differentiate keyword behavior strategically:</p>
-        <ul>
-          <li><code>#pragma multi_compile _ _MAIN_LIGHT_SHADOWS</code> — Compiles and includes all variations in the build. Required for engine-driven runtime global pipeline states.</li>
-          <li><code>#pragma shader_feature _ALPHATEST_ON</code> — Strips unused permutations out of the final build if no active materials utilize the keyword state, saving disk space and memory footprint.</li>
-        </ul>
-        <h3>Debugging & Profiling</h3>
-        <ul>
-          <li><strong>Frame Debugger:</strong> Use Unity's native profiling tool to inspect active render states, evaluate drawing order draw-by-draw, analyze render target binding patterns, and isolate state change hazards.</li>
-          <li>
-            <strong>Platform-Specific Optimization Blocks:</strong> Condition target compilation blocks based on destination hardware profiles:
-            <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">#if defined(SHADER_API_MOBILE)
-    // Simplified execution paths for low-bandwidth mobile units
-#elif defined(SHADER_API_D3D11)
-    // Full high-end feature set utilizing PC hardware capability
-#endif</code></pre>
-          </li>
-          <li>
-            <strong>Precision Emulation & Safety Checking:</strong> Test lower precision artifacts manually on desktop configurations by masking floating-point bitwise patterns, and detect division-by-zero anomalies:
-            <pre class="atlas-code-block" data-lang="cpp"><code class="language-cpp">// Simulate half-precision behavior on a 32-bit float register
-float simulatedHalf = asfloat(asuint(value) & 0xFFFF0000);
-
-// Check for unhandled NaN (Not-a-Number) values
-bool isInvalid = isnan(value);</code></pre>
-          </li>
-        </ul><!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>7. Cross-Pipeline Shader Adaptation (Built-in, URP, HDRP)</h2>
-        <p>Porting legacy shaders into Scriptable Render Pipelines (SRP) requires rewriting architectural layout blocks. Modern pipelines abandon old Cg compiler abstractions in favor of direct, cross-platform HLSL structures.</p>
-        <h3>URP Shader Implementation Example</h3>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "URPExamples/SimpleColor"
-{
-    Properties
-    {
-        _BaseColor("Color", Color) = (1,1,1,1)
-        _BaseMap("Texture", 2D) = "white" {}
-    }
-
-    SubShader
-    {
-        Tags
-        {
-            "RenderType"="Opaque"
-            "RenderPipeline"="UniversalPipeline"
-        }
-
-        Pass
-        {
-            HLSLPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            // Data structure for Vertex Input
-            struct Attributes
-            {
-                float4 positionOS   : POSITION;
-                float2 uv           : TEXCOORD0;
-            };
-
-            // Data structure for Vertex Output (Rasterizer Input)
-            struct Varyings
-            {
-                float4 positionHCS  : SV_POSITION;
-                float2 uv           : TEXCOORD0;
-            };
-
-            // Textures and Samplers API macros
-            TEXTURE2D(_BaseMap);
-            SAMPLER(sampler_BaseMap);
-
-            // SRP Batcher constant buffer configuration
-            CBUFFER_START(UnityPerMaterial)
-                float4 _BaseMap_ST;
-                half4 _BaseColor;
-            CBUFFER_END
-
-            Varyings vert(Attributes IN)
-            {
-                Varyings OUT;
-                // Transform positions from object space to homogenous clip space
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
-                return OUT;
-            }
-
-            half4 frag(Varyings IN) : SV_Target
-            {
-                // Core macro-based sampling
-                half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
-                return color * _BaseColor;
-            }
-            ENDHLSL
-        }
-    }
-}</code></pre>
-        <hr>
-        <h2>Key Pipeline Differences & Architectural Mappings</h2>
-        <p>When migrating shaders across pipelines, use the following structural conversions for include files, space transformations, and sampling macros:</p>
-        <h3>1. Structural Include Files</h3>
-        <p>Modern render pipelines break up global dependencies into target-specific shader libraries to avoid bloating memory allocations:</p>
-        <ul>
-          <li><strong>BIRP (Built-in):</strong> Relies on <code>UnityCG.cginc</code> or <code>AutoLight.cginc</code> for light and shadows calculations.</li>
-          <li><strong>URP:</strong> Uses <code>Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl</code> for structural transforms, plus specialized files like <code>Lighting.hlsl</code> or <code>Shadows.hlsl</code>.</li>
-          <li><strong>HDRP:</strong> Demands <code>Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl</code> and <code>Packages/com.unity.render-pipelines.high-definition/ShaderLibrary/ShaderVariables.hlsl</code> to interface with advanced volumetric, area lighting, and physically-based rendering data buffers.</li>
-        </ul>
-        <h3>2. Matrix & Space Operations</h3>
-        <p>Modern hardware pipelines standardize vertex operations using specific, explicitly named functions rather than combined utility macros:</p>
-        <ul>
-          <li><strong>BIRP:</strong> <code>UnityObjectToClipPos(v.vertex)</code></li>
-          <li><strong>URP / HDRP:</strong> <code>TransformObjectToHClip(positionOS.xyz)</code> (Object Space to Homogeneous Clip Space).<br>
-          <em>Note:</em> SRP requires passing a 3-component <code>float3</code> variable containing raw geometric position coordinates, discarding the explicit 4th component translation vector ($w$) prior to internal matrix multiplications.</li>
-        </ul>
-        <h3>3. Texture Sampling Architectures</h3>
-        <p>To preserve compile-time API compatibility across platform backends (such as Vulkan, Metal, and Direct3D), explicit texture sampling macros must replace legacy <code>sampler2D</code> layouts:</p>
-        <table class="atlas-data-table">
-          <thead>
-            <tr>
-              <th>Pipeline Stage</th>
-              <th>Legacy System (BIRP)</th>
-              <th>Modern SRP Architecture (URP / HDRP)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Global Allocation</strong></td>
-              <td><code>sampler2D _BaseMap;</code></td>
-              <td><code>TEXTURE2D(_BaseMap);<br>
-              SAMPLER(sampler_BaseMap);</code></td>
-            </tr>
-            <tr>
-              <td><strong>Fragment Sample</strong></td>
-              <td><code>fixed4 col = tex2D(_BaseMap, uv);</code></td>
-              <td><code>half4 col = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);</code></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="atlas-section-break" data-index="x5"></div>
-        <hr class="atlas-section-break" data-index="REFERENCES">
-        <!--- H2 SECTION END --->
-        <!--- H2 SECTION START --->
-        <h2>References & Technical Sources</h2>
-        <p>Below is the verified verification index of external engineering resources, documentation modules, and research papers utilized throughout this technical pipeline review:</p>
-        <ul class="atlas-references-list">
-          <li>
-            <strong>[ NVIDIA Technical Paper ]</strong><br>
-            Transparency or Translucency Rendering Spatially Coherent Pipelines:<br>
-            <a href="https://developer.nvidia.com/content/transparency-or-translucency-rendering" target="_blank" rel="noopener noreferrer">developer.nvidia.com/content/transparency-or-translucency-rendering</a>
-          </li>
-          <li>
-            <strong>[ Unity Core Documentation ]</strong><br>
-            High Definition Render Pipeline (HDRP) Overview & Architecture Specifications (v17.2):<br>
-            <a href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@17.2/manual/index.html" target="_blank" rel="noopener noreferrer">docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@17.2/manual/index.html</a>
-          </li>
-          <li>
-            <strong>[ Pipeline Debugging ]</strong><br>
-            Z-Sorting in Transparent Shaders — Depth Buffer Contention Resolution:<br>
-            <a href="https://ru.stackoverflow.com/questions/869171/%D0%9F%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0-z-sorting%D0%B0-%D0%B2-transparent-%D1%88%D0%B5%D0%B9%D0%B4%D0%B5%D1%80%D0%B0%D1%85" target="_blank" rel="noopener noreferrer">ru.stackoverflow.com/questions/869171/Проблема-z-sortingа-в-transparent-шейдерах</a>
-          </li>
-          <li>
-            <strong>[ Hardware Rasterization ]</strong><br>
-            The Stencil Buffer Execution and Matrix Masking in Unity3D:<br>
-            <a href="https://liu-if-else.github.io/stencil-buffer%27s-uses-in-unity3d/" target="_blank" rel="noopener noreferrer">liu-if-else.github.io/stencil-buffer's-uses-in-unity3d/</a>
-          </li>
-          <li>
-            <strong>[ Production Cheat Sheet ]</strong><br>
-            Unity Shaders Reference & Syntax Structural Mapping Gist:<br>
-            <a href="https://gist.github.com/Split82/d1651403ffb05e912d9c3786f11d6a44" target="_blank" rel="noopener noreferrer">gist.github.com/Split82/d1651403ffb05e912d9c3786f11d6a44</a>
-          </li>
-        </ul><!--- H2 SECTION END --->
-        <div class="atlas-eof-divider">
-          <span class="atlas-eof-divider__meta">// END OF SESSION // EOF</span>
-        </div>
-      </div>
-    </main>
-    <footer id="site-footer"></footer>
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF PART // UNITY_SHADERLAB // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
   </div>
-  <script>
-        /* ==========================================================================
-        ── КОНФИГУРАЦИЯ ПОСТА (Заполняется вручную для каждого лога)
-        ========================================================================== */
-        var CONFIG = {
-            user:       'pavelzosim',
-            path:       '~',
-            command:    'cat unity_shaderlab_cheatsheet.log',
-
-            prefix:     'SYSTEM_ATLAS // R&D_LOG',
-            project:    'UNITY_SHADERLAB',
-            module:     'shaders',
-            version:    '1.3.3',
-            logId:      '#042',
-            status:     'EDUCATIONAL',
-
-            slug:       'unity-shaderlab-cheatsheet',
-
-            author:     '...',
-            created:    '----.--.--',
-            modified:   null,
-            wordCount:  null,
-            title:      null,
-            tags:       [],
-
-            tagBaseUrl: '/blog/?tag='
-        };
-
-        // Эндпоинты данных
-
-        var FOOTER_URL  = 'https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@master/cdn/atlas-site-footer-config.json?v=' + new Date().getTime();
-
-        /* ==========================================================================
-        ── СЛУЖЕБНАЯ ЛОГИКА WIX (Динамический расчёт высоты iFrame)
-        ========================================================================== */
-        function sendPostHeight(reason) {
-            var height = document.documentElement.scrollHeight || document.body.scrollHeight;
-            window.parent.postMessage({
-                type: 'resize',
-                height: height
-            }, '*');
-            console.log("[ATLAS_DEBUG] Height sent to Wix: " + height + "px | Reason: " + reason);
-        }
-
-        window.addEventListener('resize', function() {
-            sendPostHeight("Window resized");
-        });
-
-        /* ==========================================================================
-        ── АВТОМАТИЧЕСКИЙ ПАРСИНГ КОДА (Prism Engine)
-        ========================================================================== */
-        function processCodeBlocks() {
-            console.log("[ATLAS_DEBUG] Scanning DOM for code blocks...");
-            if (typeof Prism !== 'undefined') {
-                var blocks = document.querySelectorAll('#atlas-body pre code');
-                if (blocks.length > 0) {
-                    console.log("[ATLAS_DEBUG] Found " + blocks.length + " code block(s). Executing Prism...");
-
-                    var processedCount = 0;
-                    blocks.forEach
-
-        // Резервный канал синхронизации через postMessage
-        window.addEventListener('message', function (e) {
-            var d = e.data;
-            if (!d || d.source !== 'atlas-backend') return;
-            applyData(d);
-        });
-
-        // 3. Асинхронная загрузка структуры футера
-        fetch(FOOTER_URL)
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(c) {
-                if (c) {
-                    renderFooter(c);
-                    setTimeout(function() { sendPostHeight("Footer configuration loaded"); }, 80);
-                }
-            })
-            .catch(function(e) { console.error('[atlas-footer-fetch]', e); });
-  </script>
-  <script>
-
-
-    window.addEventListener('load', () => {
-        console.log("=== 🔍 ATLAS FRAMEWORK DEBUGGER ===");
-
-        // 1. Проверяем, какие именно CSS-файлы с именем 'atlas' загрузил браузер
-        const styles = document.querySelectorAll('link[rel="stylesheet"]');
-        let atlasFound = false;
-        styles.forEach(link => {
-            if (link.href.includes('atlas')) {
-                console.log("📦 Загружен CSS:", link.href);
-                atlasFound = true;
-            }
-        });
-        if (!atlasFound) console.warn("CSS фреймворка не найден в DOM!");
-
-        // 2. Читаем реальный скомпилированный стиль списка (что видит движок браузера)
-        const firstListItem = document.querySelector('.content-block ul li');
-        if (firstListItem) {
-            const beforeContent = window.getComputedStyle(firstListItem, '::before').content;
-            console.log("🎯 Вычисленный контент маркера (li::before):", beforeContent);
-
-            // Если браузер вернул код старого квадрата \25AB
-            if (beforeContent.includes('25AB') || beforeContent.includes('▫')) {
-                console.error("❌ ОШИБКА КЭША: Браузер всё ещё рендерит старый квадрат!");
-            }
-            // Если маркер пустой или содержит новые скобки
-            else if (beforeContent.includes('[') || beforeContent === 'none') {
-                console.log("✅ УСПЕХ: Старый маркер стерт, применены новые стили.");
-            } else {
-                console.log("⚠️ Неизвестный маркер:", beforeContent);
-            }
-        } else {
-            console.log("ℹ️ Списки (ul li) не найдены на странице для проверки.");
-        }
-        console.log("===================================");
-    });
-  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-glsl.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-shaderlab.min.js"></script>
-
   <script src="/scripts/article-page.js?v=14"></script>
 </body>
 </html>

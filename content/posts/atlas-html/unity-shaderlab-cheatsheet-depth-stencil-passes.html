@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Unity ShaderLab Cheatsheet — Depth, Stencil &amp; Passes · Pavel Zosim</title>
+  <meta name="description" content="ShaderLab depth and visibility controls: Cull, ZWrite, ZTest, stencil masking, render order, and multi-pass rendering.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-depth-stencil-passes">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Unity ShaderLab Cheatsheet — Depth, Stencil &amp; Passes">
+  <meta property="og:description" content="ShaderLab depth and visibility controls: Cull, ZWrite, ZTest, stencil masking, render order, and multi-pass rendering.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-depth-stencil-passes">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unity ShaderLab Cheatsheet — Depth, Stencil &amp; Passes">
+  <meta name="twitter:description" content="ShaderLab depth and visibility controls: Cull, ZWrite, ZTest, stencil masking, render order, and multi-pass rendering.">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Unity ShaderLab Cheatsheet — Depth, Stencil & Passes","description":"ShaderLab depth and visibility controls: Cull, ZWrite, ZTest, stencil masking, render order, and multi-pass rendering.","url":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-depth-stencil-passes","mainEntityOfPage":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-depth-stencil-passes","image":"https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png","dateModified":"2026-08-24","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"},"isPartOf":{"@type":"CreativeWorkSeries","name":"Unity ShaderLab Cheatsheet"}}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles/atlas.css?v=55">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
+</head>
+<body id="top">
+  <h1 class="seo-heading">Unity ShaderLab Cheatsheet — Depth, Stencil &amp; Passes</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+      <nav class="atlas-series-nav" aria-label="Unity ShaderLab Cheatsheet series">
+        <span>[ SERIES // UNITY_SHADERLAB ]</span>
+        <a href="/post/unity-shaderlab-cheatsheet/">01 Fundamentals &amp; Properties</a>
+        <a href="/post/unity-shaderlab-cheatsheet-render-states/">02 Tags &amp; Render States</a>
+        <a href="/post/unity-shaderlab-cheatsheet-depth-stencil-passes/" aria-current="page">03 Depth, Stencil &amp; Passes</a>
+        <a href="/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization/">04 HLSL, Pipelines &amp; Optimization</a>
+      </nav>
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shaderlab-culling-and-depth-testing"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">ShaderLab Culling and Depth Testing</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shaderlab-pass"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">ShaderLab Pass</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+<h2 id="shaderlab-culling-and-depth-testing">01 ShaderLab Culling and Depth Testing</h2>
+        <p>To fully grasp culling and depth testing, you must first understand how the Z-Buffer (or Depth Buffer) works. Every pixel rendered on screen has an associated depth value stored in the Z-Buffer. This value determines whether an object appears in front of or behind another. In simple terms, objects are rendered from the closest to the farthest from the camera, which allows the GPU to discard pixels that should remain hidden when geometry overlaps.</p>
+        <p>Before processing a given pixel, the GPU compares the pixel’s depth against the existing value in the Z-Buffer. If the new pixel is closer than the stored value (or meets the specified comparison criteria), it is drawn and its depth is updated; otherwise, it is discarded.</p>
+        <p>By manipulating depth-related commands, you can generate various visual effects. Three important ShaderLab commands related to this are Cull, ZWrite, and ZTest.</p>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-ec788dfeadedb294.png" alt="Depth Testing Comparison Pipeline"> <span class="media-caption">[ Diagram: Hardware Depth Test Comparison Stages ]</span>
+        </div>
+        <h3 id="core-concepts">Core Concepts</h3>
+        <ul>
+          <li><strong><code>Z-Buffer / Depth Buffer</code>:</strong><br>
+          A dedicated memory space that holds depth values for each pixel. The closer an object is to the camera, the lower (or sometimes higher, depending on the device) its depth value will be. Each rendered pixel has a depth value representing its distance from the camera. The closer an object is, the lower its depth value. When multiple objects contribute to the same pixel, the one with the lowest depth value (closest to the camera) overwrites the others.</li>
+        </ul>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-82739a98f50c33d2.png" alt="Z-Buffer and Color Buffer relationship"> <span class="media-caption">[ Diagram: The Z-Buffer stores the depth of the object in the scene, and the Color Buffer stores the RGBA color information ]</span>
+        </div>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-a397ff8603fe0e24.png" alt="Depth Testing Conditional Check Pipeline"> <span class="media-caption">[ Diagram: Depth Testing Conditional Check and Z-Buffer Evaluation ]</span>
+        </div>
+        <ul>
+          <li><strong>Depth Testing:</strong><br>
+          A conditional check that determines whether a pixel should be drawn based on its depth value relative to what’s already stored in the Z-Buffer. The most common depth test is "Less" or "LEqual," meaning that only pixels closer (or at the same distance) to the camera will overwrite existing ones. This is the process where the GPU checks each pixel against the Z-Buffer value. If a pixel passes the depth test (for example, if it’s closer than what is already stored), it gets drawn and its depth value is written to the Z-Buffer.</li>
+          <li><strong>Rendering Order:</strong><br>
+          For opaque objects, a front-to-back order ensures that only the visible (closest) pixels are processed. For transparent objects, Unity (by default) uses a back-to-front order so that blending occurs correctly.</li>
+        </ul>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-cf5af1cd11491b24.png" alt="SubShader and Pass Scope Placement"> <span class="media-caption">[ Diagram: GPU Sorting Pipeline — Front-to-Back vs. Back-to-Front Layouts ]</span>
+        </div>
+        <p>Like Tags, culling and depth testing options can be written in different fields: within the SubShader field or the Pass field. The position will depend on the result we want to achieve and the number of passes we want to work with.</p>
+        <h3 id="additional-notes-on-transparent-shaders-and-depth-buffer-management">Additional Notes on Transparent Shaders and Depth Buffer Management</h3>
+        <p>Transparent shaders introduce additional complexity in depth management due to the blending process. Here are key points and challenges:</p>
+        <ul>
+          <li><strong>Opaque vs. Transparent Rendering:</strong><br>
+          Opaque objects are rendered in a front-to-back order, which allows the Z-Buffer to correctly discard hidden pixels. Transparent objects are typically rendered in a back-to-front order (though with Scriptable Render Pipelines, this can be customized) to blend correctly.</li>
+          <li><strong>Depth Buffer Behavior in Transparent Objects:</strong><br>
+          Transparent shaders often do not update the Z-Buffer (using ZWrite Off) to prevent artifacts. This is because updating the depth buffer could cause partially overlapped transparent pixels to be incorrectly discarded, leading to issues like parts of an object not being rendered.<br>
+          <br>
+          For example, consider a cube with a semi-transparent material and two-sided rendering. If the cube is composed of quads (for simplicity), the GPU might render some polygons later even though a closer polygon should have prevented them via ZTest. If depth values were updated, pixels of later-drawn (but farther) polygons might incorrectly overwrite the closer ones.</li>
+          <li><strong>Sorting Transparent Objects:</strong><br>
+          When rendering two transparent objects (e.g., with alpha = 0.5), the expected outcome is that the first object blends with the opaque background, and then the second object blends with the updated background. This requires careful management of the Z-Buffer—if updated, artifacts can appear (e.g., parts of one object may vanish behind another).</li>
+        </ul>
+        <p><strong>Practical Solutions:</strong> There is no one-size-fits-all fix. Some approaches include:</p>
+        <ul>
+          <li><strong>Shader Variants:</strong> Write separate shader variants that use different ZWrite settings depending on the object's alpha. For instance, one variant with ZWrite On for alpha values in [1.0, 0.5) (to render an "external shell") and another with ZWrite Off for alpha values in [0.5, 0].</li>
+          <li><strong>Two Different Shaders:</strong> Use two shaders (one with ZWrite On and one with ZWrite Off) and combine their output to handle different transparency levels.</li>
+          <li><strong>Custom Render Pipeline Adjustments:</strong> With Scriptable Render Pipelines, you can sometimes modify the transparent rendering order (for example, using front-to-back transparent rendering) to better suit your needs.</li>
+        </ul>
+        <p><strong>Example Problem Scenario:</strong> Imagine placing one transparent object (e.g., a helmet) inside another (e.g., a wall) so that the helmet appears on both sides of the wall. If ZWrite is enabled (writing depth), half of the helmet might not render because the wall’s depth overrides it. With ZWrite Off, both objects blend correctly, though this may affect overall scene depth sorting.</p>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ NODE INTERFACES PIPELINE NOTE ]</span>
+          <p><strong>Shader Graph Consideration:</strong> Unfortunately, Shader Graph currently does not offer easy access to change subshader properties like ZWrite directly (unlike some alternatives such as Amplify Shader Editor). In such cases, you may need to create a custom shader (for example, by starting with a Standard Surface Shader and modifying the generated code) to achieve the desired depth behavior.</p>
+        </div>
+        <h3 id="shaderlab-cull-mode">ShaderLab Cull Mode</h3>
+        <p>Controls which faces of a polygon are rendered (Back, Front, or Off). Works consistently across pipelines; additional HDRP material settings may enhance its usage. In 3D models, each polygon has a front and a back face:</p>
+        <ul>
+          <li><strong><code>Cull Back</code> (default):</strong> Only the front faces are rendered. This is typically more efficient.</li>
+          <li><strong><code>Cull Front</code>:</strong> Only the back faces are rendered.</li>
+          <li><strong><code>Cull Off</code>:</strong> Both faces are rendered. This can be useful when you need to display double-sided materials, such as thin cloth or foliage.</li>
+        </ul>
+        <p><strong>Static Implementation Example:</strong></p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/CullExample" {
+    Properties { /* ... */ }
+    SubShader {
+        // Render only the front faces (default behavior)
+        Cull Back
+        Pass {
+            CGPROGRAM
+                // Shader code...
+            ENDCG
+        }
+    }
+}</code></pre>
+        <p><strong>Dynamic Implementation via Material Inspector Enum:</strong></p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/DynamicCullExample" {
+    Properties {
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull Mode", Float) = 0
+    }
+    SubShader {
+        // Use the value of _Cull for culling
+        Cull [_Cull]
+        Pass {
+            CGPROGRAM
+                // Shader code...
+            ENDCG
+        }
+    }
+}</code></pre>
+        <p>Another helpful option occurs through the semantics <code>SV_IsFrontFace</code>, which allows us to project different colors and textures on both mesh faces. To do so, we simply declare a boolean variable and assign such semantics as an argument in the fragment shader stage.</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">fixed4 frag (v2f i, bool face : SV_IsFrontFace) : SV_Target
+{
+    fixed4 colFront = tex2D(_FrontTexture, i.uv);
+    fixed4 colBack = tex2D(_BackTexture, i.uv);
+
+    return face ? colFront : colBack;
+}</code></pre>
+        <h3 id="shaderlab-zwrite">ShaderLab ZWrite</h3>
+        <p><code>ZWrite</code> controls whether a shader writes depth information (i.e., the pixel’s distance to the camera) into the Z-Buffer. This command controls the writing of the surface pixels of an object to the Z-Buffer, that is, it allows us to ignore or respect the depth distance between the camera and an object. This is especially important when dealing with transparency e.g., when we activate the Blending options. Typically On for opaque objects and Off for transparent ones to avoid Z-fighting.</p>
+        <ul>
+          <li><strong><code>ZWrite On</code> (default):</strong> The shader writes depth information. This is typical for opaque materials.</li>
+          <li><strong><code>ZWrite Off</code>:</strong> Depth values are not written. This is usually used for transparent materials to prevent issues like Z-fighting (flickering when objects overlap).</li>
+        </ul>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "InspectorPath/shaderName"
+{
+    Properties { /* ... */ }
+    SubShader
+    {
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+        Blend SrcAlpha OneMinusSrcAlpha
+        ZWrite Off
+
+        Pass {
+            // Shader code here...
+        }
+    }
+}</code></pre>
+        <p>The Z-fighting occurs when we have two or more objects at the same distance from the camera, causing identical values in the Z-Buffer.</p>
+        <p>This effect occurs when trying to render a pixel at the end of the rendering pipeline. Since the Z-Buffer cannot determine which element is behind the other, it produces flickering lines that change shape depending on the camera’s position. To correct this issue, we simply need to disable the Z-Buffer using the “ZWrite off” command.</p>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-aee9bd917a8542e6.png" alt="Z-fighting artifact demonstration"> <span class="media-caption">[ Diagram: Planar Co-planar Geometry Conflict Resulting in Z-Fighting Artifacts ]</span>
+        </div>
+        <h3 id="shaderlab-ztest">ShaderLab ZTest</h3>
+        <p><code>ZTest</code> defines how depth testing is performed by comparing each pixel’s depth to the Z-Buffer. It supports several comparison functions:</p>
+        <ul>
+          <li><strong><code>Less</code> (&lt;):</strong> Draws the pixel if its depth is less than the stored depth.</li>
+          <li><strong><code>Greater</code> (&gt;):</strong> Draws if its depth is greater.</li>
+          <li><strong><code>LEqual</code> (≤):</strong> (Default) Draws if the pixel’s depth is less than or equal to the stored depth.</li>
+          <li><strong><code>GEqual</code> (≥):</strong> Draws if the pixel’s depth is greater than or equal.</li>
+          <li><strong><code>Equal</code> (==):</strong> Draws if the depths are exactly equal.</li>
+          <li><strong><code>NotEqual</code> (!=):</strong> Draws if the depths differ.</li>
+          <li><strong><code>Always</code>:</strong> Ignores depth testing and draws every pixel regardless of depth.</li>
+        </ul>
+        <p><code>ZTest Less</code>: (&lt;) Draws the objects in front. It ignores objects that are at the same distance or behind the shader object.</p>
+        <p>To understand this command, we will do the following exercise: Let’s suppose we have two objects in our scene; a Cube and a Sphere. The Sphere is in front of the Cube relative to the camera, and the pixel depth is as expected.</p>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-fc0df59bedebdc74.png" alt="Sphere in front of the Cube execution"> <span class="media-caption">[ Diagram: Standard Depth Verification — Sphere Positioned In Front of the Cube Scope ]</span>
+        </div>
+        <p>If we position the Sphere behind the Cube then again, the depth values will be as expected, why? Because the Z-Buffer is storing depth values for each pixel on the screen. The depth values are calculated concerning the proximity of an object to the camera.</p>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-19a855d6e225e7f9.png" alt="Sphere behind the Cube execution"> <span class="media-caption">[ Diagram: Standard Depth Verification — Sphere Occluded by the Cube Volume ]</span>
+        </div>
+        <p>Now, what would happen if we activated <code>ZTest Always</code>? In this case, Depth Testing would not be done, therefore, all pixels would appear at the same depth on screen.</p>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-5275d551580d9573.png" alt="ZTest Always execution override"> <span class="media-caption">[ Diagram: Depth Buffer Evaluation Overridden via ZTest Always Command ]</span>
+        </div>
+        <p>Example implementation:</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/ZTestExample" {
+    Properties { /* ... */ }
+    SubShader {
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+        ZTest LEqual  // Default behavior
+        Pass {
+            CGPROGRAM
+                // Shader code...
+            ENDCG
+        }
+    }
+}</code></pre>
+        <h3 id="shaderlab-stencil">ShaderLab Stencil</h3>
+        <p>The <code>Stencil Buffer</code> is a specialized buffer that stores an 8-bit integer (values 0–255) for each pixel in the Frame Buffer. Before executing the fragment shader for a pixel, the GPU can perform a Stencil Test — comparing the current value in the Stencil Buffer with a specified reference value. If the test passes, the GPU then performs the depth test; if it fails, the GPU skips further processing for that pixel. Essentially, the Stencil Buffer acts as a mask, letting you control which pixels are drawn and which are discarded.</p>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-8c56a0413b263e5c.png" alt="Stencil Buffer Pipeline Masking"> <span class="media-caption">[ Diagram: Fragment Rejection Pipeline via Hardware Stencil Evaluation ]</span>
+        </div>
+        <h3 id="how-the-stencil-buffer-works">How the Stencil Buffer Works</h3>
+        <ul>
+          <li><strong>Storage:</strong> The Stencil Buffer is like a “texture” that covers the entire frame, with each pixel storing an integer between 0 and 255.</li>
+          <li><strong>Stencil Test:</strong> Before a fragment is processed, the GPU compares the pixel’s current stencil value (from the buffer) with a reference value that you supply (StencilRef), using a mask (StencilReadMask) and a comparison function (Comp).</li>
+        </ul>
+        <p>The test can be conceptually described as:</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">if ( (StencilRef & StencilReadMask) [Comp] (StencilBufferValue & StencilReadMask) ) {
+    Accept Pixel.
+} else {
+    Discard Pixel.
+}</code></pre>
+        <ul>
+          <li><strong><code>StencilRef</code>:</strong> The reference value you want to compare against. Think of it as an ID you write into the Stencil Buffer.</li>
+          <li><strong><code>StencilReadMask</code>:</strong> A mask that determines which bits to consider during the comparison.</li>
+          <li><strong><code>Comp</code>:</strong> A comparison function that evaluates to true or false (see below).</li>
+        </ul>
+        <h3 id="available-comparison-functions">Available Comparison Functions</h3>
+        <p>The following operators can be used for the stencil comparison:</p>
+        <ul>
+          <li><strong><code>Comp Never</code>:</strong> Always fails the test.</li>
+          <li><strong><code>Comp Less</code>:</strong> Passes if the reference is less than the buffer value.</li>
+          <li><strong><code>Comp Equal</code>:</strong> Passes if the values are equal.</li>
+          <li><strong><code>Comp LEqual</code>:</strong> Passes if the reference is less than or equal to the buffer value.</li>
+          <li><strong><code>Comp Greater</code>:</strong> Passes if the reference is greater than the buffer value.</li>
+          <li><strong><code>Comp NotEqual</code>:</strong> Passes if the values are not equal.</li>
+          <li><strong><code>Comp GEqual</code>:</strong> Passes if the reference is greater than or equal to the buffer value.</li>
+          <li><strong><code>Comp Always</code>:</strong> Always passes the test.</li>
+        </ul>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-eb8a8a1974625e1a.png" alt="Stencil Comparison Functions Matrix"> <span class="media-caption">[ Diagram: Matrix of Hardware Stencil Comparison Operations ]</span>
+        </div>
+        <h3 id="practical-example">Practical Example</h3>
+        <p>Suppose you have three objects in your scene—a Cube, a Sphere, and a Square—and you want to use the Square as a mask so that only the Sphere inside the Cube is visible.</p>
+        <p><strong>1. Mask Shader (USB_stencil_ref)</strong></p>
+        <p>This shader writes a reference value (for example, 2) into the Stencil Buffer for all pixels covered by the mask (the Square). Since we only need to mark the pixels without drawing any color, we disable color output and depth writing.</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/USB_stencil_ref" {
+    Properties { /* No visible properties needed */ }
+    SubShader {
+        Tags { "Queue" = "Geometry-1" }  // Process before default geometry (default Geometry=2000, so here it's 1999)
+        ZWrite Off                       // Do not update the depth buffer for the mask
+        ColorMask 0                      // Discard color output (make it invisible)
+        Stencil {
+            Ref 2                        // StencilRef = 2; marks the mask with value 2
+            Comp Always                  // Always pass the stencil test, so all pixels covered by the mask get set to 2
+            Pass Replace                 // Replace the current stencil value with the reference value
+        }
+        Pass {
+            CGPROGRAM
+                // Minimal shader code; even an empty pass is enough since no color is drawn
+            ENDCG
+        }
+    }
+    FallBack "Diffuse"
+}</code></pre>
+        <p><strong>2. Masked Object Shader (USB_stencil_value)</strong></p>
+        <p>This shader renders the object (e.g., the Cube) but only where the Stencil Test indicates it is not part of the mask. It compares the current Stencil Buffer value with the reference value (2) and uses a comparison function to decide whether to draw a pixel.</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/USB_stencil_value" {
+    Properties {
+        _Color ("Color", Color) = (1, 1, 1, 1)
+    }
+    SubShader {
+        Tags { "Queue" = "Geometry" }
+        // Keep ZWrite on so depth is properly updated for this object
+        ZWrite On
+        Stencil {
+            Ref 2                        // Must match the mask's reference value
+            Comp NotEqual                // Pass the test only if the stencil value is NOT equal to 2
+            Pass Keep                    // Keep the existing stencil buffer value
+        }
+        Pass {
+            CGPROGRAM
+                // Your regular shader code to render the object
+                #pragma vertex vert
+                #pragma fragment frag
+                fixed4 _Color;
+                struct appdata { float4 vertex : POSITION; };
+                struct v2f { float4 pos : SV_POSITION; };
+                v2f vert (appdata v) {
+                    v2f o;
+                    o.pos = UnityObjectToClipPos(v.vertex);
+                    return o;
+                }
+                fixed4 frag (v2f i) : SV_Target {
+                    return _Color;
+                }
+            ENDCG
+        }
+    }
+    FallBack "Diffuse"
+}</code></pre>
+        <p>In this example:</p>
+        <ul>
+          <li>The mask shader (USB_stencil_ref) writes a stencil value of 2 over the area of the Square.</li>
+          <li>The masked object shader (USB_stencil_value) renders only where the stencil value is not equal to 2—hiding the Cube where the mask is applied, allowing the Sphere behind it to be visible.</li>
+        </ul>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-6bb3b8de593ecc73.png" alt="Stencil Masking Result Step 1"> <span class="media-caption">[ Diagram: Stencil Space Exclusion Test Setup — Geometry Queue (Geometry - 1) Execution ]</span>
+        </div>
+        <p>We configured “Queue” to “Geometry minus one”. Since Geometry defaults to 2000, this equals 1999, processing our mask in the Z-Buffer. Unity processes objects based on their scene position relative to the camera. To disable this, set “ZWrite to Off”. Set “ColorMask to zero” to discard mask pixels in the Frame Buffer, making them transparent.</p>
+        <div class="media-frame">
+          <img src="/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png" alt="Stencil Masking Final Composite"> <span class="media-caption">[ Diagram: Frame Buffer Result with ColorMask 0 Masking Enabled ]</span>
+        </div>
+        <h2 id="shaderlab-pass">02 ShaderLab Pass</h2>
+        <p>A Pass in rendering refers to generating different layers (e.g., color, light, occlusion) separately in 3D software like Maya or Blender. Each Pass renders one object at a time, equivalent to a draw call, so minimizing passes is crucial to avoid significant graphic load.</p>
+        <p>A Pass in ShaderLab represents a single render pass—a discrete set of rendering instructions executed by the GPU for an object. By default, Unity adds one pass inside the SubShader. However, you can define multiple passes if needed. Each pass is equivalent to one draw call, which means that an object with multiple passes is rendered multiple times. This can be useful for creating layered visual effects (such as separate passes for base color, lighting, and occlusion) but can also significantly increase the rendering workload.</p>
+        <p>Since each pass equals a draw call, increasing the number of passes can lead to a heavier GPU load. It's best to use the minimum number of passes necessary for your effect.</p>
+        <p>Below is an example of a simple shader with a single pass, similar to a basic color shader:</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "InspectorPath/USB_simple_color" {
+    Properties {
+        _MainTex ("Texture", 2D) = "white" {}
+        _Color ("Color", Color) = (1,1,1,1)
+    }
+    SubShader {
+        Tags { "RenderType"="Opaque" }
+        Pass {
+            CGPROGRAM
+                #pragma vertex vert
+                #pragma fragment frag
+                // Enable fog support
+                #pragma multi_compile_fog
+                #include "UnityCG.cginc"
+
+                struct appdata {
+                    float4 vertex : POSITION;
+                    float2 uv : TEXCOORD0;
+                };
+
+                struct v2f {
+                    float4 pos : SV_POSITION;
+                    float2 uv : TEXCOORD0;
+                    UNITY_FOG_COORDS(1)
+                };
+
+                sampler2D _MainTex;
+                float4 _Color;
+
+                v2f vert (appdata v) {
+                    v2f o;
+                    o.pos = UnityObjectToClipPos(v.vertex);
+                    o.uv = v.uv;
+                    UNITY_TRANSFER_FOG(o,o.pos);
+                    return o;
+                }
+
+                fixed4 frag (v2f i) : SV_Target {
+                    fixed4 col = tex2D(_MainTex, i.uv) * _Color;
+                    UNITY_APPLY_FOG(i.fogCoord, col);
+                    return col;
+                }
+            ENDCG
+        }
+    }
+    FallBack "Diffuse"
+}</code></pre>
+        <p>If you want to create a shader with two passes (for example, one pass for the base color and another for an additional effect), you would structure your shader like this:</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "InspectorPath/DoublePassShader" {
+    Properties { /* ... */ }
+    SubShader {
+        Tags { "RenderType"="Opaque" }
+        Pass {
+            // First pass: base color
+            CGPROGRAM
+                // Base shader code here...
+            ENDCG
+        }
+        Pass {
+            // Second pass: additional effect (e.g., shine, outline)
+            CGPROGRAM
+                // Additional effect shader code here...
+            ENDCG
+        }
+    }
+}</code></pre>
+        <h3 id="render-pipeline-considerations-2024-2025">Render Pipeline Considerations (2024/2025)</h3>
+        <ul>
+          <li><strong>Built-in Render Pipeline:</strong> Passes are typically written using <code>CGPROGRAM</code>/<code>ENDCG</code>. This is the classic method.</li>
+          <li><strong>URP/HDRP:</strong> For Scriptable Render Pipelines, it is recommended to use <code>HLSLPROGRAM</code>/<code>ENDHLSL</code> instead. Although the concept of a pass remains the same, the newer syntax provides better compatibility with modern shader targets. Regardless of the pipeline, the idea of each pass representing a separate draw call stays consistent.</li>
+        </ul>
+        <div class="atlas-section-break" data-index="x4"></div>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF PART // UNITY_SHADERLAB // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-glsl.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>
+  <script src="/scripts/article-page.js?v=14"></script>
+</body>
+</html>

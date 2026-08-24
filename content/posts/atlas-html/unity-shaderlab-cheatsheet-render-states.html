@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Unity ShaderLab Cheatsheet — Tags &amp; Render States · Pavel Zosim</title>
+  <meta name="description" content="A practical ShaderLab reference for SubShader tags, render queues, blending, AlphaToMask, and ColorMask across Unity pipelines.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-render-states">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Unity ShaderLab Cheatsheet — Tags &amp; Render States">
+  <meta property="og:description" content="A practical ShaderLab reference for SubShader tags, render queues, blending, AlphaToMask, and ColorMask across Unity pipelines.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-render-states">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unity ShaderLab Cheatsheet — Tags &amp; Render States">
+  <meta name="twitter:description" content="A practical ShaderLab reference for SubShader tags, render queues, blending, AlphaToMask, and ColorMask across Unity pipelines.">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Unity ShaderLab Cheatsheet — Tags & Render States","description":"A practical ShaderLab reference for SubShader tags, render queues, blending, AlphaToMask, and ColorMask across Unity pipelines.","url":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-render-states","mainEntityOfPage":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-render-states","image":"https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png","dateModified":"2026-08-24","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"},"isPartOf":{"@type":"CreativeWorkSeries","name":"Unity ShaderLab Cheatsheet"}}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles/atlas.css?v=55">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
+</head>
+<body id="top">
+  <h1 class="seo-heading">Unity ShaderLab Cheatsheet — Tags &amp; Render States</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+      <nav class="atlas-series-nav" aria-label="Unity ShaderLab Cheatsheet series">
+        <span>[ SERIES // UNITY_SHADERLAB ]</span>
+        <a href="/post/unity-shaderlab-cheatsheet/">01 Fundamentals &amp; Properties</a>
+        <a href="/post/unity-shaderlab-cheatsheet-render-states/" aria-current="page">02 Tags &amp; Render States</a>
+        <a href="/post/unity-shaderlab-cheatsheet-depth-stencil-passes/">03 Depth, Stencil &amp; Passes</a>
+        <a href="/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization/">04 HLSL, Pipelines &amp; Optimization</a>
+      </nav>
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#subshader-setup-in-shaderlab"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">SubShader Setup in ShaderLab</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shaderlab-blending-modes"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">ShaderLab Blending Modes</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shaderlab-alphatomask"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">ShaderLab AlphaToMask</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shaderlab-colormask"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">ShaderLab ColorMask</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+<h2 id="subshader-setup-in-shaderlab">01 SubShader Setup in ShaderLab</h2>
+        <p>Every shader must include at least one SubShader. In the SubShader, you define one or more passes (each of which contains your actual shader code) and specify metadata that informs Unity how and when to use that SubShader. This setup is crucial because Unity selects the most compatible SubShader based on your target hardware and active render pipeline.</p>
+        <p>Basic Structure Example:</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">SubShader {
+    Tags { "RenderType" = "Opaque" }
+    LOD 100
+
+    Pass {
+        // For Built-in RP, you might see CGPROGRAM/ENDCG,
+        // while URP/HDRP typically use HLSLPROGRAM/ENDHLSL.
+        CGPROGRAM
+            // Compiler directives and shader code go here...
+        ENDCG
+    }
+}</code></pre>
+        <h3 id="subshader-tags">Subshader Tags</h3>
+        <p>Tags are key–value pairs that provide essential metadata for a SubShader. They affect shader behavior, drawing order, and how the shader interacts with replacement systems or post-processing. Below is an overview of the main tags and their pipeline-specific nuances.</p>
+        <h3 id="shaderlab-queue-tags">ShaderLab Queue Tags</h3>
+        <p>Queue tags determine the order in which objects are drawn by the GPU. The render queue affects layering, transparency, and masking. The GPU sorts draw calls by these numerical values:</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Tags { "Queue" = "Geometry" }</code></pre>
+        <ul>
+          <li><strong><code>Background</code>:</strong><br>
+          This render queue is rendered before any others. You’d typically use this for things that really need to be in the background.<br>
+          <i>Range: 0–1499 (default 1000)</i></li>
+          <li><strong><code>Geometry</code>:</strong><br>
+          For opaque objects; the default for most shaders.<br>
+          <i>Range: 1500–2399 (default 2000)</i></li>
+          <li><strong><code>AlphaTest</code>:</strong><br>
+          Suitable for objects with cutout transparency (e.g., foliage, vegetation) that need to be rendered after opaque objects.<br>
+          <i>Range: 2400–2699 (default 2450)</i></li>
+          <li><strong><code>Transparent</code>:</strong><br>
+          For transparent objects; drawn back-to-front.<br>
+          <i>Range: 2700–3599 (default 3000)</i></li>
+          <li><strong><code>Overlay</code>:</strong><br>
+          For UI or overlay elements rendered last.<br>
+          <i>Range: 3600–5000 (default 4000)</i></li>
+        </ul>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ PIPELINE EXECUTION: QUEUE ]</span>
+          <p><strong>Pipeline-Specific Notes:</strong><br>
+          <strong>Built-in & URP:</strong> Queue tags are set directly in the shader and appear in the material Inspector.<br>
+          <strong>HDRP (2024/2025):</strong> Queue tags can be overridden by Material Settings (Rendering Priority). To enforce draw order in HDRP, set the queue in the SubShader tags and adjust Material Order in the Inspector.</p>
+        </div>
+        <h3 id="shaderlab-rendertype-tags">ShaderLab RenderType Tags</h3>
+        <p>The RenderType tag categorizes shaders into logical groups for global replacements or post-processing. This tag helps Unity identify which shaders can be replaced at runtime (e.g., via Camera.RenderWithShader).</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Tags { "RenderType"="Opaque" }</code></pre>
+        <p>Common RenderType Values:</p>
+        <ul>
+          <li><strong><code>Opaque</code>:</strong><br>
+          Default for most non-transparent materials. (Normal, Self Illuminated, Reflective, terrain shaders)</li>
+          <li><strong><code>Transparent</code>:</strong><br>
+          Used for shaders with blending, such as glass or particles. (Transparent, Particle, Font, terrain additive pass shaders).</li>
+          <li><strong><code>TransparentCutout</code>:</strong><br>
+          For materials that use alpha testing (masked transparency , Transparent Cutout, two pass vegetation shaders).</li>
+          <li><strong><code>Background</code>:</strong><br>
+          For skyboxes and distant scenery.</li>
+          <li><strong><code>Overlay</code>:</strong><br>
+          For UI and similar overlay elements. (GUITexture, Halo, Flare shaders.)</li>
+        </ul>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ PIPELINE EXECUTION: RENDERTYPE ]</span>
+          <p><strong>Built-in & URP:</strong> Directly specified and visible.<br>
+          <strong>HDRP:</strong> Although still used, HDRP may manage some transparency or advanced effects via additional material settings.</p>
+        </div>
+        <h3 id="specialized-tags">Specialized Tags</h3>
+        <p>Beyond Queue and RenderType, several other tags refine shader behavior:</p>
+        <ul>
+          <li><strong><code>TreeOpaque</code>:</strong> Used for opaque tree bark.</li>
+          <li><strong><code>TreeTransparentCutout</code>:</strong> Used for tree leaves that use alpha cutout.</li>
+          <li><strong><code>TreeBillboard</code>:</strong> Used for trees rendered as billboards.</li>
+          <li><strong><code>Grass</code>:</strong> For full 3D grass models.</li>
+          <li><strong><code>GrassBillboard</code>:</strong> For grass rendered as billboards to improve performance.</li>
+        </ul>
+        <h3 id="additional-tags">Additional Tags</h3>
+        <p>Beyond Queue and RenderType, several other tags refine shader behavior:</p>
+        <ul>
+          <li><strong><code>RequireOptions</code>:</strong><br>
+          Ensures a pass is rendered only if specific quality settings (e.g., SoftVegetation) are enabled.</li>
+          <li><strong><code>DisableBatching</code>:</strong><br>
+          Controls whether dynamic batching is allowed (values: True, False, LODFading).</li>
+          <li>
+            <strong><code>ForceNoShadowCasting</code>:</strong><br>
+            Prevents the shader from casting shadows. <i>(Note: In HDRP, this does not prevent contact shadows.)</i>
+            <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Tags { "ForceNoShadowCasting" = "True" }</code></pre>
+          </li>
+          <li><strong><code>IgnoreProjector</code>:</strong><br>
+          Excludes the shader from being affected by projectors. <i>(Built-in only)</i> Tells Unity to ignore projectors when rendering this geometry.</li>
+          <li><strong><code>CanUseSpriteAtlas</code>:</strong><br>
+          Indicates that the shader supports batching through a Sprite Atlas.</li>
+          <li><strong><code>PreviewType</code>:</strong><br>
+          Specifies how the shader should be previewed in the editor (e.g., Sphere, Plane, Skybox).</li>
+          <li>
+            <strong><code>GrabPass</code>:</strong><br>
+            Captures current screen contents into a texture will grab current screen contents into a texture. The texture can be accessed in further passes by _GrabTexture name. Note: this form of grab pass will do the expensive screen grabbing operation for each object that uses it! GrabPass { "TextureName" } will grab screen contents into a texture, but will only do that once per frame for the first object that uses the given texture name. The texture can be accessed in further passes by the given texture name. This is a more performant way when you have multiple objects using grab pass in the scene. Additionally, GrabPass can use Name and Tags commands.
+            <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">GrabPass { "TextureName" }</code></pre>
+          </li>
+          <li>
+            <strong><code>UsePass</code>:</strong><br>
+            Reuses passes from another shade. Inserts all passes with a given name from a given shader. Shader/Name contains the name of the shader and the name of the pass, separated by a slash character. Note that only first supported subshader is taken into account.
+            <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">UsePass "Shader/PassName"</code></pre>
+          </li>
+        </ul>
+        <p>Usage: RenderType tags help with shader replacement systems (e.g., using Camera.RenderWithShader) and enable filtering when applying post-processing effects.</p>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ PIPELINE SELECTION: ADVANCED TAGS ]</span>
+          <p><strong>Pipeline-Specific Notes:</strong><br>
+          <strong>Built-in & URP:</strong> RenderType tags work as defined and help organize shader behavior.<br>
+          <strong>HDRP:</strong> Although available, HDRP’s advanced material system often uses additional parameters to control transparency and rendering effects.<br>
+          <br>
+          <i>(Works only with URP/Built-in RP)</i> Tags are labels that show how and when our shaders are processed. Like a GameObject Tag, these can be used to recognize how a shader will be rendered or how a group of shaders will behave graphically.</p>
+        </div>
+
+<h2 id="shaderlab-blending-modes">02 ShaderLab Blending Modes</h2>
+        <p>Blending is the cornerstone of creating visually rich materials like glass, fire, smoke, and holograms. Let’s break down this critical stage in the rendering pipeline.</p>
+        <p>Blending combines the fragment shader’s output color (SrcValue) with the color already in the render target (DstValue). Think of it as layering in Photoshop—but in real-time 3D. This “merging” stage occurs after the fragment shader and is responsible for incorporating transparency, depth, and stencil data into the final pixel color.</p>
+        <p>Blending options can be written in different fields: within the SubShader field or the Pass field, the position will depend on the number of passes and the final result that we need.</p>
+        <ul>
+          <li><strong>Default Behavior:</strong> When blending is disabled (default: Blend Off), Source color overwrites the destination (no transparency).</li>
+          <li><strong>Activating Blending:</strong> Enable blending + set "Queue"="Transparent" to render after opaque objects.</li>
+        </ul>
+        <p>Blending combines fragment shader output (SrcValue) with the existing render target color (DstValue) using the equation:</p>
+        <p><code>FinalColor = SrcFactor * SrcValue [OP] DstFactor * DstValue</code></p>
+        <p>Default operation ([OP]) is Add, making the typical equation:</p>
+        <p><code>FinalColor = SrcFactor * SrcValue + DstFactor * DstValue</code></p>
+        <h3 id="blend-factors-cheat-sheet">Blend Factors Cheat Sheet</h3>
+        <table class="atlas-table">
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>RGB Value</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>One</strong></td>
+              <td><code>(1,1,1)</code></td>
+              <td>Full color contribution (e.g., additive glow).</td>
+            </tr>
+            <tr>
+              <td><strong>SrcAlpha</strong></td>
+              <td><code>(A,A,A)</code></td>
+              <td>Standard transparency (UI, glass).</td>
+            </tr>
+            <tr>
+              <td><strong>OneMinusSrcAlpha</strong></td>
+              <td><code>(1-A,1-A,1-A)</code></td>
+              <td>Inverse alpha masking (soft particles).</td>
+            </tr>
+            <tr>
+              <td><strong>DstColor</strong></td>
+              <td><code>(R,G,B)</code></td>
+              <td>Multiplicative effects (stained glass).</td>
+            </tr>
+          </tbody>
+        </table>
+        <h3 id="numerical-example">Numerical Example</h3>
+        <p>Let’s say we have an RGB pixel with the following destination values:<br>
+        <code>DstValue = [0.5R, 0.45G, 0.35B]</code></p>
+        <ul>
+          <li><strong>Step 1:</strong> Multiply DstValue by SrcFactor One (which is [1, 1, 1]):<br>
+          Result: <code>[0.5R, 0.45G, 0.35B]</code></li>
+          <li><strong>Step 2:</strong> Assume the DstFactor also equals the current DstValue ([0.5, 0.45, 0.35]). Multiply each component:<br>
+          Calculation:<br>
+          R: $$0.5 \times 0.5 = 0.25$$<br>
+          G: $$0.45 \times 0.45 \approx 0.20$$<br>
+          B: $$0.35 \times 0.35 \approx 0.12$$<br>
+          Result: <code>[0.25R, 0.20G, 0.12B]</code></li>
+          <li><strong>Step 3:</strong> Add the two results (using Add as [OP]):<br>
+          Calculation:<br>
+          R: $$0.5 + 0.25 = 0.75$$<br>
+          G: $$0.45 + 0.20 = 0.65$$<br>
+          B: $$0.35 + 0.12 \approx 0.47$$<br>
+          Final Result: <code>[0.75R, 0.65G, 0.47B]</code></li>
+        </ul>
+        <h3 id="common-blend-factors">Common Blend Factors</h3>
+        <p>Some frequently used blend factors include:</p>
+        <ul>
+          <li><strong><code>Off</code>:</strong> Disables blending.</li>
+          <li><strong><code>One</code>:</strong> (1, 1, 1) – Leaves the value unchanged.</li>
+          <li><strong><code>Zero</code>:</strong> (0, 0, 0) – Eliminates the value.</li>
+          <li><strong><code>SrcColor / SrcAlpha</code>:</strong> Uses the corresponding components from the source.</li>
+          <li><strong><code>OneMinusSrcColor / OneMinusSrcAlpha</code>:</strong> Uses (1 - source component) values.</li>
+          <li><strong><code>DstColor / DstAlpha</code>:</strong> Uses the destination color or alpha.</li>
+          <li><strong><code>OneMinusDstColor / OneMinusDstAlpha</code>:</strong> Uses (1 - destination component) values.</li>
+        </ul>
+        <p>To use blending in your shader, you'll need to modify the “Queue” tag—by default, it’s set to “Geometry” (making the object opaque). Change it to “Transparent” to indicate that the object should be rendered after opaque objects and blended accordingly.</p>
+        <p>Blend presets provide standard configurations for frequently used blending effects. The table below outlines these presets, the associated Blend command, and a brief description of their typical usage.</p>
+        <h3 id="blend-presets">Blend Presets</h3>
+        <table class="atlas-table">
+          <thead>
+            <tr>
+              <th>Blend Preset</th>
+              <th>Blend Command</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Traditional Alpha Blending</strong></td>
+              <td><code>Blend SrcAlpha OneMinusSrcAlpha</code></td>
+              <td>The classic method for transparent materials, where the source’s alpha determines transparency.</td>
+            </tr>
+            <tr>
+              <td><strong>Additive Blending</strong></td>
+              <td><code>Blend One One</code></td>
+              <td>Often used for particles or glow effects, as it adds color values, making bright effects stand out.</td>
+            </tr>
+            <tr>
+              <td><strong>Mild Additive Blending</strong></td>
+              <td><code>Blend OneMinusDstColor One</code></td>
+              <td>A softer additive effect where the influence of the destination color is partially accounted for.</td>
+            </tr>
+            <tr>
+              <td><strong>Multiplicative Blending</strong></td>
+              <td><code>Blend DstColor Zero</code></td>
+              <td>Multiplies the source with the destination, useful for effects like stained glass.</td>
+            </tr>
+            <tr>
+              <td><strong>Multiplicative Blending x2</strong></td>
+              <td><code>Blend DstColor SrcColor</code></td>
+              <td>An intensified version of multiplicative blending, doubling the effect for richer colors.</td>
+            </tr>
+            <tr>
+              <td><strong>Overlay Blending</strong></td>
+              <td><code>Blend SrcColor One</code></td>
+              <td>Uses the source color as the dominant factor, creating an overlay effect.</td>
+            </tr>
+            <tr>
+              <td><strong>Soft Light Blending</strong></td>
+              <td><code>Blend OneMinusSrcColor One</code></td>
+              <td>Produces a soft lighting effect, ideal for subtle highlights and shadows.</td>
+            </tr>
+            <tr>
+              <td><strong>Negative Color Blending</strong></td>
+              <td><code>Blend Zero OneMinusSrcColor</code></td>
+              <td>Creates a negative color effect by inverting the source color’s contribution.</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ PIPELINE INTEGRITY: BLENDING ]</span>
+          <p><strong>Pipeline-Specific Notes on Blending:</strong><br>
+          <strong>Built-in Render Pipeline:</strong> Blending commands are written directly in the shader. Depth writes (ZWrite) are typically disabled for transparent materials.<br>
+          <strong>URP (2024):</strong> You can set blend factors in the shader; however, URP’s material system may also allow artists to adjust these settings via the Inspector. Use HLSLPROGRAM/ENDHLSL blocks in URP shaders.<br>
+          <strong>HDRP:</strong> Blending is often managed indirectly via material settings—especially for transparency. In HDRP, you might not see explicit Blend commands in the shader code because transparency is handled through the Surface Type setting (Opaque vs. Transparent) in the material Inspector.</p>
+        </div>
+        <p>Common Blend Presets quick reference:</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">// 1. Traditional Alpha Blending (Transparent Materials)
+Blend SrcAlpha OneMinusSrcAlpha
+
+// 2. Additive Blending (Fire, Lasers)
+Blend One One
+
+// 3. Multiplicative Blending (Projectors, Shadows)
+Blend DstColor Zero</code></pre>
+        <p><strong>Option 1: Hardcode in the shader</strong></p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">SubShader {
+    Tags { "Queue" = "Transparent" }
+    Blend SrcAlpha OneMinusSrcAlpha
+    ZWrite Off // Disable depth writes for proper transparency
+    Pass {
+        // Shader code here...
+    }
+}</code></pre>
+        <p><strong>Option 2: Let artists control blending via the Material Inspector</strong></p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Properties {
+    [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Src Factor", Float) = 1
+    [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Dst Factor", Float) = 0
+}
+SubShader {
+    Blend [_SrcBlend] [_DstBlend]
+    Pass {
+        // Shader code here...
+    }
+}</code></pre>
+        <p>Pipeline-specific architectural blocks comparison:</p>
+        <p><strong>Built-in Render Pipeline</strong></p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">SubShader {
+    Tags { "Queue"="Transparent" }
+    Blend SrcAlpha OneMinusSrcAlpha
+    ZWrite Off  // Disable depth writes for correct transparency
+}</code></pre>
+        <p><strong>URP (2024)</strong></p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">SubShader {
+    Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" }
+    Blend [_SrcBlend] [_DstBlend]
+    ZWrite Off
+}</code></pre>
+        <h3 id="troubleshooting-blending">Troubleshooting Blending</h3>
+        <table class="atlas-table">
+          <thead>
+            <tr>
+              <th>Issue</th>
+              <th>Fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>HDRP Transparency Not Working</strong></td>
+              <td>Set Surface Type → Transparent in Material Inspector.</td>
+            </tr>
+            <tr>
+              <td><strong>URP Additive Artifacts</strong></td>
+              <td>Adjust render queue: <code>Tags { "Queue"="Transparent+100" }</code>.</td>
+            </tr>
+            <tr>
+              <td><strong>Depth Sorting Issues</strong></td>
+              <td>Use <code>Offset -1, -1</code> to manually adjust depth in Built-in Pipeline.</td>
+            </tr>
+          </tbody>
+        </table>
+
+<h2 id="shaderlab-alphatomask">03 ShaderLab AlphaToMask</h2>
+        <p>In some cases, standard blending (such as using the "SrcAlpha OneMinusSrcAlpha" blend mode) produces smooth gradients of transparency using fractional alpha values. However, for certain effects—like vegetation cutouts or space portal effects—you might require a binary (on/off) approach to transparency. This is where AlphaToMask comes into play.</p>
+        <h3 id="how-alphatomask-works">How AlphaToMask Works</h3>
+        <ul>
+          <li><strong>Purpose:</strong> AlphaToMask forces the shader to treat the alpha channel as a binary mask rather than a continuous gradient. That means the alpha output can only be 0 or 1 (off or on), producing a harsher, more defined transparency edge.</li>
+          <li><strong>Usage:</strong> This technique is particularly useful when you need crisp, hard-edged transparency (for example, for foliage or portal effects) that blending cannot provide.</li>
+          <li><strong>Declaration:</strong> The command accepts only two values: On or Off (with the default being Off). It can be declared at either the SubShader or Pass level. When enabled, the shader automatically converts the alpha output to a binary mask.</li>
+        </ul>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/AlphaToMaskExample" {
+    Properties {
+        // Define your texture and other properties here
+        _MainTex ("Texture", 2D) = "white" {}
+    }
+    SubShader {
+        Tags { "RenderType" = "Opaque" }
+        // Activate the AlphaToMask command
+        AlphaToMask On
+
+        Pass {
+            // Shader code that writes to the alpha channel
+            CGPROGRAM
+                // Your shader code here...
+            ENDCG
+        }
+    }
+}</code></pre>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ MASK CHANNELS SPECIFICATION ]</span>
+          <p><strong>Note:</strong> Unlike blending, you don't need to modify the Render Queue or add additional transparency tags when using AlphaToMask. The fourth color channel “A” is automatically treated as a binary mask.</p>
+        </div>
+        <h3 id="pipeline-specific-considerations-for-alphatomask">Pipeline-Specific Considerations for AlphaToMask</h3>
+        <ul>
+          <li><strong>General Behavior:</strong><br>
+          AlphaToMask forces the shader’s alpha channel to be treated as a binary mask (0 or 1) rather than allowing smooth gradients. This produces hard-edged transparency effects, which are ideal for vegetation, portals, or any scenario where crisp cutouts are needed.</li>
+          <li><strong>Built-in Render Pipeline:</strong><br>
+          Works as expected when enabled. Simply adding <code>AlphaToMask On</code> in the SubShader or Pass converts the alpha output into a binary mask without any further changes.</li>
+          <li><strong>URP (2024/2025):</strong><br>
+          In URP, AlphaToMask is fully supported. Just as in the Built-in pipeline, you declare it (preferably within an HLSLPROGRAM block for full compatibility), and it forces the alpha channel into a binary state. No additional transparency tags are needed.</li>
+          <li><strong>HDRP (2024/2025):</strong><br>
+          HDRP primarily manages transparency via material settings (like the Surface Type property). Although HDRP often relies on these high-level controls for transparency, AlphaToMask remains available for cases where a hard, masked transparency is required. The command works the same way as in other pipelines, but you might see it used less often because HDRP typically employs its own transparency workflow.</li>
+        </ul>
+
+<h2 id="shaderlab-colormask">04 ShaderLab ColorMask</h2>
+        <p>The <code>ColorMask</code> command allows you to restrict the GPU to writing only specific color channels (Red, Green, Blue, or Alpha). By default, the GPU writes all channels (RGBA), but you might want to limit the output for certain effects or optimizations.</p>
+        <h3 id="how-colormask-works">How ColorMask Works</h3>
+        <p><strong>Purpose:</strong> ColorMask lets you select which components of the output color should be written to the render target. This is useful, for example, if you want to create a red-only effect or isolate one channel for debugging.</p>
+        <p><strong>Usage Examples:</strong></p>
+        <ul>
+          <li><strong><code>ColorMask R</code>:</strong> Only the red channel is written, so the output appears red.</li>
+          <li><strong><code>ColorMask G</code>:</strong> Only the green channel is written.</li>
+          <li><strong><code>ColorMask B</code>:</strong> Only the blue channel is written.</li>
+          <li><strong><code>ColorMask A</code>:</strong> Only the alpha channel is written, which can be used to debug transparency.</li>
+          <li><strong><code>ColorMask RG</code>:</strong> Writes both red and green channels, allowing for channel mixing.</li>
+        </ul>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "Custom/ColorMaskExample" {
+    Properties {
+        _MainTex ("Texture", 2D) = "white" {}
+    }
+    SubShader {
+        Tags { "Queue"="Geometry" }
+        // Limit output to the RGB channels (no alpha)
+        ColorMask RGB
+
+        Pass {
+            CGPROGRAM
+                // Your shader code here...
+            ENDCG
+        }
+    }
+}</code></pre>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ PIPELINE INTEGRITY: COLOR MASK ]</span>
+          <p><strong>Pipeline Note:</strong> The ColorMask command is compatible with both the Built-in Render Pipeline and Scriptable Render Pipelines (URP/HDRP). You can declare it at either the SubShader or Pass level, depending on the desired scope.</p>
+        </div>
+        <h3 id="pipeline-specific-considerations-for-colormask">Pipeline-Specific Considerations for ColorMask</h3>
+        <ul>
+          <li><strong>General Behavior:</strong><br>
+          The ColorMask command restricts the GPU to writing only specific color channels (R, G, B, and/or A). By default, all channels (RGBA) are written, but you can limit this to isolate or blend specific outputs (e.g., output only the red channel).</li>
+          <li><strong>Built-in Render Pipeline:</strong><br>
+          ColorMask works identically to how it’s defined in ShaderLab—its syntax and function are the same. It’s commonly used for effects like channel isolation or performance optimizations.</li>
+          <li><strong>URP (2024/2025):</strong><br>
+          URP supports ColorMask without any changes. When writing custom shaders using HLSLPROGRAM blocks, you can still use ColorMask in the SubShader or Pass as usual. Artists can also control these settings via the material’s inspector if exposed.</li>
+          <li><strong>HDRP (2024/2025):</strong><br>
+          HDRP fully supports ColorMask as well. However, HDRP’s advanced color management (including HDR tonemapping and color space conversion) means that if you’re isolating channels or mixing them, you may need to ensure that your shader’s color values are correctly tagged (e.g., using the [HDR] attribute) so that the final output appears as expected.</li>
+        </ul>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF PART // UNITY_SHADERLAB // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-glsl.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>
+  <script src="/scripts/article-page.js?v=14"></script>
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Unity ShaderLab Cheatsheet — HLSL, Pipelines &amp; Optimization · Pavel Zosim</title>
+  <meta name="description" content="Unity shader program architecture: HLSL stages, semantics, precision, intrinsic functions, render pipelines, optimization, and adaptation.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Unity ShaderLab Cheatsheet — HLSL, Pipelines &amp; Optimization">
+  <meta property="og:description" content="Unity shader program architecture: HLSL stages, semantics, precision, intrinsic functions, render pipelines, optimization, and adaptation.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unity ShaderLab Cheatsheet — HLSL, Pipelines &amp; Optimization">
+  <meta name="twitter:description" content="Unity shader program architecture: HLSL stages, semantics, precision, intrinsic functions, render pipelines, optimization, and adaptation.">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Unity ShaderLab Cheatsheet — HLSL, Pipelines & Optimization","description":"Unity shader program architecture: HLSL stages, semantics, precision, intrinsic functions, render pipelines, optimization, and adaptation.","url":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization","mainEntityOfPage":"https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization","image":"https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png","dateModified":"2026-08-24","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"},"isPartOf":{"@type":"CreativeWorkSeries","name":"Unity ShaderLab Cheatsheet"}}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <link rel="stylesheet" href="/styles/atlas.css?v=55">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
+</head>
+<body id="top">
+  <h1 class="seo-heading">Unity ShaderLab Cheatsheet — HLSL, Pipelines &amp; Optimization</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+      <nav class="atlas-series-nav" aria-label="Unity ShaderLab Cheatsheet series">
+        <span>[ SERIES // UNITY_SHADERLAB ]</span>
+        <a href="/post/unity-shaderlab-cheatsheet/">01 Fundamentals &amp; Properties</a>
+        <a href="/post/unity-shaderlab-cheatsheet-render-states/">02 Tags &amp; Render States</a>
+        <a href="/post/unity-shaderlab-cheatsheet-depth-stencil-passes/">03 Depth, Stencil &amp; Passes</a>
+        <a href="/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization/" aria-current="page">04 HLSL, Pipelines &amp; Optimization</a>
+      </nav>
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#cgprogram-section"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">CGPROGRAM Section</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shader-architecture-technical-reference"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Shader Architecture Technical Reference</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#unity-render-pipeline-fundamentals"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Unity Render Pipeline Fundamentals</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#gpu-optimization-essentials-for-shaders"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">GPU Optimization Essentials for Shaders</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#cross-pipeline-shader-adaptation-built-in-urp-hdrp"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Cross-Pipeline Shader Adaptation (Built-in, URP, HDRP)</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#key-pipeline-differences-architectural-mappings"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Key Pipeline Differences &amp; Architectural Mappings</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#references-technical-sources"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">References &amp; Technical Sources</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+<h2 id="cgprogram-section">01 CGPROGRAM Section</h2>
+        <p>The sections we have examined earlier are composed in the ShaderLab declarative language. The true challenge in graphics programming begins here with the CGPROGRAM or HLSLPROGRAM declaration.</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "CustomPath/ShaderName_simpleColor"
+{
+    // ====================================================
+    // 1. MATERIAL PROPERTIES - Inspector Interface
+    // ====================================================
+    Properties
+    {
+        _MainTex ("Texture", 2D) = "white" {}
+        _Color ("Color", Color) = (1, 1, 1, 1)
+    }
+
+    // ====================================================
+    // 2. SUBSHADER - Render Pipeline Configuration
+    // ====================================================
+    SubShader
+    {
+        Tags { "RenderType"="Opaque" }
+        LOD 100
+
+        // ====================================================
+        // 3. PASS - Contains the shader program code
+        // ====================================================
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma multi_compile_fog
+
+            #include "UnityCG.cginc"
+
+            // Global Uniforms
+            sampler2D _MainTex;
+            fixed4 _Color;
+
+            // ====================================================
+            // 4. DATA STRUCTURES (Vertex Input / Output)
+            // ====================================================
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                UNITY_FOG_COORDS(1)
+            };
+
+            // ====================================================
+            // 5. VERTEX SHADER STAGE
+            // ====================================================
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                UNITY_TRANSFER_FOG(o, o.vertex);
+                return o;
+            }
+
+            // ====================================================
+            // 6. FRAGMENT SHADER STAGE
+            // ====================================================
+            fixed4 frag (v2f i) : SV_Target
+            {
+                fixed4 col = tex2D(_MainTex, i.uv) * _Color;
+                UNITY_APPLY_FOG(i.fogCoord, col);
+                return col;
+            }
+            ENDCG
+        }
+    }
+
+    // ====================================================
+    // 7. SHADER FALLBACK
+    // ====================================================
+    FallBack "Diffuse"
+}</code></pre>
+        <div class="atlas-section-break" data-index="// SECTION"></div>
+
+<h2 id="shader-architecture-technical-reference">02 Shader Architecture Technical Reference</h2>
+        <div class="atlas-notice">
+          <span class="atlas-notice__header">[ 3.0 Component of the shader: Pass ]</span>
+          <p>A Pass refers to a Render Pass literally. For those who have worked with rendering in 3D software (e.g., Maya or Blender), this concept will be easier to understand since when an image is being processed, it can generate different layers or passes separately (e.g., color Pass, light Pass, occlusion Pass, etc.) and thus obtain a separate composition in different layers.<br>
+          <strong>!Each Pass renders one object at a time:</strong> That is, if we have two passes in our shader, the object will be rendered twice on the GPU and the equivalent of that would be two draw calls.</p>
+        </div>
+        <h3 id="cgprogram-endcg">CGPROGRAM / ENDCG</h3>
+        <p>Shader will appear with the declaration of <code>HLSLPROGRAM</code> instead of <code>CGPROGRAM</code> since HLSL is currently the official graphics programming language (in fact, Shader Graph is based on it). Anyway, we can update our shader simply by replacing the word CGPROGRAM for HLSLPROGRAM and ENDCG for ENDHLSL, and then our program will compile both in Built-in RP as in Universal RP and High Definition RP.</p>
+        <h3 id="hlsl-pragma">HLSL Pragma</h3>
+        <p>The pragma is a directive that is used to give instructions to the compiler. In the case of shaders, it is used to indicate the vertex and fragment functions that we will use in shader. Their function is to help our shader recognize and compile certain functions that could not otherwise be recognized as such.</p>
+        <ul>
+          <li><code>#pragma vertex vert</code> — indicates the vertex function that we will use in the shader.</li>
+          <li><code>#pragma fragment frag</code> — indicates the fragment function that we will use in the shader.</li>
+        </ul>
+        <p><strong>Multi-compile Pragma Variant Flags:</strong></p>
+        <ul>
+          <li><code>#pragma multi_compile_fwdbase</code> — indicates that the shader will be compiled in the forward base pass.</li>
+          <li><code>#pragma multi_compile_fwdadd</code> — indicates that the shader will be compiled in the forward add pass.</li>
+          <li><code>#pragma multi_compile_fwdaddfullshadows</code> — indicates that the shader will be compiled in the forward add full shadows pass.</li>
+          <li><code>#pragma multi_compile_fwdaddshadow</code> — indicates that the shader will be compiled in the forward add shadow pass.</li>
+          <li><code>#pragma multi_compile_fwdaddshadowcaster</code> — indicates that the shader will be compiled in the forward add shadow caster pass.</li>
+          <li><code>#pragma multi_compile_fwdaddshadowcasterfullshadows</code> — indicates that the shader will be compiled in the forward add shadow caster full shadows pass.</li>
+          <li><code>#pragma multi_compile_fog</code> — indicates that the shader will be compiled with fog.</li>
+        </ul>
+        <h3 id="hlsl-include">HLSL Include</h3>
+        <p>The include is a directive that is used to include a file in the shader. This is useful when we want to use a function that is already defined in another file and we do not want to write it again in the current shader. In Unity, the most common include is “UnityCG.cginc”, which contains a series of functions that are used in the shader (e.g. lighting, texture sampling, etc.).</p>
+        <ul>
+          <li><code>UNITY_FOG_COORDS(texcoordindex)</code></li>
+          <li><code>UnityObjectToClipPos(inputVertex)</code></li>
+          <li><code>TRANSFORM_TEX(tex, name)</code></li>
+          <li><code>UNITY_TRANSFER_FOG(outputStruct, clipSpacePos)</code></li>
+          <li><code>UNITY_APPLY_FOG(inputCoords, colorOutput)</code></li>
+        </ul>
+        <p>Another defined function that we can find in UnityCG.cginc is <code>UNITY_PI</code>, which equals <code>3.14159265359f</code>. The latter is not included in our default shader because it is used only in specific cases (e.g. when calculating a triangle or Sphere).</p>
+        <blockquote>
+          <strong>Review Path:</strong><br>
+          Windows: <code>{unity install path}/Data/CGIncludes/UnityCG.cginc</code>
+        </blockquote>
+        <p>We can create our own directives using ".cginc" files, which will help us to organize our code and make it more readable. For example, we can create a file called "MyFunctions.cginc" and inside it, we can define the functions that we will use in our shader.</p>
+        <h3 id="hlsl-vertex-input-vertex-output">HLSL vertex input &amp; vertex output</h3>
+        <p>A data type that we will use frequently in the creation of our shaders is “struct”. For those who know the C language, a struct is a compound data type declaration, which defines a grouped list of multiple elements of the same type and allows access to different variables through a single pointer. We will use structs to define both inputs and outputs in our shader.</p>
+        <p>Its syntax is as follows:</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">struct name
+{
+    vector[n] name : SEMANTIC[n];
+};</code></pre>
+        <ul>
+          <li><strong>Appdata:</strong> Corresponds to the “vertex input” the place where we store our object properties (e.g. position of vertices, normals, etc.) as an “entrance” to take them to the “vertex shader stage”.</li>
+          <li><strong>v2f:</strong> Refers to the “vertex output”. The rasterized properties to take them to the “fragment shader stage”.</li>
+        </ul>
+        <p>A semantic is a chain connected to a shader input or output that transmits usage information of the intended use of a parameter:</p>
+        <ul>
+          <li><code>POSITION[n]</code> — Vertex position semantics.</li>
+          <li><code>TEXCOORD[n]</code> — allows access to the UV coordinates of our primitive and has up to four dimensions (x, y, z, w).</li>
+          <li><code>TANGENT[n]</code> — gives access to the tangents of our primitive. If we want to create normal maps, it will be necessary to work with a semantic that has up to four dimensions as well.</li>
+          <li><code>NORMAL[n]</code> — we can access the normals of our primitive, and it has up to four dimensions. We must use this semantic if we want to work with lighting within our shader.</li>
+          <li><code>COLOR[n]</code> — Vertex color allocation channels.</li>
+          <li><code>BINORMAL[n]</code> — corresponds to the binormal of the vertices.</li>
+        </ul>
+        <h3 id="system-value-sv-semantics-matrix">System Value (SV) Semantics Matrix</h3>
+        <table class="atlas-table">
+          <thead>
+            <tr>
+              <th>Semantic</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>SV_POSITION</code></td>
+              <td>Corresponds to the position of the vertices in screen space.</td>
+            </tr>
+            <tr>
+              <td><code>SV_TARGET</code></td>
+              <td>Corresponds to the target of the vertices (Render Target / Frame Buffer color output).</td>
+            </tr>
+            <tr>
+              <td><code>SV_DEPTH</code></td>
+              <td>Corresponds to the depth of the vertices.</td>
+            </tr>
+            <tr>
+              <td><code>SV_COVERAGE</code></td>
+              <td>Corresponds to the coverage of the vertices.</td>
+            </tr>
+            <tr>
+              <td><code>SV_CLIPDISTANCE</code></td>
+              <td>Corresponds to the clipping distance of the vertices.</td>
+            </tr>
+            <tr>
+              <td><code>SV_STENCILREF</code></td>
+              <td>Corresponds to the stencil reference of the vertices.</td>
+            </tr>
+            <tr>
+              <td><code>SV_VERTEXID</code></td>
+              <td>Corresponds to the vertex ID.</td>
+            </tr>
+            <tr>
+              <td><code>SV_PRIMITIVEID</code></td>
+              <td>Corresponds to the primitive ID.</td>
+            </tr>
+            <tr>
+              <td><code>SV_INSTANCEID</code></td>
+              <td>Corresponds to the instance ID.</td>
+            </tr>
+            <tr>
+              <td><code>SV_ISFRONTFACE</code></td>
+              <td>Corresponds to the front face of the vertices.</td>
+            </tr>
+            <tr>
+              <td><code>SV_SAMPLEINDEX</code></td>
+              <td>Corresponds to the sample index of the vertices.</td>
+            </tr>
+            <tr>
+              <td><code>SV_DISPATCHTHREADID</code></td>
+              <td>Corresponds to the dispatch thread ID.</td>
+            </tr>
+            <tr>
+              <td><code>SV_GROUPID</code></td>
+              <td>Corresponds to the group ID.</td>
+            </tr>
+            <tr>
+              <td><code>SV_GROUPINDEX</code></td>
+              <td>Corresponds to the group index.</td>
+            </tr>
+            <tr>
+              <td><code>SV_GROUPTHREADID</code></td>
+              <td>Corresponds to the group thread ID.</td>
+            </tr>
+            <tr>
+              <td><code>SV_GROUPTHREADFLATTENED</code></td>
+              <td>Corresponds to the group thread flattened.</td>
+            </tr>
+            <tr>
+              <td><code>SV_RENDERTARGETARRAYINDEX</code></td>
+              <td>Corresponds to the render target array index.</td>
+            </tr>
+            <tr>
+              <td><code>SV_VIEWPORTARRAYINDEX</code></td>
+              <td>Corresponds to the viewport array index.</td>
+            </tr>
+          </tbody>
+        </table>
+        <h3 id="cg-hlsl-vertex-shader-stage">Cg / HLSL vertex shader stage</h3>
+        <p>The vertex shader corresponds to a rendering pipeline’s programmable stage, where the vertices are transformed from a 3D space to a two-dimensional projection on the screen. Its smallest unit of calculation corresponds to an independent vertex.</p>
+        <p>"vert" is the name of the function that we will use to transform the vertices which corresponds to the vertex shader stage. Vertex shader was declared as such in the <code>#pragma vertex</code>.</p>
+        <p>This Shader in an Unlit type means it doesn't have light it includes a function for the vertex shader and another for the fragment shader <code>#pragma fragment frag</code>. It is essential to mention this since Unity provides a quick way to write shaders in the form of “Surface Shader” (surf) that generates Cg code automatically, exclusively for materials that are affected by lighting.</p>
+        <p>The first operation that occurs within the vertex shader stage is the transformation of the object vertices from object-space to clip-space through the “UnityObjectToClipPos” method. Let’s remember that our objects are within a three-dimensional space in the scene, and we must transform those coordinates into a two-dimensional projection of pixels on the screen. That transformation occurs precisely within the “UnityObjectToClipPos” function.</p>
+        <p>This function multiplies the matrix of the current model (unity_ObjectToWorld) by the factor of the multiplication between the current view and the projection matrix (UNITY_MATRIX_VP):</p>$$UnityObjectToClipPos = mul(\text{UNITY\_MATRIX\_VP}, mul(\text{unity\_ObjectToWorld}, float4(\text{pos}, 1.0)))$$
+        <h3 id="cg-hlsl-fragment-shader-stage">Cg / HLSL fragment shader stage</h3>
+        <p>Our next and last function in the Pass corresponds to the fragment shader stage that appears in our shader with the name “frag”. The reason we can tell that frag is the function of the fragment shader stage is because it has been declared as such in the <code>#pragma fragment</code>.</p>
+        <p>The word “fragment” refers to a pixel on the screen; to an individual fragment or to a group that together cover an object area. This means that the fragment shader stage will process every pixel on the computer screen concerning the object we are viewing.</p>
+        <p>This shader is currently written in Cg, so it will only compile in Built-in RP. If we want our shader to compile both in Universal RP and High Definition RP, we will have to change this data type for “half4 or float4”, otherwise our program could generate an error.</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// Cg language architecture configuration
+fixed4 frag (v2f i) : SV_Target { … }
+
+// HLSL language architecture configuration
+half4 frag (v2f i) : SV_Target { … }</code></pre>
+        <p>Unlike the vertex shader stage, this function has an output called “SV_Target”, which allows us to render our scene in an intermediate buffer (render target) instead of sending the data to the Frame Buffer. In previous versions of Direct3D (version 9 and lower), the color output in the fragment shader appeared with the <code>COLOR</code> semantic. However, in modern GPUs (version 10 onwards), this semantics is updated to <code>SV_Target</code>, which means “system value target”. It can apply additional effects to the image before projecting them on the computer screen.</p>
+        <p>Inside the fragment shader stage we can find a fixed4 vector type called “col” which is the same as the tex2D function, where, as an argument, it receives the _MainTex texture and UV coordinate input. Basically what this operation does is store a texture within the col vector.</p>
+        <h3 id="data-types-precision-optimization">Data Types Precision &amp; Optimization</h3>
+        <ul>
+          <li><strong>“Float” (Cg and HLSL):</strong> A high-precision data type, it is 32 bit and generally used in calculating positions in world-space, texture coordinates (UV), or scalar calculations involving complex functions such as trigonometry or exponentiation.</li>
+          <li><strong>“Half” (Cg and HLSL):</strong> Half-precision, is 16 bit and is mostly used in the calculation of low magnitude vectors, directions, object-space positions, and high dynamic range colors.</li>
+          <li><strong>“Fixed” (Cg):</strong> Low precision, it is only 11 bits and is mainly used in the calculation of simple operations (e.g. basic color storage).</li>
+        </ul>
+        <p><strong>Note:</strong> A high-precision data type has more decimals, therefore, the GPU will take longer to calculate it, increasing times and generating heat. It is essential to use vectors and/or variables in their required data type, thus we can optimize our program, reducing the graphic load on the GPU.</p>
+        <p>“Sampler” refers to the sampling state of a texture. Within this type of data, we can store a texture and its UV coordinates. Scalar values are real number integers or floating-point numbers (float, half, fixed, etc.) and vectors are a set of scalar values (float2, half3, fixed4, etc.). Matrix types are used mainly for shearing, rotation and changes of vertex positions:</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// three rows and three columns matrix execution layout
+float3x3 name = float3x3(
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1
+);
+
+// two rows and two columns matrix execution layout
+half2x2 name = half2x2(
+    1, 0,
+    0, 1
+);
+
+// four rows and four columns matrix execution layout
+fixed4x4 name = fixed4x4(
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+);</code></pre>
+        <p>The data type “sampler” allows us to store both the texture and the sampling status in a single variable:</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// declare the _MainTex texture as a global variable
+Texture2D _MainTex;
+// declare the _MainTex sampler as a global variable
+SamplerState sampler_MainTex;
+
+half4 frag(v2f i) : SV_Target {
+    // inside the col vector sample the texture in UV coordinates.
+    half4 col = _MainTex.Sample(sampler_MainTex, i.uv);
+    return col;
+}</code></pre>
+        <p>The above process can be optimized by simply using a unified legacy structural macro assignment statement:</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// declare the sampler for _MainTex
+sampler2D _MainTex;
+
+half4 frag(v2f i) : SV_Target {
+    // sample the texture in UV coordinates using the function tex2D().
+    half4 col = tex2D(_MainTex, i.uv);
+    return col;
+}</code></pre>
+        <h3 id="intrinsic-functions-reference-matrix">Intrinsic Functions Reference Matrix</h3>
+        <table class="atlas-table">
+          <thead>
+            <tr>
+              <th>Function</th>
+              <th>Description Evaluation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>abs(x)</code></td>
+              <td>returns the absolute value of a scalar or vector.</td>
+            </tr>
+            <tr>
+              <td><code>ceil(x)</code></td>
+              <td>returns the smallest integer value greater than or equal to the input value.</td>
+            </tr>
+            <tr>
+              <td><code>clamp(x, min, max)</code></td>
+              <td>restricts the value of a scalar or vector to a range.</td>
+            </tr>
+            <tr>
+              <td><code>cos(x)</code></td>
+              <td>returns the cosine of a scalar or vector.</td>
+            </tr>
+            <tr>
+              <td><code>sin(x)</code></td>
+              <td>returns the sine of a scalar or vector.</td>
+            </tr>
+            <tr>
+              <td><code>tan(x)</code></td>
+              <td>returns the tangent of a scalar or vector.</td>
+            </tr>
+            <tr>
+              <td><code>exp(x)</code></td>
+              <td>returns the exponential value of a scalar or vector.</td>
+            </tr>
+            <tr>
+              <td><code>exp2(x)</code></td>
+              <td>returns the exponential value of a scalar or vector in base 2.</td>
+            </tr>
+            <tr>
+              <td><code>floor(x)</code></td>
+              <td>returns the largest integer value less than or equal to the input value.</td>
+            </tr>
+            <tr>
+              <td><code>step(edge, x)</code></td>
+              <td>returns 0.0 if the value is less than the edge, and 1.0 if the value is greater than or equal to the edge.</td>
+            </tr>
+            <tr>
+              <td><code>smoothstep(min, max, x)</code></td>
+              <td>returns a smooth interpolation between 0.0 and 1.0 when the value is between the minimum and maximum values.</td>
+            </tr>
+            <tr>
+              <td><code>frac(x)</code></td>
+              <td>returns the fractional part of a scalar or vector.</td>
+            </tr>
+            <tr>
+              <td><code>length(v)</code></td>
+              <td>returns the length of a vector.</td>
+            </tr>
+            <tr>
+              <td><code>lerp(a, b, t)</code></td>
+              <td>returns the linear interpolation between two values.</td>
+            </tr>
+            <tr>
+              <td><code>min(a, b)</code></td>
+              <td>returns the minimum value between two values.</td>
+            </tr>
+            <tr>
+              <td><code>max(a, b)</code></td>
+              <td>returns the maximum value between two values.</td>
+            </tr>
+            <tr>
+              <td><code>pow(x, y)</code></td>
+              <td>returns the value of the first parameter raised to the power of the second parameter.</td>
+            </tr>
+          </tbody>
+        </table>
+
+<h2 id="unity-render-pipeline-fundamentals">03 Unity Render Pipeline Fundamentals</h2>
+        <p>Unity utilizes three distinct rendering architectures, each tailored to different performance requirements, hardware targets, and pipeline capabilities.</p>
+        <h3 id="key-unity-rendering-architectures">Key Unity Rendering Architectures</h3>
+        <ul>
+          <li><strong>Built-In Render Pipeline (BIRP):</strong> The legacy rendering system using Cg/HLSL. It relies on <code>CGPROGRAM</code> blocks and includes <code>UnityCG.cginc</code>. Best suited for legacy projects or older mobile hardware where optimization must be manually tuned.</li>
+          <li><strong>Universal Render Pipeline (URP):</strong> The modern, highly scalable replacement for BIRP. It requires <code>HLSLPROGRAM</code> blocks and utilizes modern HLSL includes (such as <code>Core.hlsl</code>). Features include a single-pass forward renderer, a dedicated 2D Renderer, and native Shader Graph support. Highly recommended for cross-platform deployments spanning mobile, PC, and consoles.</li>
+          <li><strong>High Definition Render Pipeline (HDRP):</strong> A physically-based rendering (PBR) pipeline built specifically for high-end fidelity. It heavily utilizes compute shaders, advanced lighting models, and volumetric effects. Best suited for AAA-grade visual productions on high-performance PC and console hardware.</li>
+        </ul>
+        <h3 id="pipeline-comparison-table">Pipeline Comparison Table</h3>
+        <table class="atlas-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>BIRP</th>
+              <th>URP</th>
+              <th>HDRP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Shader Language</strong></td>
+              <td>Cg / HLSL</td>
+              <td>HLSL</td>
+              <td>HLSL</td>
+            </tr>
+            <tr>
+              <td><strong>Base Include File</strong></td>
+              <td><code>UnityCG.cginc</code></td>
+              <td><code>Core.hlsl</code></td>
+              <td><code>Common.hlsl</code></td>
+            </tr>
+            <tr>
+              <td><strong>Lightmap Support</strong></td>
+              <td>✓</td>
+              <td>✓</td>
+              <td>✓</td>
+            </tr>
+            <tr>
+              <td><strong>Deferred Rendering</strong></td>
+              <td>✓</td>
+              <td>Limited</td>
+              <td>✓</td>
+            </tr>
+            <tr>
+              <td><strong>Shader Graph Support</strong></td>
+              <td>No</td>
+              <td>✓</td>
+              <td>✓</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="atlas-section-break" data-index="// SECTION"></div>
+
+<h2 id="gpu-optimization-essentials-for-shaders">04 GPU Optimization Essentials for Shaders</h2>
+        <p>Writing efficient shader code requires understanding how modern GPU hardware executes logic at the silicon level. Minor syntax adjustments can drastically alter instruction latency and register pressure.</p>
+        <h3 id="math-operations-instruction-latency">Math Operations &amp; Instruction Latency</h3>
+        <p>GPUs are optimized for parallel multiply-accumulate (MAC) operations, which form the structural building blocks of linear algebra:</p>
+        <ul>
+          <li><strong>Multiplication:</strong> Implemented directly in dedicated ALU hardware silicon, executing in 1–2 cycles.</li>
+          <li><strong>Division:</strong> Requires iterative approximation algorithms (such as the Newton-Raphson method) or internal hardware lookup tables. This introduces significant pipeline latency, taking 5–20 cycles.</li>
+        </ul>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// BAD: Division is expensive and stalls the ALU pipeline
+float result = value / 2.0;
+
+// GOOD: Use multiplication by a precalculated reciprocal literal
+float result = value * 0.5;</code></pre>
+        <h4>When to Actually Use Division</h4>
+        <p>While multiplication should always be favored, division is structurally unavoidable under the following mathematical conditions:</p>
+        <ul>
+          <li>
+            <strong>Dynamic Divisors:</strong> When values alter dynamically per-fragment or per-vertex, making reciprocal precomputation impossible:
+            <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">float t = saturate(time / duration);</code></pre>
+          </li>
+          <li>
+            <strong>Reciprocal Interdependence:</strong> When the divisor is derived from dynamic evaluations:
+            <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">float specular = energy / (distance * distance);</code></pre>
+          </li>
+          <li>
+            <strong>Numerical Stability & Precision Preservation:</strong> Normalizing operations require division to maintain bounds accurately without risking structural clipping:
+            <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">float3 normalized = vector / length(vector);</code></pre>
+          </li>
+        </ul>
+        <h3 id="data-type-precision-optimization">Data Type Precision Optimization</h3>
+        <p>Choosing the correct variable precision directly influences register allocation and memory bandwidth usage on mobile and embedded architectures:</p>
+        <ul>
+          <li><code>float4 position;</code> — 32-bit high precision. Mandatory for world-space coordinates, transform matrices, and complex texture coordinates (UVs).</li>
+          <li><code>half4 color;</code> — 16-bit medium precision. Optimal for lighting vectors, localized directions, normal maps, and high dynamic range (HDR) colors.</li>
+          <li><code>fixed4 light;</code> — 11-bit low precision. Legacy data type (Cg only) restricted to simple low-magnitude color math and basic UI masks. In modern HLSL pipelines, this automatically maps to <code>min16float</code> or <code>half</code>.</li>
+        </ul>
+        <h3 id="texture-sampling-optimizations">Texture Sampling Optimizations</h3>
+        <ul>
+          <li><strong>Explicit Level-of-Detail:</strong> Prefer utilizing <code>tex2Dlod</code> with explicit mipmap levels for sampling distant objects, or inside loops/vertex functions where automatic derivative calculation is disabled.</li>
+          <li><strong>Texture Compression:</strong> Target standardized hardware compression profiles such as ASTC (for cross-platform mobile architectures) or ETC2 to optimize cache locality.</li>
+          <li><strong>Lookup Minimization:</strong> Eliminate redundant sample calls in fragment stages; instead, pack scalar masks into combined vector channels (e.g., RGBA packing for Metallic, Roughness, and Ambient Occlusion).</li>
+        </ul>
+        <h3 id="branching-efficiency-conditional-overhead">Branching Efficiency &amp; Conditional Overhead</h3>
+        <p>Dynamic branching in a fragment shader causes divergent execution paths within a warp/wavefront, forcing the GPU to execute both paths sequentially while masking off threads.</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// BAD: Dynamic branch causing execution divergence in fragment stages
+if (distance &gt; threshold) {
+    // Code path A
+} else {
+    // Code path B
+}
+
+// GOOD: Mathematical interpolation eliminating physical branch execution
+float lerpFactor = saturate(distance / threshold);
+return lerp(a, b, lerpFactor);</code></pre>
+        <h3 id="srp-batcher-compatibility">SRP Batcher Compatibility</h3>
+        <p>To leverage the Scriptable Render Pipeline (SRP) Batcher and eliminate CPU-side draw call overhead, all material properties must be grouped within a standardized constant buffer block named <code>UnityPerMaterial</code>.</p>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">// Proper constant buffer declaration for SRP Batcher compliance
+CBUFFER_START(UnityPerMaterial)
+    float4 _MainTex_ST;
+    half4 _Color;
+CBUFFER_END</code></pre>
+        <ul>
+          <li>Keep all custom material parameters restricted to a single unified <code>CBUFFER</code> block.</li>
+          <li>Declare parameters using the minimum necessary data precision to conserve GPU constant buffer cache slots.</li>
+        </ul>
+        <h3 id="vectorization-tips">Vectorization Tips</h3>
+        <p>Modern GPUs run vectorized instructions efficiently. Consolidate your linear algebra into parallel vector calculations rather than component-by-component scalar operations.</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// GOOD: Unified parallel vector math (processed simultaneously by SIMD hardware)
+float3 result = a * b + c;
+
+// Swizzling: Reconstructing component layouts efficiently via native routing
+float4 color = texture.rrrg; // Maps channels natively to create float4(r, r, r, g)</code></pre>
+        <h3 id="manual-mipmap-calculations">Manual Mipmap Calculations</h3>
+        <p>When implementing custom screen-space mappings or procedural patterns, automatic mipmap generation fails due to missing texture coordinates. Screen-space partial derivatives must be evaluated manually:</p>
+        <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// Manual mip selection based on screen-space coordinate differentials
+float2 derivatives = ddx(uv) + ddy(uv);
+float mip = 0.5 * log2(max(dot(derivatives, derivatives), 1e-6));
+
+// Sample texture with explicitly resolved mip level
+color = tex2Dlod(_MainTex, float4(uv, 0, mip));</code></pre>
+        <h3 id="shader-variant-reduction">Shader Variant Reduction</h3>
+        <p>Shaders generate massive keyword combinations (permutations) that can explode compile times and memory footprints. Differentiate keyword behavior strategically:</p>
+        <ul>
+          <li><code>#pragma multi_compile _ _MAIN_LIGHT_SHADOWS</code> — Compiles and includes all variations in the build. Required for engine-driven runtime global pipeline states.</li>
+          <li><code>#pragma shader_feature _ALPHATEST_ON</code> — Strips unused permutations out of the final build if no active materials utilize the keyword state, saving disk space and memory footprint.</li>
+        </ul>
+        <h3 id="debugging-profiling">Debugging &amp; Profiling</h3>
+        <ul>
+          <li><strong>Frame Debugger:</strong> Use Unity's native profiling tool to inspect active render states, evaluate drawing order draw-by-draw, analyze render target binding patterns, and isolate state change hazards.</li>
+          <li>
+            <strong>Platform-Specific Optimization Blocks:</strong> Condition target compilation blocks based on destination hardware profiles:
+            <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">#if defined(SHADER_API_MOBILE)
+    // Simplified execution paths for low-bandwidth mobile units
+#elif defined(SHADER_API_D3D11)
+    // Full high-end feature set utilizing PC hardware capability
+#endif</code></pre>
+          </li>
+          <li>
+            <strong>Precision Emulation & Safety Checking:</strong> Test lower precision artifacts manually on desktop configurations by masking floating-point bitwise patterns, and detect division-by-zero anomalies:
+            <pre class="atlas-code-block" data-language="cpp"><code class="language-cpp">// Simulate half-precision behavior on a 32-bit float register
+float simulatedHalf = asfloat(asuint(value) & 0xFFFF0000);
+
+// Check for unhandled NaN (Not-a-Number) values
+bool isInvalid = isnan(value);</code></pre>
+          </li>
+        </ul>
+
+<h2 id="cross-pipeline-shader-adaptation-built-in-urp-hdrp">05 Cross-Pipeline Shader Adaptation (Built-in, URP, HDRP)</h2>
+        <p>Porting legacy shaders into Scriptable Render Pipelines (SRP) requires rewriting architectural layout blocks. Modern pipelines abandon old Cg compiler abstractions in favor of direct, cross-platform HLSL structures.</p>
+        <h3 id="urp-shader-implementation-example">URP Shader Implementation Example</h3>
+        <pre class="atlas-code-block" data-language="glsl"><code class="language-glsl">Shader "URPExamples/SimpleColor"
+{
+    Properties
+    {
+        _BaseColor("Color", Color) = (1,1,1,1)
+        _BaseMap("Texture", 2D) = "white" {}
+    }
+
+    SubShader
+    {
+        Tags
+        {
+            "RenderType"="Opaque"
+            "RenderPipeline"="UniversalPipeline"
+        }
+
+        Pass
+        {
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            // Data structure for Vertex Input
+            struct Attributes
+            {
+                float4 positionOS   : POSITION;
+                float2 uv           : TEXCOORD0;
+            };
+
+            // Data structure for Vertex Output (Rasterizer Input)
+            struct Varyings
+            {
+                float4 positionHCS  : SV_POSITION;
+                float2 uv           : TEXCOORD0;
+            };
+
+            // Textures and Samplers API macros
+            TEXTURE2D(_BaseMap);
+            SAMPLER(sampler_BaseMap);
+
+            // SRP Batcher constant buffer configuration
+            CBUFFER_START(UnityPerMaterial)
+                float4 _BaseMap_ST;
+                half4 _BaseColor;
+            CBUFFER_END
+
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+                // Transform positions from object space to homogenous clip space
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
+                return OUT;
+            }
+
+            half4 frag(Varyings IN) : SV_Target
+            {
+                // Core macro-based sampling
+                half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
+                return color * _BaseColor;
+            }
+            ENDHLSL
+        }
+    }
+}</code></pre>
+        <div class="atlas-section-break" data-index="// SECTION"></div>
+        <h2 id="key-pipeline-differences-architectural-mappings">06 Key Pipeline Differences &amp; Architectural Mappings</h2>
+        <p>When migrating shaders across pipelines, use the following structural conversions for include files, space transformations, and sampling macros:</p>
+        <h3 id="structural-include-files">Structural Include Files</h3>
+        <p>Modern render pipelines break up global dependencies into target-specific shader libraries to avoid bloating memory allocations:</p>
+        <ul>
+          <li><strong>BIRP (Built-in):</strong> Relies on <code>UnityCG.cginc</code> or <code>AutoLight.cginc</code> for light and shadows calculations.</li>
+          <li><strong>URP:</strong> Uses <code>Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl</code> for structural transforms, plus specialized files like <code>Lighting.hlsl</code> or <code>Shadows.hlsl</code>.</li>
+          <li><strong>HDRP:</strong> Demands <code>Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl</code> and <code>Packages/com.unity.render-pipelines.high-definition/ShaderLibrary/ShaderVariables.hlsl</code> to interface with advanced volumetric, area lighting, and physically-based rendering data buffers.</li>
+        </ul>
+        <h3 id="matrix-space-operations">Matrix &amp; Space Operations</h3>
+        <p>Modern hardware pipelines standardize vertex operations using specific, explicitly named functions rather than combined utility macros:</p>
+        <ul>
+          <li><strong>BIRP:</strong> <code>UnityObjectToClipPos(v.vertex)</code></li>
+          <li><strong>URP / HDRP:</strong> <code>TransformObjectToHClip(positionOS.xyz)</code> (Object Space to Homogeneous Clip Space).<br>
+          <em>Note:</em> SRP requires passing a 3-component <code>float3</code> variable containing raw geometric position coordinates, discarding the explicit 4th component translation vector ($w$) prior to internal matrix multiplications.</li>
+        </ul>
+        <h3 id="texture-sampling-architectures">Texture Sampling Architectures</h3>
+        <p>To preserve compile-time API compatibility across platform backends (such as Vulkan, Metal, and Direct3D), explicit texture sampling macros must replace legacy <code>sampler2D</code> layouts:</p>
+        <table class="atlas-table">
+          <thead>
+            <tr>
+              <th>Pipeline Stage</th>
+              <th>Legacy System (BIRP)</th>
+              <th>Modern SRP Architecture (URP / HDRP)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Global Allocation</strong></td>
+              <td><code>sampler2D _BaseMap;</code></td>
+              <td><code>TEXTURE2D(_BaseMap);<br>
+              SAMPLER(sampler_BaseMap);</code></td>
+            </tr>
+            <tr>
+              <td><strong>Fragment Sample</strong></td>
+              <td><code>fixed4 col = tex2D(_BaseMap, uv);</code></td>
+              <td><code>half4 col = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);</code></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="atlas-section-break" data-index="x5"></div>
+        <div class="atlas-section-break" data-index="// SECTION"></div>
+
+<h2 id="references-technical-sources">07 References &amp; Technical Sources</h2>
+        <p>Below is the verified verification index of external engineering resources, documentation modules, and research papers utilized throughout this technical pipeline review:</p>
+        <ul class="atlas-references-list">
+          <li>
+            <strong>[ NVIDIA Technical Paper ]</strong><br>
+            Transparency or Translucency Rendering Spatially Coherent Pipelines:<br>
+            <a href="https://developer.nvidia.com/content/transparency-or-translucency-rendering" target="_blank" rel="noopener noreferrer">developer.nvidia.com/content/transparency-or-translucency-rendering</a>
+          </li>
+          <li>
+            <strong>[ Unity Core Documentation ]</strong><br>
+            High Definition Render Pipeline (HDRP) Overview & Architecture Specifications (v17.2):<br>
+            <a href="https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@17.2/manual/index.html" target="_blank" rel="noopener noreferrer">docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@17.2/manual/index.html</a>
+          </li>
+          <li>
+            <strong>[ Pipeline Debugging ]</strong><br>
+            Z-Sorting in Transparent Shaders — Depth Buffer Contention Resolution:<br>
+            <a href="https://ru.stackoverflow.com/questions/869171/%D0%9F%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0-z-sorting%D0%B0-%D0%B2-transparent-%D1%88%D0%B5%D0%B9%D0%B4%D0%B5%D1%80%D0%B0%D1%85" target="_blank" rel="noopener noreferrer">ru.stackoverflow.com/questions/869171/Проблема-z-sortingа-в-transparent-шейдерах</a>
+          </li>
+          <li>
+            <strong>[ Hardware Rasterization ]</strong><br>
+            The Stencil Buffer Execution and Matrix Masking in Unity3D:<br>
+            <a href="https://liu-if-else.github.io/stencil-buffer%27s-uses-in-unity3d/" target="_blank" rel="noopener noreferrer">liu-if-else.github.io/stencil-buffer's-uses-in-unity3d/</a>
+          </li>
+          <li>
+            <strong>[ Production Cheat Sheet ]</strong><br>
+            Unity Shaders Reference & Syntax Structural Mapping Gist:<br>
+            <a href="https://gist.github.com/Split82/d1651403ffb05e912d9c3786f11d6a44" target="_blank" rel="noopener noreferrer">gist.github.com/Split82/d1651403ffb05e912d9c3786f11d6a44</a>
+          </li>
+        </ul>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF PART // UNITY_SHADERLAB // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-glsl.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>
+  <script src="/scripts/article-page.js?v=14"></script>
+</body>
+</html>

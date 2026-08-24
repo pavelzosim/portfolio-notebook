@@ -204,10 +204,10 @@
     },
     {
       "id": "REF-001",
-      "title": "Unity ShaderLab Cheatsheet",
+      "title": "Unity ShaderLab Cheatsheet — Fundamentals & Properties",
       "kind": "reference",
       "group": "shaders",
-      "summary": "Production-oriented ShaderLab and rendering-state reference.",
+      "summary": "ShaderLab fundamentals: file anatomy, CG and HLSL execution, shader identity, Properties syntax, data types, and Inspector drawers.",
       "tags": [
         "unity",
         "shaderlab",
@@ -219,9 +219,75 @@
       "sourceUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet",
       "publicUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet",
       "slug": "unity-shaderlab-cheatsheet",
-      "imageAlt": "Unity ShaderLab Cheatsheet",
+      "imageAlt": "Unity ShaderLab Cheatsheet — Fundamentals & Properties",
       "datePublished": "",
-      "dateModified": "",
+      "dateModified": "2026-08-24",
+      "indexable": true
+    },
+    {
+      "id": "REF-002",
+      "title": "Unity ShaderLab Cheatsheet — Tags & Render States",
+      "kind": "reference",
+      "group": "shaders",
+      "summary": "A practical ShaderLab reference for SubShader tags, render queues, blending, AlphaToMask, and ColorMask across Unity pipelines.",
+      "tags": [
+        "unity",
+        "shaderlab",
+        "shaders"
+      ],
+      "image": "/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png",
+      "localPath": "/content/posts/atlas-html/unity-shaderlab-cheatsheet-render-states.html",
+      "state": "published",
+      "sourceUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-render-states",
+      "publicUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-render-states",
+      "slug": "unity-shaderlab-cheatsheet-render-states",
+      "imageAlt": "Unity ShaderLab Cheatsheet — Tags & Render States",
+      "datePublished": "",
+      "dateModified": "2026-08-24",
+      "indexable": true
+    },
+    {
+      "id": "REF-003",
+      "title": "Unity ShaderLab Cheatsheet — Depth, Stencil & Passes",
+      "kind": "reference",
+      "group": "shaders",
+      "summary": "ShaderLab depth and visibility controls: Cull, ZWrite, ZTest, stencil masking, render order, and multi-pass rendering.",
+      "tags": [
+        "unity",
+        "shaderlab",
+        "shaders"
+      ],
+      "image": "/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png",
+      "localPath": "/content/posts/atlas-html/unity-shaderlab-cheatsheet-depth-stencil-passes.html",
+      "state": "published",
+      "sourceUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-depth-stencil-passes",
+      "publicUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-depth-stencil-passes",
+      "slug": "unity-shaderlab-cheatsheet-depth-stencil-passes",
+      "imageAlt": "Unity ShaderLab Cheatsheet — Depth, Stencil & Passes",
+      "datePublished": "",
+      "dateModified": "2026-08-24",
+      "indexable": true
+    },
+    {
+      "id": "REF-004",
+      "title": "Unity ShaderLab Cheatsheet — HLSL, Pipelines & Optimization",
+      "kind": "reference",
+      "group": "shaders",
+      "summary": "Unity shader program architecture: HLSL stages, semantics, precision, intrinsic functions, render pipelines, optimization, and adaptation.",
+      "tags": [
+        "unity",
+        "shaderlab",
+        "shaders"
+      ],
+      "image": "/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png",
+      "localPath": "/content/posts/atlas-html/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization.html",
+      "state": "published",
+      "sourceUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization",
+      "publicUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet-hlsl-pipelines-optimization",
+      "slug": "unity-shaderlab-cheatsheet-hlsl-pipelines-optimization",
+      "imageAlt": "Unity ShaderLab Cheatsheet — HLSL, Pipelines & Optimization",
+      "datePublished": "",
+      "dateModified": "2026-08-24",
       "indexable": true
     },
     {

@@ -190,7 +190,8 @@ def validate_site(base_path: str, noindex: bool) -> None:
         if any(value not in document for value in required):
             raise RuntimeError(f"Incomplete post metadata: {record['slug']}")
     if not noindex:
-        if len(re.findall(r"<url>", (OUTPUT / "sitemap.xml").read_text(encoding="utf-8"))) != 43:
+        expected_sitemap_urls = len(expected_posts) + 10
+        if len(re.findall(r"<url>", (OUTPUT / "sitemap.xml").read_text(encoding="utf-8"))) != expected_sitemap_urls:
             raise RuntimeError("Unexpected sitemap URL count")
         if (OUTPUT / "content" / "posts" / "atlas-html").exists():
             raise RuntimeError("Duplicate source post routes remain in output")
