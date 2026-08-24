@@ -1,4 +1,4 @@
-name: Deploy preview to GitHub Pages
+name: Deploy production to GitHub Pages
 
 on:
   push:
@@ -26,8 +26,8 @@ jobs:
         with:
           enablement: true
 
-      - name: Build preview
-        run: python scripts/build_github_pages.py --base-path "/${{ github.event.repository.name }}" --noindex
+      - name: Build production
+        run: python scripts/build_github_pages.py --base-path "/"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

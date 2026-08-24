@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
 SITE_DIRECTORIES = ("blog", "content", "privacy", "projects", "public", "styles", "tools")
-SITE_FILES = ("index.html", "404.html", "home.css")
+SITE_FILES = ("index.html", "404.html", "home.css", "CNAME")
 TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".xml", ".txt"}
 
 
