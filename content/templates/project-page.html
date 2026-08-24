@@ -35,44 +35,77 @@
   </aside>
 
   <main id="content">
-    <header class="project-hero">
+    <header class="project-hero" id="overview">
       <p class="breadcrumb">/projects/<span data-field="id">PRJ----</span>/record.md</p>
+      <p class="project-flags"><span>PUBLIC RECORD</span><span data-field="status">LOADING</span><span data-field="id">PRJ----</span></p>
       <h1 data-field="title">Loading project record…</h1>
       <p class="project-dek" data-field="summary">Reading the local project index.</p>
-      <figure class="project-cover"><img data-project-image alt="" width="1200" height="675"></figure>
+      <figure class="project-hero-media" data-hero-video-record hidden>
+        <video data-hero-project-video controls muted preload="metadata" playsinline></video>
+        <figcaption><span>MEDIA / PROJECT REEL</span><strong data-hero-video-caption></strong></figcaption>
+      </figure>
+      <figure class="project-cover" data-project-cover><img data-project-image alt="" width="1200" height="675"></figure>
+      <dl class="project-facts">
+        <div><dt>type</dt><dd data-field="type">—</dd></div>
+        <div><dt>role</dt><dd data-field="role">—</dd></div>
+        <div><dt>environment</dt><dd data-field="environment">—</dd></div>
+        <div><dt>state</dt><dd class="record-state" data-field="status">—</dd></div>
+      </dl>
     </header>
-    <dl class="project-facts">
-      <div><dt>type</dt><dd data-field="type">—</dd></div>
-      <div><dt>role</dt><dd data-field="role">—</dd></div>
-      <div><dt>environment</dt><dd data-field="environment">—</dd></div>
-      <div><dt>state</dt><dd class="record-state" data-field="status">—</dd></div>
-    </dl>
     <article class="project-record">
-      <section id="overview"><h2><span>§ 01</span> Overview</h2><p data-field="overview"></p></section>
-      <section id="scope"><h2><span>§ 02</span> Technical scope</h2><ul data-list="scope"></ul></section>
-      <section id="constraints"><h2><span>§ 03</span> Production constraints</h2><ul data-list="constraints"></ul></section>
-      <section id="role" data-optional="role"><h2><span>§ 04</span> My role</h2><ul data-list="roleDetails"></ul></section>
-      <section id="technical" data-optional="technical"><h2><span>§ 05</span> Technical solution</h2><ul data-list="solutions"></ul><div class="project-tools" data-tools></div></section>
-      <section id="media" data-optional="media"><h2><span>§ 06</span> Media record</h2><figure class="project-reel" data-video-record><video data-project-video controls muted preload="metadata" playsinline></video><figcaption data-video-caption></figcaption></figure><div class="project-media-grid" data-media-grid></div></section>
-      <section id="outcome"><h2><span data-outcome-number>§ 07</span> Result / record</h2><ul class="project-results" data-list="results"></ul><p data-field="outcome"></p></section>
+      <section class="project-overview">
+        <header class="project-section-head"><h2><span>§ 01</span> Overview</h2><em>Project record</em></header>
+        <p data-field="overview"></p>
+      </section>
+      <section id="scope">
+        <header class="project-section-head"><h2><span>§ 02</span> Scope &amp; constraints</h2><em>Context</em></header>
+        <div class="project-two-col">
+          <div><h3>Scope</h3><ul data-list="scope"></ul></div>
+          <div id="constraints"><h3>Constraints</h3><ul data-list="constraints"></ul></div>
+        </div>
+      </section>
+      <section id="role" data-optional="role">
+        <header class="project-section-head"><h2><span>§ 04</span> My role</h2><em>Contribution</em></header>
+        <ul data-list="roleDetails"></ul>
+      </section>
+      <section id="technical" data-optional="technical">
+        <header class="project-section-head"><h2><span>§ 05</span> Technical solution</h2><em>Systems</em></header>
+        <div class="project-tools" data-tools></div><ul data-list="solutions"></ul>
+      </section>
+      <section id="media" data-optional="media">
+        <header class="project-section-head"><h2><span>§ 06</span> Media record</h2><em>Evidence / carousel</em></header>
+        <figure class="project-reel" data-video-record><video data-project-video controls muted preload="metadata" playsinline></video><figcaption data-video-caption></figcaption></figure>
+        <div class="project-carousel" data-project-carousel hidden tabindex="0" aria-label="Project media carousel">
+          <div class="project-carousel-view"><div class="project-carousel-track" data-media-track></div></div>
+          <div class="project-carousel-bar">
+            <button type="button" data-carousel-prev aria-label="Previous image">← prev</button>
+            <div><strong data-carousel-caption></strong><span data-carousel-count aria-live="polite"></span></div>
+            <button type="button" data-carousel-next aria-label="Next image">next →</button>
+          </div>
+        </div>
+      </section>
+      <section id="outcome">
+        <header class="project-section-head"><h2><span data-outcome-number>§ 07</span> Result / record</h2><em>Outcome</em></header>
+        <div class="project-metrics" data-project-metrics hidden></div>
+        <ul class="project-results" data-list="results"></ul><p data-field="outcome"></p>
+      </section>
     </article>
     <nav class="project-nav" aria-label="Adjacent projects"><a data-project-previous></a><a data-project-next></a></nav>
   </main>
 
   <aside class="meta-rail" aria-label="Project metadata">
-    <div class="meta-block"><p>[RECORD]</p><dl><dt>ID</dt><dd data-field="id">—</dd><dt>STATE</dt><dd data-field="status">—</dd><dt>LANG</dt><dd>EN</dd><dt>ENC</dt><dd>UTF-8</dd></dl></div>
-    <div class="meta-block"><p>[AUTHOR]</p><ul><li>Pavel Zosim</li><li>Technical Artist</li><li>Chișinău / UTC+3</li></ul></div>
+    <div class="meta-block"><p>Record</p><dl><dt>id</dt><dd data-field="id">—</dd><dt>type</dt><dd data-meta-type>—</dd><dt>status</dt><dd class="record-state" data-field="status">—</dd><dt>client</dt><dd data-meta-client>—</dd></dl></div>
+    <div class="meta-block"><p>Stack</p><dl data-meta-stack></dl></div>
+    <div class="meta-block"><p>Reach</p><dl data-meta-reach></dl></div>
   </aside>
 </div>
 
-<footer><span>pavelzosim / project record</span><span>CC BY-NC-ND 4.0</span><a href="#content">return 0; ↑</a></footer>
+<footer class="project-site-footer"><span data-project-footer>project record</span><span>CC BY-NC-ND 4.0</span><a href="#content">return 0; ↑</a></footer>
 <nav class="function-bar" aria-label="Keyboard commands">
-  <a class="vc-button" href="/"><kbd>F2</kbd><span>Home</span></a>
-  <a class="vc-button" href="/projects/"><kbd>F3</kbd><span>Projects</span></a>
-  <a class="vc-button" href="/#notes"><kbd>F4</kbd><span>Notes</span></a>
-  <a class="vc-button" href="/tools/"><kbd>F5</kbd><span>Tools</span></a>
-  <a class="vc-button" href="/blog/"><kbd>F6</kbd><span>Blog</span></a>
-  <a class="vc-button" href="/#about"><kbd>F7</kbd><span>About</span></a>
-  <a class="vc-button" href="/#contacts"><kbd>F8</kbd><span>Contacts</span></a>
-  <a class="vc-button" href="#content"><kbd>F10</kbd><span>Top</span></a>
+  <a class="vc-button" href="/projects/"><kbd>F10</kbd><span>Index</span></a>
+  <a class="vc-button" href="#overview"><kbd>F3</kbd><span>Overview</span></a>
+  <a class="vc-button" href="#role"><kbd>F4</kbd><span>Role</span></a>
+  <a class="vc-button" href="#media"><kbd>F5</kbd><span>Media</span></a>
+  <a class="vc-button" href="#outcome"><kbd>F6</kbd><span>Outcome</span></a>
+  <a class="vc-button" href="/#contacts"><kbd>F8</kbd><span>Contact</span></a>
 </nav>

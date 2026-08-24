@@ -1,10 +1,7 @@
 (() => {
-  const routes = { F2: '/', F3: '/projects/', F4: '/#notes', F5: '/tools/', F6: '/blog/', F7: '/#about', F8: '/#contacts' };
+  const routes = { F10: '/projects/', F3: '#overview', F4: '#role', F5: '#media', F6: '#outcome', F8: '/#contacts' };
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'F10') {
-      event.preventDefault();
-      document.querySelector('#content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else if (routes[event.key]) {
+    if (routes[event.key]) {
       event.preventDefault();
       location.assign(routes[event.key]);
     }
@@ -31,6 +28,36 @@
     document.querySelector(`[data-optional="${key}"]`)?.toggleAttribute('hidden', !visible);
     document.querySelector(`[data-nav-for="${key}"]`)?.toggleAttribute('hidden', !visible);
   };
+  const configureVideo = (video, record) => {
+    if (!video || !record?.src) return false;
+    video.src = record.src;
+    video.muted = true;
+    video.defaultMuted = true;
+    if (record.poster) video.poster = record.poster;
+    return true;
+  };
+  const activateProjectRail = () => {
+    const links = [...document.querySelectorAll('.project-outline a[href^="#"]')];
+    const records = links
+      .map((link) => ({ link, section: document.querySelector(link.getAttribute('href')) }))
+      .filter(({ section }) => section);
+    if (!records.length) return;
+    const update = () => {
+      const marker = window.scrollY + 150;
+      let current = records[0];
+      records.forEach((record) => {
+        if (record.section.offsetTop <= marker) current = record;
+      });
+      records.forEach(({ link }) => {
+        const active = link === current.link;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  };
 
   Promise.all([
     fetch('/content/templates/project-page.html', { cache: 'no-store' }),
@@ -56,6 +83,8 @@
       text('[data-field="role"]', project.role);
       text('[data-field="environment"]', project.environment);
       text('[data-field="status"]', project.status);
+      text('[data-meta-type]', project.metaType || project.type);
+      text('[data-meta-client]', project.client || 'Independent');
       text('[data-field="overview"]', project.overview);
       text('[data-field="outcome"]', project.outcome);
       list('[data-list="scope"]', project.scope);
@@ -72,37 +101,76 @@
         return item;
       }));
       tools.hidden = toolValues.length === 0;
+      const metaStack = document.querySelector('[data-meta-stack]');
+      const stackValues = project.stack && typeof project.stack === 'object' ? Object.entries(project.stack) : [];
+      metaStack.replaceChildren(...stackValues.flatMap(([labelText, valueText]) => {
+        const label = document.createElement('dt');
+        const value = document.createElement('dd');
+        label.textContent = labelText;
+        value.textContent = valueText;
+        return [label, value];
+      }));
       const hasTechnical = hasSolutions || toolValues.length > 0;
       optional('role', hasRole);
       optional('technical', hasTechnical);
 
       const videoRecord = document.querySelector('[data-video-record]');
-      const video = document.querySelector('[data-project-video]');
-      if (project.video?.src) {
-        video.src = project.video.src;
-        if (project.video.poster) video.poster = project.video.poster;
+      const heroVideoRecord = document.querySelector('[data-hero-video-record]');
+      const featuredVideo = Boolean(project.video?.featured);
+      if (project.video?.src && featuredVideo) {
+        configureVideo(document.querySelector('[data-hero-project-video]'), project.video);
+        text('[data-hero-video-caption]', project.video.caption || 'Selected production footage.');
+        heroVideoRecord.hidden = false;
+        videoRecord.hidden = true;
+        document.querySelector('[data-project-cover]').hidden = true;
+      } else if (project.video?.src) {
+        configureVideo(document.querySelector('[data-project-video]'), project.video);
         text('[data-video-caption]', project.video.caption || 'Selected production footage.');
         videoRecord.hidden = false;
+        heroVideoRecord.hidden = true;
       } else {
         videoRecord.hidden = true;
+        heroVideoRecord.hidden = true;
       }
 
-      const mediaGrid = document.querySelector('[data-media-grid]');
+      const carousel = document.querySelector('[data-project-carousel]');
+      const mediaTrack = document.querySelector('[data-media-track]');
       const mediaValues = Array.isArray(project.media) ? project.media : [];
-      mediaGrid.replaceChildren(...mediaValues.map((record, mediaIndex) => {
+      mediaTrack.replaceChildren(...mediaValues.map((record, mediaIndex) => {
         const figure = document.createElement('figure');
         const image = document.createElement('img');
-        const caption = document.createElement('figcaption');
-        const marker = document.createElement('span');
+        figure.dataset.label = record.caption || `Production record ${mediaIndex + 1}`;
         image.src = record.src;
         image.alt = record.alt || `${project.title} media record`;
         image.loading = mediaIndex < 2 ? 'eager' : 'lazy';
-        marker.textContent = `FIG ${String(mediaIndex + 1).padStart(2, '0')}`;
-        caption.append(marker, document.createTextNode(record.caption || 'Production record'));
-        figure.append(image, caption);
+        image.width = 1200;
+        image.height = 675;
+        figure.append(image);
         return figure;
       }));
-      mediaGrid.hidden = mediaValues.length === 0;
+      carousel.hidden = mediaValues.length === 0;
+      if (mediaValues.length) {
+        const caption = carousel.querySelector('[data-carousel-caption]');
+        const count = carousel.querySelector('[data-carousel-count]');
+        const previousButton = carousel.querySelector('[data-carousel-prev]');
+        const nextButton = carousel.querySelector('[data-carousel-next]');
+        let mediaIndex = 0;
+        const showMedia = (nextIndex) => {
+          mediaIndex = (nextIndex + mediaValues.length) % mediaValues.length;
+          mediaTrack.style.transform = `translateX(${-mediaIndex * 100}%)`;
+          caption.textContent = mediaValues[mediaIndex].caption || `Production record ${mediaIndex + 1}`;
+          count.textContent = `${String(mediaIndex + 1).padStart(2, '0')} / ${String(mediaValues.length).padStart(2, '0')} · object-fit contain · arrow keys`;
+        };
+        previousButton.disabled = mediaValues.length < 2;
+        nextButton.disabled = mediaValues.length < 2;
+        previousButton.addEventListener('click', () => showMedia(mediaIndex - 1));
+        nextButton.addEventListener('click', () => showMedia(mediaIndex + 1));
+        carousel.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowLeft') { event.preventDefault(); showMedia(mediaIndex - 1); }
+          if (event.key === 'ArrowRight') { event.preventDefault(); showMedia(mediaIndex + 1); }
+        });
+        showMedia(0);
+      }
       const hasMedia = Boolean(project.video?.src || mediaValues.length);
       optional('media', hasMedia);
       const outcomeIndex = 4 + [hasRole, hasTechnical, hasMedia].filter(Boolean).length;
@@ -113,6 +181,29 @@
       image.src = project.image;
       image.alt = `${project.title} project record`;
 
+      const metrics = document.querySelector('[data-project-metrics]');
+      const metricValues = Array.isArray(project.metrics) ? project.metrics : [];
+      metrics.replaceChildren(...metricValues.map((record) => {
+        const item = document.createElement('div');
+        const value = document.createElement('strong');
+        const label = document.createElement('span');
+        value.textContent = record.value;
+        label.textContent = record.label;
+        item.append(value, label);
+        return item;
+      }));
+      metrics.hidden = metricValues.length === 0;
+      const metaReach = document.querySelector('[data-meta-reach]');
+      const reachValues = project.reach && typeof project.reach === 'object' ? Object.entries(project.reach) : [];
+      metaReach.replaceChildren(...reachValues.flatMap(([labelText, valueText]) => {
+        const label = document.createElement('dt');
+        const value = document.createElement('dd');
+        label.textContent = labelText;
+        value.textContent = valueText;
+        return [label, value];
+      }));
+      text('[data-project-footer]', `project · ${project.slug}`);
+
       const previous = projects[(index - 1 + projects.length) % projects.length];
       const next = projects[(index + 1) % projects.length];
       const previousLink = document.querySelector('[data-project-previous]');
@@ -121,6 +212,7 @@
       previousLink.textContent = `← ${previous.id} / ${previous.title}`;
       nextLink.href = `/projects/${next.slug}/`;
       nextLink.textContent = `${next.id} / ${next.title} →`;
+      activateProjectRail();
     })
     .catch((error) => {
       document.querySelector('main')?.setAttribute('data-error', error.message);

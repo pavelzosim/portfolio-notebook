@@ -8,6 +8,10 @@
       "role": "Art Director / UI–UX / Technical Artist",
       "environment": "Unity / mobile XR / web / print",
       "status": "PRODUCTION",
+      "client": "NASA",
+      "metaType": "XR",
+      "stack": { "engine": "Unity", "dcc": "Houdini", "motion": "After Effects" },
+      "reach": { "web": "1.5M", "app": "325K+", "print": "350K+" },
       "image": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
       "summary": "Real-time XR educational platform for STEM, space exploration, and NASA’s Artemis program narrative.",
       "overview": "NASA First Woman combines a graphic novel, an AR-enabled mobile application, a website, and interactive educational content. The platform expands the Artemis program narrative through immersive storytelling and lets a public audience explore spaceflight concepts through augmented reality.",
@@ -57,10 +61,16 @@
         "Long-term reuse across application, web, video, and print releases"
       ],
       "video": {
-        "src": "/public/media/home/home/asset-80ec1ae328b8d595.mp4",
+        "src": "/public/media/projects/nasa-first-woman/video-nasa-first-woman-project.mp4",
         "poster": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
-        "caption": "Selected production reel — broader professional context; not a NASA-only reel."
+        "caption": "NASA First Woman — selected XR project footage.",
+        "featured": true
       },
+      "metrics": [
+        { "value": "1.5M", "label": "web page views" },
+        { "value": "325K+", "label": "app downloads" },
+        { "value": "350K+", "label": "graphic novels" }
+      ],
       "media": [
         {
           "src": "/public/media/projects/nasa-first-woman/xr-interface-overview.webp",
@@ -114,6 +124,10 @@
       "role": "Technical Artist / VFX / XR",
       "environment": "Unity / Meta Quest 3 / streamed XR",
       "status": "PRODUCTION",
+      "client": "Meta / Blumhouse",
+      "metaType": "XR cinema",
+      "stack": { "engine": "Unity", "dcc": "Houdini", "stream": "HISPlayer" },
+      "reach": { "premiere": "Meta Connect", "release": "Quest Store", "recognition": "Emmy-nominated" },
       "summary": "XR cinematic experience combining streamed 4K content, spatial audio, and synchronized real-time VFX on standalone Meta Quest hardware.",
       "overview": "The experience reimagined Blumhouse films including M3GAN and The Black Phone as immersive XR cinema. Real-time environmental effects extended beyond the streamed screen while spatial audio increased presence. It premiered at Meta Connect and was later released publicly on the Meta Quest Store.",
       "scope": [
@@ -186,6 +200,10 @@
       "role": "Art Director / Technical Artist",
       "environment": "Unity HDRP / touch display / continuous operation",
       "status": "PRODUCTION",
+      "client": "Internal R&D",
+      "metaType": "Interactive",
+      "stack": { "engine": "Unity HDRP", "dcc": "Houdini", "motion": "Cinema 4D" },
+      "reach": { "runtime": "24/7", "state": "validated", "scope": "R&D" },
       "summary": "Interactive airport-operations visualization combining a timeline-driven aircraft lifecycle, video playback, and touch-controlled camera navigation.",
       "overview": "An internal R&D interaction screen visualizing the complete aircraft lifecycle from taxi and takeoff through flight and landing. Synchronized animation, video playback, and an interactive camera created a continuous operational presentation.",
       "scope": [
@@ -269,6 +287,10 @@
       "role": "Art Director / Technical Artist / UI–UX",
       "environment": "Unity / AR / exhibition installation",
       "status": "PRODUCTION",
+      "client": "Deloitte",
+      "metaType": "AR / digital twin",
+      "stack": { "engine": "Unity", "dcc": "Houdini", "motion": "After Effects" },
+      "reach": { "visitors": "thousands", "leads": "500+", "recognition": "ADDY" },
       "summary": "AR-based digital-twin and multiplayer racing experience translating complex IoT concepts into a multi-zone public installation.",
       "overview": "The Virtual Factory was designed as an interactive sales-enablement and experiential-learning platform. It combined physical space, synchronized mobile devices, real-time visuals, and a story-driven representation of IoT concepts. The project evolved through several releases and culminated in Virtual Factory 3.0.",
       "scope": [
@@ -355,6 +377,10 @@
       "role": "Technical Artist / VFX Artist",
       "environment": "Unreal Engine / gesture recognition / stadium installation",
       "status": "PRODUCTION",
+      "client": "Quantum Fiber",
+      "metaType": "Installation",
+      "stack": { "engine": "Unreal", "input": "AI gesture", "backend": "CMS" },
+      "reach": { "engagement": "5×", "conversations": "3×", "recognition": "ADDY Gold / Silver" },
       "summary": "Gesture-driven 100-yard digital dash for live Seahawks game days, combining real-time gameplay, branded VFX, and live leaderboard feedback.",
       "overview": "The Speed Zone was a public real-time installation at Lumen Field. Fans ran in place while AI-driven webcam gesture recognition propelled a virtual player through a recreated stadium environment, with large-screen feedback and a live leaderboard.",
       "scope": [

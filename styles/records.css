@@ -62,30 +62,12 @@ body.article-record-page:not(.migrated-post) > .atlas-container::before {
 body.article-record-page:not(.migrated-post) > .atlas-container > .content-block { padding-inline: var(--notebook-record-inset, 28px); }
 body.article-record-page:not(.migrated-post) > .atlas-container #site-passport .passport-title-bar { border-bottom-color: var(--record-border); }
 
-/* Project records use the same restrained document scale as the technical notes. */
-.project-site main { background: var(--record-paper); }
-.project-hero { padding: 26px 28px 0; }
-.project-hero .breadcrumb { margin-bottom: 18px; }
-.project-hero h1 { max-width: 700px; margin-bottom: 10px; font-size: clamp(26px, 3.2vw, 34px); letter-spacing: -.025em; }
-.project-hero .project-dek { max-width: 680px; margin-bottom: 20px; font-size: 11px; line-height: 1.75; }
-.project-cover { margin-inline: -28px; }
-.project-cover img { max-height: 500px; object-fit: contain; }
-.project-facts div { padding: 10px 12px; }
-.project-record { padding: 28px 28px 38px; }
-.project-record section { padding-bottom: 26px; margin-bottom: 26px; }
-.project-record h2 { margin-bottom: 13px; }
-.project-record p { max-width: 700px; line-height: 1.75; }
-.project-record li { padding-top: 7px; padding-bottom: 7px; }
-.project-reel video { object-fit: contain; }
-
 @media (max-width: 760px) {
   .article-shellbar { min-height: 40px; padding: 8px 12px 7px; }
   .article-shellbar nav a { padding: 7px 7px 4px; }
   body.article-record-page:not(.migrated-post) { padding: 10px 0 40px; }
   body.article-record-page:not(.migrated-post) > .atlas-container { width: calc(100% - 16px); }
   body.article-record-page:not(.migrated-post) > .atlas-container > .content-block { padding-inline: 18px; }
-  .project-hero, .project-record { padding-inline: 18px; }
-  .project-cover { margin-inline: -18px; }
 }
 
 /* Long-form posts join the project-record layout after article-page.js builds its rails. */
