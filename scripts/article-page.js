@@ -36,12 +36,73 @@
     const records = Array.isArray(registry.records) ? registry.records : [];
     const recordIndex = records.findIndex((record) => currentPath.endsWith(cleanPath(record.localPath || '')));
     const record = recordIndex >= 0 ? records[recordIndex] : null;
+    const isToolRecord = Boolean(record) && (
+      ['tool', 'asset'].includes(String(record.kind || '').toLowerCase()) ||
+      ['tools', 'assets', 'python-tools'].includes(String(record.group || '').toLowerCase())
+    );
+    const currentSection = isToolRecord
+      ? { number: '02', href: '/tools/', label: 'tools index', documentPath: '~/tools/assets' }
+      : { number: '03', href: '/blog/', label: 'blog index', documentPath: '~/blog/technical-notes' };
+
+    // The Wix endpoint that used to hydrate Atlas passports is unavailable on the
+    // static site. Fill the shared article header from the local registry instead.
+    const passportHost = content.querySelector('#site-passport');
+    if (record && passportHost) {
+      if (window.CONFIG && window.render) {
+        window.CONFIG.title = record.title || window.CONFIG.title;
+        if (!window.CONFIG.tags?.length && record.tags?.length) window.CONFIG.tags = record.tags;
+        window.render();
+      } else if (!passportHost.querySelector('.passport-bp')) {
+        const passport = make('div', 'passport-bp');
+        const titleBar = make('div', 'passport-title-bar');
+        titleBar.append(
+          make('div', null, `pavelzosim : ~ # cat ${record.slug || 'article'}.log`),
+          make('div', null, `[ SYS_STATUS: ${String(record.state || 'published').toUpperCase()} ]`)
+        );
+        const title = make('div', 'passport-main-title', String(record.title || 'Article').toUpperCase());
+        const grid = make('div', 'passport-grid');
+        const projectCell = make('div', 'passport-cell');
+        const groupLine = make('div', 'passport-cell-line', record.group || 'notes');
+        groupLine.dataset.key = 'project';
+        const kindLine = make('div', 'passport-cell-line', record.kind || 'article');
+        kindLine.dataset.key = 'module';
+        projectCell.append(groupLine, kindLine);
+        const idCell = make('div', 'passport-cell');
+        const versionLine = make('div', 'passport-cell-line', 'WEB');
+        versionLine.dataset.key = 'version';
+        const idLine = make('div', 'passport-cell-line', record.id || 'LOCAL');
+        idLine.dataset.key = 'log_id';
+        idCell.append(versionLine, idLine);
+        grid.append(projectCell, idCell);
+        const metaRow = make('div', 'passport-meta');
+        const author = make('div', 'passport-meta-item', 'Pavel Zosim');
+        author.dataset.meta = 'auth';
+        const created = make('div', 'passport-meta-item', String(record.datePublished || '—').replaceAll('-', '.'));
+        created.dataset.meta = 'created';
+        metaRow.append(author, created);
+        passport.append(titleBar, title, grid, metaRow);
+        if (record.tags?.length) {
+          const tags = make('div', 'passport-tags');
+          record.tags.forEach((tag) => tags.append(makeLink(`${currentSection.href}?tag=${encodeURIComponent(tag)}`, `#${String(tag).toUpperCase()}`, 'passport-tag')));
+          passport.append(tags);
+        }
+        passportHost.append(passport);
+      }
+    }
+
+    const currentSectionHref = cleanPath(siteHref(currentSection.href));
+    document.querySelectorAll('.article-shellbar nav a').forEach((link) => {
+      link.removeAttribute('aria-current');
+      const href = cleanPath(link.getAttribute('href') || '');
+      if (href === currentSectionHref) link.setAttribute('aria-current', 'page');
+    });
 
     const workspace = make('div', 'article-workspace');
     const rail = make('aside', 'article-rail');
     rail.setAttribute('aria-label', 'Article contents');
     const main = make('main', 'article-main');
     main.id = 'content';
+    content.dataset.documentPath = currentSection.documentPath;
     const meta = make('aside', 'article-meta');
     meta.setAttribute('aria-label', 'Article metadata');
 
@@ -56,7 +117,7 @@
       const item = make('li');
       const link = makeLink(href);
       link.append(make('span', null, number), make('b', null, label));
-      if (number === '03') {
+      if (number === currentSection.number) {
         link.classList.add('active');
         link.setAttribute('aria-current', 'page');
       }
@@ -82,7 +143,7 @@
     });
     rail.append(globalTitle, globalNav, railTitle);
     if (headings.length) rail.append(outline);
-    const indexLink = makeLink('/blog/', '← blog index', 'article-index-link');
+    const indexLink = makeLink(currentSection.href, `← ${currentSection.label}`, 'article-index-link');
     rail.append(indexLink);
 
     const recordBlock = make('section', 'article-meta-block');

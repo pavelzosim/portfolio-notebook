@@ -100,7 +100,7 @@ body.article-record-page:not(.migrated-post) { min-height: 100vh; padding: 0 0 4
   border-bottom: 1px solid var(--record-border);
 }
 .article-main > .atlas-container::before {
-  content: "~/blog/technical-notes  [ DOCUMENT VIEW ]";
+  content: attr(data-document-path) "  [ DOCUMENT VIEW ]";
   display: block;
   height: 30px;
   padding: 0 18px;

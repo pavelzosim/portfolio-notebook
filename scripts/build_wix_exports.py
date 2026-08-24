@@ -218,7 +218,7 @@ def article_html(post: dict, tags: list[str]) -> str:
     <article class="atlas-container"><div class="content-block">{body}</div></article>
     <footer class="post-end"><a href="/blog/">← Blog index</a><span>Wix archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
   </main>
-  <script src="/scripts/article-page.js?v=13"></script>
+  <script src="/scripts/article-page.js?v=14"></script>
 </body>
 </html>
 '''
