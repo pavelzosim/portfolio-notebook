@@ -1,5 +1,9 @@
 (() => {
   const view = document.body.dataset.contentIndex || 'blog';
+  const loader = document.currentScript || [...document.scripts].find((script) => script.src.includes('/scripts/content-index.js'));
+  const loaderPath = new URL(loader?.src || location.href, location.href).pathname;
+  const basePath = loaderPath.replace(/\/scripts\/content-index\.js$/, '');
+  const withBase = (path) => path?.startsWith('/') && !path.startsWith('//') ? `${basePath}${path}` : path;
   const pageConfig = {
     projects: {
       file: 'PROJECTS.md',
@@ -40,8 +44,8 @@
   const registryPath = view === 'projects' ? '/content/projects/index.json' : '/content/posts/index.json';
 
   Promise.all([
-    fetch('/content/templates/content-index.html?v=2', { cache: 'no-store' }),
-    fetch(registryPath, { cache: 'no-store' })
+    fetch(`${withBase('/content/templates/content-index.html')}?v=2`, { cache: 'no-store' }),
+    fetch(withBase(registryPath), { cache: 'no-store' })
   ])
     .then(async ([templateResponse, indexResponse]) => {
       if (!templateResponse.ok) throw new Error(`Index template: ${templateResponse.status}`);
@@ -96,14 +100,14 @@
 
       const renderRecord = (record) => {
         const link = node('a', 'content-record');
-        link.href = record.localPath || record.sourceUrl;
+        link.href = record.localPath ? withBase(record.localPath) : record.sourceUrl;
         link.setAttribute('role', 'listitem');
         if (!record.localPath) link.rel = 'external';
 
         const preview = node('div', 'content-preview');
         if (record.image) {
           const image = node('img');
-          image.src = record.image;
+          image.src = withBase(record.image);
           image.alt = `${record.title} preview`;
           image.loading = 'lazy';
           preview.append(image);
