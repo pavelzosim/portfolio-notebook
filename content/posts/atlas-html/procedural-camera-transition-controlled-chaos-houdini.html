@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1"><title>Procedural Camera Transition with Controlled Chaos (Houdini) · Pavel Zosim</title><meta name="description" content="Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization."><link rel="canonical" href="https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini"><meta property="og:type" content="article"><meta property="og:title" content="Procedural Camera Transition with Controlled Chaos (Houdini)"><meta property="og:description" content="Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization."><meta property="og:url" content="https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Procedural Camera Transition with Controlled Chaos (Houdini)"><meta name="twitter:description" content="Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Procedural Camera Transition with Controlled Chaos (Houdini)", "description": "Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization.", "url": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini", "mainEntityOfPage": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini", "image": "https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif", "datePublished": "2026-02-04", "dateModified": "2026-02-04", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
+
+
+
+
+
+
+  <link rel="stylesheet" href="/styles/atlas.css?v=53"><link rel="stylesheet" href="/styles/posts.css?v=14">
+</head>
+<body class="migrated-post" id="top">
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+  <main class="post-shell">
+    <header class="post-header"><p class="post-path">~/blog/procedural-camera-transition-controlled-chaos-houdini.md</p><h1>Procedural Camera Transition with Controlled Chaos (Houdini)</h1><p class="post-summary">Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization.</p><div class="post-meta"><span>Pavel Zosim</span><span>2026-02-04</span><span>#technical-art</span><span>#houdini</span><span>#game-pipeline</span><span>#procedural-animation</span><span>#soft-body-simulation</span><span>#vellum</span><span>#procedural-workflow</span></div></header>
+    <article class="atlas-container"><div class="content-block"><div class="media-frame"><iframe src="https://www.youtube.com/embed/q25PkDgioKU" title="Controlled Chaos — Procedural Camera Transition with Soft Bodies | Houdini" loading="lazy" allowfullscreen></iframe><div class="media-caption">Controlled Chaos — Procedural Camera Transition with Soft Bodies | Houdini</div></div>
+<p>&nbsp;</p>
+<h2>What is this project</h2>
+<p>This project demonstrates a procedural camera transition system built in Houdini.</p>
+<p>&nbsp;</p>
+<p>The system animates a large number of objects interacting with each other as soft bodies and with a surface.  </p>
+<p>&nbsp;</p>
+<p>Objects are launched along ballistic trajectories, collide with an imaginary screen, stick to it, fully cover the visible area, and then detach over time.</p>
+<p>&nbsp;</p>
+<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-1512a5c14327d293.gif" alt="Technical article illustration" loading="lazy"></div>
+<p>&nbsp;</p>
+<p>The core idea of the project is controlled chaos:  </p>
+<p>motion is driven by physical simulation, while variation is introduced intentionally and selectively.</p>
+<p>&nbsp;</p>
+<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-60361b0a1e61de97.gif" alt="Technical article illustration" loading="lazy"></div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>---</p>
+<p>&nbsp;</p>
+<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-c4b7a2f3dd3f9184.png" alt="Technical article illustration" loading="lazy"></div>
+<h2>How the system works</h2>
+<p>The entire setup is camera-driven.  </p>
+<p>The camera frustum is used as a spatial template to define final object positions, ensuring fixed object count, stable screen coverage, and predictable composition.</p>
+<p>&nbsp;</p>
+<p>Initial and final positions are defined per object and connected into procedural trajectories. These trajectories define flight direction and curvature.</p>
+<p>&nbsp;</p>
+<p>Rather than moving objects directly along splines, spline tangents are converted into a velocity field. This velocity field drives the simulation, allowing acceleration, deceleration, rotation, and noise to be applied while keeping target positions deterministic.</p>
+<p>&nbsp;</p>
+<p>Variation is introduced through controlled offsets in timing, orientation, and velocity strength. Randomness is never global and never breaks the underlying structure.</p>
+<p>&nbsp;</p>
+<p>---</p>
+<p>&nbsp;</p>
+<h2>Soft-body simulation and state logic</h2>
+<p>Physical interaction is handled using Vellum soft-body simulation.</p>
+<p>&nbsp;</p>
+<p>Objects deform on impact and interact with each other during collisions.  </p>
+<p>Collision volumes are also used to track object states, including screen contact, sticking, and release timing.</p>
+<p>&nbsp;</p>
+<p>All state changes are stored as attributes and interpreted inside a custom DOP network.  </p>
+<p>Velocity is applied only to selected object groups, allowing different launch phases.</p>
+<p>&nbsp;</p>
+<p>Key hero objects are activated first, followed by the main group after a controlled delay.  </p>
+<p>This sequencing allows the chaos to build up gradually rather than appearing all at once.</p>
+<p>&nbsp;</p>
+<p>---</p>
+<p>&nbsp;</p>
+<h2>Stick and release behavior</h2>
+<p>When objects reach the screen surface, stick constraints are activated.  </p>
+<p>Release is not triggered simultaneously.</p>
+<p>&nbsp;</p>
+<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-c81bf2bdf6cc5b23.gif" alt="Technical article illustration" loading="lazy"></div>
+<p>&nbsp;</p>
+<p>Each object has its own release timing based on randomized thresholds, causing objects to detach one by one instead of collapsing as a single layer.</p>
+<p>&nbsp;</p>
+<p>Additional velocity masking is applied to slightly slow objects during flight and accelerate them before impact, reinforcing the perception of weight and contact.</p>
+<p>&nbsp;</p>
+<p>---</p>
+<p>&nbsp;</p>
+<h2>Pipeline usage</h2>
+<p>The simulation runs on low-poly proxy geometry.</p>
+<p>&nbsp;</p>
+<p>Motion is transferred to final meshes using Point Deformer and then cached.  </p>
+<p>The result can be rendered directly in Houdini or Solaris, or exported to a game engine using VAT.</p>
+<p>&nbsp;</p>
+<p>The example focuses on system design and problem-solving rather than on a specific engine integration.  </p>
+<p>The same approach can be adapted to game cinematics, real-time effects, and stylized transitions.</p>
+<p> </p>
+<hr>
+<p><strong>Like this post? </strong>( ´◔ ω◔`) ノシ</p>
+<p><strong>Support:</strong> <u><a href="https://buymeacoffee.com/pavel.zosim" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a></u> | <u><a href="https://www.patreon.com/c/pavel_zosim" target="_blank" rel="noopener noreferrer">Patreon</a></u> | <u><a href="https://github.com/pavelzosim" target="_blank" rel="noopener noreferrer">GitHub</a></u> | <u><a href="https://pavelzosim.gumroad.com/" target="_blank" rel="noopener noreferrer">Gumroad</a></u><u> </u>| <u><a href="https://www.youtube.com/@VFX_PavelZosim/videos" target="_blank" rel="noopener noreferrer">YouTube</a></u> </p></div></article>
+    <footer class="post-end"><a href="/blog/">← Blog index</a><span>Wix archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
+  </main>
+  <script src="/scripts/article-page.js?v=13"></script>
+</body>
+</html>

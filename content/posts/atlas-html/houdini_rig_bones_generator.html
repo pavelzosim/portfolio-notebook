@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-procedural-skeleton-rig-bones-generator">
-  <title>Procedural Skeleton Generation in Houdini — rig_bones_generator · pavelzosim.com</title>
-  <meta name="description" content="A procedural Houdini tool for fast skeleton generation, consistent joint naming, and reusable rig presets. Designed for game-ready skeletons, Apex workflows, and batch animation export.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Procedural Skeleton Generator · Pavel Zosim</title><meta name="description" content="Generate reusable rig-bone structures from procedural Houdini geometry."><link rel="canonical" href="https://www.pavelzosim.com/post/procedural-skeleton-houdini"><meta property="og:type" content="article"><meta property="og:title" content="Procedural Skeleton Generator"><meta property="og:description" content="Generate reusable rig-bone structures from procedural Houdini geometry."><meta property="og:url" content="https://www.pavelzosim.com/post/procedural-skeleton-houdini"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/houdini_rig_bones_generator/asset-12cb00f93c86a0d9.png"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/houdini_rig_bones_generator/asset-12cb00f93c86a0d9.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Procedural Skeleton Generator"><meta name="twitter:description" content="Generate reusable rig-bone structures from procedural Houdini geometry."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Procedural Skeleton Generator", "description": "Generate reusable rig-bone structures from procedural Houdini geometry.", "url": "https://www.pavelzosim.com/post/procedural-skeleton-houdini", "mainEntityOfPage": "https://www.pavelzosim.com/post/procedural-skeleton-houdini", "image": "https://www.pavelzosim.com/public/media/posts/houdini_rig_bones_generator/asset-12cb00f93c86a0d9.png", "datePublished": "2024-09-20", "dateModified": "2024-09-20", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
+
+
+
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
@@ -120,7 +120,7 @@
   </style>
   <link rel="stylesheet" href="/styles/legacy-posts.css?v=15">
 </head>
-<body>
+<body><h1 class="seo-heading">Procedural Skeleton Generator</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
 <div class="atlas-container">
 
@@ -449,9 +449,9 @@ var CONFIG = {
   slug: 'procedural-skeleton-houdini',
   author: 'Pavel Zosim', created: '2024.09.20', modified: null,
   wordCount: null, title: null, tags: [],
-  tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+  tagBaseUrl: '/blog/?tag='
 };
-var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
+
 function applyData(d) {
   if (d.author)   CONFIG.author   = d.author;
   if (d.title) {  CONFIG.title    = d.title;
@@ -463,13 +463,7 @@ function applyData(d) {
   if (Array.isArray(d.tags)) CONFIG.tags = d.tags;
   window.render && window.render();
 }
-(function(){
-  if (!CONFIG.slug) return;
-  fetch(BACKEND_URL + '?slug=' + encodeURIComponent(CONFIG.slug))
-    .then(r => r.ok ? r.json() : null)
-    .then(d => { if (d && !d.error) applyData(d); })
-    .catch(e => console.warn('[ATLAS]', e));
-})();
+
 (function(){
   function render() {
     var o = CONFIG, status = (o.status || 'DRAFT').toUpperCase();

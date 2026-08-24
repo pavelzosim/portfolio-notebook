@@ -40,6 +40,7 @@ SAFE_EXTENSIONS = {
 def sources() -> list[tuple[Path, str, str]]:
     items = [(REPO / "index.html", "home", "home")]
     items.extend((path, "posts", path.stem) for path in sorted(POSTS.glob("*.html")))
+    items.append((REPO / "content" / "posts" / "index.json", "posts", "index"))
     return items
 
 

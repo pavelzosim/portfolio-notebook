@@ -1,0 +1,1332 @@
+{
+  "id": "a092a577-bef1-4c65-a55f-97f9d0f19776",
+  "title": "Procedural Camera Transition with Controlled Chaos (Houdini)",
+  "excerpt": "Technical breakdown of a camera-driven procedural transition using controlled chaos, soft-body simulation, and spline-based velocity fields in Houdini.",
+  "contentText": "What is this project This project demonstrates a procedural camera transition system built in Houdini. The system animates a large number of objects interacting with each other as soft bodies and with a surface.  Objects are launched along ballistic trajectories, collide with an imaginary screen, stick to it, fully cover the visible area, and then detach over time. The core idea of the project is controlled chaos:  motion is driven by physical simulation, while variation is introduced intentionally and selectively. --- How the system works The entire setup is camera-driven.  The camera frustum is used as a spatial template to define final object positions, ensuring fixed object count, stable screen coverage, and predictable composition. Initial and final positions are defined per object and connected into procedural trajectories. These trajectories define flight direction and curvature. Rather than moving objects directly along splines, spline tangents are converted into a velocity field. This velocity field drives the simulation, allowing acceleration, deceleration, rotation, and noise to be applied while keeping target positions deterministic. Variation is introduced through controlled offsets in timing, orientation, and velocity strength. Randomness is never global and never breaks the underlying structure. --- Soft-body simulation and state logic Physical interaction is handled using Vellum soft-body simulation. Objects deform on impact and interact with each other during collisions.  Collision volumes are also used to track object states, including screen contact, sticking, and release timing. All state changes are stored as attributes and interpreted inside a custom DOP network.  Velocity is applied only to selected object groups, allowing different launch phases. Key hero objects are activated first, followed by the main group after a controlled delay.  This sequencing allows the chaos to build up gradually rather than appearing all at once. --- Stick and release behavior When objects reach the screen surface, stick constraints are activated.  Release is not triggered simultaneously. Each object has its own release timing based on randomized thresholds, causing objects to detach one by one instead of collapsing as a single layer. Additional velocity masking is applied to slightly slow objects during flight and accelerate them before impact, reinforcing the perception of weight and contact. --- Pipeline usage The simulation runs on low-poly proxy geometry. Motion is transferred to final meshes using Point Deformer and then cached.  The result can be rendered directly in Houdini or Solaris, or exported to a game engine using VAT. The example focuses on system design and problem-solving rather than on a specific engine integration.  The same approach can be adapted to game cinematics, real-time effects, and stylized transitions.   Like this post? ( ´◔ ω◔`) ノシ Support:   Buy Me a Coffee  | Patreon  | GitHub  | Gumroad   |  YouTube",
+  "firstPublishedDate": "2026-02-04T09:30:37.349Z",
+  "lastPublishedDate": "2026-02-04T12:20:13.162Z",
+  "url": {
+    "base": "https://www.pavelzosim.com",
+    "path": "/post/procedural-camera-transition-controlled-chaos-houdini"
+  },
+  "slug": "procedural-camera-transition-controlled-chaos-houdini",
+  "featured": false,
+  "pinned": false,
+  "categoryIds": [
+    "fa8e3a97-4127-4e61-9a78-11cc6fa4f113",
+    "31a1ca4e-8232-498b-b8ec-1643554301ca",
+    "973378dc-fa7f-4b63-81ba-80f0ccaa3b2d"
+  ],
+  "memberId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "hashtags": [],
+  "commentingEnabled": true,
+  "minutesToRead": 2,
+  "tagIds": [
+    "72941ecc-3611-4816-be1a-51f401f236ca",
+    "d111a76c-ca43-462c-9fd3-77120b56c816",
+    "4c278ea9-7af5-4507-8e23-3c9106fe651c",
+    "535b8c30-b19f-4669-bda3-c2649b273a77",
+    "14028821-5a4f-4e91-9b17-02e4624877ee",
+    "bcbaa5cf-ecd9-4bd8-92ee-fad1460aa263",
+    "2114d435-0331-41de-aa12-08a1c7472557"
+  ],
+  "relatedPostIds": [
+    "7f33c0cd-5325-464e-8436-95d595861a36"
+  ],
+  "pricingPlanIds": [],
+  "language": "en",
+  "seoData": {
+    "tags": [
+      {
+        "type": "title",
+        "children": "Procedural Camera Transition with Controlled Chaos | Houdini",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "name": "description",
+          "content": "Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization."
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:title",
+          "content": "Procedural Camera Transition with Controlled Chaos | Houdini"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:description",
+          "content": "A technical breakdown of a camera-driven procedural transition using Houdini, soft-body simulation, and deterministic structure with selective randomness."
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:image",
+          "content": "https://static.wixstatic.com/media/ace175_28c9941fde2f4eef9c2f5fecb1eda7fd~mv2.gif"
+        },
+        "meta": {
+          "width": 640,
+          "height": 360
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      }
+    ],
+    "settings": {
+      "preventAutoRedirect": false,
+      "keywords": [
+        {
+          "term": "procedural camera transition houdini",
+          "isMain": true
+        }
+      ]
+    }
+  },
+  "richContent": {
+    "nodes": [
+      {
+        "type": "VIDEO",
+        "id": "ygejp2964",
+        "nodes": [],
+        "videoData": {
+          "containerData": {
+            "width": {
+              "size": "CONTENT"
+            },
+            "alignment": "CENTER",
+            "textWrap": true
+          },
+          "video": {
+            "src": {
+              "url": "https://youtu.be/q25PkDgioKU?si=kDzg9lpC3oyXz8zw"
+            },
+            "duration": 324
+          },
+          "thumbnail": {
+            "src": {
+              "url": "https://i.ytimg.com/vi/q25PkDgioKU/maxresdefault.jpg"
+            },
+            "width": 1280,
+            "height": 720
+          },
+          "title": "Controlled Chaos — Procedural Camera Transition with Soft Bodies | Houdini"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "fy3cx3153",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HEADING",
+        "id": "r6wpu1362",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "What is this project",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "e8em11365",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "This project demonstrates a procedural camera transition system built in Houdini.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "l3gv11367",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "barft1368",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The system animates a large number of objects interacting with each other as soft bodies and with a surface.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "v1sz5507",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "32qwp1370",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Objects are launched along ballistic trajectories, collide with an imaginary screen, stick to it, fully cover the visible area, and then detach over time.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "1la2l1810",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "IMAGE",
+        "id": "ljub6975",
+        "nodes": [],
+        "imageData": {
+          "containerData": {
+            "width": {
+              "size": "CONTENT"
+            },
+            "alignment": "CENTER",
+            "textWrap": true
+          },
+          "image": {
+            "src": {
+              "id": "ace175_5d99b657fac04cd6933aa84757e62150~mv2.gif"
+            },
+            "width": 1280,
+            "height": 720
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "3uxs41372",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "gilul1373",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The core idea of the project is controlled chaos:  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "rj1341375",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "motion is driven by physical simulation, while variation is introduced intentionally and selectively.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "mvhsv2098",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "IMAGE",
+        "id": "64shd1957",
+        "nodes": [],
+        "imageData": {
+          "containerData": {
+            "width": {
+              "size": "CONTENT"
+            },
+            "alignment": "CENTER",
+            "textWrap": true
+          },
+          "image": {
+            "src": {
+              "id": "ace175_6484f74531f64597b772981f43f67631~mv2.gif"
+            },
+            "width": 640,
+            "height": 360
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "0wtpm1116",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "2d60t1377",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "kvnus1378",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "---",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "fqc2i1380",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "IMAGE",
+        "id": "udwzu1163",
+        "nodes": [],
+        "imageData": {
+          "containerData": {
+            "width": {
+              "size": "SMALL"
+            },
+            "alignment": "LEFT",
+            "textWrap": true
+          },
+          "image": {
+            "src": {
+              "id": "ace175_8b80af1d1c8e41599c4506560900660f~mv2.png"
+            },
+            "width": 1687,
+            "height": 1540
+          }
+        }
+      },
+      {
+        "type": "HEADING",
+        "id": "6grrh1381",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "How the system works",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "kx7hn1384",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The entire setup is camera-driven.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "1gl2u1386",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The camera frustum is used as a spatial template to define final object positions, ensuring fixed object count, stable screen coverage, and predictable composition.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "m556c3474",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "iufbt1389",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Initial and final positions are defined per object and connected into procedural trajectories. These trajectories define flight direction and curvature.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "zcn991393",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "1we6m1394",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Rather than moving objects directly along splines, spline tangents are converted into a velocity field. This velocity field drives the simulation, allowing acceleration, deceleration, rotation, and noise to be applied while keeping target positions deterministic.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "tdct91398",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "wu7tm1399",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Variation is introduced through controlled offsets in timing, orientation, and velocity strength. Randomness is never global and never breaks the underlying structure.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "f3jk71403",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "v1k611404",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "---",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "e0pmg1406",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HEADING",
+        "id": "4jlqr1407",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Soft-body simulation and state logic",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "nrhrp1410",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Physical interaction is handled using Vellum soft-body simulation.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "2nelx1412",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "s9twn1413",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Objects deform on impact and interact with each other during collisions.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "5o4bk1415",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Collision volumes are also used to track object states, including screen contact, sticking, and release timing.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "8slrp1417",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "zaqce1418",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "All state changes are stored as attributes and interpreted inside a custom DOP network.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "e3ot51420",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Velocity is applied only to selected object groups, allowing different launch phases.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "0wjxq1422",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "b51kv1423",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Key hero objects are activated first, followed by the main group after a controlled delay.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "myyk21425",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "This sequencing allows the chaos to build up gradually rather than appearing all at once.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "fwzr21427",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "4hh8q1428",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "---",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "snmlz1430",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HEADING",
+        "id": "6r74c1431",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Stick and release behavior",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "eb7j71434",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "When objects reach the screen surface, stick constraints are activated.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "9allf1436",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Release is not triggered simultaneously.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "s29yy1438",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "IMAGE",
+        "id": "lnyoq2587",
+        "nodes": [],
+        "imageData": {
+          "containerData": {
+            "width": {
+              "size": "CONTENT"
+            },
+            "alignment": "CENTER",
+            "textWrap": true
+          },
+          "image": {
+            "src": {
+              "id": "ace175_28c9941fde2f4eef9c2f5fecb1eda7fd~mv2.gif"
+            },
+            "width": 640,
+            "height": 360
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "imaja1439",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "pa0xb2854",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Each object has its own release timing based on randomized thresholds, causing objects to detach one by one instead of collapsing as a single layer.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "id4292463",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "ewyzg1442",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Additional velocity masking is applied to slightly slow objects during flight and accelerate them before impact, reinforcing the perception of weight and contact.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "nuezj1444",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "obqjt1445",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "---",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "aksd01447",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HEADING",
+        "id": "521dn1448",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Pipeline usage",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "cley01451",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The simulation runs on low-poly proxy geometry.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "3xg7h1453",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "pswna1454",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Motion is transferred to final meshes using Point Deformer and then cached.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "txwf61456",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The result can be rendered directly in Houdini or Solaris, or exported to a game engine using VAT.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "7t8pl1458",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "e7k6r1459",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The example focuses on system design and problem-solving rather than on a specific engine integration.  ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "aj9si1461",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The same approach can be adapted to game cinematics, real-time effects, and stylized transitions.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "hh83u2254",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "DIVIDER",
+        "id": "lybbz2919",
+        "nodes": [],
+        "dividerData": {
+          "containerData": {
+            "width": {},
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {},
+            "textWrap": false
+          },
+          "lineStyle": "DOUBLE",
+          "width": "LARGE",
+          "alignment": "CENTER"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-viewer-tif09104694",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Like this post? ",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "( ´◔ ω◔`) ノシ",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-viewer-2kbj214374",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Support:",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": []
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Buy Me a Coffee",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://buymeacoffee.com/pavel.zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Patreon",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.patreon.com/c/pavel_zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "GitHub",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://github.com/pavelzosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Gumroad",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://pavelzosim.gumroad.com/",
+                      "target": "BLANK",
+                      "rel": {
+                        "noreferrer": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "| ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "YouTube",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.youtube.com/@VFX_PavelZosim/videos",
+                      "target": "BLANK",
+                      "rel": {
+                        "nofollow": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      }
+    ],
+    "documentStyle": {}
+  },
+  "preview": false,
+  "contentId": "69b51ed879b818b5bd3acfb9",
+  "mostRecentContributorId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "media": {
+    "embedMedia": {
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/q25PkDgioKU/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      },
+      "video": {
+        "url": "https://youtu.be/q25PkDgioKU?si=kDzg9lpC3oyXz8zw",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "displayed": true,
+    "custom": false
+  },
+  "hasUnpublishedChanges": false,
+  "translations": [],
+  "customExcerpt": true,
+  "internalCategoryIds": [],
+  "internalRelatedPostIds": []
+}

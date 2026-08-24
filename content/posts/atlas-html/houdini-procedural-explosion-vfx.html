@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Houdini Procedural Explosion VFX · Pavel Zosim</title><meta name="description" content="Layer architecture, Pyro simulation, VAT export, and real-time lighting."><link rel="canonical" href="https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx"><meta property="og:type" content="article"><meta property="og:title" content="Houdini Procedural Explosion VFX"><meta property="og:description" content="Layer architecture, Pyro simulation, VAT export, and real-time lighting."><meta property="og:url" content="https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx"><meta property="og:image" content="https://www.pavelzosim.com/public/media/home/home/asset-d9f1ca6b786259a5.gif"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/home/home/asset-d9f1ca6b786259a5.gif"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Houdini Procedural Explosion VFX"><meta name="twitter:description" content="Layer architecture, Pyro simulation, VAT export, and real-time lighting."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Houdini Procedural Explosion VFX", "description": "Layer architecture, Pyro simulation, VAT export, and real-time lighting.", "url": "https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx", "mainEntityOfPage": "https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx", "image": "https://www.pavelzosim.com/public/media/home/home/asset-d9f1ca6b786259a5.gif", "datePublished": "2024-11-15", "dateModified": "2024-11-15", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
 
   <!-- SEO: canonical указывает поисковикам на оригинальную страницу Wix,
        а не на iframe. Это предотвращает дублирование контента в индексе. -->
-  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx">
 
-  <title>Houdini Procedural Explosion VFX — pavelzosim.com</title>
-  <meta name="description" content="Layer-based procedural explosion system in Houdini. Two-HDA pipeline: deterministic point animation, Pyro simulation, VAT export, Six Point Lighting for real-time engines.">
+
+
+
 
   <!-- noindex: iframe-контент не должен индексироваться отдельно от страницы.
        follow: ссылки внутри iframe всё равно могут передавать вес. -->
@@ -82,7 +82,7 @@
   </style>
   <link rel="stylesheet" href="/styles/legacy-posts.css?v=15">
 </head>
-<body>
+<body><h1 class="seo-heading">Houdini Procedural Explosion VFX</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
 <div class="atlas-container">
 
@@ -668,10 +668,8 @@ var CONFIG = {
   slug: 'houdini-procedural-explosion-vfx',
   author: 'Pavel Zosim', created: '2024.11.15', modified: null,
   wordCount: null, title: null, tags: [],
-  tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+  tagBaseUrl: '/blog/?tag='
 };
-
-var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
 
 function applyData(d) {
   if (d.author)   CONFIG.author   = d.author;
@@ -686,13 +684,7 @@ function applyData(d) {
   window.render && window.render();
 }
 
-(function(){
-  if (!CONFIG.slug) return;
-  fetch(BACKEND_URL + '?slug=' + encodeURIComponent(CONFIG.slug))
-    .then(r => r.ok ? r.json() : null)
-    .then(d => { if (d && !d.error) applyData(d); })
-    .catch(e => console.warn('[ATLAS] Passport fetch failed', e));
-})();
+
 
 (function(){
   function render() {

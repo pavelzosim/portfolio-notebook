@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders">
-  <meta name="description" content="A unified technical art CG shaders guide explaining real-time rendering, shader stages, and engine pipelines for technical artists.">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Technical Art CG Shaders – Unified Guide">
-  <meta property="og:description" content="A unified technical art CG shaders guide explaining real-time rendering, shader stages, and engine pipelines for technical artists.">
-  <meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders">
-  <title>Technical Art CG Shaders – Unified Guide · Pavel Zosim</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"><title>A Unified Guide to Shaders · Pavel Zosim</title><meta name="description" content="A technical-art overview of shader concepts and practical rendering use."><link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders"><meta property="og:type" content="article"><meta property="og:title" content="A Unified Guide to Shaders"><meta property="og:description" content="A technical-art overview of shader concepts and practical rendering use."><meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-cdad8f7d82da4aca.png"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-cdad8f7d82da4aca.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="A Unified Guide to Shaders"><meta name="twitter:description" content="A technical-art overview of shader concepts and practical rendering use."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "A Unified Guide to Shaders", "description": "A technical-art overview of shader concepts and practical rendering use.", "url": "https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders", "mainEntityOfPage": "https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders", "image": "https://www.pavelzosim.com/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-cdad8f7d82da4aca.png", "datePublished": "2025-03-05", "dateModified": "2025-03-05", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
+
+
+
+
+
+
+
   <link rel="stylesheet" href="/styles/atlas.css?v=53">
   <link rel="stylesheet" href="/styles/posts.css?v=14">
 </head>
@@ -60,7 +60,7 @@ Final Color = Albedo × (Diffuse + Specular) + Emission
 // Unity (Metallic Workflow):
 Final Color = Emission + (1 - Metallic) * Albedo * DiffuseTerm + SpecularTerm
 
-// UE5 (Material Graph)  
+// UE5 (Material Graph)
 BaseColor = Lerp(DielectricSpecular, Albedo, Metallic);</code></pre>
       <p><strong>Shader File Types</strong></p>
       <p>Unity organizes shader-related files into several categories, each serving a specific purpose:</p>
@@ -77,11 +77,11 @@ BaseColor = Lerp(DielectricSpecular, Albedo, Metallic);</code></pre>
       <ul><li><strong>Unity</strong>:<ul><li>.cginc (legacy CG) is used in Built-in RP (e.g., UnityCG.cginc).</li><li>.hlsl includes are standard in URP/HDRP.</li></ul></li><li><strong>Unreal</strong>:<ul><li>.ush files (e.g., ShadingModels.ush) define shared lighting logic.</li><li>No equivalent to .cginc – Unreal uses HLSL exclusively.<br></li></ul></li></ul>
       <ol><li><strong>Associations</strong></li></ol>
       <pre><code>Unity
-graph LR  
+graph LR
 A[.shader] --&gt; B[CGPROGRAM]
-A --&gt; C[HLSLPROGRAM]  
-B --&gt; D[.cginc]  
-C --&gt; E[.hlsl]  
+A --&gt; C[HLSLPROGRAM]
+B --&gt; D[.cginc]
+C --&gt; E[.hlsl]
 F[.shadergraph] --&gt; G[HLSLPROGRAM]
 
 Unreal
@@ -95,7 +95,7 @@ D --&gt; E[.ush]</code></pre>
       <p>.cginc files – replaced by .ush/.usf.</p>
       <p><strong>Unity to Unreal Translation:</strong></p>
       <p>Unity’s Surface Shader ≈ Unreal’s Material Domain (e.g., Surface, Deferred Decal).</p>
-      <p>Unity’s <a href="https://www.pavelzosim.com/blog/hashtags/pragma" rel="external">#pragma</a> multi_compile ≈ Unreal’s Static Switches or Shader Permutations.</p>
+      <p>Unity’s <a href="/blog/?tag=pragma" rel="external">#pragma</a> multi_compile ≈ Unreal’s Static Switches or Shader Permutations.</p>
       <p><strong>Pipeline Compatibility:</strong></p>
       <p>Unity: .shadergraph only works in URP/HDRP.</p>
       <p>Unreal: Materials work across all pipelines (Forward, Deferred, Mobile).</p>

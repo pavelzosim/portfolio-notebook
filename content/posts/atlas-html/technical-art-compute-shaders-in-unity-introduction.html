@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction">
-  <meta name="description" content="Introduction to technical art compute shaders in Unity, focusing on GPU-based parallel processing and data workflows.">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Technical Art Compute Shaders in Unity">
-  <meta property="og:description" content="Introduction to technical art compute shaders in Unity, focusing on GPU-based parallel processing and data workflows.">
-  <meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction">
-  <title>Technical Art Compute Shaders in Unity · Pavel Zosim</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"><title>Compute Shaders in Unity — Introduction · Pavel Zosim</title><meta name="description" content="Foundational compute-shader concepts and their use inside Unity."><link rel="canonical" href="https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction"><meta property="og:type" content="article"><meta property="og:title" content="Compute Shaders in Unity — Introduction"><meta property="og:description" content="Foundational compute-shader concepts and their use inside Unity."><meta property="og:url" content="https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Compute Shaders in Unity — Introduction"><meta name="twitter:description" content="Foundational compute-shader concepts and their use inside Unity."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Compute Shaders in Unity — Introduction", "description": "Foundational compute-shader concepts and their use inside Unity.", "url": "https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction", "mainEntityOfPage": "https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction", "image": "https://www.pavelzosim.com/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg", "datePublished": "2025-03-03", "dateModified": "2025-03-03", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
+
+
+
+
+
+
+
   <link rel="stylesheet" href="/styles/atlas.css?v=53">
   <link rel="stylesheet" href="/styles/posts.css?v=14">
 </head>
@@ -44,7 +44,7 @@
       <p>Compute shaders run on the GPU independently of the traditional rendering pipeline.</p>
       <p>The structure is built around <strong>“kernels</strong>” which are functions that execute in parallel over many threads.</p>
       <p><strong>Kernel Declaration</strong></p>
-      <p>Each kernel starts with a <a href="https://www.pavelzosim.com/blog/hashtags/pragma" rel="external">#pragma</a> kernel directive followed by the kernel function name (e.g., CSMain).</p>
+      <p>Each kernel starts with a <a href="/blog/?tag=pragma" rel="external">#pragma</a> kernel directive followed by the kernel function name (e.g., CSMain).</p>
       <pre><code>#pragma kernel CSMain</code></pre>
       <div class="media-frame"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg" alt="Diagram of compute shader structure shows dispatch, group, and thread with labeled grids and circles. Text: Compute Shader Structure." loading="lazy"></div>
       <p>When you invoke a compute shader via <strong>Dispatch</strong>, you specify how many <strong><em>groups</em></strong><strong> </strong>you want along each axis (X, Y, Z). Each group itself contains a fixed number of threads,</p>

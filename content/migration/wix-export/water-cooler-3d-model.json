@@ -1,0 +1,764 @@
+{
+  "id": "21e8821f-16d7-40ab-8c2b-8bb110b8dc91",
+  "title": "Water Cooler 3D Model",
+  "excerpt": "Game-ready water cooler 3D model designed for real-time environments and production pipelines.\n",
+  "contentText": "This is a game-ready water cooler 3D model created for real-time environments. The asset is designed with clean topology, predictable scale, and engine-friendly structure, suitable for use in games, simulations, and visualization projects. WATER COOLER 3D MODEL — ASSET OVERVIEW Asset type: Static prop Topology and polycount: Quads, 32k triangles UVs and Texture: No Rig and Animation: No File formats: FBX (.fbx) Like this post? ( ´◔ ω◔`) ノシ Support:   Buy Me a Coffee  | Patreon  | GitHub  | Gumroad   |  YouTube",
+  "firstPublishedDate": "2025-01-04T20:14:31.851Z",
+  "lastPublishedDate": "2026-03-18T10:27:27.186Z",
+  "url": {
+    "base": "https://www.pavelzosim.com",
+    "path": "/post/water-cooler-3d-model"
+  },
+  "slug": "water-cooler-3d-model",
+  "featured": false,
+  "pinned": false,
+  "categoryIds": [
+    "ed1abb3e-542e-4554-8f18-8baefb1cbb92"
+  ],
+  "memberId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "hashtags": [],
+  "commentingEnabled": true,
+  "minutesToRead": 1,
+  "tagIds": [
+    "336844fe-b78e-4801-bf97-3a40e35d0fdd",
+    "66f99994-8f77-46e6-b04f-b869eb5788d8",
+    "d527c872-fe8b-4b04-a45b-64fc3476c2cd",
+    "bef3fac1-976b-4130-a863-5096078e7bd1",
+    "f9def72e-af61-4c77-9b80-9c072a161ec3",
+    "767aa6ca-a502-4411-9bc4-359ea305cab1"
+  ],
+  "relatedPostIds": [
+    "530e383d-a2fa-4e0a-969a-fd4eacf40ad9",
+    "65636616-3f32-4bd0-a266-63dc2e47dd0a",
+    "5f0c8e95-670c-4969-876d-1f787a21044d"
+  ],
+  "pricingPlanIds": [],
+  "language": "en",
+  "seoData": {
+    "tags": [
+      {
+        "type": "title",
+        "children": "Water Cooler 3D Model — Game-Ready Asset",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "name": "description"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "name": "description",
+          "content": "Game-ready water cooler 3D model with clean topology and predictable structure for real-time engines and production pipelines.\n"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:image",
+          "content": "https://static.wixstatic.com/media/ace175_c938d2912d3a48eaa7f87ef194b01c40~mv2.png"
+        },
+        "meta": {
+          "width": 1400,
+          "height": 788
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:title",
+          "content": "Water Cooler 3D Model"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:description",
+          "content": "A clean, game-ready water cooler 3D asset designed for real-time engines and production workflows."
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      }
+    ],
+    "settings": {
+      "preventAutoRedirect": false,
+      "keywords": [
+        {
+          "term": "water cooler 3d model",
+          "isMain": true
+        }
+      ]
+    }
+  },
+  "richContent": {
+    "nodes": [
+      {
+        "type": "PARAGRAPH",
+        "id": "p73zl15871",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "This is a game-ready water cooler 3D model created for real-time environments.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "qw8x015873",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "a840115874",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The asset is designed with clean topology, predictable scale, and engine-friendly structure, suitable for use in games, simulations, and visualization projects.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "dk82633573",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HTML",
+        "id": "hq2x633678",
+        "nodes": [],
+        "htmlData": {
+          "containerData": {
+            "width": {
+              "custom": "940"
+            },
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {
+              "custom": "484"
+            },
+            "textWrap": true
+          },
+          "html": "<div class=\"sketchfab-embed-wrapper\">\n  <iframe \n    title=\"Low Poly Water Cooler 3D Model\" \n    frameborder=\"0\" \n    allowfullscreen \n    mozallowfullscreen=\"true\" \n    webkitallowfullscreen=\"true\" \n    allow=\"autoplay; fullscreen; xr-spatial-tracking\" \n    xr-spatial-tracking \n    execution-while-out-of-viewport \n    execution-while-not-rendered \n    web-share \n    width=\"740\" \n    height=\"480\" \n    src=\"https://sketchfab.com/models/533523d0c9d143428506c58b1918eaf3/embed\">\n  </iframe>\n</div>\n",
+          "source": "HTML"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "evizv1073",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "IMAGE",
+        "id": "9k5td1071",
+        "nodes": [],
+        "imageData": {
+          "containerData": {
+            "width": {
+              "size": "CONTENT"
+            },
+            "alignment": "CENTER",
+            "textWrap": true
+          },
+          "image": {
+            "src": {
+              "id": "ace175_3928b71a959542548681b477518855ce~mv2.png"
+            },
+            "width": 1920,
+            "height": 1080
+          },
+          "altText": "Water cooler 3D model for real-time environments"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "fjk3r1183",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HEADING",
+        "id": "7vhts18476",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "WATER COOLER 3D MODEL — ASSET OVERVIEW",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "BULLETED_LIST",
+        "id": "rvs6k446",
+        "nodes": [
+          {
+            "type": "LIST_ITEM",
+            "id": "owadl447",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "1olp516221",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": "Asset type: Static prop",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "zraym449",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "bgfy2417",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": "Topology and polycount: Quads, 32k triangles",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "2ijnl451",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "7x0o5419",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": "UVs and Texture: No",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "58dur453",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "3ltg2421",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": "Rig and Animation: No",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "7iz0n455",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "cmrth423",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": "File formats: FBX (.fbx)",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          }
+        ],
+        "bulletedListData": {
+          "indentation": 0
+        }
+      },
+      {
+        "type": "DIVIDER",
+        "id": "ac0ua19428",
+        "nodes": [],
+        "dividerData": {
+          "containerData": {
+            "width": {},
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {},
+            "textWrap": false
+          },
+          "lineStyle": "DOTTED",
+          "width": "LARGE",
+          "alignment": "CENTER"
+        }
+      },
+      {
+        "type": "BUTTON",
+        "id": "ya1a26618",
+        "nodes": [],
+        "buttonData": {
+          "containerData": {
+            "width": {
+              "custom": "740"
+            },
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {},
+            "textWrap": true
+          },
+          "type": "LINK",
+          "styles": {},
+          "text": "DOWNLOAD",
+          "link": {
+            "url": "https://pavelzosim.gumroad.com/l/water-cooler-3d-model",
+            "target": "BLANK",
+            "rel": {
+              "noreferrer": true
+            }
+          }
+        }
+      },
+      {
+        "type": "DIVIDER",
+        "id": "ehsto19612",
+        "nodes": [],
+        "dividerData": {
+          "containerData": {
+            "width": {},
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {},
+            "textWrap": false
+          },
+          "lineStyle": "DOUBLE",
+          "width": "LARGE",
+          "alignment": "CENTER"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-tif09104694",
+        "nodes": [],
+        "style": {},
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "LEFT"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "0qju920580",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Like this post? ",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "( ´◔ ω◔`) ノシ ",
+              "decorations": []
+            }
+          }
+        ],
+        "style": {},
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "LEFT"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-2kbj214374",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Support:",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": []
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Buy Me a Coffee",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://buymeacoffee.com/pavel.zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Patreon",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.patreon.com/c/pavel_zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "GitHub",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://github.com/pavelzosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Gumroad",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://pavelzosim.gumroad.com/",
+                      "target": "BLANK",
+                      "rel": {
+                        "noreferrer": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "| ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "YouTube",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.youtube.com/@VFX_PavelZosim/videos",
+                      "target": "BLANK",
+                      "rel": {
+                        "nofollow": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "style": {},
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "LEFT"
+          }
+        }
+      }
+    ],
+    "documentStyle": {}
+  },
+  "preview": false,
+  "contentId": "69ba7e0f5303a105b06e7ba7",
+  "mostRecentContributorId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "media": {
+    "wixMedia": {
+      "image": {
+        "id": "ace175_c938d2912d3a48eaa7f87ef194b01c40~mv2.png",
+        "url": "https://static.wixstatic.com/media/ace175_c938d2912d3a48eaa7f87ef194b01c40~mv2.png",
+        "height": 788,
+        "width": 1400,
+        "altText": "Water Cooler 3D Model — Game-Ready Asset",
+        "filename": "f4d25c66297123.5b111c808cf26.png"
+      }
+    },
+    "displayed": true,
+    "custom": true,
+    "altText": "Water Cooler 3D Model — Game-Ready Asset"
+  },
+  "hasUnpublishedChanges": false,
+  "translations": [],
+  "customExcerpt": true,
+  "internalCategoryIds": [],
+  "internalRelatedPostIds": []
+}

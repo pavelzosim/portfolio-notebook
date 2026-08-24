@@ -1,5 +1,6 @@
 html{scroll-behavior:smooth}
 body.migrated-post{margin:0;background:var(--atlas-bg);color:var(--atlas-ink)}
+.seo-heading{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .post-shell{width:min(980px,calc(100% - 32px));margin:32px auto 72px}
 .post-header{padding:26px 30px;border:1px solid var(--atlas-border);border-bottom:0;background:rgba(230,220,210,.96)}
 .post-path{margin:0 0 12px;color:var(--atlas-ink-muted);font:10px var(--atlas-font-mono);text-transform:uppercase}

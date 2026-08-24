@@ -1,0 +1,894 @@
+{
+  "id": "65636616-3f32-4bd0-a266-63dc2e47dd0a",
+  "title": "Low-Poly Piggy Bank 3D Model",
+  "excerpt": "Low-poly piggy bank 3D model with multiple mesh variants and clean topology for real-time pipelines.\n",
+  "contentText": "This low poly piggy bank 3d model provided in multiple mesh variants for different real-time use cases. The asset includes low-poly, high-poly, and fractured versions, allowing controlled usage depending on performance and visual requirements. Low-Poly Piggy Bank 3D Model Details  Asset type: Static prop  Topology and polycount:   Low-poly: Quads (747 polygons)   High-poly: Quads (2,996 polygons)   Fractured: Quads (7,268 polygons)  UVs and Texture: UNKNOWN  Rig and Animation: No  File formats: FBX (.fbx), Cinema 4D (.c4d) Like this post? ( ´◔ ω◔`) ノシ Support:   Buy Me a Coffee  | Patreon  | GitHub  | Gumroad   |  YouTube",
+  "firstPublishedDate": "2025-01-06T06:44:27.076Z",
+  "lastPublishedDate": "2026-03-18T10:28:40.996Z",
+  "url": {
+    "base": "https://www.pavelzosim.com",
+    "path": "/post/3d-model-low-poly-piggy-bank"
+  },
+  "slug": "3d-model-low-poly-piggy-bank",
+  "featured": false,
+  "pinned": false,
+  "categoryIds": [
+    "ed1abb3e-542e-4554-8f18-8baefb1cbb92"
+  ],
+  "memberId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "hashtags": [],
+  "commentingEnabled": true,
+  "minutesToRead": 1,
+  "tagIds": [
+    "66f99994-8f77-46e6-b04f-b869eb5788d8",
+    "d527c872-fe8b-4b04-a45b-64fc3476c2cd",
+    "b3056a86-d50c-4643-83ce-9ec489ebe859",
+    "ab5d5c82-cf2a-4fac-ab03-f35a7bb8e65c",
+    "005948a7-ad21-4fa3-9560-aea1156604d2",
+    "db70e63d-18d3-435d-87d7-b99f9d4e88ff",
+    "7df73efe-98a4-4b14-98e7-c629a7e3e19f"
+  ],
+  "relatedPostIds": [
+    "5f0c8e95-670c-4969-876d-1f787a21044d",
+    "530e383d-a2fa-4e0a-969a-fd4eacf40ad9",
+    "21e8821f-16d7-40ab-8c2b-8bb110b8dc91"
+  ],
+  "pricingPlanIds": [],
+  "language": "en",
+  "seoData": {
+    "tags": [
+      {
+        "type": "title",
+        "children": "Low-Poly Piggy Bank 3D Model (FBX, C4D)\n",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "name": "description"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "name": "description",
+          "content": "Low poly piggy bank 3d model with low, high, and fractured mesh variants.\n"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:image",
+          "content": "https://static.wixstatic.com/media/ace175_bfd548d2a6d74fb889fa469cf23cb0e2~mv2.png"
+        },
+        "meta": {
+          "width": 1024,
+          "height": 1024
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:title",
+          "content": "Low-Poly Piggy Bank 3D Model"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:description",
+          "content": "Low-poly piggy bank 3D asset for real-time environments and technical pipelines."
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      }
+    ],
+    "settings": {
+      "preventAutoRedirect": false,
+      "keywords": [
+        {
+          "term": "low poly piggy bank 3d model",
+          "isMain": true
+        }
+      ]
+    }
+  },
+  "richContent": {
+    "nodes": [
+      {
+        "type": "PARAGRAPH",
+        "id": "fyak930211",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "This low poly piggy bank 3d model provided in multiple mesh variants for different real-time use cases.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "26auw30213",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "whc5h30214",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The asset includes low-poly, high-poly, and fractured versions, allowing controlled usage depending on performance and visual requirements.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {}
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "zfq4f32295",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HTML",
+        "id": "hify322170",
+        "nodes": [],
+        "htmlData": {
+          "containerData": {
+            "width": {
+              "custom": "737"
+            },
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {
+              "custom": "484"
+            },
+            "textWrap": true
+          },
+          "html": "<div class=\"sketchfab-embed-wrapper\">\n  <iframe \n    title=\"Piggy Bank 3D Model (Low & Mid Poly)\" \n    frameborder=\"0\" \n    allowfullscreen \n    mozallowfullscreen=\"true\" \n    webkitallowfullscreen=\"true\" \n    allow=\"autoplay; fullscreen; xr-spatial-tracking\" \n    xr-spatial-tracking \n    execution-while-out-of-viewport \n    execution-while-not-rendered \n    web-share \n    width=\"740\" \n    height=\"480\" \n    src=\"https://sketchfab.com/models/c813a2a6fa2c481cb9de6fe706416505/embed?ui_theme=dark\">\n  </iframe>\n</div>\n",
+          "source": "HTML"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "gwpm031742",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "HEADING",
+        "id": "7gqo52508",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Low-Poly Piggy Bank 3D Model Details",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "BULLETED_LIST",
+        "id": "1rhya1732",
+        "nodes": [
+          {
+            "type": "LIST_ITEM",
+            "id": "4qq4t1733",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "632r21695",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": " Asset type: Static prop",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "2fv031735",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "qdr2d1697",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": " Topology and polycount:",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              },
+              {
+                "type": "BULLETED_LIST",
+                "id": "ozqxh1772",
+                "nodes": [
+                  {
+                    "type": "LIST_ITEM",
+                    "id": "xywco1737",
+                    "nodes": [
+                      {
+                        "type": "PARAGRAPH",
+                        "id": "u2iml1699",
+                        "nodes": [
+                          {
+                            "type": "TEXT",
+                            "id": "",
+                            "nodes": [],
+                            "textData": {
+                              "text": "  Low-poly: Quads (747 polygons)",
+                              "decorations": []
+                            }
+                          }
+                        ],
+                        "paragraphData": {}
+                      }
+                    ]
+                  },
+                  {
+                    "type": "LIST_ITEM",
+                    "id": "u5e5g1739",
+                    "nodes": [
+                      {
+                        "type": "PARAGRAPH",
+                        "id": "fme2m1701",
+                        "nodes": [
+                          {
+                            "type": "TEXT",
+                            "id": "",
+                            "nodes": [],
+                            "textData": {
+                              "text": "  High-poly: Quads (2,996 polygons)",
+                              "decorations": []
+                            }
+                          }
+                        ],
+                        "paragraphData": {}
+                      }
+                    ]
+                  },
+                  {
+                    "type": "LIST_ITEM",
+                    "id": "ontia1741",
+                    "nodes": [
+                      {
+                        "type": "PARAGRAPH",
+                        "id": "tg7qh1703",
+                        "nodes": [
+                          {
+                            "type": "TEXT",
+                            "id": "",
+                            "nodes": [],
+                            "textData": {
+                              "text": "  Fractured: Quads (7,268 polygons)",
+                              "decorations": []
+                            }
+                          }
+                        ],
+                        "paragraphData": {}
+                      }
+                    ]
+                  }
+                ],
+                "bulletedListData": {
+                  "indentation": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "liyit1743",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "oezoe1705",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": " UVs and Texture: UNKNOWN",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "mf1e01745",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "oyxga1707",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": " Rig and Animation: No",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          },
+          {
+            "type": "LIST_ITEM",
+            "id": "864aq1747",
+            "nodes": [
+              {
+                "type": "PARAGRAPH",
+                "id": "hdczj1709",
+                "nodes": [
+                  {
+                    "type": "TEXT",
+                    "id": "",
+                    "nodes": [],
+                    "textData": {
+                      "text": " File formats: FBX (.fbx), Cinema 4D (.c4d)",
+                      "decorations": []
+                    }
+                  }
+                ],
+                "paragraphData": {}
+              }
+            ]
+          }
+        ],
+        "bulletedListData": {
+          "indentation": 0
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "asbu228996",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "GALLERY",
+        "id": "jt82h552",
+        "nodes": [],
+        "galleryData": {
+          "containerData": {
+            "width": {
+              "size": "CONTENT"
+            },
+            "alignment": "CENTER",
+            "height": {},
+            "textWrap": true
+          },
+          "items": [
+            {
+              "image": {
+                "media": {
+                  "src": {
+                    "url": "ace175_d6a984a54268443d904d7c78b4f44a80~mv2.png"
+                  },
+                  "width": 1021,
+                  "height": 1019
+                }
+              },
+              "altText": "Low poly piggy bank 3D model for real-time environments"
+            },
+            {
+              "image": {
+                "media": {
+                  "src": {
+                    "url": "ace175_cbfae58290c346caa53bad6d6eaf3d77~mv2.jpg"
+                  },
+                  "width": 1080,
+                  "height": 1080
+                }
+              },
+              "title": "",
+              "altText": "Low poly piggy bank 3D asset topology"
+            },
+            {
+              "image": {
+                "media": {
+                  "src": {
+                    "url": "ace175_eba0f653f40547ad8fab1c97023041b4~mv2.jpg"
+                  },
+                  "width": 1080,
+                  "height": 1080
+                }
+              },
+              "altText": "Low poly piggy bank 3D asset topology"
+            },
+            {
+              "image": {
+                "media": {
+                  "src": {
+                    "url": "ace175_b0ae717699a94df6908db9b9748e96e1~mv2.jpg"
+                  },
+                  "width": 1080,
+                  "height": 1080
+                }
+              },
+              "altText": "Low poly piggy bank 3D asset topology"
+            }
+          ],
+          "options": {
+            "layout": {
+              "type": "GRID",
+              "horizontalScroll": false,
+              "orientation": "COLUMNS",
+              "numberOfColumns": 4
+            },
+            "item": {
+              "ratio": 1,
+              "crop": "FILL"
+            },
+            "thumbnails": {
+              "placement": "NONE"
+            }
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "ukmpy31352",
+        "nodes": [],
+        "paragraphData": {}
+      },
+      {
+        "type": "DIVIDER",
+        "id": "58qbn30714",
+        "nodes": [],
+        "dividerData": {
+          "containerData": {
+            "width": {},
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {},
+            "textWrap": false
+          },
+          "lineStyle": "DOTTED",
+          "width": "LARGE",
+          "alignment": "CENTER"
+        }
+      },
+      {
+        "type": "BUTTON",
+        "id": "hio8k9708",
+        "nodes": [],
+        "buttonData": {
+          "containerData": {
+            "width": {
+              "custom": "740"
+            },
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {},
+            "textWrap": true
+          },
+          "type": "LINK",
+          "styles": {},
+          "text": "DOWNLOAD",
+          "link": {
+            "url": "https://pavelzosim.gumroad.com/l/low-poly-piggy-bank-3d-model",
+            "target": "BLANK",
+            "rel": {
+              "noreferrer": true
+            }
+          }
+        }
+      },
+      {
+        "type": "DIVIDER",
+        "id": "8irpc30979",
+        "nodes": [],
+        "dividerData": {
+          "containerData": {
+            "width": {},
+            "alignment": "CENTER",
+            "spoiler": {},
+            "height": {},
+            "textWrap": false
+          },
+          "lineStyle": "DOUBLE",
+          "width": "LARGE",
+          "alignment": "CENTER"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-tif09104694",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Like this post? ",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "( ´◔ ω◔`) ノシ ",
+              "decorations": []
+            }
+          }
+        ],
+        "style": {},
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "LEFT"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-2kbj214374",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Support:",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": []
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Buy Me a Coffee",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://buymeacoffee.com/pavel.zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Patreon",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.patreon.com/c/pavel_zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "GitHub",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://github.com/pavelzosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Gumroad",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://pavelzosim.gumroad.com/",
+                      "target": "BLANK",
+                      "rel": {
+                        "noreferrer": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "| ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "YouTube",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.youtube.com/@VFX_PavelZosim/videos",
+                      "target": "BLANK",
+                      "rel": {
+                        "nofollow": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "style": {},
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "LEFT"
+          }
+        }
+      }
+    ],
+    "documentStyle": {}
+  },
+  "preview": false,
+  "contentId": "69ba7e598b3a7e7764060d49",
+  "mostRecentContributorId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "media": {
+    "wixMedia": {
+      "image": {
+        "id": "ace175_e1db5fe198364849ad26ce4f1e4bc378~mv2.png",
+        "url": "https://static.wixstatic.com/media/ace175_e1db5fe198364849ad26ce4f1e4bc378~mv2.png",
+        "height": 1024,
+        "width": 1024,
+        "altText": "Low poly piggy bank 3D model for real-time environments",
+        "filename": "PiggyBank.png"
+      }
+    },
+    "displayed": true,
+    "custom": true,
+    "altText": "Low poly piggy bank 3D model for real-time environments"
+  },
+  "hasUnpublishedChanges": false,
+  "translations": [],
+  "customExcerpt": true,
+  "internalCategoryIds": [],
+  "internalRelatedPostIds": []
+}

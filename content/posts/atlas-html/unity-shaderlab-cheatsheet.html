@@ -3,8 +3,8 @@
 <head>
   <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.8.0">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>System Atlas // Production Template</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Unity ShaderLab Cheatsheet · Pavel Zosim</title><meta name="description" content="Production-oriented ShaderLab and rendering-state reference."><link rel="canonical" href="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet"><meta property="og:type" content="article"><meta property="og:title" content="Unity ShaderLab Cheatsheet"><meta property="og:description" content="Production-oriented ShaderLab and rendering-state reference."><meta property="og:url" content="https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Unity ShaderLab Cheatsheet"><meta name="twitter:description" content="Production-oriented ShaderLab and rendering-state reference."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Unity ShaderLab Cheatsheet", "description": "Production-oriented ShaderLab and rendering-state reference.", "url": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet", "mainEntityOfPage": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet", "image": "https://www.pavelzosim.com/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png", "datePublished": null, "dateModified": null, "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&amp;display=swap">
@@ -37,7 +37,7 @@
   </style>
   <link rel="stylesheet" href="/styles/legacy-posts.css?v=15">
 </head>
-<body>
+<body><h1 class="seo-heading">Unity ShaderLab Cheatsheet</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
   <div class="atlas-container">
     <header id="site-passport"></header>
@@ -397,20 +397,20 @@
 
         SubShader
         {
-            Tags 
-            { 
-                "RenderType" = "Opaque" 
-                "RenderPipeline" = "UniversalPipeline" 
+            Tags
+            {
+                "RenderType" = "Opaque"
+                "RenderPipeline" = "UniversalPipeline"
             }
 
             Pass
             {
                 Name "ForwardLit"
-                
+
                 HLSLPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
-                
+
                 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
                 // Data structure passed from the 3D application to the Vertex Shader
@@ -482,7 +482,7 @@
                             _Color ("Tint Color", Color) = (1, 1, 1, 1)
                             _Value ("Intensity Float", Float) = 1.0
                         }
-                        
+
                         // Low-level graphics pipeline execution blocks follow here...
                     }</code></pre>
 
@@ -662,7 +662,7 @@
     Pass {
         // For Built-in RP, you might see CGPROGRAM/ENDCG,
         // while URP/HDRP typically use HLSLPROGRAM/ENDHLSL.
-        CGPROGRAM  
+        CGPROGRAM
             // Compiler directives and shader code go here...
         ENDCG
     }
@@ -900,20 +900,20 @@
           <strong>HDRP:</strong> Blending is often managed indirectly via material settings—especially for transparency. In HDRP, you might not see explicit Blend commands in the shader code because transparency is handled through the Surface Type setting (Opaque vs. Transparent) in the material Inspector.</p>
         </div>
         <p>Common Blend Presets quick reference:</p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">// 1. Traditional Alpha Blending (Transparent Materials)  
-Blend SrcAlpha OneMinusSrcAlpha  
+        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">// 1. Traditional Alpha Blending (Transparent Materials)
+Blend SrcAlpha OneMinusSrcAlpha
 
-// 2. Additive Blending (Fire, Lasers)  
-Blend One One  
+// 2. Additive Blending (Fire, Lasers)
+Blend One One
 
-// 3. Multiplicative Blending (Projectors, Shadows)  
+// 3. Multiplicative Blending (Projectors, Shadows)
 Blend DstColor Zero</code></pre>
         <p><strong>Option 1: Hardcode in the shader</strong></p>
         <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {
     Tags { "Queue" = "Transparent" }
     Blend SrcAlpha OneMinusSrcAlpha
     ZWrite Off // Disable depth writes for proper transparency
-    Pass { 
+    Pass {
         // Shader code here...
     }
 }</code></pre>
@@ -930,16 +930,16 @@ SubShader {
 }</code></pre>
         <p>Pipeline-specific architectural blocks comparison:</p>
         <p><strong>Built-in Render Pipeline</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {  
-    Tags { "Queue"="Transparent" }  
-    Blend SrcAlpha OneMinusSrcAlpha  
-    ZWrite Off  // Disable depth writes for correct transparency  
+        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {
+    Tags { "Queue"="Transparent" }
+    Blend SrcAlpha OneMinusSrcAlpha
+    ZWrite Off  // Disable depth writes for correct transparency
 }</code></pre>
         <p><strong>URP (2024)</strong></p>
-        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {  
-    Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" }  
-    Blend [_SrcBlend] [_DstBlend]  
-    ZWrite Off  
+        <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">SubShader {
+    Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" }
+    Blend [_SrcBlend] [_DstBlend]
+    ZWrite Off
 }</code></pre>
         <h3>Troubleshooting Blending</h3>
         <table class="atlas-data-table">
@@ -1142,7 +1142,7 @@ SubShader {
 {
     fixed4 colFront = tex2D(_FrontTexture, i.uv);
     fixed4 colBack = tex2D(_BackTexture, i.uv);
-    
+
     return face ? colFront : colBack;
 }</code></pre>
         <h3>4.5.2 ShaderLab ZWrite</h3>
@@ -1159,7 +1159,7 @@ SubShader {
         Tags { "Queue"="Transparent" "RenderType"="Transparent" }
         Blend SrcAlpha OneMinusSrcAlpha
         ZWrite Off
-        
+
         Pass {
             // Shader code here...
         }
@@ -1333,21 +1333,21 @@ SubShader {
                 // Enable fog support
                 #pragma multi_compile_fog
                 #include "UnityCG.cginc"
-                
+
                 struct appdata {
                     float4 vertex : POSITION;
                     float2 uv : TEXCOORD0;
                 };
-                
+
                 struct v2f {
                     float4 pos : SV_POSITION;
                     float2 uv : TEXCOORD0;
                     UNITY_FOG_COORDS(1)
                 };
-                
+
                 sampler2D _MainTex;
                 float4 _Color;
-                
+
                 v2f vert (appdata v) {
                     v2f o;
                     o.pos = UnityObjectToClipPos(v.vertex);
@@ -1355,7 +1355,7 @@ SubShader {
                     UNITY_TRANSFER_FOG(o,o.pos);
                     return o;
                 }
-                
+
                 fixed4 frag (v2f i) : SV_Target {
                     fixed4 col = tex2D(_MainTex, i.uv) * _Color;
                     UNITY_APPLY_FOG(i.fogCoord, col);
@@ -1398,8 +1398,8 @@ SubShader {
 {
     // ====================================================
     // 1. MATERIAL PROPERTIES - Inspector Interface
-    // ==================================================== 
-    Properties 
+    // ====================================================
+    Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Color", Color) = (1, 1, 1, 1)
@@ -1408,7 +1408,7 @@ SubShader {
     // ====================================================
     // 2. SUBSHADER - Render Pipeline Configuration
     // ====================================================
-    SubShader 
+    SubShader
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
@@ -1416,13 +1416,13 @@ SubShader {
         // ====================================================
         // 3. PASS - Contains the shader program code
         // ====================================================
-        Pass 
+        Pass
         {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fog
-            
+
             #include "UnityCG.cginc"
 
             // Global Uniforms
@@ -1432,13 +1432,13 @@ SubShader {
             // ====================================================
             // 4. DATA STRUCTURES (Vertex Input / Output)
             // ====================================================
-            struct appdata 
+            struct appdata
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
 
-            struct v2f 
+            struct v2f
             {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
@@ -1448,7 +1448,7 @@ SubShader {
             // ====================================================
             // 5. VERTEX SHADER STAGE
             // ====================================================
-            v2f vert (appdata v) 
+            v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -1460,7 +1460,7 @@ SubShader {
             // ====================================================
             // 6. FRAGMENT SHADER STAGE
             // ====================================================
-            fixed4 frag (v2f i) : SV_Target 
+            fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv) * _Color;
                 UNITY_APPLY_FOG(i.fogCoord, col);
@@ -1469,7 +1469,7 @@ SubShader {
             ENDCG
         }
     }
-    
+
     // ====================================================
     // 7. SHADER FALLBACK
     // ====================================================
@@ -1931,37 +1931,37 @@ bool isInvalid = isnan(value);</code></pre>
         <h3>URP Shader Implementation Example</h3>
         <pre class="atlas-code-block" data-lang="glsl"><code class="language-glsl">Shader "URPExamples/SimpleColor"
 {
-    Properties 
+    Properties
     {
         _BaseColor("Color", Color) = (1,1,1,1)
         _BaseMap("Texture", 2D) = "white" {}
     }
 
-    SubShader 
+    SubShader
     {
-        Tags 
-        { 
+        Tags
+        {
             "RenderType"="Opaque"
             "RenderPipeline"="UniversalPipeline"
         }
-        
-        Pass 
+
+        Pass
         {
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            
+
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             // Data structure for Vertex Input
-            struct Attributes 
+            struct Attributes
             {
                 float4 positionOS   : POSITION;
                 float2 uv           : TEXCOORD0;
             };
 
             // Data structure for Vertex Output (Rasterizer Input)
-            struct Varyings 
+            struct Varyings
             {
                 float4 positionHCS  : SV_POSITION;
                 float2 uv           : TEXCOORD0;
@@ -1970,14 +1970,14 @@ bool isInvalid = isnan(value);</code></pre>
             // Textures and Samplers API macros
             TEXTURE2D(_BaseMap);
             SAMPLER(sampler_BaseMap);
-            
+
             // SRP Batcher constant buffer configuration
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST;
                 half4 _BaseColor;
             CBUFFER_END
 
-            Varyings vert(Attributes IN) 
+            Varyings vert(Attributes IN)
             {
                 Varyings OUT;
                 // Transform positions from object space to homogenous clip space
@@ -1986,7 +1986,7 @@ bool isInvalid = isnan(value);</code></pre>
                 return OUT;
             }
 
-            half4 frag(Varyings IN) : SV_Target 
+            half4 frag(Varyings IN) : SV_Target
             {
                 // Core macro-based sampling
                 half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
@@ -2102,11 +2102,11 @@ bool isInvalid = isnan(value);</code></pre>
             title:      null,
             tags:       [],
 
-            tagBaseUrl: 'https://www.pavelzosim.com/blog/tags/'
+            tagBaseUrl: '/blog/?tag='
         };
 
         // Эндпоинты данных
-        var BACKEND_URL = 'https://www.pavelzosim.com/_functions/getPostData';
+
         var FOOTER_URL  = 'https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@master/cdn/atlas-site-footer-config.json?v=' + new Date().getTime();
 
         /* ==========================================================================
@@ -2134,165 +2134,9 @@ bool isInvalid = isnan(value);</code></pre>
                 var blocks = document.querySelectorAll('#atlas-body pre code');
                 if (blocks.length > 0) {
                     console.log("[ATLAS_DEBUG] Found " + blocks.length + " code block(s). Executing Prism...");
-                    
+
                     var processedCount = 0;
-                    blocks.forEach(function(el) {
-                        Prism.highlightElement(el, false, function() {
-                            processedCount++;
-                            if (processedCount === blocks.length) {
-                                console.log("[ATLAS_DEBUG] All code blocks successfully highlighted.");
-                                setTimeout(function() { sendPostHeight("Prism parsing finished"); }, 50);
-                            }
-                        });
-                    });
-                } else {
-                    console.log("[ATLAS_DEBUG] No code blocks detected in this post.");
-                    sendPostHeight("No code blocks found");
-                }
-            } else {
-                console.error("[ATLAS_DEBUG] Critical Error: Prism.js is missing or failed to initialize.");
-                sendPostHeight("Fallback (Prism missing)");
-            }
-        }
-
-        /* ==========================================================================
-        ── РЕНДЕРИНГ КОМПОНЕНТА: ПАСПОРТ ПОСТА (ВЕРХНИЙ БЛОК)
-        ========================================================================== */
-        function renderPassport() {
-            var o = CONFIG;
-            var status = (o.status || 'DRAFT').toUpperCase();
-            var rt = o.readTime || (o.wordCount ? '~' + Math.ceil(Number(o.wordCount) / 200) + ' MIN' : null);
-
-            var meta = [
-                { k: 'AUTH',    v: o.author  || '—' },
-                { k: 'CREATED', v: o.created || '—' }
-            ];
-            if (o.modified) meta.push({ k: 'LAST_MODIFIED', v: o.modified });
-            if (rt)          meta.push({ k: 'READ', v: rt });
-
-            var metaHTML = meta.map(function (m) {
-                return '<span class="bp-meta-item"><b>' + m.k + '</b>: ' + m.v + '</span>';
-            }).join('');
-
-            var tags = Array.isArray(o.tags) ? o.tags : [];
-            var baseUrl = o.tagBaseUrl || null;
-            function toSlug(s) { return s.toLowerCase().replace(/\s+/g, '-'); }
-
-            var tagsHTML = tags.length
-                ? '<div class="bp-tags" style="padding-bottom: 14px; padding-right: 14px;">' +
-                  tags.map(function (tg) {
-                      return baseUrl
-                          ? '<a href="' + baseUrl + toSlug(tg) + '" class="atlas-blueprint-link" target="_top">#' + tg + '</a>'
-                          : '<span class="atlas-blueprint-link" style="cursor:default">#' + tg + '</span>';
-                  }).join('') + '</div>'
-                : '';
-
-            document.getElementById('site-passport').innerHTML =
-                '<div class="passport-bp">' +
-                    '<div class="bp-title-bar">' +
-                        '<div class="bp-title-bar__left">' +
-                            '<span class="bp-user-prompt">' + (o.user || 'user') + '</span>' +
-                            '<span style="opacity:.4">:</span>' +
-                            '<span class="bp-path-prompt">' + (o.path || '~') + '</span>' +
-                            '<span class="bp-root-char">#</span>' +
-                            '<span class="bp-command-text">' + (o.command || 'cat log') + '</span>' +
-                        '</div>' +
-                        '<div class="bp-sys-status">[ SYS_STATUS: <b>' + status + '</b> ]</div>' +
-                    '</div>' +
-                    (o.title ? '<div class="bp-main-title">' + o.title + '</div>' : '') +
-                    '<div class="bp-grid">' +
-                        '<div class="bp-cell">' +
-                            '<div><span class="bp-key">PROJECT</span><span class="bp-val">' + (o.project || '—') + '</span></div>' +
-                            '<div><span class="bp-key">MODULE</span><span class="bp-val">'   + (o.module  || '—') + '</span></div>' +
-                        '</div>' +
-                        '<div class="bp-cell">' +
-                            '<div><span class="bp-key">VERSION</span><span class="bp-val">' + (o.version || '—') + '</span></div>' +
-                            '<div><span class="bp-key">LOG_ID</span><span class="bp-val">'  + (o.logId   || '—') + '</span></div>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="bp-meta">' + metaHTML + '</div>' +
-                    tagsHTML +
-                '</div>';
-        }
-
-        /* ==========================================================================
-        ── РЕНДЕРИНГ КОМПОНЕНТА: ФУТЕР САЙТА (НИЖНИЙ БЛОК)
-        ========================================================================== */
-        function renderFooter(c) {
-            var supportHTML = '';
-            if (c.support) {
-                var supportLinks = (c.support.links || []).map(function(l, idx, arr) {
-                    var link = '<a href="' + l.url + '" class="atlas-blueprint-link" target="_blank">[ ' + l.text + ' ]</a>';
-                    return idx < arr.length - 1
-                        ? link + '<span class="atlas-footer-block__support-divider">|</span>'
-                        : link;
-                }).join('');
-
-                supportHTML =
-                    '<div class="atlas-footer-block__support-content">' +
-                        '<div class="atlas-footer-block__support-text">' + (c.support.text || '') + '</div>' +
-                        '<div class="atlas-footer-block__support-links">' + supportLinks + '</div>' +
-                    '</div>';
-            }
-
-            var matrixHTML = (c.links || []).map(function(group) {
-                var items = (group.items || []).map(function(item) {
-                    return '<a href="' + item.url + '" class="atlas-blueprint-link" target="_blank">/ ' + item.text + '</a>';
-                }).join('');
-
-                return '<div class="atlas-footer-block__matrix-column">' +
-                           '<span class="atlas-footer-block__column-label">' + group.label + '</span>' +
-                           '<div class="atlas-footer-block__column-items">' + items + '</div>' +
-                       '</div>';
-            }).join('');
-
-            document.getElementById('site-footer').innerHTML =
-                '<div class="atlas-footer-wrapper">' +
-                    '<div class="atlas-footer-block atlas-footer-block--main">' +
-                        '<div class="atlas-footer-block__support-header">' +
-                            '<div class="atlas-footer-block__kaomoji">' + (c.tagline || '') + '</div>' +
-                            '<div class="atlas-footer-block__support-title">Let\'s stay in touch</div>' +
-                        '</div>' +
-                        supportHTML +
-                        '<div class="atlas-footer-block__matrix-zone">' + matrixHTML + '</div>' +
-                    '</div>' +
-                '</div>';
-        }
-
-        /* ==========================================================================
-        ── ИНИЦИАЛИЗАЦИЯ И СИНХРОНИЗАЦИЯ ДАННЫХ
-        ========================================================================== */
-        function applyData(d) {
-            if (d.author)             CONFIG.author    = d.author;
-            if (d.title)              CONFIG.title     = d.title;
-            if (d.created)            CONFIG.created   = d.created;
-            if (d.modified !== undefined) CONFIG.modified  = d.modified;
-            if (Array.isArray(d.tags) && d.tags.length) CONFIG.tags = d.tags;
-
-            renderPassport();
-            processCodeBlocks();
-        }
-
-        // 1. Старт системы при первичной загрузке DOM
-        window.addEventListener('load', function() {
-            console.log("[ATLAS_DEBUG] Production Template loaded. Initializing systems...");
-            renderPassport();
-            processCodeBlocks(); 
-        });
-
-        // 2. Запрос метаданных из базы Wix
-        (function () {
-            var slug = CONFIG.slug || '';
-            if (!slug) return;
-
-            fetch(BACKEND_URL + '?slug=' + encodeURIComponent(slug))
-                .then(function (r) { return r.ok ? r.json() : null; })
-                .then(function (data) {
-                    if (data && !data.error) applyData(data);
-                    else console.warn('[ATLAS] Backend returned:', JSON.stringify(data));
-                })
-                .catch(function (err) { console.warn('[ATLAS] Fetch failed:', err); });
-        })();
+                    blocks.forEach
 
         // Резервный канал синхронизации через postMessage
         window.addEventListener('message', function (e) {
@@ -2311,13 +2155,13 @@ bool isInvalid = isnan(value);</code></pre>
                 }
             })
             .catch(function(e) { console.error('[atlas-footer-fetch]', e); });
-  </script> 
+  </script>
   <script>
 
 
     window.addEventListener('load', () => {
         console.log("=== 🔍 ATLAS FRAMEWORK DEBUGGER ===");
-        
+
         // 1. Проверяем, какие именно CSS-файлы с именем 'atlas' загрузил браузер
         const styles = document.querySelectorAll('link[rel="stylesheet"]');
         let atlasFound = false;
@@ -2334,11 +2178,11 @@ bool isInvalid = isnan(value);</code></pre>
         if (firstListItem) {
             const beforeContent = window.getComputedStyle(firstListItem, '::before').content;
             console.log("🎯 Вычисленный контент маркера (li::before):", beforeContent);
-            
+
             // Если браузер вернул код старого квадрата \25AB
             if (beforeContent.includes('25AB') || beforeContent.includes('▫')) {
                 console.error("❌ ОШИБКА КЭША: Браузер всё ещё рендерит старый квадрат!");
-            } 
+            }
             // Если маркер пустой или содержит новые скобки
             else if (beforeContent.includes('[') || beforeContent === 'none') {
                 console.log("✅ УСПЕХ: Старый маркер стерт, применены новые стили.");
@@ -2352,7 +2196,7 @@ bool isInvalid = isnan(value);</code></pre>
     });
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-glsl.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-hlsl.min.js"></script>

@@ -1,0 +1,674 @@
+{
+  "id": "67bd5625-5add-48e5-8a28-42563f680f42",
+  "title": "Enemy System Progress + Player/Camera Integration",
+  "excerpt": "Solo Game Dev Vlog In this vlog I walk through the progress I’ve made on the modular Enemy System (attack and spawn)  and the first phase of Player & Camera Integration . The enemy system now has a solid foundation: data stored in ScriptableObjects, health and attack modules, movement patterns like chasers and ranged units, and loot drops tied directly into death events. I also built a spawning system that uses NavMesh sampling to keep things flexible and reliable. On the player side, I...",
+  "contentText": "Solo Game Dev Vlog In this vlog I walk through the progress I’ve made on the modular Enemy System (attack and spawn)  and the first phase of Player & Camera Integration . The enemy system now has a solid foundation: data stored in ScriptableObjects, health and attack modules, movement patterns like chasers and ranged units, and loot drops tied directly into death events. I also built a spawning system that uses NavMesh sampling to keep things flexible and reliable. On the player side, I integrated a controller with free 8‑directional movement, melee combat, health and scoring, all running on Unity’s new Input System. The camera follows smoothly, with boundary triggers and optional dead zones for that classic beat’em up feel. 🎥 The video shows these systems in action — enemies spawning, moving, attacking, dropping loot, while the player and camera interact seamlessly. The modular setup makes it easy to expand with new features as development continues. Like this post? ( ´◔ ω◔`) ノシ Support:   Buy Me a Coffee  | Patreon  | GitHub  | Gumroad   |  YouTube",
+  "firstPublishedDate": "2025-12-15T09:22:20.771Z",
+  "lastPublishedDate": "2025-12-15T09:22:20.771Z",
+  "url": {
+    "base": "https://www.pavelzosim.com",
+    "path": "/post/enemy-system-progress-player-camera-integration"
+  },
+  "slug": "enemy-system-progress-player-camera-integration",
+  "featured": false,
+  "pinned": false,
+  "categoryIds": [],
+  "memberId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "hashtags": [],
+  "commentingEnabled": true,
+  "minutesToRead": 1,
+  "tagIds": [
+    "0a490349-37b0-467c-bd19-0247468267fc",
+    "c0162675-e0fc-4605-a30f-9416b28176c4",
+    "bae8261f-d081-4183-be5e-70f3bfb6d390",
+    "e5d9102b-f79a-49ed-9829-2fc980ad7064"
+  ],
+  "relatedPostIds": [],
+  "pricingPlanIds": [],
+  "language": "en",
+  "seoData": {
+    "tags": [
+      {
+        "type": "meta",
+        "props": {
+          "property": "og:image",
+          "content": "https://static.wixstatic.com/media/ace175_8812804dcc4249dd93a1889daf57e41f~mv2.jpg"
+        },
+        "meta": {
+          "width": 1200,
+          "height": 627
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "name": "description",
+          "content": "Solo Game Dev Vlog.  I’ve made on the modular Enemy System (attack and spawn) and the first phase of Player & Camera Integration.\n\n"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "title",
+        "children": "Solo Game Dev: Enemy System & Player/Camera Integration Progress",
+        "custom": false,
+        "disabled": false
+      },
+      {
+        "type": "meta",
+        "props": {
+          "name": "robots",
+          "content": "noindex"
+        },
+        "children": "",
+        "custom": false,
+        "disabled": false
+      }
+    ],
+    "settings": {
+      "preventAutoRedirect": false,
+      "keywords": [
+        {
+          "term": "Solo Game Dev",
+          "isMain": true
+        }
+      ]
+    }
+  },
+  "richContent": {
+    "nodes": [
+      {
+        "type": "HEADING",
+        "id": "uatkh693",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Solo Game Dev Vlog",
+              "decorations": []
+            }
+          }
+        ],
+        "headingData": {
+          "level": 2,
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "f0cmo1600",
+        "nodes": [],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "rb5te2013",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "In this vlog I walk through the progress I’ve made on the ",
+              "decorations": []
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "modular Enemy System (attack and spawn)",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " and the first phase of ",
+              "decorations": []
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Player & Camera Integration",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": ".",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "6f2x31606",
+        "nodes": [],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "grja61922",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "The enemy system now has a solid foundation: data stored in ScriptableObjects, health and attack modules, movement patterns like chasers and ranged units, and loot drops tied directly into death events. I also built a spawning system that uses NavMesh sampling to keep things flexible and reliable.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "3sfsr1608",
+        "nodes": [],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "bgj611899",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "On the player side, I integrated a controller with free 8‑directional movement, melee combat, health and scoring, all running on Unity’s new Input System. The camera follows smoothly, with boundary triggers and optional dead zones for that classic beat’em up feel.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "j9uqg2118",
+        "nodes": [],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "VIDEO",
+        "id": "a0ob22081",
+        "nodes": [],
+        "videoData": {
+          "containerData": {
+            "width": {
+              "size": "CONTENT"
+            },
+            "alignment": "CENTER",
+            "textWrap": true
+          },
+          "video": {
+            "src": {
+              "url": "https://youtu.be/Sa2pQzJxfa0"
+            },
+            "duration": 31
+          },
+          "thumbnail": {
+            "src": {
+              "url": "https://i.ytimg.com/vi/Sa2pQzJxfa0/sddefault.jpg"
+            },
+            "width": 640,
+            "height": 480
+          },
+          "title": "Enemy System Progress & Player/Camera Integration"
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "d6h381912",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "🎥 The video shows these systems in action — enemies spawning, moving, attacking, dropping loot, while the player and camera interact seamlessly. The modular setup makes it easy to expand with new features as development continues.",
+              "decorations": []
+            }
+          }
+        ],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "djjd52138",
+        "nodes": [],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-tif09104694",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Like this post? ",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "( ´◔ ω◔`) ノシ ",
+              "decorations": []
+            }
+          }
+        ],
+        "style": {},
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "LEFT"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "viewer-2kbj214374",
+        "nodes": [
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Support:",
+              "decorations": [
+                {
+                  "type": "BOLD",
+                  "fontWeightValue": 700
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": []
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Buy Me a Coffee",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://buymeacoffee.com/pavel.zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Patreon",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.patreon.com/c/pavel_zosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "GitHub",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://github.com/pavelzosim",
+                      "target": "BLANK"
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " | ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "Gumroad",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://pavelzosim.gumroad.com/",
+                      "target": "BLANK",
+                      "rel": {
+                        "noreferrer": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "foreground": "rgb(8, 78, 189)"
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "| ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": "YouTube",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                },
+                {
+                  "type": "LINK",
+                  "linkData": {
+                    "link": {
+                      "url": "https://www.youtube.com/@VFX_PavelZosim/videos",
+                      "target": "BLANK",
+                      "rel": {
+                        "nofollow": true
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "UNDERLINE"
+                }
+              ]
+            }
+          },
+          {
+            "type": "TEXT",
+            "id": "",
+            "nodes": [],
+            "textData": {
+              "text": " ",
+              "decorations": [
+                {
+                  "type": "COLOR",
+                  "colorData": {
+                    "background": "transparent",
+                    "foreground": "rgb(1, 65, 170)"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "style": {},
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "LEFT"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "mou8f2031",
+        "nodes": [],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      },
+      {
+        "type": "PARAGRAPH",
+        "id": "ce9g11612",
+        "nodes": [],
+        "paragraphData": {
+          "textStyle": {
+            "textAlignment": "AUTO"
+          }
+        }
+      }
+    ],
+    "documentStyle": {}
+  },
+  "preview": false,
+  "contentId": "69b51ed879b818b5bd3acfdd",
+  "mostRecentContributorId": "ace1758c-fcdc-41cb-9e82-a1d476acc442",
+  "media": {
+    "embedMedia": {
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/Sa2pQzJxfa0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "video": {
+        "url": "https://youtu.be/Sa2pQzJxfa0",
+        "width": 640,
+        "height": 480
+      }
+    },
+    "displayed": true,
+    "custom": false
+  },
+  "hasUnpublishedChanges": false,
+  "translations": [],
+  "customExcerpt": false,
+  "internalCategoryIds": [],
+  "internalRelatedPostIds": []
+}

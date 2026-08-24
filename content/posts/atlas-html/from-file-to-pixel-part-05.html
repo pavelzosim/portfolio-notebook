@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://www.pavelzosim.com/post/from-file-to-pixel-part-05">
-  <title>From File to Pixel · Part 05: The Engine — pavelzosim.com</title>
-  <meta name="description" content="Forward vs Deferred rendering, Unity URP/HDRP, Unreal Nanite/Lumen/RDG, API decision matrix across Vulkan/DX12/Metal/GL ES, and profiling tools for PC, Console, Mobile, and VR.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>From File to Pixel · Part 05: The Engine · Pavel Zosim</title><meta name="description" content="Forward and deferred rendering across Unity URP, HDRP, and Unreal Engine."><link rel="canonical" href="https://www.pavelzosim.com/post/from-file-to-pixel-part-05"><meta property="og:type" content="article"><meta property="og:title" content="From File to Pixel · Part 05: The Engine"><meta property="og:description" content="Forward and deferred rendering across Unity URP, HDRP, and Unreal Engine."><meta property="og:url" content="https://www.pavelzosim.com/post/from-file-to-pixel-part-05"><meta property="og:image" content="https://www.pavelzosim.com/public/media/home/home/asset-7c59da9a33eb4d36.jpg"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/home/home/asset-7c59da9a33eb4d36.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="From File to Pixel · Part 05: The Engine"><meta name="twitter:description" content="Forward and deferred rendering across Unity URP, HDRP, and Unreal Engine."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "From File to Pixel · Part 05: The Engine", "description": "Forward and deferred rendering across Unity URP, HDRP, and Unreal Engine.", "url": "https://www.pavelzosim.com/post/from-file-to-pixel-part-05", "mainEntityOfPage": "https://www.pavelzosim.com/post/from-file-to-pixel-part-05", "image": "https://www.pavelzosim.com/public/media/home/home/asset-7c59da9a33eb4d36.jpg", "datePublished": "2025-04-05", "dateModified": "2025-04-05", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
+
+
+
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
@@ -80,7 +80,7 @@
   </style>
   <link rel="stylesheet" href="/styles/legacy-posts.css?v=15">
 </head>
-<body>
+<body><h1 class="seo-heading">From File to Pixel · Part 05: The Engine</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
 <div class="atlas-container">
   <div id="site-passport"></div>
@@ -642,7 +642,7 @@ void MainCS(uint3 ThreadId : SV_DispatchThreadID)
           <span class="atlas-part-nav__label">Part 04: The Shader</span>
           <span class="atlas-part-nav__sub">File→Pixel · Instancing · HLSL/GLSL/MSL</span>
         </a>
-        <a href="https://www.pavelzosim.com/post/from-file-to-pixel" target="_top" class="atlas-part-nav__btn" style="text-align:right">
+        <a href="/blog/" target="_top" class="atlas-part-nav__btn" style="text-align:right">
           <span class="atlas-part-nav__direction">↑ Index</span>
           <span class="atlas-part-nav__label">Series Overview</span>
           <span class="atlas-part-nav__sub">All 5 parts · From File to Pixel</span>
@@ -661,10 +661,10 @@ void MainCS(uint3 ThreadId : SV_DispatchThreadID)
 </div>
 
 <script>
-var CONFIG={user:'pavelzosim',path:'~',command:'cat forward_deferred_urp_hdrp_unreal_tools.log',project:'From File to Pixel',module:'Part 05 — The Engine',version:'v1.0',logId:'FTFP_P05',status:'LIVE',slug:'from-file-to-pixel-part-05',author:'Pavel Zosim',created:'2025.04.05',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'https://www.pavelzosim.com/blog/tags/'};
-var BACKEND_URL='https://www.pavelzosim.com/_functions/getPostData';
+var CONFIG={user:'pavelzosim',path:'~',command:'cat forward_deferred_urp_hdrp_unreal_tools.log',project:'From File to Pixel',module:'Part 05 — The Engine',version:'v1.0',logId:'FTFP_P05',status:'LIVE',slug:'from-file-to-pixel-part-05',author:'Pavel Zosim',created:'2025.04.05',modified:null,wordCount:null,title:null,tags:[],tagBaseUrl:'/blog/?tag='};
+
 function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
-(function(){if(!CONFIG.slug)return;fetch(BACKEND_URL+'?slug='+encodeURIComponent(CONFIG.slug)).then(r=>r.ok?r.json():null).then(d=>{if(d&&!d.error)applyData(d);}).catch(e=>console.warn('[ATLAS]',e));})();
+
 (function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
 (function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
 document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});

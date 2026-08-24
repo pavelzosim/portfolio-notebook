@@ -14,8 +14,19 @@
       "image": "/public/media/home/home/asset-7c59da9a33eb4d36.jpg",
       "localPath": "/content/posts/atlas-html/from-file-to-pixel-part-01.html",
       "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-01",
-      "state": "LOCAL",
-      "homepage": { "highlight": true, "recent": true, "rank": 40, "date": "2026.06" }
+      "state": "published",
+      "homepage": {
+        "highlight": true,
+        "recent": true,
+        "rank": 40,
+        "date": "2026.06"
+      },
+      "publicUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-01",
+      "slug": "from-file-to-pixel-part-01",
+      "imageAlt": "From File to Pixel · Part 01: The Machine",
+      "datePublished": "2025-03-08",
+      "dateModified": "2025-03-08",
+      "indexable": true
     },
     {
       "id": "NOTE-002",
@@ -31,7 +42,13 @@
       "image": "/public/media/home/home/asset-7c59da9a33eb4d36.jpg",
       "localPath": "/content/posts/atlas-html/from-file-to-pixel-part-02.html",
       "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-02",
-      "state": "LOCAL"
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-02",
+      "slug": "from-file-to-pixel-part-02",
+      "imageAlt": "From File to Pixel · Part 02: The Pipeline",
+      "datePublished": "2025-03-15",
+      "dateModified": "2025-03-15",
+      "indexable": true
     },
     {
       "id": "NOTE-003",
@@ -47,7 +64,13 @@
       "image": "/public/media/home/home/asset-7c59da9a33eb4d36.jpg",
       "localPath": "/content/posts/atlas-html/from-file-to-pixel-part-03.html",
       "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-03",
-      "state": "LOCAL"
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-03",
+      "slug": "from-file-to-pixel-part-03",
+      "imageAlt": "From File to Pixel · Part 03: The Data",
+      "datePublished": "2025-03-22",
+      "dateModified": "2025-03-22",
+      "indexable": true
     },
     {
       "id": "NOTE-004",
@@ -63,7 +86,13 @@
       "image": "/public/media/home/home/asset-7c59da9a33eb4d36.jpg",
       "localPath": "/content/posts/atlas-html/from-file-to-pixel-part-04.html",
       "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-04",
-      "state": "LOCAL"
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-04",
+      "slug": "from-file-to-pixel-part-04",
+      "imageAlt": "From File to Pixel · Part 04: The Shader",
+      "datePublished": "2025-03-29",
+      "dateModified": "2025-03-29",
+      "indexable": true
     },
     {
       "id": "NOTE-005",
@@ -79,7 +108,13 @@
       "image": "/public/media/home/home/asset-7c59da9a33eb4d36.jpg",
       "localPath": "/content/posts/atlas-html/from-file-to-pixel-part-05.html",
       "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-05",
-      "state": "LOCAL"
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-05",
+      "slug": "from-file-to-pixel-part-05",
+      "imageAlt": "From File to Pixel · Part 05: The Engine",
+      "datePublished": "2025-04-05",
+      "dateModified": "2025-04-05",
+      "indexable": true
     },
     {
       "id": "RND-001",
@@ -96,8 +131,19 @@
       "image": "/public/media/home/home/asset-bec58259fb369286.jpg",
       "localPath": "/content/posts/atlas-html/procedural-sun-ue5-hlsl-compute-shader.html",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders",
-      "state": "LOCAL",
-      "homepage": { "highlight": true, "recent": true, "rank": 30, "date": "2026.07" }
+      "state": "published",
+      "homepage": {
+        "highlight": true,
+        "recent": true,
+        "rank": 30,
+        "date": "2026.07"
+      },
+      "publicUrl": "https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders",
+      "slug": "procedural-sun-ue5-hlsl-compute-shaders",
+      "imageAlt": "Procedural Sun Surface — UE5 HLSL Compute Shader",
+      "datePublished": "2026-04-10",
+      "dateModified": "2026-04-10",
+      "indexable": true
     },
     {
       "id": "RND-002",
@@ -114,8 +160,19 @@
       "image": "/public/media/home/home/asset-d9f1ca6b786259a5.gif",
       "localPath": "/content/posts/atlas-html/houdini-procedural-explosion-vfx.html",
       "sourceUrl": "https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx",
-      "state": "LOCAL",
-      "homepage": { "highlight": true, "recent": true, "rank": 20, "date": "2026.08" }
+      "state": "published",
+      "homepage": {
+        "highlight": true,
+        "recent": true,
+        "rank": 20,
+        "date": "2026.08"
+      },
+      "publicUrl": "https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx",
+      "slug": "houdini-procedural-explosion-vfx",
+      "imageAlt": "Houdini Procedural Explosion VFX",
+      "datePublished": "2024-11-15",
+      "dateModified": "2024-11-15",
+      "indexable": true
     },
     {
       "id": "CASE-001",
@@ -130,9 +187,20 @@
       ],
       "image": "/public/media/home/home/asset-b9bb1240178d9cc3.jpg",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd",
-      "state": "LOCAL",
+      "state": "published",
       "localPath": "/content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
-      "homepage": { "highlight": true, "recent": true, "rank": 10, "date": "2026.08" }
+      "homepage": {
+        "highlight": true,
+        "recent": true,
+        "rank": 10,
+        "date": "2026.08"
+      },
+      "publicUrl": "https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd",
+      "slug": "procedural-interior-design-pipeline-houdini-usd",
+      "imageAlt": "Procedural Interiors with Houdini & USD",
+      "datePublished": "2026-01-17",
+      "dateModified": "2026-01-17",
+      "indexable": true
     },
     {
       "id": "REF-001",
@@ -147,7 +215,14 @@
       ],
       "image": "/public/media/posts/unity-shaderlab-cheatsheet/asset-0ffadac9d2348774.png",
       "localPath": "/content/posts/atlas-html/unity-shaderlab-cheatsheet.html",
-      "state": "LOCAL"
+      "state": "published",
+      "sourceUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet",
+      "publicUrl": "https://www.pavelzosim.com/post/unity-shaderlab-cheatsheet",
+      "slug": "unity-shaderlab-cheatsheet",
+      "imageAlt": "Unity ShaderLab Cheatsheet",
+      "datePublished": "",
+      "dateModified": "",
+      "indexable": true
     },
     {
       "id": "TOOL-001",
@@ -163,8 +238,14 @@
       "image": "/public/media/home/home/asset-ef33d8a1c9b8b70b.png",
       "localPath": "/content/posts/atlas-html/sprite-sheet-assembly-tool.html",
       "sourceUrl": "https://www.pavelzosim.com/post/sprite-sheet-assembly-tool",
-      "state": "LOCAL",
-      "resource": true
+      "state": "published",
+      "resource": true,
+      "publicUrl": "https://www.pavelzosim.com/post/sprite-sheet-assembly-tool",
+      "slug": "sprite-sheet-assembly-tool",
+      "imageAlt": "Sprite Sheet Assembly Tool",
+      "datePublished": "2026-07-14",
+      "dateModified": "2026-07-14",
+      "indexable": true
     },
     {
       "id": "TOOL-002",
@@ -179,9 +260,15 @@
       ],
       "image": "/public/media/posts/houdini-folder-based-file-importer-tool/asset-16d45d74edf2b5c1.png",
       "localPath": "/content/posts/atlas-html/houdini-folder-based-file-importer-tool.html",
-      "sourceUrl": "https://www.pavelzosim.com/post/houdini-folder-based-file-importer-tool",
-      "state": "LOCAL",
-      "resource": true
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-tool-folder-based-file-importer",
+      "state": "published",
+      "resource": true,
+      "publicUrl": "https://www.pavelzosim.com/post/houdini-tool-folder-based-file-importer",
+      "slug": "houdini-tool-folder-based-file-importer",
+      "imageAlt": "Houdini Folder-Based File Importer",
+      "datePublished": "2024-07-20",
+      "dateModified": "2024-07-20",
+      "indexable": true
     },
     {
       "id": "TOOL-003",
@@ -195,9 +282,15 @@
         "python"
       ],
       "localPath": "/content/posts/atlas-html/houdini-material-path-manager-tool.html",
-      "sourceUrl": "https://www.pavelzosim.com/post/houdini-material-path-manager-tool",
-      "state": "LOCAL",
-      "resource": true
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-tool-material-path-manager",
+      "state": "published",
+      "resource": true,
+      "publicUrl": "https://www.pavelzosim.com/post/houdini-tool-material-path-manager",
+      "slug": "houdini-tool-material-path-manager",
+      "imageAlt": "Houdini Material Path Manager",
+      "datePublished": "2024-05-01",
+      "dateModified": "2024-05-01",
+      "indexable": true
     },
     {
       "id": "TOOL-004",
@@ -212,8 +305,14 @@
       ],
       "localPath": "/content/posts/atlas-html/houdini-tool-data-export-from-houdini-to-after-effects.html",
       "sourceUrl": "https://www.pavelzosim.com/post/houdini-tool-data-export-from-houdini-to-after-effects",
-      "state": "LOCAL",
-      "resource": true
+      "state": "published",
+      "resource": true,
+      "publicUrl": "https://www.pavelzosim.com/post/houdini-tool-data-export-from-houdini-to-after-effects",
+      "slug": "houdini-tool-data-export-from-houdini-to-after-effects",
+      "imageAlt": "Houdini to After Effects Data Export",
+      "datePublished": "2024-03-15",
+      "dateModified": "2024-03-15",
+      "indexable": true
     },
     {
       "id": "TOOL-005",
@@ -228,9 +327,15 @@
       ],
       "image": "/public/media/posts/houdini_rig_bones_generator/asset-12cb00f93c86a0d9.png",
       "localPath": "/content/posts/atlas-html/houdini_rig_bones_generator.html",
-      "sourceUrl": "https://www.pavelzosim.com/post/houdini-procedural-skeleton-rig-bones-generator",
-      "state": "LOCAL",
-      "resource": true
+      "sourceUrl": "https://www.pavelzosim.com/post/procedural-skeleton-houdini",
+      "state": "published",
+      "resource": true,
+      "publicUrl": "https://www.pavelzosim.com/post/procedural-skeleton-houdini",
+      "slug": "procedural-skeleton-houdini",
+      "imageAlt": "Procedural Skeleton Generator",
+      "datePublished": "2024-09-20",
+      "dateModified": "2024-09-20",
+      "indexable": true
     },
     {
       "id": "TOOL-006",
@@ -246,8 +351,14 @@
       "image": "/public/media/posts/procedural-modeling-tire-generator/asset-02249583ea375895.gif",
       "localPath": "/content/posts/atlas-html/procedural-modeling-tire-generator.html",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-modeling-tire-generator",
-      "state": "LOCAL",
-      "resource": true
+      "state": "published",
+      "resource": true,
+      "publicUrl": "https://www.pavelzosim.com/post/procedural-modeling-tire-generator",
+      "slug": "procedural-modeling-tire-generator",
+      "imageAlt": "Procedural Tire Generator",
+      "datePublished": "2024-06-10",
+      "dateModified": "2024-06-10",
+      "indexable": true
     },
     {
       "id": "TOOL-007",
@@ -262,9 +373,15 @@
       ],
       "image": "/public/media/home/home/asset-e04d98152185263d.jpg",
       "sourceUrl": "https://www.pavelzosim.com/post/folder-structure-cli-tool",
-      "state": "LOCAL",
+      "state": "published",
       "resource": true,
-      "localPath": "/content/posts/atlas-html/folder-structure-cli-tool.html"
+      "localPath": "/content/posts/atlas-html/folder-structure-cli-tool.html",
+      "publicUrl": "https://www.pavelzosim.com/post/folder-structure-cli-tool",
+      "slug": "folder-structure-cli-tool",
+      "imageAlt": "FolderTree.Parser",
+      "datePublished": "2026-01-10",
+      "dateModified": "2026-01-10",
+      "indexable": true
     },
     {
       "id": "TOOL-008",
@@ -278,10 +395,16 @@
         "optimization"
       ],
       "sourceUrl": "https://www.pavelzosim.com/post/jackpressed-powerful-image-compression-resizing-tool",
-      "state": "LOCAL",
+      "state": "published",
       "resource": true,
       "localPath": "/content/posts/atlas-html/jackpressed-powerful-image-compression-resizing-tool.html",
-      "image": "/public/media/posts/jackpressed-powerful-image-compression-resizing-tool/asset-6502b4656e14b13b.png"
+      "image": "/public/media/posts/jackpressed-powerful-image-compression-resizing-tool/asset-6502b4656e14b13b.png",
+      "publicUrl": "https://www.pavelzosim.com/post/jackpressed-powerful-image-compression-resizing-tool",
+      "slug": "jackpressed-powerful-image-compression-resizing-tool",
+      "imageAlt": "JackPressed Image Tool",
+      "datePublished": "2025-02-03",
+      "dateModified": "2025-02-03",
+      "indexable": true
     },
     {
       "id": "ASSET-001",
@@ -296,9 +419,15 @@
       ],
       "image": "/public/media/home/home/asset-e2084d63922cf3bf.png",
       "sourceUrl": "https://www.pavelzosim.com/post/low-poly-dumpster-3d-model",
-      "state": "LOCAL",
+      "state": "published",
       "resource": true,
-      "localPath": "/content/posts/atlas-html/low-poly-dumpster-3d-model.html"
+      "localPath": "/content/posts/atlas-html/low-poly-dumpster-3d-model.html",
+      "publicUrl": "https://www.pavelzosim.com/post/low-poly-dumpster-3d-model",
+      "slug": "low-poly-dumpster-3d-model",
+      "imageAlt": "Low-Poly Dumpster",
+      "datePublished": "2025-01-30",
+      "dateModified": "2025-01-30",
+      "indexable": true
     },
     {
       "id": "ASSET-002",
@@ -312,10 +441,16 @@
         "asset"
       ],
       "sourceUrl": "https://www.pavelzosim.com/post/modular-market-shelf-3d-model",
-      "state": "LOCAL",
+      "state": "published",
       "resource": true,
       "localPath": "/content/posts/atlas-html/modular-market-shelf-3d-model.html",
-      "image": "/public/media/posts/modular-market-shelf-3d-model/asset-bf358c5e9145fb5e.png"
+      "image": "/public/media/posts/modular-market-shelf-3d-model/asset-bf358c5e9145fb5e.png",
+      "publicUrl": "https://www.pavelzosim.com/post/modular-market-shelf-3d-model",
+      "slug": "modular-market-shelf-3d-model",
+      "imageAlt": "Modular Market Shelf",
+      "datePublished": "2025-01-06",
+      "dateModified": "2025-01-06",
+      "indexable": true
     },
     {
       "id": "NOTE-006",
@@ -328,9 +463,15 @@
         "technical-art"
       ],
       "sourceUrl": "https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders",
-      "state": "LOCAL",
+      "state": "published",
       "localPath": "/content/posts/atlas-html/technical-art-cg-shaders-a-unified-guide-to-shaders.html",
-      "image": "/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-cdad8f7d82da4aca.png"
+      "image": "/public/media/posts/technical-art-cg-shaders-a-unified-guide-to-shaders/asset-cdad8f7d82da4aca.png",
+      "publicUrl": "https://www.pavelzosim.com/post/technical-art-cg-shaders-a-unified-guide-to-shaders",
+      "slug": "technical-art-cg-shaders-a-unified-guide-to-shaders",
+      "imageAlt": "A Unified Guide to Shaders",
+      "datePublished": "2025-03-05",
+      "dateModified": "2025-03-05",
+      "indexable": true
     },
     {
       "id": "NOTE-007",
@@ -344,9 +485,313 @@
         "shaders"
       ],
       "sourceUrl": "https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction",
-      "state": "LOCAL",
+      "state": "published",
       "localPath": "/content/posts/atlas-html/technical-art-compute-shaders-in-unity-introduction.html",
-      "image": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg"
+      "image": "/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg",
+      "publicUrl": "https://www.pavelzosim.com/post/technical-art-compute-shaders-in-unity-introduction",
+      "slug": "technical-art-compute-shaders-in-unity-introduction",
+      "imageAlt": "Compute Shaders in Unity — Introduction",
+      "datePublished": "2025-03-03",
+      "dateModified": "2025-03-03",
+      "indexable": true
+    },
+    {
+      "id": "WIX-65636616",
+      "title": "Low-Poly Piggy Bank 3D Model",
+      "slug": "3d-model-low-poly-piggy-bank",
+      "kind": "article",
+      "group": "3d-assets",
+      "summary": "Low poly piggy bank 3d model with low, high, and fractured mesh variants.",
+      "tags": [
+        "game assets",
+        "real-time",
+        "3d model",
+        "low poly",
+        "piggy bank",
+        "high poly",
+        "fractured mesh"
+      ],
+      "image": "/public/media/posts/index/asset-848c07b9f0239014.png",
+      "imageAlt": "Low-Poly Piggy Bank 3D Model",
+      "localPath": "/content/posts/atlas-html/3d-model-low-poly-piggy-bank.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/3d-model-low-poly-piggy-bank",
+      "publicUrl": "https://www.pavelzosim.com/post/3d-model-low-poly-piggy-bank",
+      "datePublished": "2025-01-06",
+      "dateModified": "2026-03-18",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-B1D8CF4E",
+      "title": "C# Variables Lesson 1 Part 1",
+      "slug": "csharp-variables-lesson-1-part-1",
+      "kind": "article",
+      "group": "technical-art",
+      "summary": "C# variables lesson 1 part 1 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.",
+      "tags": [
+        "Game Development",
+        "Technical Art",
+        "Unity",
+        "Lessons",
+        "C-sharp",
+        "Tutorials"
+      ],
+      "image": "/public/media/posts/index/asset-f773fc7b97d25373.jpg",
+      "imageAlt": "C# Variables Lesson 1 Part 1",
+      "localPath": "/content/posts/atlas-html/csharp-variables-lesson-1-part-1.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-1",
+      "publicUrl": "https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-1",
+      "datePublished": "2025-11-23",
+      "dateModified": "2026-01-30",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-230D929F",
+      "title": "C# Variables Lesson 1 Part 2",
+      "slug": "csharp-variables-lesson-1-part-2",
+      "kind": "article",
+      "group": "technical-art",
+      "summary": "C# variables lesson 1 part 2 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.",
+      "tags": [
+        "Technical Art",
+        "Unity",
+        "Lessons",
+        "C-sharp"
+      ],
+      "image": "/public/media/posts/index/asset-7e59eef51e78ff26.png",
+      "imageAlt": "C# Variables Lesson 1 Part 2",
+      "localPath": "/content/posts/atlas-html/csharp-variables-lesson-1-part-2.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-2",
+      "publicUrl": "https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-2",
+      "datePublished": "2025-12-06",
+      "dateModified": "2026-01-30",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-9CEC1BEE",
+      "title": "C# Variables Lesson 1 Part 3",
+      "slug": "csharp-variables-lesson-1-part-3",
+      "kind": "article",
+      "group": "technical-art",
+      "summary": "C# variables lesson 1 part 3 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.",
+      "tags": [
+        "Technical Art",
+        "Unity",
+        "Lessons",
+        "C-sharp"
+      ],
+      "image": "/public/media/posts/index/asset-7e59eef51e78ff26.png",
+      "imageAlt": "C# Variables Lesson 1 Part 3",
+      "localPath": "/content/posts/atlas-html/csharp-variables-lesson-1-part-3.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-3",
+      "publicUrl": "https://www.pavelzosim.com/post/csharp-variables-lesson-1-part-3",
+      "datePublished": "2025-12-06",
+      "dateModified": "2026-01-30",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-67BD5625",
+      "title": "Enemy System Progress + Player/Camera Integration",
+      "slug": "enemy-system-progress-player-camera-integration",
+      "kind": "article",
+      "group": "archive",
+      "summary": "Solo Game Dev Vlog. I’ve made on the modular Enemy System (attack and spawn) and the first phase of Player & Camera Integration.",
+      "tags": [
+        "Game Development",
+        "Unity",
+        "Technical Art",
+        "Breakdowns"
+      ],
+      "image": "/public/media/posts/index/asset-7709d429de4c2082.jpg",
+      "imageAlt": "Enemy System Progress + Player/Camera Integration",
+      "localPath": "/content/posts/atlas-html/enemy-system-progress-player-camera-integration.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/enemy-system-progress-player-camera-integration",
+      "publicUrl": "https://www.pavelzosim.com/post/enemy-system-progress-player-camera-integration",
+      "datePublished": "2025-12-15",
+      "dateModified": "2025-12-15",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-7F33C0CD",
+      "title": "FX Flame simulation vertex animation",
+      "slug": "fx-flame-simulation-vertex-animation",
+      "kind": "article",
+      "group": "houdini",
+      "summary": "FX flame simulation vertex animation using Houdini VAT workflow for Unreal Engine and Unity real-time pipelines.",
+      "tags": [
+        "Game Development",
+        "Unity",
+        "Technical Art",
+        "Automation",
+        "Houdini",
+        "Assets",
+        "Unreal Engine",
+        "VFX"
+      ],
+      "image": "",
+      "imageAlt": "FX Flame simulation vertex animation",
+      "localPath": "/content/posts/atlas-html/fx-flame-simulation-vertex-animation.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/fx-flame-simulation-vertex-animation",
+      "publicUrl": "https://www.pavelzosim.com/post/fx-flame-simulation-vertex-animation",
+      "datePublished": "2024-10-09",
+      "dateModified": "2026-02-04",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-53CB4555",
+      "title": "Video-to-Text Transcription Tool — Local Offline CLI Workflow",
+      "slug": "local-video-to-text-transcription-tool",
+      "kind": "article",
+      "group": "python-tools",
+      "summary": "Offline video-to-text transcription tool. Convert local video files into clean text without cloud services, subscriptions, or upload limits.",
+      "tags": [
+        "Downloads",
+        "Automation",
+        "Free Tools",
+        "Python",
+        "Pipeline",
+        "Offline Transcription",
+        "CLI Tools",
+        "Video to Text"
+      ],
+      "image": "/public/media/posts/index/asset-4216cb19853c92a2.png",
+      "imageAlt": "Video-to-Text Transcription Tool — Local Offline CLI Workflow",
+      "localPath": "/content/posts/atlas-html/local-video-to-text-transcription-tool.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/local-video-to-text-transcription-tool",
+      "publicUrl": "https://www.pavelzosim.com/post/local-video-to-text-transcription-tool",
+      "datePublished": "2025-12-04",
+      "dateModified": "2026-01-11",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-530E383D",
+      "title": "Low-poly slot machine 3d model",
+      "slug": "low-poly-slot-machine-3d-model",
+      "kind": "article",
+      "group": "3d-assets",
+      "summary": "Low-poly slot machine 3D model with clean topology, full rig, and FBX format. Prepared for real-time animation and game engine integration.",
+      "tags": [
+        "Game Development",
+        "Assets",
+        "Downloads",
+        "3D Models"
+      ],
+      "image": "/public/media/posts/index/asset-c5cc1d80ed7528c2.png",
+      "imageAlt": "Low-poly slot machine 3d model",
+      "localPath": "/content/posts/atlas-html/low-poly-slot-machine-3d-model.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/low-poly-slot-machine-3d-model",
+      "publicUrl": "https://www.pavelzosim.com/post/low-poly-slot-machine-3d-model",
+      "datePublished": "2025-01-06",
+      "dateModified": "2026-03-18",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-A092A577",
+      "title": "Procedural Camera Transition with Controlled Chaos (Houdini)",
+      "slug": "procedural-camera-transition-controlled-chaos-houdini",
+      "kind": "article",
+      "group": "houdini",
+      "summary": "Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization.",
+      "tags": [
+        "technical art",
+        "houdini",
+        "game pipeline",
+        "procedural animation",
+        "soft body simulation",
+        "vellum",
+        "procedural workflow"
+      ],
+      "image": "/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif",
+      "imageAlt": "Procedural Camera Transition with Controlled Chaos (Houdini)",
+      "localPath": "/content/posts/atlas-html/procedural-camera-transition-controlled-chaos-houdini.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini",
+      "publicUrl": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini",
+      "datePublished": "2026-02-04",
+      "dateModified": "2026-02-04",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-A5AAE36F",
+      "title": "Procedural environment creation houdini — chapter 1",
+      "slug": "procedural-environment-creation-houdini-chapter-1",
+      "kind": "article",
+      "group": "houdini",
+      "summary": "Procedural environment creation houdini chapter 1 covering asset optimization and production pipelines for real-time projects.",
+      "tags": [
+        "Game Development",
+        "Unity",
+        "Automation",
+        "Houdini",
+        "Unreal Engine",
+        "Breakdowns",
+        "Tutorials"
+      ],
+      "image": "/public/media/posts/index/asset-838345dc6aff7971.gif",
+      "imageAlt": "Procedural environment creation houdini — chapter 1",
+      "localPath": "/content/posts/atlas-html/procedural-environment-creation-houdini-chapter-1.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1",
+      "publicUrl": "https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1",
+      "datePublished": "2025-01-29",
+      "dateModified": "2026-02-04",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-DF03E9C6",
+      "title": "Technical Art Coordinate Transformation Systems",
+      "slug": "technical-art-basics-coordinate-transformation-systems",
+      "kind": "article",
+      "group": "technical-art",
+      "summary": "Technical art basics article explaining coordinate and transformation systems, including local, world, and view spaces in computer graphics.",
+      "tags": [
+        "technical art",
+        "coordinate systems",
+        "transformation systems",
+        "computer graphics",
+        "math"
+      ],
+      "image": "/public/media/posts/index/asset-9ca24a98c2ba2a35.png",
+      "imageAlt": "Technical Art Coordinate Transformation Systems",
+      "localPath": "/content/posts/atlas-html/technical-art-basics-coordinate-transformation-systems.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems",
+      "publicUrl": "https://www.pavelzosim.com/post/technical-art-basics-coordinate-transformation-systems",
+      "datePublished": "2025-02-17",
+      "dateModified": "2026-03-15",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "WIX-21E8821F",
+      "title": "Water Cooler 3D Model",
+      "slug": "water-cooler-3d-model",
+      "kind": "article",
+      "group": "3d-assets",
+      "summary": "Game-ready water cooler 3D model with clean topology and predictable structure for real-time engines and production pipelines.",
+      "tags": [
+        "3D Models",
+        "game assets",
+        "real-time",
+        "water cooler",
+        "environment art",
+        "pipeline"
+      ],
+      "image": "/public/media/posts/index/asset-3990c75da41f0cba.png",
+      "imageAlt": "Water Cooler 3D Model",
+      "localPath": "/content/posts/atlas-html/water-cooler-3d-model.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/water-cooler-3d-model",
+      "publicUrl": "https://www.pavelzosim.com/post/water-cooler-3d-model",
+      "datePublished": "2025-01-04",
+      "dateModified": "2026-03-18",
+      "state": "published",
+      "indexable": true
     }
   ]
 }
