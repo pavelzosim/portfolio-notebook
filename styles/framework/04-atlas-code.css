@@ -47,9 +47,13 @@
 }
 
 .atlas-container .content-block .atlas-math-block {
-  font-size: var(--fs-code);
-  line-height: 1.6;
+  font-size: var(--fs-math);
+  line-height: 1.35;
   color: var(--atlas-ink-soft);
+}
+
+.atlas-container .content-block .atlas-math-block mjx-container[display="true"] {
+  margin-block: 12px;
 }
 
 /* ── СЕКЦИЯ C: SMART COUPLING — Бесшовное слияние math + code ────────────── */

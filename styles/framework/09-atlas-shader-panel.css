@@ -15,13 +15,11 @@
 /* ── СЕКЦИЯ A: НОВЫЕ ТОКЕНЫ — Добавить в 01-atlas-core.css :root ─────────
    --atlas-accent:   #0000AA   Volkov Commander blue — UI кнопки, слайдеры
    --atlas-accent-h: #008181   Hover-состояние accent
-   --fs-math:        14px      MathJax формулы (крупнее кода, но меньше h3)
-   Здесь продублированы как fallback если core ещё не обновлён.           */
+   Компонент не переопределяет общие типографические токены документа.     */
 
 :root {
   --atlas-accent:   #0000AA;
   --atlas-accent-h: #008181;
-  --fs-math:        14px;
   /* Dither-паттерн: 4×4px шахматка, чёрная — для теней и OFF-состояний */
   --atlas-dither: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="2" height="2" x="0" y="0" fill="black"/><rect width="2" height="2" x="2" y="2" fill="black"/></svg>');
 }

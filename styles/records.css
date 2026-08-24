@@ -93,12 +93,6 @@ body.article-record-page:not(.migrated-post) { min-height: 100vh; padding: 0 0 4
   background: var(--record-paper);
   box-shadow: none;
 }
-.article-record-page .article-main > .atlas-container #site-passport .passport-bp {
-  border: 0;
-}
-.article-record-page .article-main > .atlas-container #site-passport .passport-title-bar {
-  border-bottom: 1px solid var(--record-border);
-}
 .article-main > .atlas-container::before {
   content: attr(data-document-path) "  [ DOCUMENT VIEW ]";
   display: block;

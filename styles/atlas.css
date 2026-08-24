@@ -1,14 +1,14 @@
 /* Atlas portfolio stylesheet orchestrator.
    Framework modules are canonical; homepage modules only compose the index UI. */
-@import url("./framework/01-atlas-core.css?v=3");
+@import url("./framework/01-atlas-core.css?v=4");
 @import url("./framework/02-atlas-typography.css?v=3");
-@import url("./framework/03-atlas-header.css");
-@import url("./framework/04-atlas-code.css?v=2");
+@import url("./framework/03-atlas-header.css?v=2");
+@import url("./framework/04-atlas-code.css?v=3");
 @import url("./framework/05-atlas-tables.css?v=2");
 @import url("./framework/06-atlas-callout.css?v=2");
 @import url("./framework/07-atlas-media.css?v=2");
 @import url("./framework/08-atlas-interactive.css?v=5");
-@import url("./framework/09-atlas-shader-panel.css?v=2");
+@import url("./framework/09-atlas-shader-panel.css?v=3");
 @import url("./framework/10-atlas-toc.css?v=2");
 @import url("./framework/11-atlas-consent.css?v=1");
 @import url("./home/core.css?v=2");

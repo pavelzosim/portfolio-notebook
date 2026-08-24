@@ -36,6 +36,12 @@
   color: var(--atlas-ink);
   white-space: nowrap;
 }
+.atlas-container #site-passport .passport-title-bar > * {
+  min-width: 0;
+}
+.atlas-container #site-passport .passport-title-bar > :first-child {
+  overflow-wrap: anywhere;
+}
 .atlas-container #site-passport .passport-title-bar b {
   font-weight: 700;
   color: var(--atlas-ink);
@@ -268,6 +274,12 @@
 /* мобильную верстку и не ломают сетку паспорта 2×2.                       */
 
 @media (max-width: 550px) {
+  .atlas-container #site-passport .passport-title-bar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+    white-space: normal;
+  }
   .atlas-container #site-passport .passport-grid {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -288,4 +300,3 @@
     gap: 24px;
   }
 }
-
