@@ -7,6 +7,7 @@
   <title>Article Style Guide / Pavel Zosim</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
   <link rel="stylesheet" href="/styles/atlas.css?v=52">
+  <link rel="stylesheet" href="/styles/records.css?v=8">
   <link rel="stylesheet" href="/styles/style-guide.css?v=7">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
   <script src="/scripts/style-guide.js?v=2" defer></script>
@@ -255,6 +256,23 @@ float3 ApplyExposure(float3 color, float exposure)
                 </div>
               </div>
             </div>
+
+            <p class="guide-note">ARTICLE AFTERWORD / DISTRIBUTION + DISCOVERY</p>
+            <p class="guide-component-rule"><b>Share actions</b> — generated from the canonical production URL. Keep them textual and subordinate; opening a network is a user-initiated action.</p>
+            <p class="guide-component-rule"><b>Related / latest</b> — generated from the content registry. Rank shared tags and group first, then use recent records as fallback. Do not hard-code this feed inside an article.</p>
+            <section class="article-afterword" aria-label="Share and continue reading example">
+              <section class="article-share">
+                <div class="article-afterword__header"><span>[SHARE]</span><strong>Share this record</strong></div>
+                <div class="article-share__links"><a href="#article-shell">linkedin</a><a href="#article-shell">facebook</a><a href="#article-shell">twitter</a></div>
+              </section>
+              <section class="article-related">
+                <div class="article-afterword__header"><span>[RELATED / LATEST]</span><strong>Continue reading</strong></div>
+                <div class="article-related__grid">
+                  <a class="article-related-card" href="#article-shell"><span class="article-related-card__media"><span>ARTICLE IMAGE</span></span><span class="article-related-card__body"><small>RND-001 / breakdown</small><strong>Related technical record</strong><span>Shared systems, tags, and implementation context.</span><i>open record →</i></span></a>
+                  <a class="article-related-card" href="#article-shell"><span class="article-related-card__media"><span>ARTICLE IMAGE</span></span><span class="article-related-card__body"><small>NOTE-001 / article</small><strong>Latest notebook entry</strong><span>Recent fallback when no stronger relationship exists.</span><i>open record →</i></span></a>
+                </div>
+              </section>
+            </section>
           </section>
 
           <section class="guide-section" id="contract">

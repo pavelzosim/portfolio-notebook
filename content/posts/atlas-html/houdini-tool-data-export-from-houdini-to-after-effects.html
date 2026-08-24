@@ -407,6 +407,6 @@ function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.titl
 document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="/scripts/article-page.js?v=4"></script>
+  <script src="/scripts/article-page.js?v=5"></script>
 </body>
 </html>
