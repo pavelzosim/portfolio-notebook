@@ -9,14 +9,42 @@
 
 
 
-  <link rel="stylesheet" href="/styles/atlas.css?v=55"><link rel="stylesheet" href="/styles/posts.css?v=18">
-</head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"><link rel="stylesheet" href="/styles/atlas.css?v=55"><link rel="stylesheet" href="/styles/posts.css?v=18">
+<style>
+.atlas-container .atlas-series-nav{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 0;margin:32px 0 0;width:100%}
+.atlas-container .atlas-series-nav::before{content:"[ SERIES // C#_VARIABLES_LESSON_1 ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+.atlas-container .atlas-series-nav__parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+.atlas-container .atlas-series-nav__part{display:grid;grid-template-columns:36px 1fr auto;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);padding:8px 16px;transition:background .1s}
+.atlas-container .atlas-series-nav__part:last-child{border-bottom:none}
+.atlas-container .atlas-series-nav__part:hover{background:rgba(0,0,0,.02)}
+.atlas-container .atlas-series-nav__part a{display:contents;text-decoration:none;color:inherit}
+.atlas-container .atlas-series-nav__part:hover .atlas-series-nav__num,
+.atlas-container .atlas-series-nav__part:hover .atlas-series-nav__title{color:#8b0000}
+.atlas-container .atlas-series-nav__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);letter-spacing:.04em;transition:color .1s}
+.atlas-container .atlas-series-nav__title{font-size:12px;font-weight:700;color:#000;transition:color .1s}
+.atlas-container .atlas-series-nav__sub{font-size:10px;color:rgba(0,0,0,.4);font-weight:400;white-space:nowrap;padding-left:12px}
+.atlas-container .atlas-series-nav__part--current{background:rgba(139,0,0,.03);border-left:2px solid #8b0000}
+.atlas-container .atlas-series-nav__part--current .atlas-series-nav__num,
+.atlas-container .atlas-series-nav__part--current .atlas-series-nav__title{color:#8b0000}
+.atlas-container .atlas-series-nav__status{font-size:9px;font-weight:700;padding:1px 6px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.atlas-container .atlas-series-nav__status--live{color:var(--atlas-ok);border-color:var(--atlas-ok)}
+.atlas-container .atlas-series-nav__status--current{color:var(--atlas-crit);border-color:var(--atlas-crit)}
+.atlas-container .atlas-part-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-top:1px dashed rgba(0,0,0,.12)}
+.atlas-container .atlas-part-nav--single{grid-template-columns:1fr}
+.atlas-container .atlas-part-nav__btn{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);text-decoration:none;transition:background .12s,border-color .12s}
+.atlas-container .atlas-part-nav__btn:hover{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.3)}
+.atlas-container .atlas-part-nav__btn--next{text-align:right}
+.atlas-container .atlas-part-nav__direction{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.35);text-transform:uppercase}
+.atlas-container .atlas-part-nav__label{font-size:12px;font-weight:700;color:#000}
+.atlas-container .atlas-part-nav__sub{font-size:10px;color:rgba(0,0,0,.4)}
+.atlas-container .atlas-part-nav__btn:hover .atlas-part-nav__label{color:#8b0000}
+</style></head>
 <body class="migrated-post" id="top">
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
   <main class="post-shell">
     <header class="post-header"><p class="post-path">~/blog/csharp-variables-lesson-1-part-3.md</p><h1>C# Variables Lesson 1 Part 3</h1><p class="post-summary">C# variables lesson 1 part 3 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.</p><div class="post-meta"><span>Pavel Zosim</span><span>2025-12-06</span><span>#technical-art</span><span>#unity</span><span>#lessons</span><span>#c-sharp</span></div></header>
-    <article class="atlas-container"><div class="content-block"><h2 id="overview">01 Overview</h2>
-<p>This C# variables lesson 1 part 3 continues the introduction to basic data types and variable usage for technical art workflows.</p>
+    <article class="atlas-container"><div class="content-block"><nav class="atlas-toc" aria-label="Article table of contents"><ul class="atlas-toc__list"><li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#references"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">References</span><span class="atlas-toc__dots"></span></span></a></li></ul></nav><h2 id="overview">01 Overview</h2>
+<p>This C# variables lesson 1 part 3 continues the introduction to basic data types and variable usage for technical art workflows.</p><div class="atlas-callout atlas-callout--warning"><p><strong>Money vs. gameplay math.</strong> <code>decimal</code> is exact but 10–100× slower than <code>float</code>/<code>double</code> — use it only for prices and currency, never inside <code>Update()</code> or any per-frame loop. Keep gameplay math (positions, physics, timers) on <code>float</code>.</p></div>
 
 <h3 id="decimal">decimal — money and financial calculations</h3>
 <p><strong>Beginner explanation:</strong> The MOST precise decimal type, designed specifically for money and financial calculations. Has ~28-29 digits of precision and avoids the rounding errors that plague float/double. ALWAYS use decimal for currency, prices, and financial data. Much slower than float/double, so NEVER use in game loops or real-time calculations. Requires 'm' or 'M' suffix!</p>
@@ -27,11 +55,10 @@
 <h4>Performance notes</h4>
 <ul><li><strong>VERY SLOW</strong> - 10-100x slower than float/double</li><li>No hardware acceleration (software-emulated)</li><li>Uses 4x memory of float (16 vs 4 bytes)</li><li><strong>EXACT</strong> - no rounding errors for decimal values</li><li>Perfect for financial calculations</li><li><strong>NEVER use in Update()/FixedUpdate()</strong> - too slow!</li><li><strong>Use ONLY for money, prices, currency</strong></li></ul>
 
-<h4>When to use decimal</h4>
-<ul><li>Money/Currency (prices, costs, balances)</li><li>Financial calculations (interest, tax, exchange rates)</li><li>Accounting/billing systems</li><li>Shop UI (display prices)</li><li>Any calculation where exact decimal precision is legally required</li><li>NEVER in game loops (Update, FixedUpdate)</li><li>NEVER for positions, physics, transforms</li><li>NEVER for real-time calculations</li><li>Don't use if float/double are sufficient</li></ul>
+<h4>When to use decimal</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Money/Currency (prices, costs, balances)</li><li>Financial calculations (interest, tax, exchange rates)</li><li>Accounting/billing systems</li><li>Shop UI (display prices)</li><li>Any calculation where exact decimal precision is legally required</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>NEVER in game loops (Update, FixedUpdate)</li><li>NEVER for positions, physics, transforms</li><li>NEVER for real-time calculations</li><li>Don't use if float/double are sufficient</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// CRITICAL: Always add &#x27;m&#x27; or &#x27;M&#x27; suffix!
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// CRITICAL: Always add &#x27;m&#x27; or &#x27;M&#x27; suffix!
 decimal price = 19.99m; // Correct
 decimal tax = 0.15m; // Correct (15%)
 decimal wrong = 19.99; // Error! Needs &#x27;m&#x27; suffix
@@ -47,7 +74,7 @@ decimal precise = 0.1234567890123456789012345678m; // 28 digits!
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// In-game shop/economy (ALWAYS use decimal for money!)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// In-game shop/economy (ALWAYS use decimal for money!)
 decimal itemPrice = 9.99m;
 decimal playerGold = 1500.50m;
 decimal taxRate = 0.08m; // 8% tax
@@ -150,7 +177,7 @@ decimal cartTotal = cart.Sum(item =&gt; item.Total); // Exact sum
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Forgetting &#x27;m&#x27; suffix
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Forgetting &#x27;m&#x27; suffix
 decimal price = 19.99; // Error!
 decimal price = 19.99m; // Correct
 
@@ -217,7 +244,7 @@ transform.position = new Vector3(position, 0, 0);
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: ALWAYS use decimal for money - it&#x27;s the law in financial software!
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: ALWAYS use decimal for money - it&#x27;s the law in financial software!
 decimal productPrice = 29.99m;
 decimal tax = productPrice * 0.08m; // Exact: 2.3992 (no rounding errors)
 decimal total = productPrice + tax; // Exact: 32.3892
@@ -384,11 +411,10 @@ decimal clampedPrice = Clamp(userInput, 0.01m, 9999.99m);
 <h4>Performance notes</h4>
 <ul><li>Fast (just a 16-bit integer internally)</li><li>2 bytes (same as ushort)</li><li>Good for menu systems, keyboard input</li><li>String is usually more practical for text</li><li>Use char for single-character operations only</li></ul>
 
-<h4>When to use char</h4>
-<ul><li>Single character storage</li><li>Keyboard input (single key)</li><li>Menu options (A, B, C, D)</li><li>Character-by-character text parsing</li><li>Grades, ratings (A, B, C)</li><li>Direction indicators (N, S, E, W)</li><li>Don't use for multi-character text (use string)</li><li>Emojis need string (surrogate pairs)</li></ul>
+<h4>When to use char</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Single character storage</li><li>Keyboard input (single key)</li><li>Menu options (A, B, C, D)</li><li>Character-by-character text parsing</li><li>Grades, ratings (A, B, C)</li><li>Direction indicators (N, S, E, W)</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use for multi-character text (use string)</li><li>Emojis need string (surrogate pairs)</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration (use SINGLE quotes!)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration (use SINGLE quotes!)
 char letter = &#x27;A&#x27;; // Correct
 char number = &#x27;5&#x27;; // Correct (character &#x27;5&#x27;, not number 5!)
 char symbol = &#x27;@&#x27;; // Correct
@@ -413,7 +439,7 @@ char lastLetter = name[name.Length - 1]; // &#x27;r&#x27;
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Keyboard input
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Keyboard input
 char keyPressed = &#x27;W&#x27;; // WASD movement
 char menuOption = &#x27;A&#x27;; // Menu selection (A, B, C)
 char direction = &#x27;N&#x27;; // N, S, E, W
@@ -492,7 +518,7 @@ Direction GetDirectionFromChar(char c)
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Single vs double quotes
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Single vs double quotes
 char letter = &#x27;A&#x27;; // char - single quotes
 string word = &quot;A&quot;; // string - double quotes
 char wrong = &quot;A&quot;; // Error!
@@ -539,7 +565,7 @@ string nullStr = null; // Null reference (no object)
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Check if char is letter/digit/etc
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Check if char is letter/digit/etc
 char input = &#x27;A&#x27;;
 bool isLetter = char.IsLetter(input); // true
 bool isDigit = char.IsDigit(input); // false
@@ -698,11 +724,10 @@ char zeroChar = &#x27;\0&#x27;; // Null character
 <h4>Performance notes</h4>
 <ul><li><strong>Immutable</strong> - every modification creates new string object</li><li>Concatenation in loops is VERY slow (use StringBuilder)</li><li>String interpolation ($"") is optimized by compiler</li><li>String comparison is fast (interned strings)</li><li><strong>Use StringBuilder</strong> for 10+ concatenations</li><li>Memory: Stores on heap (garbage collected)</li></ul>
 
-<h4>When to use string</h4>
-<ul><li>Player names, item names, descriptions</li><li>UI text, dialogue, messages</li><li>File paths, URLs</li><li>JSON, XML, serialized data</li><li>User input, commands</li><li>Don't concatenate in loops (use StringBuilder)</li><li>Don't use for single characters (use char)</li></ul>
+<h4>When to use string</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Player names, item names, descriptions</li><li>UI text, dialogue, messages</li><li>File paths, URLs</li><li>JSON, XML, serialized data</li><li>User input, commands</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't concatenate in loops (use StringBuilder)</li><li>Don't use for single characters (use char)</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration
 string playerName = &quot;Hero&quot;;
 string message = &quot;Hello, World!&quot;;
 string empty = &quot;&quot;; // Empty string (not null!)
@@ -729,7 +754,7 @@ string old = &quot;Score: &quot; + score; // Slower, less readable
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Game examples
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Game examples
 string playerName = &quot;Steve&quot;;
 string dialogueText = &quot;Welcome to the adventure!&quot;;
 string itemName = &quot;Legendary Sword&quot;;
@@ -789,7 +814,7 @@ string GetLocalizedText(string key, string language)
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Strings are IMMUTABLE!
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Strings are IMMUTABLE!
 string name = &quot;Bob&quot;;
 name.ToUpper(); // This does NOTHING! Doesn&#x27;t modify &#x27;name&#x27;
 // ToUpper() returns a NEW string, doesn&#x27;t change original
@@ -849,7 +874,7 @@ string good = $&quot;Name: {name}, Level: {level}&quot;; // Fast, readable
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: String interpolation is your friend!
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: String interpolation is your friend!
 int health = 75;
 int maxHealth = 100;
 string oldWay = &quot;HP: &quot; + health + &quot;/&quot; + maxHealth; // Ugly, slow
@@ -1025,11 +1050,10 @@ StringBuilder sb = new StringBuilder(1000); // Pre-allocate for 1000 chars
 <h4>Performance notes</h4>
 <ul><li>Very fast (1 byte, simple operations)</li><li>Comparison operators are optimized</li><li>Short-circuit evaluation saves CPU</li><li>Despite being 1 bit logically, uses 1 byte (memory alignment)</li><li>For thousands of flags, consider bit packing</li></ul>
 
-<h4>When to use bool</h4>
-<ul><li>Any yes/no, true/false, on/off state</li><li>Conditions and flags</li><li>Ability checks (canJump, canAttack)</li><li>State tracking (isAlive, isPaused)</li><li>UI visibility (showMenu, isEnabled)</li><li>Don't use int (0/1) instead of bool</li><li>Don't use for multi-state (use enum instead)</li></ul>
+<h4>When to use bool</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Any yes/no, true/false, on/off state</li><li>Conditions and flags</li><li>Ability checks (canJump, canAttack)</li><li>State tracking (isAlive, isPaused)</li><li>UI visibility (showMenu, isEnabled)</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use int (0/1) instead of bool</li><li>Don't use for multi-state (use enum instead)</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration
 bool isAlive = true;
 bool hasKey = false;
 bool gameOver = false;
@@ -1049,7 +1073,7 @@ bool flag; // Defaults to false (not null!)
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Game state flags
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Game state flags
 bool isPlayerAlive = true;
 bool isPaused = false;
 bool isGameOver = false;
@@ -1141,7 +1165,7 @@ IEnumerator AbilityCooldown()
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Redundant comparisons
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Redundant comparisons
 bool isAlive = true;
 if (isAlive == true) // Redundant! &#x27;isAlive&#x27; is already bool
 {
@@ -1210,7 +1234,7 @@ if (isReady) // Clear and readable
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Use meaningful names (is/has/can/should prefixes)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Use meaningful names (is/has/can/should prefixes)
 bool isAlive; // State
 bool hasWeapon; // Possession
 bool canJump; // Ability
@@ -1404,11 +1428,11 @@ void Update()
 </code></pre>
 <div class="atlas-section-break" data-index="// § 01"></div>
 <h2 id="references">02 References</h2>
-<div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">SERIES</span><span class="atlas-ref-author">Pavel Zosim</span> — C# variables, lesson 1, part 1.<br><a class="atlas-ref-link" href="/post/csharp-variables-lesson-1-part-1">pavelzosim.com/post/csharp-variables-lesson-1-part-1</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">SERIES</span><span class="atlas-ref-author">Pavel Zosim</span> — C# variables, lesson 1, part 2.<br><a class="atlas-ref-link" href="/post/csharp-variables-lesson-1-part-2">pavelzosim.com/post/csharp-variables-lesson-1-part-2</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[03]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Built-in types and literals.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[04]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Integral numeric types.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types</a></span></li></ul></div>
+<div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Built-in types and literals.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Integral numeric types.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types</a></span></li></ul></div><div class="atlas-series-nav"><ul class="atlas-series-nav__parts"><li class="atlas-series-nav__part"><a href="/post/csharp-variables-lesson-1-part-1"><span class="atlas-series-nav__num">01</span><span class="atlas-series-nav__title">Overview &amp; Integer Types</span><span class="atlas-series-nav__sub">int · byte · sbyte · short · ushort</span><span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span></a></li><li class="atlas-series-nav__part"><a href="/post/csharp-variables-lesson-1-part-2"><span class="atlas-series-nav__num">02</span><span class="atlas-series-nav__title">Unsigned &amp; Floating-Point Types</span><span class="atlas-series-nav__sub">uint · long · ulong · float · double</span><span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span></a></li><li class="atlas-series-nav__part atlas-series-nav__part--current"><span class="atlas-series-nav__num">03</span><span class="atlas-series-nav__title">Decimal, Char, String &amp; Bool</span><span class="atlas-series-nav__sub">decimal · char · string · bool</span><span class="atlas-series-nav__status atlas-series-nav__status--current">CURRENT</span></li></ul><div class="atlas-part-nav atlas-part-nav--single"><a href="/post/csharp-variables-lesson-1-part-2" class="atlas-part-nav__btn atlas-part-nav__btn--prev"><span class="atlas-part-nav__direction">← Prev</span><span class="atlas-part-nav__label">Part 02: Unsigned &amp; Floating-Point Types</span><span class="atlas-part-nav__sub">uint · long · ulong · float · double</span></a></div></div>
 <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // CSHARP_VARIABLES_LESSON_1_PART_3 // EOF</span><span class="atlas-eof-divider__line"></span></div>
     </div></article>
     <footer class="post-end"><a href="/blog/">← Blog index</a><span>Local archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
   </main>
-  <script src="/scripts/article-page.js?v=14"></script>
+  <script src="/scripts/article-page.js?v=14"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
 </body>
 </html>

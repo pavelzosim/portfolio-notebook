@@ -9,13 +9,41 @@
 
 
 
-  <link rel="stylesheet" href="/styles/atlas.css?v=55"><link rel="stylesheet" href="/styles/posts.css?v=18">
-</head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"><link rel="stylesheet" href="/styles/atlas.css?v=55"><link rel="stylesheet" href="/styles/posts.css?v=18">
+<style>
+.atlas-container .atlas-series-nav{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 0;margin:32px 0 0;width:100%}
+.atlas-container .atlas-series-nav::before{content:"[ SERIES // C#_VARIABLES_LESSON_1 ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+.atlas-container .atlas-series-nav__parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+.atlas-container .atlas-series-nav__part{display:grid;grid-template-columns:36px 1fr auto;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);padding:8px 16px;transition:background .1s}
+.atlas-container .atlas-series-nav__part:last-child{border-bottom:none}
+.atlas-container .atlas-series-nav__part:hover{background:rgba(0,0,0,.02)}
+.atlas-container .atlas-series-nav__part a{display:contents;text-decoration:none;color:inherit}
+.atlas-container .atlas-series-nav__part:hover .atlas-series-nav__num,
+.atlas-container .atlas-series-nav__part:hover .atlas-series-nav__title{color:#8b0000}
+.atlas-container .atlas-series-nav__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);letter-spacing:.04em;transition:color .1s}
+.atlas-container .atlas-series-nav__title{font-size:12px;font-weight:700;color:#000;transition:color .1s}
+.atlas-container .atlas-series-nav__sub{font-size:10px;color:rgba(0,0,0,.4);font-weight:400;white-space:nowrap;padding-left:12px}
+.atlas-container .atlas-series-nav__part--current{background:rgba(139,0,0,.03);border-left:2px solid #8b0000}
+.atlas-container .atlas-series-nav__part--current .atlas-series-nav__num,
+.atlas-container .atlas-series-nav__part--current .atlas-series-nav__title{color:#8b0000}
+.atlas-container .atlas-series-nav__status{font-size:9px;font-weight:700;padding:1px 6px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.atlas-container .atlas-series-nav__status--live{color:var(--atlas-ok);border-color:var(--atlas-ok)}
+.atlas-container .atlas-series-nav__status--current{color:var(--atlas-crit);border-color:var(--atlas-crit)}
+.atlas-container .atlas-part-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-top:1px dashed rgba(0,0,0,.12)}
+.atlas-container .atlas-part-nav--single{grid-template-columns:1fr}
+.atlas-container .atlas-part-nav__btn{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);text-decoration:none;transition:background .12s,border-color .12s}
+.atlas-container .atlas-part-nav__btn:hover{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.3)}
+.atlas-container .atlas-part-nav__btn--next{text-align:right}
+.atlas-container .atlas-part-nav__direction{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.35);text-transform:uppercase}
+.atlas-container .atlas-part-nav__label{font-size:12px;font-weight:700;color:#000}
+.atlas-container .atlas-part-nav__sub{font-size:10px;color:rgba(0,0,0,.4)}
+.atlas-container .atlas-part-nav__btn:hover .atlas-part-nav__label{color:#8b0000}
+</style></head>
 <body class="migrated-post" id="top">
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
   <main class="post-shell">
     <header class="post-header"><p class="post-path">~/blog/csharp-variables-lesson-1-part-1.md</p><h1>C# Variables Lesson 1 Part 1</h1><p class="post-summary">C# variables lesson 1 part 1 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.</p><div class="post-meta"><span>Pavel Zosim</span><span>2025-11-23</span><span>#game-development</span><span>#technical-art</span><span>#unity</span><span>#lessons</span><span>#c-sharp</span><span>#tutorials</span></div></header>
-    <article class="atlas-container"><div class="content-block"><h2 id="overview">01 Overview</h2>
+    <article class="atlas-container"><div class="content-block"><nav class="atlas-toc" aria-label="Article table of contents"><ul class="atlas-toc__list"><li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#understanding-variables"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Understanding Variables</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#integer-types-whole-numbers"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Integer types (whole numbers)</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#references"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">References</span><span class="atlas-toc__dots"></span></span></a></li></ul></nav><h2 id="overview">01 Overview</h2>
 <p>If you've never programmed before but want to start making games in Unity - this guide is for you! I'll explain everything as simply as possible, without complex terminology.</p>
 
 <p>This cheat sheet covers <strong>technical art C# data types</strong> commonly used in real-time rendering, tools development, and performance-critical workflows.</p>
@@ -38,7 +66,7 @@
 <h2 id="understanding-variables">02 Understanding Variables</h2>
 <p>Every variable declaration in C# follows a consistent pattern:</p>
 
-<pre><code>int health = 100;
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">int health = 100;
 </code></pre>
 
 <p><strong>Syntax breakdown:</strong></p>
@@ -56,7 +84,7 @@
 <ul><li>Numbers default to 0, booleans to false, strings to null</li><li><em>Best practice:</em> Always initialize your variables explicitly to avoid confusion!</li></ul>
 
 <h3>C# data types</h3>
-<div class="atlas-table-frame"><table>
+<div class="atlas-table-frame atlas-table-frame--solid"><div class="atlas-table-header-solid">[ DATA_TYPES // REFERENCE_MATRIX ]</div><table class="atlas-table">
  <thead>
  <tr>
  <th>Type</th>
@@ -126,16 +154,7 @@
  </tbody>
 </table></div>
 
-<blockquote><p>Decision guide.</p></blockquote>
-<p><strong>For whole numbers:</strong></p>
-<ul><li>Use <strong>int </strong>by default (99% of cases)</li><li>Use <strong>byte </strong>for 0-255 range in large arrays (health, colors)</li><li>Use <strong>long </strong>only if exceeding ±2 billion</li></ul>
-<p><strong>For decimal numbers:</strong></p>
-<ul><li>Use <strong>float </strong>in Unity/Unreal (engine standard)</li><li>Use <strong>double </strong>for general C# math</li><li>Use <strong>decimal </strong>ONLY for money (never in game loops!)</li></ul>
-<p><strong>For text:</strong></p>
-<ul><li>Use <strong>char </strong>for single character</li><li>Use <strong>string </strong>for text of any length</li></ul>
-<p><strong>For true/false:</strong></p>
-<ul><li>Use <strong>bool</strong></li></ul>
-<blockquote><p>Now let's explore the most important types in detail.</p></blockquote>
+<div class="atlas-callout atlas-callout--important"><p><strong>Decision guide.</strong> Quick defaults before the deep dive below.</p><p><strong>Whole numbers:</strong> <strong>int</strong> by default (99% of cases) · <strong>byte</strong> for 0–255 in large arrays (health, colors) · <strong>long</strong> only past ±2 billion.</p><p><strong>Decimal numbers:</strong> <strong>float</strong> in Unity/Unreal (engine standard) · <strong>double</strong> for general C# math · <strong>decimal</strong> ONLY for money (never in game loops!).</p><p><strong>Text:</strong> <strong>char</strong> for a single character · <strong>string</strong> for text of any length.</p><p><strong>True/false:</strong> <strong>bool</strong>.</p></div>
 
 
 <div class="atlas-section-break" data-index="// § 02"></div>
@@ -151,7 +170,7 @@
 <ul><li><strong>Fastest integer type</strong> on all platforms (32-bit and 64-bit)</li><li>Modern CPUs optimized for 32-bit operations</li><li>No conversion overhead when used with standard libraries</li><li>Cache-friendly (fits perfectly in CPU registers)</li><li>Division is slow (~10-40 CPU cycles) - avoid in tight loops if possible</li><li><strong>Use by default</strong> unless you have specific memory/range requirements</li></ul>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration
 int score = 0;
 int enemyCount = 50;
 int playerLevel = 1;
@@ -169,7 +188,7 @@ int depth = -100;
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Game examples
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Game examples
 int playerHealth = 100; // HP: 0 to 100
 int score = 0; // Game score
 int enemiesDefeated = 0; // Kill counter
@@ -184,7 +203,7 @@ int instanceID = gameObject.GetInstanceID(); // Object ID
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Integer division loses decimals
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Integer division loses decimals
 int a = 10;
 int b = 3;
 int result = a / b; // Result = 3, not 3.333!
@@ -213,7 +232,7 @@ for (int i = 0; i &lt; 10; i++)
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Use const for unchanging values
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Use const for unchanging values
 const int MAX_ENEMIES = 100;
 const int GRID_SIZE = 64;
 
@@ -243,8 +262,7 @@ if (int.TryParse(input, out int value))
 <h3 id="byte">byte — small positive numbers (0-255)</h3>
 <p><strong>Beginner explanation:</strong> A tiny box that can only hold small positive numbers from 0 to 255. Perfect for things like health bars (0-100 HP), percentages (0-100%), or color values (red, green, blue are each 0-255). Can't store negative numbers or anything bigger than 255.</p>
 
-<h4>When to use byte</h4>
-<ul><li>Health bars (0-100)</li><li>RGB color values (0-255)</li><li>Percentages (0-100)</li><li>Small counters that never exceed 255</li><li>Large arrays of small values</li><li>Don't use for values that might exceed 255</li><li>Don't use when you need negative numbers</li></ul>
+<h4>When to use byte</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Health bars (0-100)</li><li>RGB color values (0-255)</li><li>Percentages (0-100)</li><li>Small counters that never exceed 255</li><li>Large arrays of small values</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use for values that might exceed 255</li><li>Don't use when you need negative numbers</li></ul></div></div></div>
 
 <h4>Technical specs</h4>
 <ul><li><strong>Size:</strong> 1 byte (8 bits)</li><li><strong>Range:</strong> 0 to 255</li><li><strong>Signed:</strong> No (unsigned - positive only)</li><li><strong>Default Value:</strong> 0</li></ul>
@@ -253,7 +271,7 @@ if (int.TryParse(input, out int value))
 <ul><li><strong>Smallest integer type</strong> - saves 75% memory vs int</li><li>Perfect for large arrays (textures, heightmaps, voxel data)</li><li>GPU-friendly (Color32 in Unity uses bytes)</li><li>Arithmetic operations convert to int (slight overhead)</li><li>Range checks needed for game logic (health, damage)</li><li><strong>Use in large arrays</strong> or when range is naturally 0-255</li><li><strong>Memory matters:</strong> 1000 bytes = 1KB, 1000 ints = 4KB</li></ul>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration
 byte health = 100;
 byte percentage = 75;
 byte age = 25;
@@ -269,7 +287,7 @@ byte[] networkPacket = { 0x01, 0xFF, 0xA3 }; // Hexadecimal notation
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Health systems
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Health systems
 byte playerHealth = 100; // HP from 0 to 100
 byte enemyHealth = 50; // Enemy HP
 byte shieldPercent = 80; // Shield strength %
@@ -294,7 +312,7 @@ byte[] textureData = new byte[256 * 256]; // Grayscale texture
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Overflow when exceeding 255
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Overflow when exceeding 255
 byte value = 255;
 value += 1; // Wraps to 0! (not 256)
 value = 300; // Compiler error: cannot convert int to byte
@@ -337,7 +355,7 @@ if (unsigned &gt; signed) // TRUE, but byte gets converted to int first
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Perfect for health bars (0-100 range)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Perfect for health bars (0-100 range)
 byte health = 100;
 float healthPercent = health / 100f; // Convert to 0.0-1.0 for UI
 
@@ -373,15 +391,14 @@ bool flag0 = (flags &amp; 0b00000001) != 0; // Check bit 0
 <h3 id="sbyte">sbyte — signed 8-bit integer</h3>
 <p><strong>Beginner explanation:</strong> Like byte, but can go negative. Stores numbers from -128 to +127. Useful for small values that need both positive and negative (like temperature in Celsius, small offsets, or directional values). Rarely used in games because byte or int are usually better choices.</p>
 
-<h4>When to use sbyte</h4>
-<ul><li>Small values needing negatives (-128 to 127)</li><li>Directional input (-1, 0, 1)</li><li>Small deltas/offsets</li><li>8-bit audio samples</li><li>Temperature values (if limited range)</li><li>Rarely used in modern game development</li><li><p>Usually better to use int instead</p></li></ul>
+<h4>When to use sbyte</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Small values needing negatives (-128 to 127)</li><li>Directional input (-1, 0, 1)</li><li>Small deltas/offsets</li><li>8-bit audio samples</li><li>Temperature values (if limited range)</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Rarely used in modern game development</li><li>Usually better to use int instead</li></ul></div></div></div>
 <h4>Technical specs</h4>
 <ul><li><strong>Size:</strong> 1 byte (8 bits)</li><li><strong>Range:</strong> -128 to 127</li><li><strong>Signed:</strong> Yes (can be negative)</li><li><p><strong>Default Value:</strong> 0</p></li></ul>
 <h4>Performance notes</h4>
 <ul><li>Same size as byte (1 byte)</li><li>Good for small arrays needing negative values</li><li>Arithmetic operations convert to int (overhead)</li><li>Very limited range compared to int</li><li><strong>Rarely used</strong> in practice - byte or int are more common</li><li>Most game engines don't use sbyte - check documentation</li></ul>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration
 sbyte temperature = -40; // Temperature in Celsius
 sbyte offset = -10; // Position offset
 sbyte delta = -5; // Change in value
@@ -398,7 +415,7 @@ sbyte velocitySmall = -20; // Small velocity value
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Directional values
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Directional values
 sbyte directionX = -1; // -1 = left, 0 = none, 1 = right
 sbyte directionY = 1; // -1 = down, 0 = none, 1 = up
 sbyte velocitySmall = -20; // Small velocity value
@@ -422,7 +439,7 @@ sbyte tempChange = 5; // Temperature increase
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Overflow at limits
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Overflow at limits
 sbyte value = 127;
 value += 1; // Wraps to -128! (not 128)
 
@@ -459,7 +476,7 @@ if (a &lt; b) // Compiler warning - comparing signed with unsigned
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Good for directional input
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Good for directional input
 sbyte inputX = 0; // -1 (left), 0 (none), 1 (right)
 sbyte inputY = 0; // -1 (down), 0 (none), 1 (up)
 
@@ -517,11 +534,10 @@ float SByteToFloat(sbyte sample)
 <h4>Performance notes</h4>
 <ul><li>Uses 50% memory of int</li><li>Good for large arrays needing negative values</li><li>Arithmetic operations convert to int (overhead)</li><li>Limited range - often better to use int</li><li><strong>Use when:</strong> range fits AND memory matters</li><li><strong>Modern practice:</strong> int is usually preferred (CPU optimized for 32-bit)</li></ul>
 
-<h4>When to use short</h4>
-<ul><li>Small map coordinates (maps &lt; 32K × 32K)</li><li>Memory optimization in large arrays</li><li>16-bit audio samples</li><li>Item/Entity IDs in smaller games (&lt; 32K items)</li><li>Building heights, floor numbers</li><li>Don't use for large maps (overflow!)</li><li>Modern CPUs prefer int (32-bit optimized)</li></ul>
+<h4>When to use short</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Small map coordinates (maps &lt; 32K × 32K)</li><li>Memory optimization in large arrays</li><li>16-bit audio samples</li><li>Item/Entity IDs in smaller games (&lt; 32K items)</li><li>Building heights, floor numbers</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use for large maps (overflow!)</li><li>Modern CPUs prefer int (32-bit optimized)</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration
 short positionX = 1024;
 short positionY = -512;
 short itemID = 5000;
@@ -534,7 +550,7 @@ short inventorySize = 500; // Max inventory slots
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Map coordinates (for small/medium maps)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Map coordinates (for small/medium maps)
 short mapX = 1000; // Tile X position
 short mapY = -500; // Tile Y position
 short elevation = 250; // Height/elevation value
@@ -566,7 +582,7 @@ short[] terrainData = new short[512 * 512]; // Terrain elevation data
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Overflow at 32,767
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Overflow at 32,767
 short score = 32767;
 score += 1; // Wraps to -32768! (not 32768)
 
@@ -606,7 +622,7 @@ float accurate = (float)a / b; // 3.333... (need float for decimals)
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Good for small map coordinates
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Good for small map coordinates
 short tileX = 100, tileY = 200; // For maps &lt; 32K × 32K
 Vector2Int tilePos = new Vector2Int(tileX, tileY);
 
@@ -685,11 +701,10 @@ int enemyCount = 50; // int is faster and safer
 <h4>Performance notes</h4>
 <ul><li>Same memory as short (2 bytes)</li><li>Double positive range vs short</li><li>Arithmetic operations convert to int</li><li>Subtraction can wrap around (dangerous!)</li><li><strong>Use for:</strong> ports, Unicode, IDs up to 65K</li><li>Less common than byte/int in game development</li></ul>
 
-<h4>When to use ushort</h4>
-<ul><li>Network port numbers (0-65535)</li><li>Unicode character codes</li><li>Object IDs up to 65K</li><li>Voxel/block types (Minecraft-style)</li><li>Audio sample rate values</li><li>Small positive-only counters</li><li>Don't use if you need negatives</li><li>Be careful with subtraction (wrapping!)</li></ul>
+<h4>When to use ushort</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Network port numbers (0-65535)</li><li>Unicode character codes</li><li>Object IDs up to 65K</li><li>Voxel/block types (Minecraft-style)</li><li>Audio sample rate values</li><li>Small positive-only counters</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use if you need negatives</li><li>Be careful with subtraction (wrapping!)</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration
 ushort port = 8080; // Network port
 ushort objectID = 50000; // Object identifier
 ushort characterCode = 0x4E2D; // Unicode character (中)
@@ -701,7 +716,7 @@ ushort unicodeChar = 65; // &#x27;A&#x27; in Unicode
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Network/Server
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Network/Server
 ushort serverPort = 8080; // HTTP port
 ushort gamePort = 27015; // Game server port (Source engine style)
 ushort clientPort = 50000; // Client connection port
@@ -744,7 +759,7 @@ frameCounter++;
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Overflow at 65,535
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Overflow at 65,535
 ushort value = 65535;
 value += 1; // Wraps to 0! (not 65536)
 
@@ -797,7 +812,7 @@ string emoji = &quot;😀&quot;; // Use string for emojis
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Perfect for network ports
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Perfect for network ports
 ushort serverPort = 8080; // Valid ports: 0-65535 (but 0 is reserved)
 bool IsValidPort(ushort port) =&gt; port &gt; 0;
 
@@ -900,11 +915,11 @@ bool isSet = (flags &amp; FLAG_BIT_0) != 0; // Check bit
 </code></pre>
 <div class="atlas-section-break" data-index="// § 03"></div>
 <h2 id="references">04 References</h2>
-<div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">SERIES</span><span class="atlas-ref-author">Pavel Zosim</span> — C# variables, lesson 1, part 2.<br><a class="atlas-ref-link" href="/post/csharp-variables-lesson-1-part-2">pavelzosim.com/post/csharp-variables-lesson-1-part-2</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">SERIES</span><span class="atlas-ref-author">Pavel Zosim</span> — C# variables, lesson 1, part 3.<br><a class="atlas-ref-link" href="/post/csharp-variables-lesson-1-part-3">pavelzosim.com/post/csharp-variables-lesson-1-part-3</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[03]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Built-in types and literals.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[04]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Integral numeric types.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types</a></span></li></ul></div>
+<div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Built-in types and literals.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Integral numeric types.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types</a></span></li></ul></div><div class="atlas-series-nav"><ul class="atlas-series-nav__parts"><li class="atlas-series-nav__part atlas-series-nav__part--current"><span class="atlas-series-nav__num">01</span><span class="atlas-series-nav__title">Overview &amp; Integer Types</span><span class="atlas-series-nav__sub">int · byte · sbyte · short · ushort</span><span class="atlas-series-nav__status atlas-series-nav__status--current">CURRENT</span></li><li class="atlas-series-nav__part"><a href="/post/csharp-variables-lesson-1-part-2"><span class="atlas-series-nav__num">02</span><span class="atlas-series-nav__title">Unsigned &amp; Floating-Point Types</span><span class="atlas-series-nav__sub">uint · long · ulong · float · double</span><span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span></a></li><li class="atlas-series-nav__part"><a href="/post/csharp-variables-lesson-1-part-3"><span class="atlas-series-nav__num">03</span><span class="atlas-series-nav__title">Decimal, Char, String &amp; Bool</span><span class="atlas-series-nav__sub">decimal · char · string · bool</span><span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span></a></li></ul><div class="atlas-part-nav atlas-part-nav--single"><a href="/post/csharp-variables-lesson-1-part-2" class="atlas-part-nav__btn atlas-part-nav__btn--next"><span class="atlas-part-nav__direction">Next →</span><span class="atlas-part-nav__label">Part 02: Unsigned &amp; Floating-Point Types</span><span class="atlas-part-nav__sub">uint · long · ulong · float · double</span></a></div></div>
 <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // CSHARP_VARIABLES_LESSON_1_PART_1 // EOF</span><span class="atlas-eof-divider__line"></span></div>
     </div></article>
     <footer class="post-end"><a href="/blog/">← Blog index</a><span>Local archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
   </main>
-  <script src="/scripts/article-page.js?v=14"></script>
+  <script src="/scripts/article-page.js?v=14"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
 </body>
 </html>

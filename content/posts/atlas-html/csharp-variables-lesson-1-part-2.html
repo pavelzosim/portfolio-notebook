@@ -9,14 +9,42 @@
 
 
 
-  <link rel="stylesheet" href="/styles/atlas.css?v=55"><link rel="stylesheet" href="/styles/posts.css?v=18">
-</head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"><link rel="stylesheet" href="/styles/atlas.css?v=55"><link rel="stylesheet" href="/styles/posts.css?v=18">
+<style>
+.atlas-container .atlas-series-nav{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 0;margin:32px 0 0;width:100%}
+.atlas-container .atlas-series-nav::before{content:"[ SERIES // C#_VARIABLES_LESSON_1 ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+.atlas-container .atlas-series-nav__parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+.atlas-container .atlas-series-nav__part{display:grid;grid-template-columns:36px 1fr auto;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);padding:8px 16px;transition:background .1s}
+.atlas-container .atlas-series-nav__part:last-child{border-bottom:none}
+.atlas-container .atlas-series-nav__part:hover{background:rgba(0,0,0,.02)}
+.atlas-container .atlas-series-nav__part a{display:contents;text-decoration:none;color:inherit}
+.atlas-container .atlas-series-nav__part:hover .atlas-series-nav__num,
+.atlas-container .atlas-series-nav__part:hover .atlas-series-nav__title{color:#8b0000}
+.atlas-container .atlas-series-nav__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);letter-spacing:.04em;transition:color .1s}
+.atlas-container .atlas-series-nav__title{font-size:12px;font-weight:700;color:#000;transition:color .1s}
+.atlas-container .atlas-series-nav__sub{font-size:10px;color:rgba(0,0,0,.4);font-weight:400;white-space:nowrap;padding-left:12px}
+.atlas-container .atlas-series-nav__part--current{background:rgba(139,0,0,.03);border-left:2px solid #8b0000}
+.atlas-container .atlas-series-nav__part--current .atlas-series-nav__num,
+.atlas-container .atlas-series-nav__part--current .atlas-series-nav__title{color:#8b0000}
+.atlas-container .atlas-series-nav__status{font-size:9px;font-weight:700;padding:1px 6px;border:1px solid;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.atlas-container .atlas-series-nav__status--live{color:var(--atlas-ok);border-color:var(--atlas-ok)}
+.atlas-container .atlas-series-nav__status--current{color:var(--atlas-crit);border-color:var(--atlas-crit)}
+.atlas-container .atlas-part-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-top:1px dashed rgba(0,0,0,.12)}
+.atlas-container .atlas-part-nav--single{grid-template-columns:1fr}
+.atlas-container .atlas-part-nav__btn{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid rgba(0,0,0,.15);text-decoration:none;transition:background .12s,border-color .12s}
+.atlas-container .atlas-part-nav__btn:hover{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.3)}
+.atlas-container .atlas-part-nav__btn--next{text-align:right}
+.atlas-container .atlas-part-nav__direction{font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.35);text-transform:uppercase}
+.atlas-container .atlas-part-nav__label{font-size:12px;font-weight:700;color:#000}
+.atlas-container .atlas-part-nav__sub{font-size:10px;color:rgba(0,0,0,.4)}
+.atlas-container .atlas-part-nav__btn:hover .atlas-part-nav__label{color:#8b0000}
+</style></head>
 <body class="migrated-post" id="top">
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
   <main class="post-shell">
     <header class="post-header"><p class="post-path">~/blog/csharp-variables-lesson-1-part-2.md</p><h1>C# Variables Lesson 1 Part 2</h1><p class="post-summary">C# variables lesson 1 part 2 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.</p><div class="post-meta"><span>Pavel Zosim</span><span>2025-12-06</span><span>#technical-art</span><span>#unity</span><span>#lessons</span><span>#c-sharp</span></div></header>
-    <article class="atlas-container"><div class="content-block"><h2 id="overview">01 Overview</h2>
-<p>This lesson continues the technical art C# data types lesson 2, focusing on practical usage of variables and operations in production code.</p>
+    <article class="atlas-container"><div class="content-block"><nav class="atlas-toc" aria-label="Article table of contents"><ul class="atlas-toc__list"><li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#floating-point-types-decimal-numbers"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Floating point types (decimal numbers)</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#references"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">References</span><span class="atlas-toc__dots"></span></span></a></li></ul></nav><h2 id="overview">01 Overview</h2>
+<p>This lesson continues the technical art C# data types lesson 2, focusing on practical usage of variables and operations in production code.</p><div class="atlas-callout atlas-callout--warning"><p><strong>Unsigned wraparound.</strong> <code>uint</code> and <code>ulong</code> can never go negative — subtracting past zero wraps to a huge positive number instead of throwing. A countdown loop like <code>for (uint i = 10; i &gt;= 0; i--)</code> never terminates. When a value might subtract or count down, use a signed type (<code>int</code>/<code>long</code>) instead.</p></div>
 
 <h3 id="uint">uint — unsigned 32-bit integer</h3>
 <p><strong>Beginner explanation:</strong> Like int, but only positive numbers (0 to 4.3 billion). Perfect for bit operations, color values (RGBA), large positive numbers, hash codes, or anything that should never be negative. Double the positive range of int!</p>
@@ -26,11 +54,10 @@
 
 <h4>Performance notes</h4>
 <ul><li>Same speed as int (32-bit optimized)</li><li>Double positive range vs int</li><li>Perfect for bit operations (no sign bit)</li><li><strong>DANGER:</strong> Subtraction wrapping is a common source of bugs</li><li><strong>Use for:</strong> bit flags, colors, hashes, frame counters</li><li><p><strong>Avoid for:</strong> anything involving subtraction or comparisons with negative values</p></li></ul>
-<h4>When to use uint</h4>
-<ul><li>Bit masks and flags (32 boolean values in one variable)</li><li>Packed color values (RGBA format)</li><li>Hash codes and checksums</li><li>Frame/tick counters (never negative)</li><li>Large positive-only IDs</li><li>Network packet data</li><li>Don't use for loops that count down</li><li>Don't use if you ever subtract or compare with negatives</li><li>Don't use just because "it's never negative" - int is safer!</li></ul>
+<h4>When to use uint</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Bit masks and flags (32 boolean values in one variable)</li><li>Packed color values (RGBA format)</li><li>Hash codes and checksums</li><li>Frame/tick counters (never negative)</li><li>Large positive-only IDs</li><li>Network packet data</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use for loops that count down</li><li>Don't use if you ever subtract or compare with negatives</li><li>Don't use just because "it's never negative" - int is safer!</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration (note &#x27;u&#x27; suffix for literals)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration (note &#x27;u&#x27; suffix for literals)
 uint colorRGBA = 0xFF5733FF; // Color in hex (RGBA format)
 uint hash = 0xABCDEF12; // Hash value
 uint largeCount = 3000000000; // Large positive number
@@ -46,7 +73,7 @@ uint flags = 0; // Flag storage (32 boolean flags)
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Color operations (packed RGBA format)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Color operations (packed RGBA format)
 uint packedColor = 0xFF0080FF; // R=255, G=0, B=128, A=255
 
 // Extract color components (bit shifting)
@@ -122,7 +149,7 @@ uint combined = value | 0xF0; // Set upper 4 bits
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Subtraction wraps around (MOST COMMON BUG!)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Subtraction wraps around (MOST COMMON BUG!)
 uint a = 10u;
 uint b = 20u;
 uint result = a - b; // Result = 4,294,967,286 (NOT -10!)
@@ -204,7 +231,7 @@ float result = bigNum; // Precision loss! float can&#x27;t represent all uint va
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Perfect for bit flags (32 booleans in 4 bytes!)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Perfect for bit flags (32 booleans in 4 bytes!)
 [System.Flags]
 enum GameState : uint
 {
@@ -330,11 +357,10 @@ uint multiLayer = (1u &lt;&lt; 8) | (1u &lt;&lt; 9); // Multiple layers (8 and 9
 <h4>Performance notes</h4>
 <ul><li>Fast on 64-bit systems (native register size)</li><li>Slightly slower on 32-bit systems (requires two operations)</li><li>Same speed as int on modern 64-bit CPUs</li><li>No conversion overhead when working with time APIs</li><li>Uses 2x memory of int (8 bytes vs 4 bytes)</li><li><strong>Use when:</strong> int range isn't enough OR working with timestamps/file sizes</li></ul>
 
-<h4>When to use long</h4>
-<ul><li>Timestamps (milliseconds since Unix epoch)</li><li>File sizes (especially &gt; 2GB)</li><li>Database IDs (primary keys)</li><li>High-precision timers</li><li>Large world coordinates (space games)</li><li>When calculations might exceed ±2 billion</li><li>Don't use by default (wastes memory)</li><li>Don't use for small counters/IDs</li></ul>
+<h4>When to use long</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Timestamps (milliseconds since Unix epoch)</li><li>File sizes (especially &gt; 2GB)</li><li>Database IDs (primary keys)</li><li>High-precision timers</li><li>Large world coordinates (space games)</li><li>When calculations might exceed ±2 billion</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use by default (wastes memory)</li><li>Don't use for small counters/IDs</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration (note the &#x27;L&#x27; suffix!)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration (note the &#x27;L&#x27; suffix!)
 long timestamp = 1699999999999L; // Must use &#x27;L&#x27; suffix!
 long fileSize = 5368709120L; // 5 GB in bytes
 long largeNumber = 9000000000L; // 9 billion
@@ -350,7 +376,7 @@ long worldSeed = 987654321098L; // World generation seed
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Timestamps (most common use!)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Timestamps (most common use!)
 long unixTimeMs = DateTimeOffset.Now.ToUnixTimeMilliseconds(); // 1699999999999
 long unixTimeSec = DateTimeOffset.Now.ToUnixTimeSeconds(); // 1699999999
 long ticksNow = DateTime.Now.Ticks; // 638365440000000000 (ticks since year 1)
@@ -413,7 +439,7 @@ long entityCount = 5000000000L; // 5 billion entities
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Forgetting the &#x27;L&#x27; suffix
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Forgetting the &#x27;L&#x27; suffix
 long big = 3000000000; // Compiler error! Treated as int
 long big = 3000000000L; // Correct
 
@@ -461,7 +487,7 @@ double accurate = (double)a / b; // 3.333... (need double for decimals)
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Use for Unix timestamps (milliseconds)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Use for Unix timestamps (milliseconds)
 long GetCurrentTimeMs()
 {
  return DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -595,11 +621,10 @@ if (FitsInInt(longValue))
 <h4>Performance notes</h4>
 <ul><li>Same speed as long on 64-bit systems</li><li>Slower on 32-bit systems</li><li>Double positive range vs long</li><li>Subtraction wrapping is dangerous (like uint)</li><li>Very rarely needed in game development</li><li><strong>Use only when:</strong> long range isn't enough AND values are positive-only</li></ul>
 
-<h4>When to use ulong</h4>
-<ul><li>Extremely large file sizes (&gt; 9 exabytes)</li><li>Cryptographic operations (hashing, keys)</li><li>Scientific calculations with huge positive values</li><li>64-bit hashing</li><li>Blockchain/cryptocurrency data</li><li>Astronomical calculations</li><li>Almost never needed in typical games</li><li>Don't use for countdown loops</li><li>Don't use if long is sufficient</li></ul>
+<h4>When to use ulong</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Extremely large file sizes (&gt; 9 exabytes)</li><li>Cryptographic operations (hashing, keys)</li><li>Scientific calculations with huge positive values</li><li>64-bit hashing</li><li>Blockchain/cryptocurrency data</li><li>Astronomical calculations</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Almost never needed in typical games</li><li>Don't use for countdown loops</li><li>Don't use if long is sufficient</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// Basic declaration (note &#x27;UL&#x27; or &#x27;ul&#x27; suffix)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Basic declaration (note &#x27;UL&#x27; or &#x27;ul&#x27; suffix)
 ulong hugeNumber = 15000000000000000000UL; // 15 quintillion
 ulong fileSize = 10000000000UL; // 10 GB in bytes
 ulong counter = 0UL;
@@ -611,7 +636,7 @@ ulong largeID = 999999999999999UL; // Very large identifier
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// File system (handles HUGE files &gt; 16 exabytes)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// File system (handles HUGE files &gt; 16 exabytes)
 ulong driveSize = GetDriveTotalSize(); // Total drive space
 ulong freeSpace = GetDriveFreeSpace(); // Available space
 ulong fileSize = GetFileSize(&quot;huge_file.bin&quot;);
@@ -666,7 +691,7 @@ ulong GenerateUniqueID()
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Subtraction wraps (same as uint, but BIGGER!)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Subtraction wraps (same as uint, but BIGGER!)
 ulong a = 10UL;
 ulong b = 20UL;
 ulong result = a - b; // Result = 18,446,744,073,709,551,606 (NOT -10!)
@@ -732,7 +757,7 @@ double result = huge; // Precision loss! double can&#x27;t represent all ulong v
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Use for file system operations (handles &gt; 16 exabyte files)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Use for file system operations (handles &gt; 16 exabyte files)
 ulong GetTotalDiskSpace(string drive)
 {
  DriveInfo info = new DriveInfo(drive);
@@ -901,11 +926,10 @@ for (long i = 10; i &gt;= 0; i--) // Works
 <h4>Performance notes</h4>
 <ul><li><strong>Fast</strong> - hardware accelerated on all platforms</li><li>GPU prefers float (Vector/Matrix math)</li><li>Half memory of double (4 vs 8 bytes)</li><li>Unity/Unreal use float as standard</li><li>~6-7 digits precision (errors accumulate!)</li><li>Large + small numbers lose small value</li><li><strong>Unity standard</strong> - use float everywhere in Unity</li><li><strong>Performance:</strong> Faster than double on some platforms</li></ul>
 
-<h4>When to use float</h4>
-<ul><li>Unity/Unreal game development (always!)</li><li>3D positions, rotations, scales</li><li>Physics (velocity, acceleration, forces)</li><li>Game timers, cooldowns</li><li>UI values (alpha, scale, position)</li><li>Audio (volume, pitch, pan)</li><li>Don't use for money/currency (precision errors!)</li><li>Don't use for exact equality comparisons</li></ul>
+<h4>When to use float</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Unity/Unreal game development (always!)</li><li>3D positions, rotations, scales</li><li>Physics (velocity, acceleration, forces)</li><li>Game timers, cooldowns</li><li>UI values (alpha, scale, position)</li><li>Audio (volume, pitch, pan)</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use for money/currency (precision errors!)</li><li>Don't use for exact equality comparisons</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// CRITICAL: Always add &#x27;f&#x27; suffix!
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// CRITICAL: Always add &#x27;f&#x27; suffix!
 float speed = 5.5f; // Correct
 float gravity = -9.8f; // Correct
 float wrong = 5.5; // Compiler warning! Treated as double
@@ -927,7 +951,7 @@ float large = 3.4e38f; // 340,000,000,000,000,000,000,000,000,000,000,000,000
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Unity Transform (ALL use float)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Unity Transform (ALL use float)
 float posX = transform.position.x;
 float posY = transform.position.y;
 float posZ = transform.position.z;
@@ -989,7 +1013,7 @@ Color color = new Color(red, green, blue, 1.0f);
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Forgetting &#x27;f&#x27; suffix
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Forgetting &#x27;f&#x27; suffix
 float value = 5.5; // Warning! Implicitly converted from double
 float value = 5.5f; // Correct
 
@@ -1061,7 +1085,7 @@ float result2 = a + (b + c); // ...this! (due to precision)
 </code></pre>
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Unity helper functions
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Unity helper functions
 float clamped = Mathf.Clamp(value, 0.0f, 1.0f); // Clamp between 0 and 1
 float clamped01 = Mathf.Clamp01(value); // Same as above (shortcut)
 float lerped = Mathf.Lerp(start, end, 0.5f); // Linear interpolation
@@ -1182,11 +1206,10 @@ float wrapped = Mathf.Repeat(value, length); // Wraps value between 0 and length
 <ul><li><strong>Size:</strong> 8 bytes (64 bits)</li><li><strong>Precision:</strong> ~15-16 significant digits</li><li><strong>Range:</strong> ±5.0 × 10⁻³²⁴ to ±1.7 × 10³⁰⁸</li><li><p><strong>Default Value:</strong> 0.0</p></li></ul>
 <h4>Performance notes</h4>
 <ul><li>Fast on 64-bit systems (native register size)</li><li>Slower than float on some platforms (~10-30% slower)</li><li>Uses 2x memory of float (8 vs 4 bytes)</li><li>Math class uses double (no conversion overhead)</li><li>Better precision for scientific calculations</li><li><strong>C# standard</strong> for math operations</li><li><p><strong>Unity:</strong> Stick with float; convert from double only when needed</p></li></ul>
-<h4>When to use double</h4>
-<ul><li>Scientific calculations</li><li>Math library operations (Math.Sin, Math.Sqrt, etc.)</li><li>High-precision requirements (astronomy, physics simulations)</li><li>Statistical analysis</li><li>General C# programming (non-Unity)</li><li>Don't use in Unity (use float instead)</li><li>Don't use for money (use decimal!)</li><li>Don't use in performance-critical loops if float is sufficient</li></ul>
+<h4>When to use double</h4><div class="comparison-matrix"><div class="comp-col"><div class="comp-label">USE</div><div class="comp-body"><ul><li>Scientific calculations</li><li>Math library operations (Math.Sin, Math.Sqrt, etc.)</li><li>High-precision requirements (astronomy, physics simulations)</li><li>Statistical analysis</li><li>General C# programming (non-Unity)</li></ul></div></div><div class="comp-col"><div class="comp-label">AVOID</div><div class="comp-body"><ul><li>Don't use in Unity (use float instead)</li><li>Don't use for money (use decimal!)</li><li>Don't use in performance-critical loops if float is sufficient</li></ul></div></div></div>
 
 <h4>Syntax and declaration</h4>
-<pre><code>// No suffix needed (double is default for decimals)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// No suffix needed (double is default for decimals)
 double pi = 3.14159265358979; // High precision
 double scientific = 1.23e-100; // Very small number
 double large = 1.79e308; // Very large number
@@ -1202,7 +1225,7 @@ double calculation = Math.PI * Math.E; // Math class uses double
 </code></pre>
 
 <h4>Practical use cases</h4>
-<pre><code>// Scientific calculations
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// Scientific calculations
 double speedOfLight = 299792458.0; // m/s (exact value)
 double gravityConstant = 6.67430e-11; // N⋅m²/kg²
 double avogadro = 6.02214076e23; // Avogadro&#x27;s number
@@ -1273,7 +1296,7 @@ const double SQRT_2 = 1.41421356237309504880;
 </code></pre>
 
 <h4>Common pitfalls</h4>
-<pre><code>// PITFALL 1: Mixing float and double (implicit conversions)
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// PITFALL 1: Mixing float and double (implicit conversions)
 float f = 5.5f;
 double d = f; // OK - float → double (safe, no data loss)
 
@@ -1328,7 +1351,7 @@ if (!double.IsFinite(value)) // Check if NOT (NaN or Infinity)
 
 
 <h4>Pro tips</h4>
-<pre><code>// TIP 1: Math class functions use double
+<pre class="atlas-code-block" data-language="C#"><code class="language-c">// TIP 1: Math class functions use double
 double angle = Math.PI / 4.0; // 45 degrees in radians
 double sine = Math.Sin(angle);
 double cosine = Math.Cos(angle);
@@ -1463,11 +1486,11 @@ double value = double.Parse(&quot;123.456&quot;, System.Globalization.CultureInf
 </code></pre>
 <div class="atlas-section-break" data-index="// § 02"></div>
 <h2 id="references">03 References</h2>
-<div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">SERIES</span><span class="atlas-ref-author">Pavel Zosim</span> — C# variables, lesson 1, part 1.<br><a class="atlas-ref-link" href="/post/csharp-variables-lesson-1-part-1">pavelzosim.com/post/csharp-variables-lesson-1-part-1</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">SERIES</span><span class="atlas-ref-author">Pavel Zosim</span> — C# variables, lesson 1, part 3.<br><a class="atlas-ref-link" href="/post/csharp-variables-lesson-1-part-3">pavelzosim.com/post/csharp-variables-lesson-1-part-3</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[03]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Built-in types and literals.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[04]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Integral numeric types.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types</a></span></li></ul></div>
+<div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Built-in types and literals.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/built-in-types</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-author">Microsoft Learn</span> — Integral numeric types.<br><a class="atlas-ref-link" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types" target="_blank" rel="noopener noreferrer">learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types</a></span></li></ul></div><div class="atlas-series-nav"><ul class="atlas-series-nav__parts"><li class="atlas-series-nav__part"><a href="/post/csharp-variables-lesson-1-part-1"><span class="atlas-series-nav__num">01</span><span class="atlas-series-nav__title">Overview &amp; Integer Types</span><span class="atlas-series-nav__sub">int · byte · sbyte · short · ushort</span><span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span></a></li><li class="atlas-series-nav__part atlas-series-nav__part--current"><span class="atlas-series-nav__num">02</span><span class="atlas-series-nav__title">Unsigned &amp; Floating-Point Types</span><span class="atlas-series-nav__sub">uint · long · ulong · float · double</span><span class="atlas-series-nav__status atlas-series-nav__status--current">CURRENT</span></li><li class="atlas-series-nav__part"><a href="/post/csharp-variables-lesson-1-part-3"><span class="atlas-series-nav__num">03</span><span class="atlas-series-nav__title">Decimal, Char, String &amp; Bool</span><span class="atlas-series-nav__sub">decimal · char · string · bool</span><span class="atlas-series-nav__status atlas-series-nav__status--live">LIVE</span></a></li></ul><div class="atlas-part-nav"><a href="/post/csharp-variables-lesson-1-part-1" class="atlas-part-nav__btn atlas-part-nav__btn--prev"><span class="atlas-part-nav__direction">← Prev</span><span class="atlas-part-nav__label">Part 01: Overview &amp; Integer Types</span><span class="atlas-part-nav__sub">int · byte · sbyte · short · ushort</span></a><a href="/post/csharp-variables-lesson-1-part-3" class="atlas-part-nav__btn atlas-part-nav__btn--next"><span class="atlas-part-nav__direction">Next →</span><span class="atlas-part-nav__label">Part 03: Decimal, Char, String &amp; Bool</span><span class="atlas-part-nav__sub">decimal · char · string · bool</span></a></div></div>
 <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // CSHARP_VARIABLES_LESSON_1_PART_2 // EOF</span><span class="atlas-eof-divider__line"></span></div>
     </div></article>
     <footer class="post-end"><a href="/blog/">← Blog index</a><span>Local archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
   </main>
-  <script src="/scripts/article-page.js?v=14"></script>
+  <script src="/scripts/article-page.js?v=14"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
 </body>
 </html>
