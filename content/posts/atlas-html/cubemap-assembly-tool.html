@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cubemap Assembly Tool · Pavel Zosim</title><meta name="description" content="A desktop utility for assembling, validating, previewing, and exporting DirectX cubemaps — from six loose faces to a cross, strip, or DDS texture."><link rel="canonical" href="https://www.pavelzosim.com/post/cubemap-assembly-tool"><meta property="og:type" content="article"><meta property="og:title" content="Cubemap Assembly Tool"><meta property="og:description" content="A desktop utility for assembling, validating, previewing, and exporting DirectX cubemaps — from six loose faces to a cross, strip, or DDS texture."><meta property="og:url" content="https://www.pavelzosim.com/post/cubemap-assembly-tool"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/cubemap-assembly-tool/og-cover.png"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/cubemap-assembly-tool/og-cover.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Cubemap Assembly Tool"><meta name="twitter:description" content="A desktop utility for assembling, validating, previewing, and exporting DirectX cubemaps — from six loose faces to a cross, strip, or DDS texture."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Cubemap Assembly Tool", "description": "A desktop utility for assembling, validating, previewing, and exporting DirectX cubemaps — from six loose faces to a cross, strip, or DDS texture.", "url": "https://www.pavelzosim.com/post/cubemap-assembly-tool", "mainEntityOfPage": "https://www.pavelzosim.com/post/cubemap-assembly-tool", "image": "https://www.pavelzosim.com/public/media/posts/cubemap-assembly-tool/og-cover.png", "datePublished": "2026-08-26", "dateModified": "2026-08-26", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
+
+
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework@v1.9.5/cdn/atlas-framework.css?v=1.9.5">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <style>
+    html,body{margin:0;padding:0;background:transparent}
+
+    /* refs */
+    .atlas-container .content-block .atlas-refs{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 16px 16px;margin:24px 0;width:100%}
+    .atlas-container .content-block .atlas-refs::before{content:"[ REFERENCES // ИСТОЧНИКИ ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-container .content-block .atlas-ref-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-container .content-block .atlas-ref-item{display:grid;grid-template-columns:28px 1fr;align-items:baseline;font-size:12px;line-height:1.6;color:rgba(0,0,0,.85);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,.12)}
+    .atlas-container .content-block .atlas-ref-item:last-child{border-bottom:none}
+    .atlas-container .content-block .atlas-ref-num{font-size:9px;font-weight:700;color:#8b0000;letter-spacing:.04em}
+    .atlas-container .content-block .atlas-ref-tag{display:inline-block;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);border:1px solid rgba(0,0,0,.2);padding:0 5px;margin-right:6px;vertical-align:middle}
+    .atlas-container .content-block .atlas-ref-author{color:rgba(0,0,0,.5)}
+    .atlas-container .content-block .atlas-ref-link{display:inline-block;margin-top:2px;font-size:10px;color:#8b0000;text-decoration:none;border-bottom:1px solid rgba(139,0,0,.2)}
+    .atlas-container .content-block .atlas-ref-link::before{content:'→ ';font-weight:700}
+    .atlas-container .content-block .atlas-ref-link:hover{border-bottom-color:#8b0000}
+
+    /* download button */
+    .atlas-container .atlas-download-wrap{position:relative;display:inline-block;margin:8px 0 24px}
+    .atlas-container .atlas-download-wrap::after{content:'';position:absolute;top:4px;left:4px;right:-4px;bottom:-4px;background-image:linear-gradient(45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(-45deg,rgba(0,0,170,.6) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(0,0,170,.6) 75%),linear-gradient(-45deg,transparent 75%,rgba(0,0,170,.6) 75%);background-size:4px 4px;background-position:0 0,0 2px,2px -2px,-2px 0;z-index:0;pointer-events:none}
+    .atlas-container .atlas-download-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 24px;background:#0000AA;color:#fff;border:none;border-radius:0;text-decoration:none;white-space:nowrap;cursor:pointer;transform:translate(-4px,-4px);transition:transform .05s linear}
+    .atlas-container .atlas-download-btn:hover{background:#0000CC}
+    .atlas-container .atlas-download-btn:active{transform:translate(0,0)}
+    .atlas-container .atlas-download-btn__icon{font-size:14px;font-weight:400}
+    .atlas-container .atlas-download-btn__sub{font-size:9px;font-weight:400;letter-spacing:.04em;opacity:.75;margin-left:4px}
+
+    /* toc */
+    .atlas-toc{position:relative;border:1px solid rgba(0,0,0,.15);padding:34px 0 8px;margin:24px 0;width:100%}
+    .atlas-toc::before{content:"[ TABLE_OF_CONTENTS // NAVIGATION ]";position:absolute;top:0;left:0;right:0;height:24px;line-height:24px;padding-left:16px;font-size:9px;font-weight:700;color:rgba(0,0,0,.45);background:rgba(0,0,0,.015);border-bottom:1px solid rgba(0,0,0,.12);letter-spacing:.06em;font-family:'JetBrains Mono',monospace}
+    .atlas-toc__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column}
+    .atlas-toc__item{display:grid;grid-template-columns:32px 1fr;align-items:center;border-bottom:1px dashed rgba(0,0,0,.12);transition:background .1s}
+    .atlas-toc__item:last-child{border-bottom:none}
+    .atlas-toc__item:hover{background:rgba(0,0,0,.02)}
+    .atlas-toc__item a{display:contents;text-decoration:none;color:inherit}
+    .atlas-toc__item:hover .atlas-toc__num,.atlas-toc__item:hover .atlas-toc__title{color:#8b0000}
+    .atlas-toc__num{font-size:9px;font-weight:700;color:rgba(0,0,0,.35);padding:7px 0 7px 16px;letter-spacing:.04em;transition:color .1s}
+    .atlas-toc__row{display:flex;align-items:center;gap:4px;padding:7px 16px 7px 8px;overflow:hidden}
+    .atlas-toc__title{font-size:12px;font-weight:700;color:#000;white-space:nowrap;flex-shrink:0;transition:color .1s}
+    .atlas-toc__dots{flex:1;border-bottom:1px dotted rgba(0,0,0,.15);min-width:12px;height:0;align-self:center;margin-bottom:2px}
+    .atlas-toc__item--h3 .atlas-toc__title{font-size:11px;font-weight:400;color:rgba(0,0,0,.7);padding-left:14px}
+    .atlas-toc__item--h3 .atlas-toc__num{color:rgba(0,0,0,.2)}
+  </style>
+  <link rel="stylesheet" href="/styles/legacy-posts.css?v=15">
+</head>
+<body><h1 class="seo-heading">Cubemap Assembly Tool</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+<div class="atlas-container">
+  <div id="site-passport"></div>
+
+  <!-- TOC + CTA -->
+  <div class="content-block">
+    <div class="atlas-toc">
+      <ul class="atlas-toc__list">
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s01"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">What Problem It Solves</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s02"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Face Assignment &amp; Live Preview</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-auto"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">Automatic Face Detection</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s02-preview"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">3D Cube &amp; Inside 360° Preview</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s03"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Output Formats &amp; Export Pipeline</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-layouts"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">PNG / TGA / BMP Layouts</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h3"><a href="#s03-dds"><span class="atlas-toc__num">—</span><span class="atlas-toc__row"><span class="atlas-toc__title">DDS via texassemble</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s04"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Architecture &amp; Project Structure</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s05"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Installation — Windows &amp; Linux</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s06"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Workflow</span><span class="atlas-toc__dots"></span></span></a></li>
+        <li class="atlas-toc__item atlas-toc__item--h2"><a href="#s07"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Current Scope &amp; Limitations</span><span class="atlas-toc__dots"></span></span></a></li>
+      </ul>
+    </div>
+
+    <div class="atlas-download-wrap">
+      <a href="https://github.com/pavelzosim/cubemap-assembly-tool"
+         target="_top" class="atlas-download-btn">
+        <span class="atlas-download-btn__icon">↓</span>
+        Download on GitHub
+        <span class="atlas-download-btn__sub">Free · MIT License</span>
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ══ 01: PROBLEM ══════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s01">01 What Problem It Solves</h2>
+
+    <p>A cubemap is six square images bolted together in a fixed order — but "fixed" only helps if every tool along the pipeline agrees on what that order is. DirectX expects <span class="atlas-code-inline">+X, −X, +Y, −Y, +Z, −Z</span>. Source frames rendered from a Houdini camera rig, exported from a panorama stitcher, or handed off by another artist rarely arrive labelled that way, and reassembling them by hand in a generic image editor means eyeballing rotations and hoping the skybox doesn't show a seam.</p>
+
+    <div class="media-frame">
+      <iframe src="https://www.youtube.com/embed/HGoSGOWHWms"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+      <div class="media-caption">Video 01: Cubemap Assembly Tool — end-to-end workflow, from six loose faces to a saved DDS/PNG cubemap.</div>
+    </div>
+
+    <p>The Cubemap Assembly Tool is a free, open-source desktop utility that takes over exactly that hand-off: six explicit face slots in the correct DirectX order, automatic face guessing from common filenames, per-face rotate/flip correction, and a live preview — both an orbiting 3D cube and a from-the-inside 360° view — before anything is exported to a cross, strip, or DDS texture.</p>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p>The tool is built around one constraint that engines impose and general image editors ignore: <strong>face order and orientation are fixed by the target format, not by however the source frames happened to be authored</strong>. Every correction — rotation, flip, face assignment — happens before export, with the result previewed first, not guessed at afterward.</p>
+    </div>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ FEATURE_SET // v0.2.0 ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>FEATURE</th><th>DETAIL</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Face input</td><td>Six explicit DirectX face slots in required order. Supports PNG, JPG, JPEG, BMP, TGA, TIFF, WEBP.</td></tr>
+          <tr><td>Automatic face guessing</td><td>Filenames such as <span class="atlas-code-inline">posx</span>, <span class="atlas-code-inline">right</span>, <span class="atlas-code-inline">top</span>, <span class="atlas-code-inline">front</span> are matched to the correct face automatically.</td></tr>
+          <tr><td>Per-face correction</td><td>Rotate in 90° steps, flip horizontally, flip vertically, replace, or remove — independently per face.</td></tr>
+          <tr><td>3D cube preview</td><td>Drag to orbit, wheel to zoom — offline, no export required to check the result.</td></tr>
+          <tr><td>Inside 360° preview</td><td>Look outward from the centre of the cube; drag to look, wheel to change field of view.</td></tr>
+          <tr><td>2D layout preview</td><td>Live horizontal cross, vertical cross, horizontal strip, and vertical strip canvases.</td></tr>
+          <tr><td>Cross-platform layout export</td><td>PNG / TGA / BMP, rendered in pure Python via Pillow — no external dependency required.</td></tr>
+          <tr><td>DDS cubemap export</td><td>Through Microsoft's <span class="atlas-code-inline">texassemble</span>: face size, filter, DXGI format, sRGB, DX10 header, and overwrite options.</td></tr>
+          <tr><td>Safe installers</td><td>Project-local <span class="atlas-code-inline">.venv</span> installers and launchers for Windows and Linux.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 01"></div>
+  </div>
+
+
+  <!-- ══ 02: FACE ASSIGNMENT & PREVIEW ═════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s02">02 Face Assignment &amp; Live Preview</h2>
+
+    <h3 id="s02-auto">Automatic Face Detection</h3>
+
+    <p>Dropping in six arbitrarily named files still needs to end up on the correct face. The tool normalizes each filename stem and checks it against a small alias table before falling back to manual assignment:</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>FACE</th><th>DIRECTX SLOT</th><th>RECOGNISED ALIASES</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>px</td><td>+X / RIGHT</td><td><span class="atlas-code-inline">posx</span>, <span class="atlas-code-inline">xpos</span>, <span class="atlas-code-inline">positive_x</span>, <span class="atlas-code-inline">right</span>, <span class="atlas-code-inline">east</span>, <span class="atlas-code-inline">+x</span></td></tr>
+          <tr><td>nx</td><td>−X / LEFT</td><td><span class="atlas-code-inline">negx</span>, <span class="atlas-code-inline">xneg</span>, <span class="atlas-code-inline">negative_x</span>, <span class="atlas-code-inline">left</span>, <span class="atlas-code-inline">west</span>, <span class="atlas-code-inline">-x</span></td></tr>
+          <tr><td>py</td><td>+Y / UP</td><td><span class="atlas-code-inline">posy</span>, <span class="atlas-code-inline">ypos</span>, <span class="atlas-code-inline">positive_y</span>, <span class="atlas-code-inline">top</span>, <span class="atlas-code-inline">up</span>, <span class="atlas-code-inline">+y</span></td></tr>
+          <tr><td>ny</td><td>−Y / DOWN</td><td><span class="atlas-code-inline">negy</span>, <span class="atlas-code-inline">yneg</span>, <span class="atlas-code-inline">negative_y</span>, <span class="atlas-code-inline">bottom</span>, <span class="atlas-code-inline">down</span>, <span class="atlas-code-inline">-y</span></td></tr>
+          <tr><td>pz</td><td>+Z / FRONT</td><td><span class="atlas-code-inline">posz</span>, <span class="atlas-code-inline">zpos</span>, <span class="atlas-code-inline">positive_z</span>, <span class="atlas-code-inline">front</span>, <span class="atlas-code-inline">forward</span>, <span class="atlas-code-inline">+z</span></td></tr>
+          <tr><td>nz</td><td>−Z / BACK</td><td><span class="atlas-code-inline">negz</span>, <span class="atlas-code-inline">zneg</span>, <span class="atlas-code-inline">negative_z</span>, <span class="atlas-code-inline">back</span>, <span class="atlas-code-inline">rear</span>, <span class="atlas-code-inline">-z</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Pressing <span class="atlas-code-inline">AUTO LOAD 6 FILES</span> selects a batch, matches whatever filenames it recognises to their face, and drops any leftover unrecognised files into the remaining empty slots in DirectX order. Nothing is silently discarded — files that don't match an alias still get placed, just without a guessed face, so the artist confirms the rest manually.</p>
+
+    <div class="atlas-callout atlas-callout--important">
+      <p><strong>Mismatched or non-square source faces are not rejected — they're resized.</strong> Validation flags faces that aren't square, or that don't share one common resolution, but export still proceeds: every face is independently resized to the target output size. The warning exists so the artist knows a resize is about to happen, not to block it.</p>
+    </div>
+
+    <h3 id="s02-preview">3D Cube &amp; Inside 360° Preview</h3>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // 3D CUBE — outside view</div>
+        <div class="comp-body">
+          <p>Six CSS-transformed faces on a real cube, rendered from the same preview thumbnails used in the face grid. Drag to orbit, scroll to zoom.</p>
+          <p><strong>Use for:</strong> checking that faces meet correctly at the seams and that rotation/flip corrections line up before spending an export cycle.</p>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // INSIDE 360° — from the centre</div>
+        <div class="comp-body">
+          <p>A small ray-per-pixel renderer projects a look direction (yaw, pitch, adjustable field of view) outward, samples the correct cached face texture per pixel, and draws the result to a canvas — approximating what the cubemap looks like from inside, the way it will be sampled at runtime.</p>
+          <p><strong>Use for:</strong> validating a skybox or reflection cubemap the way a camera or reflection probe will actually see it, without opening a game engine.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="media-frame">
+      <div class="gallery-grid">
+        <figure>
+          <img src="/public/media/posts/cubemap-assembly-tool/3d-cube-preview.png" alt="Cubemap Assembly Tool with six faces loaded, showing the 3D Cube preview mode with the DirectX face grid on the left and an orbiting cube render on the right">
+          <figcaption>3D Cube — drag to orbit, wheel to zoom.</figcaption>
+        </figure>
+        <figure>
+          <img src="/public/media/posts/cubemap-assembly-tool/inside-360-preview.png" alt="Cubemap Assembly Tool showing the Inside 360 degree preview mode, looking outward from the centre of the cube into a room" loading="lazy">
+          <figcaption>Inside 360° — drag to look, wheel changes field of view.</figcaption>
+        </figure>
+      </div>
+      <div class="media-caption">Screenshot 02: the same six-face cubemap in both live preview modes — 3D Cube (outside) and Inside 360° (from the centre). Both panels also show the face grid, Output Configuration, and Export panel, since the whole tool fits in one window.</div>
+    </div>
+
+    <p>Both previews and the four 2D layout previews (H-Cross, V-Cross, H-Strip, V-Strip) run entirely offline in the desktop window — nothing is written to disk until <span class="atlas-code-inline">EXPORT CUBEMAP</span> is pressed.</p>
+
+    <div class="atlas-section-break" data-index="// § 02"></div>
+  </div>
+
+
+  <!-- ══ 03: OUTPUT FORMATS ══════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s03">03 Output Formats &amp; Export Pipeline</h2>
+
+    <p>Export always runs on a background thread with progress reported back to the UI, so the window stays responsive on large face sizes. The output filename encodes the size and layout so it's identifiable without reopening the tool:</p>
+
+    <pre class="atlas-code-block"><code class="language-c">// Naming format:
+cubemap_&lt;face-size&gt;px_&lt;type&gt;.&lt;ext&gt;
+
+// Examples:
+cubemap_1024px_hcross.png
+cubemap_2048px_vcross_fnz.png
+cubemap_512px_hstrip.tga
+cubemap_2048px_cubemap.dds</code></pre>
+
+    <h3 id="s03-layouts">PNG / TGA / BMP Layouts</h3>
+
+    <p>Rendered in pure Python with Pillow — no external binary, works identically on Windows and Linux. Five layouts are available:</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>LAYOUT</th><th>GRID</th><th>NOTE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Horizontal cross</td><td>4 × 3 cells</td><td>Standard unfolded cross, +Y above +Z, faces wrapping left to right.</td></tr>
+          <tr><td>Vertical cross</td><td>3 × 4 cells</td><td>Same face arrangement, rotated to a portrait cross.</td></tr>
+          <tr><td>Vertical cross / flip −Z</td><td>3 × 4 cells</td><td>Identical to Vertical cross, with the −Z (back) face additionally rotated 180° — for engines that expect that convention.</td></tr>
+          <tr><td>Horizontal strip</td><td>6 × 1 cells</td><td>All six faces in DirectX order, left to right.</td></tr>
+          <tr><td>Vertical strip</td><td>1 × 6 cells</td><td>All six faces in DirectX order, top to bottom.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Each face is resized to a shared square size (1–32768 px) with a selectable resampling filter — Lanczos, Cubic, Linear, or Point (nearest-neighbour) — then composited with alpha onto a transparent canvas. The save dialog offers PNG, TGA, or BMP as the output container.</p>
+
+    <h3 id="s03-dds">DDS via texassemble</h3>
+
+    <p>For an engine-ready DirectDraw Surface cubemap, the tool shells out to Microsoft's <span class="atlas-code-inline">texassemble</span> — part of the open-source DirectXTex suite — invoked as a plain argument list, never through a shell. It is located automatically, in this order: the <span class="atlas-code-inline">TEXASSEMBLE_PATH</span> environment variable, a <span class="atlas-code-inline">tools/texassemble.exe</span> next to the app, then <span class="atlas-code-inline">PATH</span>.</p>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>OPTION</th><th>TEXASSEMBLE FLAG</th><th>NOTE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Face size</td><td><span class="atlas-code-inline">-w / -h</span></td><td>Applied when set to a non-zero value.</td></tr>
+          <tr><td>Filter</td><td><span class="atlas-code-inline">-if</span></td><td>Accepts POINT, LINEAR, CUBIC, FANT, BOX, TRIANGLE.</td></tr>
+          <tr><td>DXGI format</td><td><span class="atlas-code-inline">-f</span></td><td>Optional; a leading <span class="atlas-code-inline">DXGI_FORMAT_</span> prefix is stripped automatically if typed.</td></tr>
+          <tr><td>sRGB</td><td><span class="atlas-code-inline">-srgb</span></td><td>Off by default.</td></tr>
+          <tr><td>DX10 header</td><td><span class="atlas-code-inline">-dx10</span></td><td>Off by default.</td></tr>
+          <tr><td>Overwrite</td><td><span class="atlas-code-inline">-y</span></td><td>Off by default — a pre-existing file is otherwise refused by texassemble.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--warning">
+      <p><strong>Filter naming mismatch to watch for:</strong> the UI's filter dropdown is shared between the PNG-layout renderer and the DDS path, and offers <span class="atlas-code-inline">lanczos</span> as an option. <span class="atlas-code-inline">texassemble</span> itself has no Lanczos filter — only POINT, LINEAR, CUBIC, FANT, BOX, and TRIANGLE are valid <span class="atlas-code-inline">-if</span> values. Selecting Lanczos for a DDS export is silently dropped from the command, and texassemble falls back to its own default filter instead. Pick Cubic, Linear, or Point explicitly for DDS output until this is reconciled.</p>
+    </div>
+
+    <p>If <span class="atlas-code-inline">texassemble</span> isn't found, DDS export is disabled in the UI with an explanation — PNG/TGA/BMP layout export keeps working regardless, since it has no external dependency.</p>
+
+    <div class="atlas-section-break" data-index="// § 03"></div>
+  </div>
+
+
+  <!-- ══ 04: ARCHITECTURE ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s04">04 Architecture &amp; Project Structure</h2>
+
+    <p>The tool is a Python desktop app (<span class="atlas-code-inline">pywebview</span>) with a clean split between the offline HTML/JS interface and the Python services doing the real work. <span class="atlas-code-inline">app.py</span> is the only supported entry point.</p>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ PROJECT_STRUCTURE // v0.2.0 ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>FILE / PATH</th><th>ROLE</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="atlas-code-inline">app.py</span></td><td>Desktop conductor — only supported entry point; creates the pywebview window.</td></tr>
+          <tr><td><span class="atlas-code-inline">src/bridge.py</span></td><td>Narrow UI-to-Python API — the only surface JavaScript can call into.</td></tr>
+          <tr><td><span class="atlas-code-inline">src/models.py</span></td><td>Face order, labels, filename-based face detection, and validation.</td></tr>
+          <tr><td><span class="atlas-code-inline">src/image_service.py</span></td><td>File validation and browser-safe base64 previews.</td></tr>
+          <tr><td><span class="atlas-code-inline">src/layout_service.py</span></td><td>Pure-Python cross and strip rendering (Pillow).</td></tr>
+          <tr><td><span class="atlas-code-inline">src/texassemble_service.py</span></td><td>Optional DirectXTex command adapter — discovery, command building, execution.</td></tr>
+          <tr><td><span class="atlas-code-inline">ui/</span></td><td>Offline HTML, CSS, and JavaScript interface.</td></tr>
+          <tr><td><span class="atlas-code-inline">install.py</span></td><td>Guarded dependency audit/install — refuses to run outside the project's own <span class="atlas-code-inline">.venv</span>.</td></tr>
+          <tr><td><span class="atlas-code-inline">tests/test_core.py</span></td><td>Face-order, layout, and command-building tests.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The bridge deliberately never exposes the native window object to JavaScript. Outbound links are allow-listed to three known destinations rather than opened freely, export work always runs off the UI thread via <span class="atlas-code-inline">threading.Thread</span>, and <span class="atlas-code-inline">texassemble</span> is invoked as a Python argument list — never through a shell — so a stray character in a file path can't be interpreted as a shell command.</p>
+
+    <div class="atlas-section-break" data-index="// § 04"></div>
+  </div>
+
+
+  <!-- ══ 05: INSTALLATION ══════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s05">05 Installation — Windows &amp; Linux</h2>
+
+    <div class="comparison-matrix">
+      <div class="comp-col">
+        <div class="comp-label">Δ1 // WINDOWS</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// Step 1: install once
+win_install.bat
+
+// Step 2: run anytime
+win_RUN.bat
+
+// Debug mode (keeps console open)
+win_RUN_debug.bat
+
+// Verify dependencies — read-only, no changes
+.venv\Scripts\python.exe install.py --check
+
+// Optional: DDS export backend
+winget install Microsoft.DirectXTex.Texassemble</code></pre>
+        </div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-label">Δ2 // LINUX</div>
+        <div class="comp-body">
+          <pre class="atlas-code-block"><code class="language-c">// Step 1: make scripts executable
+chmod +x lnx_install.sh lnx_RUN.sh
+
+// Step 2: install once
+./lnx_install.sh
+
+// Step 3: run anytime
+./lnx_RUN.sh
+
+// Verify — read-only
+.venv/bin/python install.py --check</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <p>The app also detects a <span class="atlas-code-inline">tools/texassemble.exe</span> placed next to it, or a <span class="atlas-code-inline">TEXASSEMBLE_PATH</span> environment variable, as alternatives to a system-wide install. PNG/TGA/BMP layout export needs none of this — it works natively on both platforms.</p>
+
+    <h3>Installation Safety Model</h3>
+
+    <div class="atlas-table-frame">
+      <table class="atlas-table">
+        <thead>
+          <tr><th>GUARANTEE</th><th>DETAIL</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Isolated environment</td><td>Dependencies install into a project-local <span class="atlas-code-inline">.venv</span> only — never system or user Python.</td></tr>
+          <tr><td>Audit before install</td><td>Missing packages (<span class="atlas-code-inline">Pillow</span>, <span class="atlas-code-inline">pywebview</span>, and on Linux <span class="atlas-code-inline">PyQt6</span>) are listed before anything is installed.</td></tr>
+          <tr><td>Safe default</td><td>Pressing Enter or answering anything except <span class="atlas-code-inline">Y</span>/<span class="atlas-code-inline">Yes</span> cancels safely, at every prompt.</td></tr>
+          <tr><td>Refuses broken envs</td><td>An existing incomplete, symlinked/junctioned, or system-site-enabled <span class="atlas-code-inline">.venv</span> is refused, not overwritten.</td></tr>
+          <tr><td>Read-only check</td><td><span class="atlas-code-inline">install.py --check</span> never prompts or installs — safe to run anytime for diagnostics.</td></tr>
+          <tr><td>Requires Python 3.10+</td><td>Installer exits with a clear error on older interpreters.</td></tr>
+          <tr><td>Linux runtime support</td><td>Offers <span class="atlas-code-inline">apt</span>, <span class="atlas-code-inline">dnf</span>, or <span class="atlas-code-inline">pacman</span> for a missing Python runtime — asks before every system-level operation.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="atlas-callout atlas-callout--note">
+      <p><span class="atlas-code-inline">install.py --yes</span> skips the interactive confirmation for scripted setups, but still refuses to run outside the project's own <span class="atlas-code-inline">.venv</span> — the flag bypasses the prompt, not the isolation guarantee.</p>
+    </div>
+
+    <div class="atlas-section-break" data-index="// § 05"></div>
+  </div>
+
+
+  <!-- ══ 06: WORKFLOW ══════════════════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s06">06 Workflow</h2>
+
+    <div class="atlas-table-frame atlas-table-frame--solid">
+      <div class="atlas-table-header-solid">[ WORKFLOW // STEP_BY_STEP ]</div>
+      <table class="atlas-table">
+        <thead>
+          <tr><th>STEP</th><th>ACTION</th><th>NOTES</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Auto Load 6 Files, or assign faces one at a time</td><td>Auto Load matches recognised filenames automatically and fills the rest in DirectX order.</td></tr>
+          <tr><td>2</td><td>Correct each face</td><td>Rotate in 90° steps, flip X/Y, or replace — per face, from its card.</td></tr>
+          <tr><td>3</td><td>Check the validation line</td><td>Confirms all six faces are assigned and flags non-square or mismatched-resolution sources.</td></tr>
+          <tr><td>4</td><td>Preview</td><td>3D Cube (drag/zoom) or Inside 360° (drag to look, wheel for FOV, double-click to reset) to catch seam or orientation errors before exporting.</td></tr>
+          <tr><td>5</td><td>Choose output type and options</td><td>DDS (texassemble) or a PNG/TGA/BMP layout; set face size and filter, plus DXGI format / sRGB / DX10 / overwrite for DDS.</td></tr>
+          <tr><td>6</td><td>Export Cubemap</td><td>Choose the destination; the filename is pre-filled from size and output type. Progress and the final saved path are reported live.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The Output Configuration and Export panels are visible in both screenshots in <a href="#s02-preview">§ 02</a> — DDS options (DXGI format, sRGB, DX10, overwrite) on the left, filename preview and progress bar at the bottom right.</p>
+
+    <div class="atlas-section-break" data-index="// § 06"></div>
+  </div>
+
+
+  <!-- ══ 07: SCOPE & LIMITATIONS ═════════════════════════════════ -->
+  <div class="content-block">
+    <h2 id="s07">07 Current Scope &amp; Limitations</h2>
+
+    <p>The current release focuses specifically on assembling a single six-image cubemap. A few things are explicitly out of scope for now, called out here rather than left for someone to discover mid-export:</p>
+
+    <div class="atlas-callout atlas-callout--warning">
+      <p>Planned but not yet available: importing an existing DDS/cross/strip and splitting it back into six editable faces, cubemap arrays, mip-chain generation, HDR/EXR workflows, and a packaged standalone executable (today it runs from a project-local Python <span class="atlas-code-inline">.venv</span>).</p>
+    </div>
+
+    <p>DDS export depends on locating a working <span class="atlas-code-inline">texassemble</span> binary — straightforward on Windows via <span class="atlas-code-inline">winget</span>, less standardised on Linux, where it's up to the user to place a compatible build on <span class="atlas-code-inline">PATH</span>, in <span class="atlas-code-inline">tools/</span>, or point <span class="atlas-code-inline">TEXASSEMBLE_PATH</span> at it. PNG/TGA/BMP layout export has no such dependency on either platform.</p>
+
+    <div class="atlas-callout atlas-callout--success">
+      <p>What does work today, fully: six-face assignment with automatic detection and per-face correction, offline 3D and Inside 360° preview, and export to five PNG/TGA/BMP layouts plus DDS — covering the everyday case of turning a rendered or captured cubemap into an engine-ready texture.</p>
+    </div>
+
+    <!-- References -->
+    <div class="atlas-refs">
+      <ul class="atlas-ref-list">
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[01]</span>
+          <div>
+            <span class="atlas-ref-tag">REPO</span>
+            <span class="atlas-ref-author">pavelzosim</span> — Cubemap Assembly Tool. GitHub, 2026. MIT License.
+            <br><a href="https://github.com/pavelzosim/cubemap-assembly-tool" class="atlas-ref-link" target="_top">github.com/pavelzosim/cubemap-assembly-tool</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[02]</span>
+          <div>
+            <span class="atlas-ref-tag">DOC</span>
+            <span class="atlas-ref-author">Microsoft</span> — DDS File Layout for Cubic Environment Maps: DirectX cubemap face order. Microsoft Learn.
+            <br><a href="https://learn.microsoft.com/en-us/windows/win32/direct3ddds/dds-file-layout-for-cubic-environment-maps" class="atlas-ref-link" target="_top">learn.microsoft.com — DDS Cube Map file layout</a>
+          </div>
+        </li>
+        <li class="atlas-ref-item">
+          <span class="atlas-ref-num">[03]</span>
+          <div>
+            <span class="atlas-ref-tag">TOOL</span>
+            <span class="atlas-ref-author">Microsoft / DirectXTex</span> — texassemble command-line reference. GitHub Wiki.
+            <br><a href="https://github.com/microsoft/DirectXTex/wiki/Texassemble" class="atlas-ref-link" target="_top">github.com/microsoft/DirectXTex/wiki/Texassemble</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div style="margin-top:24px">
+      <div class="atlas-download-wrap">
+        <a href="https://github.com/pavelzosim/cubemap-assembly-tool"
+           target="_top" class="atlas-download-btn">
+          <span class="atlas-download-btn__icon">↓</span>
+          Download on GitHub
+          <span class="atlas-download-btn__sub">Free · Open Source · MIT</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="atlas-eof-divider">
+      <span class="atlas-eof-divider__line"></span>
+      <span class="atlas-eof-divider__meta">// END OF LOG // CUBEMAP_ASSEMBLY_TOOL // v0.2.0 // 7 SECTIONS // EOF</span>
+      <span class="atlas-eof-divider__line"></span>
+    </div>
+  </div>
+
+  <div id="atlas-footer"></div>
+</div>
+
+<script>
+var CONFIG={user:'pavelzosim',path:'~',command:'cat cubemap_assembly_tool.log',project:'CubemapAssemblyTool',module:'Python / pywebview / texassemble',version:'v0.2.0',logId:'CUBEMAP_01',status:'MVP',slug:'cubemap-assembly-tool',author:'Pavel Zosim',created:'2026.08.26',modified:null,wordCount:null,title:null,tags:['python','tooling','directx'],tagBaseUrl:'/blog/?tag='};
+
+function applyData(d){if(d.author)CONFIG.author=d.author;if(d.title){CONFIG.title=d.title;CONFIG.command='cat '+d.title.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/(^_|_$)/g,'')+'.log';}if(d.created)CONFIG.created=d.created;if(d.modified)CONFIG.modified=d.modified;if(d.wordCount)CONFIG.wordCount=d.wordCount;if(Array.isArray(d.tags))CONFIG.tags=d.tags;window.render&&window.render();}
+
+(function(){function render(){var o=CONFIG,status=(o.status||'DRAFT').toUpperCase();var rt=o.wordCount?'~'+Math.ceil(Number(o.wordCount)/200)+' MIN':null;var meta='<div class="passport-meta-item" data-meta="auth">'+(o.author||'—')+'</div><div class="passport-meta-item" data-meta="created">'+(o.created||'—')+'</div>';if(o.modified)meta+='<div class="passport-meta-item" data-meta="modified">'+o.modified+'</div>';if(rt)meta+='<div class="passport-meta-item" data-meta="read">'+rt+'</div>';var tags=Array.isArray(o.tags)&&o.tags.length?'<div class="passport-tags">'+o.tags.map(t=>'<a href="'+o.tagBaseUrl+t.toLowerCase().replace(/\s+/g,'-')+'" class="passport-tag" target="_top">#'+t.toUpperCase()+'</a>').join('')+'</div>':'';document.getElementById('site-passport').innerHTML='<div class="passport-bp"><div class="passport-title-bar"><div>'+o.user+' : '+o.path+' # '+o.command+'</div><div>[ SYS_STATUS: <b>'+status+'</b> ]</div></div>'+(o.title?'<div class="passport-main-title">'+o.title.toUpperCase()+'</div>':'')+'<div class="passport-grid"><div class="passport-cell"><div class="passport-cell-line" data-key="project">'+o.project+'</div><div class="passport-cell-line" data-key="module">'+o.module+'</div></div><div class="passport-cell"><div class="passport-cell-line" data-key="version">'+o.version+'</div><div class="passport-cell-line" data-key="log_id">'+o.logId+'</div></div></div><div class="passport-meta">'+meta+'</div>'+tags+'</div>';}window.render=render;render();}());
+(function(){fetch('https://cdn.jsdelivr.net/gh/pavelzosim/atlas-framework/cdn/atlas-site-footer-config.json?t='+Date.now()).then(r=>r.json()).then(c=>{document.getElementById('atlas-footer').innerHTML='<div class="atlas-footer-wrapper"><div class="atlas-footer-block__support-header"><span class="atlas-footer-block__kaomoji">'+c.tagline+'</span><span>LET\'S STAY IN TOUCH</span></div><div class="atlas-footer-block__support-content"><div class="atlas-footer-block__support-text">'+c.support.text+'</div><div class="atlas-footer-block__support-links">'+c.support.links.map((l,i,a)=>'<a href="'+l.url+'" class="atlas-blueprint-link" target="_top">'+l.text+'</a>'+(i<a.length-1?'<span class="atlas-footer-block__support-divider">|</span>':'')).join('')+'</div></div><div class="atlas-footer-block__matrix-zone">'+c.links.map(g=>'<div class="atlas-footer-block__matrix-column"><span class="atlas-footer-block__column-label">'+g.label+'</span><div class="atlas-footer-block__column-items">'+g.items.map(i=>'<a href="'+i.url+'" class="atlas-blueprint-link" target="_top">/ '+i.text+'</a>').join('')+'</div></div>').join('')+'</div></div>';}).catch(e=>console.error('[ATLAS] Footer:',e));})();
+document.addEventListener('click',function(e){var a=e.target.closest('.atlas-toc__item a');if(!a)return;var href=a.getAttribute('href');if(!href||href[0]!=='#')return;var dest=document.getElementById(href.slice(1));if(!dest)return;e.preventDefault();dest.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(function(){window.scrollBy(0,-8);},350);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="/scripts/article-page.js?v=14"></script>
+</body>
+</html>
