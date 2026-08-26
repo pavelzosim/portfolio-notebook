@@ -861,6 +861,29 @@
       "state": "published",
       "resource": true,
       "indexable": true
+    },
+    {
+      "id": "TOOL-009",
+      "title": "Cubemap Assembly Tool",
+      "kind": "tool",
+      "group": "tools",
+      "summary": "Assemble, validate, preview, and export DirectX cubemaps — from six loose faces to a cross, strip, or DDS texture.",
+      "tags": [
+        "python",
+        "tooling",
+        "directx"
+      ],
+      "image": "/public/media/posts/cubemap-assembly-tool/3d-cube-preview.png",
+      "localPath": "/content/posts/atlas-html/cubemap-assembly-tool.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/cubemap-assembly-tool",
+      "state": "published",
+      "resource": true,
+      "publicUrl": "https://www.pavelzosim.com/post/cubemap-assembly-tool",
+      "slug": "cubemap-assembly-tool",
+      "imageAlt": "Cubemap Assembly Tool — 3D Cube preview with six loaded faces",
+      "datePublished": "2026-08-26",
+      "dateModified": "2026-08-26",
+      "indexable": true
     }
   ]
 }
