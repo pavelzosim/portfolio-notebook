@@ -53,7 +53,7 @@
     });
   };
 
-  fetch('/content/posts/index.json')
+  fetch('/content/posts/index.json', { cache: 'no-store' })
     .then(response => {
       if (!response.ok) throw new Error(`Post registry returned ${response.status}`);
       return response.json();
