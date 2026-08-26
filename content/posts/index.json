@@ -172,7 +172,17 @@
       "imageAlt": "Houdini Procedural Explosion VFX",
       "datePublished": "2024-11-15",
       "dateModified": "2024-11-15",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "recent": true,
+        "rank": 40,
+        "highlightKind": "HDA · VFX",
+        "blurb": "Pyro → VAT → Unity",
+        "recentDate": "R&D",
+        "recentKind": "VFX",
+        "recentBlurb": "pyro · VAT · real-time lighting"
+      }
     },
     {
       "id": "CASE-001",
@@ -311,7 +321,17 @@
       "imageAlt": "Sprite Sheet Assembly Tool",
       "datePublished": "2026-07-14",
       "dateModified": "2026-07-14",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "recent": true,
+        "rank": 10,
+        "highlightKind": "TOOL · PYTHON",
+        "blurb": "Game-ready PNG export",
+        "recentDate": "TOOL",
+        "recentKind": "PYTHON",
+        "recentBlurb": "animation grids · game-ready PNG export"
+      }
     },
     {
       "id": "TOOL-002",
@@ -447,7 +467,17 @@
       "imageAlt": "FolderTree.Parser",
       "datePublished": "2026-01-10",
       "dateModified": "2026-01-10",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "recent": true,
+        "rank": 20,
+        "highlightKind": "TOOL · CLI",
+        "blurb": "Semantic Markdown export",
+        "recentDate": "TOOL",
+        "recentKind": "CLI",
+        "recentBlurb": "semantic directory inspection · Markdown export"
+      }
     },
     {
       "id": "TOOL-008",
@@ -493,7 +523,17 @@
       "imageAlt": "Low-Poly Dumpster",
       "datePublished": "2025-01-30",
       "dateModified": "2026-08-24",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "recent": true,
+        "rank": 30,
+        "highlightKind": "ASSET · 3D",
+        "blurb": "Realtime-ready FBX",
+        "recentDate": "ASSET",
+        "recentKind": "3D",
+        "recentBlurb": "realtime-ready FBX · production asset"
+      }
     },
     {
       "id": "ASSET-002",
@@ -883,7 +923,17 @@
       "imageAlt": "Cubemap Assembly Tool — 3D Cube preview with six loaded faces",
       "datePublished": "2026-08-26",
       "dateModified": "2026-08-26",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "recent": true,
+        "rank": 5,
+        "highlightKind": "TOOL · PYTHON",
+        "blurb": "DirectX cubemaps · DDS export",
+        "recentDate": "TOOL",
+        "recentKind": "PYTHON",
+        "recentBlurb": "DirectX cubemaps · DDS & PNG export"
+      }
     }
   ]
 }

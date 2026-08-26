@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="/styles/atlas.css?v=55">
   <script src="/scripts/vfx-flipbooks.js?v=33" defer></script>
   <script src="/scripts/home-content.js?v=1" defer></script>
+  <script src="/scripts/tools-content.js?v=1" defer></script>
   <script src="/scripts/section-actions.js?v=1" defer></script>
 </head>
 <body>
@@ -154,19 +155,9 @@
       <section class="doc-section" id="tools">
         <header class="section-label"><span>§ 05</span><h2>Tools and assets</h2><em>QUICK ACCESS</em></header>
         <p class="section-intro">Reusable utilities, production helpers, and game-ready assets. Each entry includes implementation notes rather than only a download link.</p>
-        <div class="highlight-strip" aria-label="Selected tools and assets">
-          <article class="highlight-card"><a class="card-cover" href="/post/sprite-sheet-assembly-tool/"><img src="/public/media/home/home/asset-ef33d8a1c9b8b70b.png" alt="Sprite Sheet Assembly Tool interface" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">TOOL · PYTHON</span><strong>Sprite Sheet Assembly Tool</strong><small>Game-ready PNG export</small></span></a><span class="card-actions"><a href="/post/sprite-sheet-assembly-tool/">Download →</a></span></article>
-          <article class="highlight-card"><a class="card-cover" href="https://www.pavelzosim.com/post/folder-structure-cli-tool"><img src="/public/media/home/home/asset-e04d98152185263d.jpg" alt="FolderTree Parser command line tool" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">TOOL · CLI</span><strong>FolderTree.Parser</strong><small>Semantic Markdown export</small></span></a><span class="card-actions"><a href="https://www.pavelzosim.com/post/folder-structure-cli-tool">Download →</a></span></article>
-          <article class="highlight-card"><a class="card-cover" href="https://www.pavelzosim.com/post/low-poly-dumpster-3d-model"><img src="/public/media/home/home/asset-e2084d63922cf3bf.png" alt="Low-poly dumpster 3D asset" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">ASSET · 3D</span><strong>Low-Poly Dumpster</strong><small>Realtime-ready FBX</small></span></a><span class="card-actions"><a href="https://www.pavelzosim.com/post/low-poly-dumpster-3d-model">Download →</a></span></article>
-          <article class="highlight-card"><a class="card-cover" href="/post/houdini-procedural-explosion-vfx/"><img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Procedural Explosion VFX breakdown" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">HDA · VFX</span><strong>Procedural Explosion</strong><small>Pyro → VAT → Unity</small></span></a><span class="card-actions"><a href="/post/houdini-procedural-explosion-vfx/">Download →</a></span></article>
-        </div>
+        <div class="highlight-strip" data-tools-highlights aria-label="Selected tools and assets"></div>
         <div class="section-split"><span>Latest · in progress</span></div>
-        <div class="record-list" role="list">
-          <a role="listitem" href="/post/sprite-sheet-assembly-tool/"><span class="record-date">TOOL</span><span class="record-kind">PYTHON</span><span class="record-main"><strong>Sprite Sheet Assembly Tool</strong><span class="record-tags">animation grids · game-ready PNG export</span></span><span class="record-arrow">→</span></a>
-          <a role="listitem" href="https://www.pavelzosim.com/post/folder-structure-cli-tool"><span class="record-date">TOOL</span><span class="record-kind">CLI</span><span class="record-main"><strong>FolderTree.Parser</strong><span class="record-tags">semantic directory inspection · Markdown export</span></span><span class="record-arrow">→</span></a>
-          <a role="listitem" href="https://www.pavelzosim.com/post/low-poly-dumpster-3d-model"><span class="record-date">ASSET</span><span class="record-kind">3D</span><span class="record-main"><strong>Low-Poly Dumpster</strong><span class="record-tags">realtime-ready FBX · production asset</span></span><span class="record-arrow">→</span></a>
-          <a role="listitem" href="/post/houdini-procedural-explosion-vfx/"><span class="record-date">R&amp;D</span><span class="record-kind">VFX</span><span class="record-main"><strong>Procedural Explosion</strong><span class="record-tags">pyro · VAT · real-time lighting</span></span><span class="record-arrow">→</span></a>
-        </div>
+        <div class="record-list" data-tools-recent role="list" aria-live="polite"></div>
         <p class="section-foot"><span>tools · scripts · 3D assets</span><a href="/tools/">browse tools and assets →</a></p>
       </section>
 
