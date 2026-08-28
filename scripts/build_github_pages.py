@@ -200,7 +200,7 @@ def validate_site(base_path: str, noindex: bool) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base-path", default="/portfolio-notebook")
+    parser.add_argument("--base-path", default="/")
     parser.add_argument("--noindex", action="store_true")
     args = parser.parse_args()
     base_path = normalized_base_path(args.base_path)

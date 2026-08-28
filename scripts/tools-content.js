@@ -53,11 +53,7 @@
     });
   };
 
-  fetch('/content/posts/index.json', { cache: 'no-store' })
-    .then(response => {
-      if (!response.ok) throw new Error(`Post registry returned ${response.status}`);
-      return response.json();
-    })
+  window.atlasFetchRegistry('/content/posts/index.json')
     .then(data => {
       const configured = data.records.filter(post => post.resource && post.toolsHome && (post.toolsHome.highlight || post.toolsHome.recent));
       renderHighlights(sorted(configured.filter(post => post.toolsHome.highlight)));

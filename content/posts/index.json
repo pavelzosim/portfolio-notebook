@@ -602,7 +602,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-65636616",
+      "id": "ASSET-003",
       "title": "Low-Poly Piggy Bank 3D Model",
       "slug": "3d-model-low-poly-piggy-bank",
       "kind": "asset",
@@ -629,7 +629,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-B1D8CF4E",
+      "id": "NOTE-008",
       "title": "C# Variables Lesson 1 Part 1",
       "slug": "csharp-variables-lesson-1-part-1",
       "kind": "article",
@@ -654,7 +654,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-230D929F",
+      "id": "NOTE-009",
       "title": "C# Variables Lesson 1 Part 2",
       "slug": "csharp-variables-lesson-1-part-2",
       "kind": "article",
@@ -677,7 +677,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-9CEC1BEE",
+      "id": "NOTE-010",
       "title": "C# Variables Lesson 1 Part 3",
       "slug": "csharp-variables-lesson-1-part-3",
       "kind": "article",
@@ -700,7 +700,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-67BD5625",
+      "id": "NOTE-011",
       "title": "Enemy System Progress + Player/Camera Integration",
       "slug": "enemy-system-progress-player-camera-integration",
       "kind": "article",
@@ -723,7 +723,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-7F33C0CD",
+      "id": "NOTE-012",
       "title": "FX Flame simulation vertex animation",
       "slug": "fx-flame-simulation-vertex-animation",
       "kind": "article",
@@ -750,7 +750,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-53CB4555",
+      "id": "NOTE-013",
       "title": "Video-to-Text Transcription Tool — Local Offline CLI Workflow",
       "slug": "local-video-to-text-transcription-tool",
       "kind": "article",
@@ -777,7 +777,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-530E383D",
+      "id": "ASSET-004",
       "title": "Low Poly Slot Machine 3D Model",
       "slug": "low-poly-slot-machine-3d-model",
       "kind": "asset",
@@ -801,7 +801,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-A092A577",
+      "id": "NOTE-014",
       "title": "Procedural Camera Transition with Controlled Chaos (Houdini)",
       "slug": "procedural-camera-transition-controlled-chaos-houdini",
       "kind": "article",
@@ -827,7 +827,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-A5AAE36F",
+      "id": "NOTE-015",
       "title": "Procedural environment creation houdini — chapter 1",
       "slug": "procedural-environment-creation-houdini-chapter-1",
       "kind": "article",
@@ -853,7 +853,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-DF03E9C6",
+      "id": "NOTE-016",
       "title": "Technical Art Coordinate Transformation Systems",
       "slug": "technical-art-basics-coordinate-transformation-systems",
       "kind": "article",
@@ -877,7 +877,7 @@
       "indexable": true
     },
     {
-      "id": "WIX-21E8821F",
+      "id": "ASSET-005",
       "title": "Water Cooler 3D Model",
       "slug": "water-cooler-3d-model",
       "kind": "asset",
