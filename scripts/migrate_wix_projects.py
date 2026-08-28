@@ -295,7 +295,7 @@ def write_shell(project: dict) -> None:
     page_dir.mkdir(parents=True, exist_ok=True)
     description = escape(project["summary"], quote=True)
     title = escape(project["title"], quote=True)
-    canonical = f'https://www.pavelzosim.com/projects/{project["slug"]}'
+    canonical = f'https://www.pavelzosim.com/projects/{project["slug"]}/'
     image = f'https://www.pavelzosim.com{project["image"]}'
     structured_data = json.dumps(
         {

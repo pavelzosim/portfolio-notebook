@@ -133,7 +133,7 @@ def render_page(part: dict[str, str | None], fragment: str, toc: list[tuple[str,
     title = str(part["title"])
     description = str(part["description"])
     slug = str(part["slug"])
-    canonical = f"{DOMAIN}/post/{slug}"
+    canonical = f"{DOMAIN}/post/{slug}/"
     structured = {
         "@context": "https://schema.org",
         "@type": "TechArticle",
@@ -240,8 +240,8 @@ def update_registry() -> None:
             "image": IMAGE,
             "localPath": f'/content/posts/atlas-html/{part["slug"]}.html',
             "state": "published",
-            "sourceUrl": template.get("sourceUrl", f'{DOMAIN}/post/{part["slug"]}') if part["id"] == "REF-001" else f'{DOMAIN}/post/{part["slug"]}',
-            "publicUrl": f'{DOMAIN}/post/{part["slug"]}',
+            "sourceUrl": template.get("sourceUrl", f'{DOMAIN}/post/{part["slug"]}/') if part["id"] == "REF-001" else f'{DOMAIN}/post/{part["slug"]}/',
+            "publicUrl": f'{DOMAIN}/post/{part["slug"]}/',
             "slug": part["slug"],
             "imageAlt": part["title"],
             "datePublished": template.get("datePublished", ""),

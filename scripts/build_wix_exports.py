@@ -173,7 +173,7 @@ def representative_image(post: dict) -> str:
 
 def article_html(post: dict, tags: list[str]) -> str:
     slug = post["slug"]
-    canonical = f"{DOMAIN}/post/{slug}"
+    canonical = f"{DOMAIN}/post/{slug}/"
     description = seo_value(post, "description") or post.get("excerpt", "")
     description = re.sub(r"\s+", " ", description).strip()[:300]
     title = post["title"].strip()
@@ -240,7 +240,7 @@ def main() -> int:
         categories = [category_names[item] for item in post.get("categoryIds", []) if item in category_names]
         output = POSTS / f"{post['slug']}.html"
         output.write_text(article_html(post, tags), encoding="utf-8", newline="\n")
-        public_url = f"{DOMAIN}/post/{post['slug']}"
+        public_url = f"{DOMAIN}/post/{post['slug']}/"
         record = by_url.get(public_url)
         if record is None:
             record = {"id": f"WIX-{post['id'][:8].upper()}"}
