@@ -185,6 +185,29 @@
       }
     },
     {
+      "id": "RND-003",
+      "title": "Greyhound Racing — Procedural Race Simulation",
+      "kind": "breakdown",
+      "group": "vfx",
+      "summary": "Solo R&D project: a 2,600-object stadium, sculpted greyhounds, and a Cinema 4D/Python system generating randomized, broadcast-style dog races.",
+      "tags": [
+        "cinema4d",
+        "octane",
+        "procedural",
+        "vfx"
+      ],
+      "image": "/public/media/posts/greyhound-racing-procedural-simulation/hero-final-render.png",
+      "localPath": "/content/posts/atlas-html/greyhound-racing-procedural-simulation.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/greyhound-racing-procedural-simulation/",
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/greyhound-racing-procedural-simulation/",
+      "slug": "greyhound-racing-procedural-simulation",
+      "imageAlt": "Broadcast-style render of greyhounds racing around a procedurally built stadium",
+      "datePublished": "2016-06-01",
+      "dateModified": "2026-08-28",
+      "indexable": true
+    },
+    {
       "id": "CASE-001",
       "title": "Procedural Interiors with Houdini & USD",
       "kind": "case study",

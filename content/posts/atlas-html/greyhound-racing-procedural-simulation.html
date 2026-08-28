@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Greyhound Racing — Procedural Race Simulation · Pavel Zosim</title>
+  <meta name="description" content="Solo R&amp;D project: a 2,600-object stadium, sculpted greyhounds, and a Cinema 4D/Python system generating randomized, broadcast-style dog races.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/greyhound-racing-procedural-simulation/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Greyhound Racing — Procedural Race Simulation">
+  <meta property="og:description" content="Solo R&amp;D project: a 2,600-object stadium, sculpted greyhounds, and a Cinema 4D/Python system generating randomized, broadcast-style dog races.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/greyhound-racing-procedural-simulation/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/greyhound-racing-procedural-simulation/hero-final-render.png">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/greyhound-racing-procedural-simulation/hero-final-render.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Greyhound Racing — Procedural Race Simulation">
+  <meta name="twitter:description" content="Solo R&amp;D project: a 2,600-object stadium, sculpted greyhounds, and a Cinema 4D/Python system generating randomized, broadcast-style dog races.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Greyhound Racing — Procedural Race Simulation","description":"Solo R&D project: a 2,600-object stadium, sculpted greyhounds, and a Cinema 4D/Python system generating randomized, broadcast-style dog races.","url":"https://www.pavelzosim.com/post/greyhound-racing-procedural-simulation/","mainEntityOfPage":"https://www.pavelzosim.com/post/greyhound-racing-procedural-simulation/","image":"https://www.pavelzosim.com/public/media/posts/greyhound-racing-procedural-simulation/hero-final-render.png","datePublished":"2016-06-01","dateModified":"2026-08-28","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=55">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
+</head>
+<body id="top">
+  <h1 class="seo-heading">Greyhound Racing — Procedural Race Simulation</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#environment"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Environment: the stadium</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#dogs"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Dog sculpting, shading, rigging, and animation</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#generator"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Random generator and broadcast graphics</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#render"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Render, compositing, and post-production</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#result"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Result</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+      <h2 id="overview">01 Overview</h2>
+      <p>This was the first time I built a complete 3D production entirely from scratch, solo — environment, characters, simulation, systems, and final compositing, all one person. It's an R&amp;D piece from June 2016: realistic-looking greyhound-racing footage with a different, randomized finish every time.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/hero-final-render.png" alt="Broadcast-style render of greyhounds racing down the track, with motion blur and chromatic aberration matching a live sports feed" loading="eager">
+        <figcaption class="media-caption">Final composite, graded to read as a live broadcast feed rather than a 3D render.</figcaption>
+      </figure>
+
+      <p>Tools: Cinema 4D, Octane Render, Anima Crowd Simulation, ZBrush, Substance Painter, Photoshop, and After Effects.</p>
+
+      <div class="atlas-section-break" data-index="// § 01"></div>
+
+      <h2 id="environment">02 Environment: the stadium</h2>
+      <p>The stadium model runs to roughly 2,600 objects, built from a real dog-racing track using real-world measurements and about 360 reference photos and videos. An XPresso controller system exposes stadium lighting and time-of-day as simple parameters, so a lighting pass doesn't mean touching individual lights by hand.</p>
+
+      <p>To keep the tribunes from reading as empty geometry, crowd on the stands is generated with the Anima crowd simulation plugin.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/stadium-wireframe-render.png" alt="Split wireframe and rendered view of the full stadium model, with inset details of the starting gate and a greyhound in racing jacket" loading="lazy">
+        <figcaption class="media-caption">Full stadium — wireframe against the rendered pass, with starting-gate and dog detail insets.</figcaption>
+      </figure>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/stadium-grandstand-wireframe.png" alt="Wireframe view of the grandstand, floodlights, and trackside fencing built to real-world scale" loading="lazy">
+        <figcaption class="media-caption">Grandstand and floodlight wireframe, built at real scale from the reference stadium.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 02"></div>
+
+      <h2 id="dogs">03 Dog sculpting, shading, rigging, and animation</h2>
+      <p>The greyhound started as a high-poly ZBrush sculpt, retopologized down to a production mesh with a baked normal map. Three separate diffuse textures were built in Substance Painter and Photoshop, and a Cinema 4D shader randomizer handles per-dog coat color and race-jacket number variation at render time — no dog in a race needs a manually authored material.</p>
+
+      <p>Rigging uses a straightforward FK bone chain; the gallop cycle is a 34-frame idle animation.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/dog-sculpt-retopology-uv.png" alt="Greyhound production model next to its retopologized low-poly mesh and unwrapped UV shells" loading="lazy">
+        <figcaption class="media-caption">ZBrush sculpt through to the retopologized production mesh and UV layout.</figcaption>
+      </figure>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/gallop-cycle-rig.png" alt="Five poses from the greyhound's FK skeleton gallop cycle, shown in sequence" loading="lazy">
+        <figcaption class="media-caption">FK rig — five poses from the 34-frame gallop cycle.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 03"></div>
+
+      <h2 id="generator">04 Random generator and broadcast graphics</h2>
+      <p>The race needed to feel like a contest rather than a fixed animation loop, so each dog runs on its own randomized speed value that changes several times over the course of the run — built with Cinema 4D, C.O.F.F.E.E, and Python.</p>
+
+      <p>Each dog also gets a random name pulled from a text file, and the same names drive the broadcast-style leaderboard graphic: it shows the current top three during the run, then locks in each dog's time at the finish. Camera movement and focus are calculated continuously from the pack's average position, so the shot follows the race instead of running a scripted path.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/random-generator-node-network.png" alt="C.O.F.F.E.E expression node network calculating rotation and position values that drive the random race logic" loading="lazy">
+        <figcaption class="media-caption">C.O.F.F.E.E node network behind the random speed and camera-tracking logic.</figcaption>
+      </figure>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/broadcast-leaderboard.png" alt="Broadcast-style leaderboard graphic listing six greyhounds by random name, position, and time" loading="lazy">
+        <figcaption class="media-caption">Broadcast leaderboard — names, positions, and times driven by the same generator.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 04"></div>
+
+      <h2 id="render">05 Render, compositing, and post-production</h2>
+      <p>Rendering runs on Octane. The heavy stadium environment is rendered once as a background plate and reused underneath the runners — a choice that also made random camera rotation cheap, since the expensive part of the scene never needs re-rendering per shot. The main challenge at this stage was separating the right depth planes cleanly so the composited dogs read correctly against that reused background.</p>
+
+      <p>Render time was pushed down close to real-time, and post-production stayed intentionally simple: a compositing pass over PNG sequences in After Effects.</p>
+
+      <figure class="media-frame">
+        <div class="gallery-grid gallery-grid--2col">
+          <img src="/public/media/posts/greyhound-racing-procedural-simulation/final-render-clean.png" alt="Clean, ungraded render of the greyhound pack mid-race, before compositing" loading="lazy">
+          <img src="/public/media/posts/greyhound-racing-procedural-simulation/final-render-matte-pass.png" alt="Isolated matte pass of the dogs on black, separated from the stadium background plate" loading="lazy">
+        </div>
+        <div class="media-caption">Gallery: clean render pass next to the isolated matte used to separate the dogs from the reused stadium plate.</div>
+      </figure>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/greyhound-racing-procedural-simulation/race-wide-shot.png" alt="Wide broadcast-style shot of the greyhound pack racing along the trackside advertising boards" loading="lazy">
+        <figcaption class="media-caption">Wide trackside shot from the finished composite.</figcaption>
+      </figure>
+
+      <figure class="media-frame">
+        <video controls muted preload="metadata" playsinline poster="/public/media/posts/greyhound-racing-procedural-simulation/hero-final-render.png">
+          <source src="/public/media/posts/greyhound-racing-procedural-simulation/race-broadcast-clip.mp4" type="video/mp4">
+        </video>
+        <figcaption class="media-caption">Finished race clip, graded to broadcast look.</figcaption>
+      </figure>
+
+      <figure class="media-frame">
+        <video controls muted preload="metadata" playsinline>
+          <source src="/public/media/posts/greyhound-racing-procedural-simulation/dog-running-clip.mp4" type="video/mp4">
+        </video>
+        <figcaption class="media-caption">Closer running clip showing the gallop cycle and per-dog material variation in motion.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 05"></div>
+
+      <h2 id="result">06 Result</h2>
+      <p>This was one of the first projects I built completely solo, end to end — every discipline from environment art through simulation systems to final compositing held by one person, the same shape of ownership that shows up throughout later client work. It's a decade old now, made in tools I don't use day to day anymore, but the underlying instinct — find the repeating pattern, build a system instead of hand-authoring each result — is the same one behind the procedural work on this site today.</p>
+
+      <div class="atlas-refs">
+        <ul class="atlas-ref-list">
+          <li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">ARCHIVE</span><span class="atlas-ref-author">Pavel Zosim</span> — original portfolio spread.<br><a class="atlas-ref-link" href="https://www.behance.net/zosimpavel" target="_blank" rel="noopener noreferrer">behance.net/zosimpavel</a></span></li>
+        </ul>
+      </div>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // GREYHOUND_RACING_RND // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+  <script src="/scripts/article-page.js?v=14"></script>
+</body>
+</html>
