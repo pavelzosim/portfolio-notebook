@@ -25,8 +25,7 @@ Content is independent from templates and CSS:
 content/
 ├── posts/       Markdown blog entries
 ├── projects/    project records and project index
-├── pages/       stable About and Contact copy
-└── migration/   Wix source map and migration state
+└── pages/       stable About and Contact copy
 
 public/media/
 ├── posts/<slug>/
@@ -34,12 +33,3 @@ public/media/
 ├── reel/
 └── shared/
 ```
-
-## Wix migration states
-
-- `inventory` — source URL is recorded
-- `migrated-draft` — text and metadata are local; media or embeds still need review
-- `ready` — body, metadata, media, captions, alt text, embeds, downloads, and links are verified
-- `redirected` — the new route is public and the Wix URL has a redirect plan
-
-Migration is additive. Nothing is removed from Wix until a local post is `ready`, its route has been tested, and the redirect has been recorded.

@@ -23,15 +23,12 @@ Then open `http://127.0.0.1:8765/`.
 - `styles/atlas.css` — stylesheet orchestrator
 - `styles/framework/` — canonical Atlas framework modules
 - `styles/home/` — homepage-specific modules
-- `content/posts/atlas-html/` — canonical post sources imported from Atlas
-- `content/migration/` — content and media provenance maps
+- `content/posts/atlas-html/` — canonical post sources
 - `public/media/` — localized post, project, reel, and shared media
-- `scripts/localize_wix_media.py` — repeatable Wix media localization
 - `home.css` — compatibility entry point for older embeds
 
 YouTube players and external technical references remain remote by design.
-See [ARCHITECTURE.md](ARCHITECTURE.md) for module boundaries and the Wix
-migration workflow.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for module boundaries.
 
 All authoring, UI/UX, SEO, indexing, and analytics rules start at the
 [Atlas Rules Index](content/guides/README.md).
