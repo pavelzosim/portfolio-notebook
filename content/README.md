@@ -16,13 +16,15 @@ Every post uses YAML front matter with at least `title`, `slug`, `published`, `s
 
 ## Homepage visibility
 
-`posts/index.json` is the registry for migrated HTML posts. To feature a post on the homepage, add a `homepage` object to its record:
+`posts/index.json` is the registry for migrated HTML posts.
+
+**Recent notes** (the compact list under "Recent notes") is fully automatic: every `published`, indexable record is eligible, sorted by `siteDate` (falling back to `datePublished`) descending, newest six shown. Nothing to add or maintain per post — a new post appears at the top on its own, and the oldest one rolls off. Only set `siteDate` when a post's `datePublished` is a historical/backdated date (e.g. R&D work written up long after it was made) and you need the post to sort by when it was actually added to the site rather than by that historical date.
+
+**Highlights** (the four-card strip) is still manually curated — add a `homepage` object to feature a post there:
 
 ```json
-"homepage": { "highlight": true, "recent": true, "rank": 10, "date": "2026.08" }
+"homepage": { "highlight": true, "rank": 10 }
 ```
 
 - `highlight` places the post in the four-card Highlights strip.
-- `recent` places the post in the compact Recent notes list.
-- `rank` controls the order; lower values appear first.
-- `date` is the short document-style date visible in Recent notes.
+- `rank` controls the order within the strip; lower values appear first.
