@@ -37,27 +37,11 @@
     });
   };
 
-  const renderRecent = posts => {
-    recentTarget.replaceChildren();
-    posts.slice(0, 6).forEach(post => {
-      const row = make('a');
-      row.href = postUrl(post);
-      row.setAttribute('role', 'listitem');
-      row.append(make('span', 'record-date', post.toolsHome.recentDate));
-      row.append(make('span', 'record-kind', post.toolsHome.recentKind));
-      const main = make('span', 'record-main');
-      main.append(make('strong', '', post.title));
-      main.append(make('span', 'record-tags', post.toolsHome.recentBlurb));
-      row.append(main, make('span', 'record-arrow', '→'));
-      recentTarget.append(row);
-    });
-  };
-
   window.atlasFetchRegistry('/content/posts/index.json')
     .then(data => {
-      const configured = data.records.filter(post => post.resource && post.toolsHome && (post.toolsHome.highlight || post.toolsHome.recent));
-      renderHighlights(sorted(configured.filter(post => post.toolsHome.highlight)));
-      renderRecent(sorted(configured.filter(post => post.toolsHome.recent)));
+      const highlighted = data.records.filter(post => post.resource && post.toolsHome && post.toolsHome.highlight);
+      renderHighlights(sorted(highlighted));
+      window.atlasRenderRecentList(recentTarget, data.records, { limit: 5, filter: post => post.resource });
       document.dispatchEvent(new Event('tools:records-ready'));
     })
     .catch(() => { recentTarget.textContent = 'Post registry unavailable.'; });
