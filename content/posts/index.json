@@ -208,6 +208,29 @@
       "indexable": true
     },
     {
+      "id": "RND-004",
+      "title": "Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors",
+      "kind": "breakdown",
+      "group": "pipeline",
+      "summary": "A typed data layer over the Houdini Engine API that routes procedural placements to independent Blueprint Actors or to named HISM components inside a shared container.",
+      "tags": [
+        "houdini",
+        "unreal",
+        "procedural",
+        "pipeline"
+      ],
+      "image": "/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png",
+      "localPath": "/content/posts/atlas-html/houdini-unreal-typed-placement-routing.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/houdini-unreal-typed-placement-routing/",
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/houdini-unreal-typed-placement-routing/",
+      "slug": "houdini-unreal-typed-placement-routing",
+      "imageAlt": "Large procedurally generated level cooked through the Houdini-to-Unreal typed placement bridge",
+      "datePublished": "2026-08-31",
+      "dateModified": "2026-08-31",
+      "indexable": true
+    },
+    {
       "id": "CASE-001",
       "title": "Procedural Interiors with Houdini & USD",
       "kind": "case study",

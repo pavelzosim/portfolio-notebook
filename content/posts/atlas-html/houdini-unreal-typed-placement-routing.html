@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors · Pavel Zosim</title>
+  <meta name="description" content="A typed data layer over the Houdini Engine API that routes procedural placements to independent Blueprint Actors or to named HISM components inside a shared container.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/houdini-unreal-typed-placement-routing/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors">
+  <meta property="og:description" content="A typed data layer over the Houdini Engine API that routes procedural placements to independent Blueprint Actors or to named HISM components inside a shared container.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/houdini-unreal-typed-placement-routing/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors">
+  <meta name="twitter:description" content="A typed data layer over the Houdini Engine API that routes procedural placements to independent Blueprint Actors or to named HISM components inside a shared container.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors","description":"A typed data layer over the Houdini Engine API that routes procedural placements to independent Blueprint Actors or to named HISM components inside a shared container.","url":"https://www.pavelzosim.com/post/houdini-unreal-typed-placement-routing/","mainEntityOfPage":"https://www.pavelzosim.com/post/houdini-unreal-typed-placement-routing/","image":"https://www.pavelzosim.com/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png","datePublished":"2026-08-31","dateModified":"2026-08-31","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=55">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
+</head>
+<body id="top">
+  <h1 class="seo-heading">Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#gap"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">The gap in native Houdini Engine output</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#contract"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">A typed placement contract</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#houdini-side"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Houdini side: authoring the semantic assignment</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#unreal-side"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Unreal side: resolving named HISM components</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#before-after"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Before and after</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#result"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Result</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+      <h2 id="overview">01 Overview</h2>
+      <p>My procedural maze generator eventually hit an architectural limit: tens of thousands of modular elements, with significant variation, concentrated in a relatively small area. Culling, streaming, World Partition, and HLOD are all valid optimization layers — but my first goal was to improve the underlying representation of the generated content, not to paper over it downstream.</p>
+
+      <p>Houdini Engine already supports native ISM/HISM output. My problem was slightly different.</p>
+
+      <div class="atlas-section-break" data-index="// § 01"></div>
+
+      <h2 id="gap">02 The gap in native Houdini Engine output</h2>
+      <p>For gameplay modules, I still needed independent Blueprint Actors — chests, doors, enemies, anything with its own logic. But structural modules (ground, walls, caps) did not need separate Actor-level logic at all. What I wanted was for Houdini points to target specific HISM components inside one Unreal-owned Blueprint container:</p>
+
+      <pre class="atlas-code-block"><code>BP_StructuralContainer
+├─ HISM_Ground_I
+├─ HISM_Ground_L
+├─ HISM_Wall_Straight
+└─ HISM_Wall_Corner</code></pre>
+
+      <p>Native Houdini Engine ISM/HISM output instantiates by asset path — it doesn't have a concept of "this point belongs on the third named component inside an artist-authored container." Getting there meant building a typed integration layer on top of the Houdini Engine public API, not just consuming its default output.</p>
+
+      <div class="atlas-section-break" data-index="// § 02"></div>
+
+      <h2 id="contract">03 A typed placement contract</h2>
+      <p>The HDA now assigns one of two representation modes per point:</p>
+
+      <div class="comparison-matrix">
+        <div class="comp-col">
+          <div class="comp-label">Δ1 // Actor</div>
+          <div class="comp-body">Blueprint Path → independent Actor. Used for gameplay modules that need their own logic.</div>
+        </div>
+        <div class="comp-col">
+          <div class="comp-label">Δ2 // Instanced</div>
+          <div class="comp-body">Blueprint Container Path → Named HISM Component → Instance Transform. Used for structural modules where scale and editor performance matter.</div>
+        </div>
+      </div>
+
+      <p>Instead of telling Unreal which mesh to instantiate directly, Houdini sends a semantic assignment. Unreal remains responsible for the meshes, materials, collision settings, and component configuration — the HDA never reaches into that; it only says <em>which</em> named target a given transform belongs to.</p>
+
+      <p>The bridge reads named PCG outputs and typed point metadata from the cooked HDA, then routes every resolved assignment to either an Actor or a specific HISM component. That gives the procedural system two clean options: Actors where independent logic is required, HISM containers where scale and editor performance matter.</p>
+
+      <div class="atlas-section-break" data-index="// § 03"></div>
+
+      <h2 id="houdini-side">04 Houdini side: authoring the semantic assignment</h2>
+      <p>On the Houdini asset, each structural module in the registry gets a <span class="atlas-code-inline">structural_type</span>, a <span class="atlas-code-inline">topology_type</span>, and — for the instanced path — a <span class="atlas-code-inline">hism_component_name</span>. The registry resolves those into the container path and component name the Unreal side will look for:</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/houdini-unreal-typed-placement-routing/houdini-registry-hism-component-name.png" alt="Houdini Data Registry panel showing the Instanced Mode module list with Container Blueprint Root and per-module HISM Component Name fields such as HISM_Window_One_A and HISM_Panel_B" loading="lazy">
+        <figcaption class="media-caption">Instanced-mode registry on the HDA — each module gets a Structural Type, a Topology Type, and the named HISM component it targets.</figcaption>
+      </figure>
+
+      <pre class="atlas-code-block"><code class="language-python">record = {
+    "registry_index": registry_index,
+    "representation_mode": "instanced",
+    "structural_type": structural_type,
+    "topology_type": topology_type,
+    "container_blueprint_name": blueprint_name,
+    "container_blueprint_path": _join_unreal_content_path(
+        container_root,
+        blueprint_name,
+    ),
+    "hism_component_name": hism_component_name,
+    "static_mesh_name": static_mesh_name,
+    "static_mesh_path": _join_unreal_content_path(
+        mesh_root,
+        static_mesh_name,
+    ),
+}</code></pre>
+
+      <p>This record is Houdini's entire opinion on the matter: a container path and a component name, both strings. It never touches a mesh reference, a material, or a collision setting — those stay entirely on the Unreal side, authored once on the container Blueprint itself.</p>
+
+      <div class="atlas-section-break" data-index="// § 04"></div>
+
+      <h2 id="unreal-side">05 Unreal side: resolving named HISM components</h2>
+      <p>The container Blueprint is an ordinary self-contained Actor with one HISM component per module variant, each given a meaningful component name:</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/houdini-unreal-typed-placement-routing/bp-container-named-hism-components.png" alt="Unreal Blueprint editor showing a container Actor's component tree with several named Hierarchical Instanced Static Mesh components, including HISM_Balcony_A, HISM_Entrance_A, HISM_Panel_A/B/C, and HISM_Window_One_A" loading="lazy">
+        <figcaption class="media-caption">Container Blueprint — one HISM component per module variant, named so the bridge can resolve them by string.</figcaption>
+      </figure>
+
+      <p>On the C++ side, resolving a <span class="atlas-code-inline">hism_component_name</span> against a spawned or reused container Actor is a plain component lookup by name, cast to the expected type:</p>
+
+      <pre class="atlas-code-block"><code class="language-cpp">UHierarchicalInstancedStaticMeshComponent* FindNamedHism(AActor* ContainerActor, const FString& ComponentName, FString& OutError)
+{
+    TInlineComponentArray<UActorComponent*> Components;
+    ContainerActor->GetComponents(Components);
+    for (UActorComponent* Component : Components)
+    {
+        if (Component->GetName() == ComponentName)
+        {
+            if (UHierarchicalInstancedStaticMeshComponent* Hism = Cast<UHierarchicalInstancedStaticMeshComponent>(Component))
+            {
+                return Hism;
+            }
+            OutError = FString::Printf(TEXT("component '%s' is not a UHierarchicalInstancedStaticMeshComponent"), *ComponentName);
+            return nullptr;
+        }
+    }
+    OutError = FString::Printf(TEXT("named HISM component '%s' is missing"), *ComponentName);
+    return nullptr;
+}</code></pre>
+
+      <div class="atlas-callout atlas-callout--note">
+        <p>A missing or misspelled <span class="atlas-code-inline">hism_component_name</span> fails loudly, per placement, with the exact component name in the message — never a silent no-op. Placements grouped under the same container path are batched by HISM name, so one container Actor with four named components receives four separate <span class="atlas-code-inline">AddInstances</span> calls instead of one undifferentiated mesh dump.</p>
+      </div>
+
+      <div class="atlas-section-break" data-index="// § 05"></div>
+
+      <h2 id="before-after">06 Before and after</h2>
+      <p>Without this layer, the previous approach spawned one Blueprint Actor per structural instance. On a single generated level that meant thousands of individual, independently-ticking Actors in the Outliner for what is, structurally, repeated static geometry:</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/houdini-unreal-typed-placement-routing/legacy-per-actor-outliner.png" alt="Unreal Outliner listing thousands of individual BP_Balcony_A, BP_Balcony_A1 through BP_Balcony_A67 Blueprint Actor instances generated by the earlier per-actor approach" loading="lazy">
+        <figcaption class="media-caption">Before — the earlier per-instance approach: 7,535 individual Actors for one generated level, each a separate Blueprint instance.</figcaption>
+      </figure>
+
+      <p>With the typed bridge, the same generation pass produces one reused container Actor per Blueprint path, with instances batched into the correct named HISM component:</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png" alt="Large procedurally generated multi-story level in the Unreal viewport after a successful Houdini Engine cook through the typed placement bridge" loading="lazy">
+        <figcaption class="media-caption">After — the same class of generation, routed through the typed bridge: structural volume without a matching Actor count.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 06"></div>
+
+      <h2 id="result">07 Result</h2>
+      <p>The maze generator was the reason I built this layer, but the architecture itself is not maze-specific. Any high-volume procedural tool that needs more control than direct asset instancing provides — and that has a mix of "this needs its own logic" and "this is just repeated geometry" — can sit on the same contract: a typed placement record, Houdini deciding domain and target, Unreal owning everything about how that target actually renders and behaves.</p>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // HOUDINI_UNREAL_TYPED_PLACEMENT_ROUTING // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+  <script src="/scripts/article-page.js?v=14"></script>
+</body>
+</html>
