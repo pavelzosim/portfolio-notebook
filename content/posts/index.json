@@ -255,6 +255,29 @@
       "indexable": true
     },
     {
+      "id": "RND-005",
+      "title": "Maze Generator — One HDA, One Contract to Unreal",
+      "kind": "breakdown",
+      "group": "procedural",
+      "summary": "A snapshot of the actual production architecture: one Houdini asset, 144 nodes, 66 Python modules, and a single point-stream contract feeding Unreal.",
+      "tags": [
+        "houdini",
+        "unreal",
+        "procedural",
+        "architecture"
+      ],
+      "image": "/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png",
+      "localPath": "/content/posts/atlas-html/maze-generator-architecture-overview.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/maze-generator-architecture-overview/",
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/maze-generator-architecture-overview/",
+      "slug": "maze-generator-architecture-overview",
+      "imageAlt": "Large procedurally generated maze level cooked through the Houdini-to-Unreal pipeline",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "indexable": true
+    },
+    {
       "id": "CASE-001",
       "title": "Procedural Interiors with Houdini & USD",
       "kind": "case study",
