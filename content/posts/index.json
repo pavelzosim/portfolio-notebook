@@ -232,29 +232,6 @@
       "indexable": true
     },
     {
-      "id": "NOTE-017",
-      "title": "Controlled Procedurality — Cells, Rules, and Manual Override in Solo Level Design",
-      "kind": "article",
-      "group": "procedural",
-      "summary": "A cell-based rule system, not a maze tool: shared structure via HISM, unique content via Actors, one reachability algorithm reused across mechanics.",
-      "tags": [
-        "procedural",
-        "level-design",
-        "houdini",
-        "unreal"
-      ],
-      "image": "/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png",
-      "localPath": "/content/posts/atlas-html/controlled-procedurality-solo-level-design.html",
-      "sourceUrl": "https://www.pavelzosim.com/post/controlled-procedurality-solo-level-design/",
-      "state": "published",
-      "publicUrl": "https://www.pavelzosim.com/post/controlled-procedurality-solo-level-design/",
-      "slug": "controlled-procedurality-solo-level-design",
-      "imageAlt": "Large procedurally generated level built from cell-based rules, cooked through Houdini into Unreal",
-      "datePublished": "2026-09-01",
-      "dateModified": "2026-09-01",
-      "indexable": true
-    },
-    {
       "id": "CASE-001",
       "title": "Procedural Interiors with Houdini & USD",
       "kind": "case study",
