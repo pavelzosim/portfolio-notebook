@@ -210,10 +210,10 @@
     },
     {
       "id": "RND-004",
-      "title": "Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors",
+      "title": "Houdini to Unreal — HISM and Blueprint Actor Routing",
       "kind": "breakdown",
       "group": "pipeline",
-      "summary": "A typed data layer over the Houdini Engine API that routes procedural placements to independent Blueprint Actors or to named HISM components inside a shared container.",
+      "summary": "A typed layer over the Houdini Engine API that routes procedural placements to Blueprint Actors or named HISM components in a shared container.",
       "tags": [
         "houdini",
         "unreal",
