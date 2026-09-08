@@ -47,7 +47,11 @@
 
       <p>Right now, every wall in the demo is a straight 90-degree segment. That's a deliberate constraint, not a corner I haven't gotten to yet. Angled corridors and non-orthogonal geometry mean more junction types to test, more assets to author for each of them, and a wall-building step that has to account for arbitrary angles instead of one fixed grid increment. Orthogonal walls keep the module count small and the placement math simple. Angled geometry is a real option later — once the rule system underneath is proven, not before.</p>
 
-      <div class="atlas-section-break" data-index="// § 01"></div>
+      <div class="atlas-callout atlas-callout--important">
+        <p>Orthogonal-only walls are a deliberate scope constraint, not an unfinished corner. Angled/non-orthogonal geometry is deferred until the rule system underneath is proven — not implemented and hidden.</p>
+      </div>
+
+      <div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
 
       <h2 id="real-maps">02 Borrowing structure from real maps</h2>
       <p>Take a real map. It's divided into grid squares, and each of those squares divides again into smaller ones. That's not a metaphor — it's literally how military grid reference systems work: a large square gets a code, and inside it, smaller squares narrow the precision down further, from ten kilometers to one meter, depending on how exact you need to be.</p>
@@ -100,16 +104,21 @@
         </div>
       </figure>
 
-      <div class="atlas-section-break" data-index="// § 02"></div>
+      <div class="atlas-section-break" data-index="// § 02 BORROWING STRUCTURE FROM REAL MAPS"></div>
 
       <h2 id="cell">03 The cell as the unit of intent</h2>
 
+      <!-- TODO: replace src with a real in-game capture (third-person or 3/4 view, final lighting, not a debug view). If the real shot differs from this framing, update the caption's "Debug view" line to match. -->
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/hero-placeholder.png" alt="PLACEHOLDER — hero shot from Pavel's own game running on this generator, third-person or ¾ view, final lighting, not a debug view" loading="lazy">
-        <figcaption class="media-caption">PLACEHOLDER — a level from [project name], generated through this system. Replace with a real in-game shot before publishing.</figcaption>
+        <img src="/public/media/posts/controlled-procedurality/hero-placeholder.png" alt="A generated level running in the current game build, third-person view, final lighting" loading="lazy">
+        <figcaption class="media-caption">FIG 01 — A generated level from the current build. Debug view: none, final art and lighting. Note the module variety along one straight corridor stretch — same wall abstraction, different variants.</figcaption>
       </figure>
 
       <p>That's the layer I built into the generator. A cell is a slot that can carry a zone — shop, action, puzzle — independent of what fills it structurally, and independent of whatever prop rule applies inside it.</p>
+
+      <div class="atlas-callout atlas-callout--note">
+        <p>Cell — a slot that carries a zone rule (shop / action / puzzle), independent of the structural rule that fills it and independent of any prop rule applied inside it.</p>
+      </div>
 
       <div class="atlas-table-frame">
         <table class="atlas-table">
@@ -124,12 +133,13 @@
 
       <p>The lamppost in cell C isn't decoration. It's a landmark — the same way a real streetlamp standing alone in the middle of a real street quietly tells you <em>this is a place</em>, without a line of dialogue or a UI marker. Two cells can carry the identical zone label (B and C are both ACTION here) and still read completely differently, because the prop rule and the structural rule under that label aren't tied to it.</p>
 
+      <!-- TODO: replace src with a real side-by-side capture of a shop/rest cell next to an action cell, in one frame. State plainly whether the shot uses debug geometry or final art if that differs from the caption below. -->
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/zone-rule-split-placeholder.png" alt="PLACEHOLDER — split image, a shop/rest cell on the left next to an action cell on the right, in one frame" loading="lazy">
-        <figcaption class="media-caption">PLACEHOLDER — same abstraction, different rule per cell. Note in the caption whether this uses debug geometry or final art.</figcaption>
+        <img src="/public/media/posts/controlled-procedurality/zone-rule-split-placeholder.png" alt="A shop-zone cell next to an action-zone cell, same underlying grid, different zone rules" loading="lazy">
+        <figcaption class="media-caption">FIG 02 — Same cell abstraction, two different zone rules, side by side. Note how the shop cell (left) and the action cell (right) read as distinct places without any change to the underlying grid.</figcaption>
       </figure>
 
-      <div class="atlas-section-break" data-index="// § 03"></div>
+      <div class="atlas-section-break" data-index="// § 03 THE CELL AS THE UNIT OF INTENT"></div>
 
       <h2 id="obstacles-actions">04 Two categories: obstacles and actions</h2>
       <p>Everything the system places falls into one of two buckets.</p>
@@ -147,46 +157,32 @@
 
       <p>Same underlying registration mechanism, different job.</p>
 
-      <div class="atlas-section-break" data-index="// § 04"></div>
+      <div class="atlas-section-break" data-index="// § 04 OBSTACLES AND ACTIONS"></div>
 
       <h2 id="guarantee">05 A guarantee, not a coincidence</h2>
       <p>Doors and keys are one instance of this pattern. Each door carries an index, and the system guarantees a matching key exists somewhere the player can actually reach <em>before</em> that door has to be crossed. That's not validated after the fact and patched to fit — the guarantee is built into how the layout gets generated in the first place.</p>
 
       <figure class="atlas-schematic">
-        <figcaption class="atlas-schematic__header">CELL RHYTHM — INTENSITY ACROSS SIX CELLS</figcaption>
+        <figcaption class="atlas-schematic__header">REACHABILITY GUARANTEE — KEY → PATH → GATED DOOR</figcaption>
         <div class="atlas-schematic__canvas">
-          <svg viewBox="0 0 760 260" style="font-size:11px" role="img" aria-labelledby="rhythmTitle rhythmDesc" xmlns="http://www.w3.org/2000/svg">
-            <title id="rhythmTitle">Cell rhythm across a generated stretch, with a reachability guarantee between key and door</title>
-            <desc id="rhythmDesc">A bar chart showing intensity across six cells — rest, action with a key, puzzle, action, a gated door, rest — with a dashed arc marking that the key is always reachable before the door.</desc>
-            <line class="atlas-schematic__primary" x1="40" y1="200" x2="740" y2="200"/>
-            <line class="atlas-schematic__primary" x1="40" y1="200" x2="40" y2="35"/>
-            <text class="atlas-schematic__label" x="34" y="42" text-anchor="end">HIGH</text>
-            <text class="atlas-schematic__label" x="34" y="198" text-anchor="end">LOW</text>
+          <svg viewBox="0 0 560 140" style="font-size:11px" role="img" aria-labelledby="reachTitle reachDesc" xmlns="http://www.w3.org/2000/svg">
+            <title id="reachTitle">Reachability chain from a key to its gated door</title>
+            <desc id="reachDesc">A left-to-right chain: a Key, then a path connecting it, then a gated Door, illustrating that the key always sits somewhere reachable before the door has to be crossed.</desc>
 
-            <rect class="atlas-schematic__primary" fill="none" x="65" y="175" width="70" height="25"/>
-            <rect x="185" y="70" width="70" height="130" style="fill:var(--atlas-accent)"/>
-            <rect class="atlas-schematic__secondary" fill="none" x="305" y="120" width="70" height="80"/>
-            <rect x="425" y="60" width="70" height="140" style="fill:var(--atlas-accent)"/>
-            <rect class="atlas-schematic__critical" fill="none" stroke-dasharray="4 3" x="545" y="130" width="70" height="70"/>
-            <rect class="atlas-schematic__primary" fill="none" x="665" y="175" width="70" height="25"/>
+            <circle class="atlas-schematic__primary" fill="none" cx="60" cy="70" r="30"/>
+            <text class="atlas-schematic__label" x="60" y="74" text-anchor="middle">KEY</text>
 
-            <text class="atlas-schematic__label" x="100" y="218" text-anchor="middle">SHOP</text>
-            <text class="atlas-schematic__label" x="100" y="231" text-anchor="middle" style="font-size:9px">rest</text>
-            <text class="atlas-schematic__label" x="220" y="218" text-anchor="middle">ACTION</text>
-            <text class="atlas-schematic__label" x="220" y="231" text-anchor="middle" style="font-size:9px">key here</text>
-            <text class="atlas-schematic__label" x="340" y="218" text-anchor="middle">PUZZLE</text>
-            <text class="atlas-schematic__label" x="460" y="218" text-anchor="middle">ACTION</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="580" y="218" text-anchor="middle">DOOR</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="580" y="231" text-anchor="middle" style="font-size:9px">gated</text>
-            <text class="atlas-schematic__label" x="700" y="218" text-anchor="middle">SHOP</text>
-            <text class="atlas-schematic__label" x="700" y="231" text-anchor="middle" style="font-size:9px">rest</text>
+            <line class="atlas-schematic__secondary" x1="90" y1="70" x2="400" y2="70"/>
+            <text class="atlas-schematic__label" x="245" y="55" text-anchor="middle" style="font-size:9px">PATH — always reachable first</text>
 
-            <path class="atlas-schematic__critical" fill="none" stroke-dasharray="5 4" d="M220,70 Q400,10 580,130"/>
+            <rect class="atlas-schematic__critical" fill="none" x="400" y="45" width="130" height="50"/>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="465" y="66" text-anchor="middle">DOOR</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="465" y="80" text-anchor="middle" style="font-size:9px">gated</text>
           </svg>
         </div>
         <div class="atlas-schematic__note">
           <b>GUARANTEE</b>
-          <span>An original schematic, not a reproduction of any game's level. Intensity alternates by cell rule; the key is always reachable before the gated door — a formal reachability check, not a level-design choice made by hand.</span>
+          <span>Every gated Door has a matching Key placed somewhere reachable along the path before that door has to be crossed — checked at generation time, not validated and patched afterward. Original schematic, not a reproduction of any game's level.</span>
         </div>
       </figure>
 
@@ -194,7 +190,7 @@
 
       <p>Door and key is also just the current skin on it. The same guarantee holds for a hammer that breaks through a wall, a lever, a button that lowers a bridge over a moat — whatever the obstacle and whatever resolves it, the underlying rule doesn't change: never place the resolution somewhere the player can't reach first.</p>
 
-      <div class="atlas-section-break" data-index="// § 05"></div>
+      <div class="atlas-section-break" data-index="// § 05 A GUARANTEE, NOT A COINCIDENCE"></div>
 
       <h2 id="rooms">06 Rooms: space with intent</h2>
       <p>A room is a separate abstraction — an n-dimensional, definable area. It might be a hall between corridors, or a whole biome. What makes it a room instead of leftover space is that it carries its own unique scatter of objects, distinct from whatever rules govern the corridor around it.</p>
@@ -210,7 +206,7 @@
         </div>
       </div>
 
-      <div class="atlas-section-break" data-index="// § 06"></div>
+      <div class="atlas-section-break" data-index="// § 06 ROOMS: SPACE WITH INTENT"></div>
 
       <h2 id="workflow">07 Why it's built this way, and what it looks like for an artist</h2>
       <p>Four things hold the system together: modularity, abstraction, scalability, and the ability to keep adding new abstractions without rebuilding what already exists. A wall, a chest, a door, a room — every one of them is registered the same way, which is what makes it possible to add a fifth or sixth category later without touching the first four.</p>
@@ -261,27 +257,37 @@
 
       <p>Above structural placement sits the gameplay layer — rooms, doors, keys, enemies — and it follows the same registration principle end to end, because that principle is the actual foundation of the tool, not a detail specific to walls. Above that sit props: benches, lampposts, whatever fills a space without changing how it plays.</p>
 
-      <div class="atlas-section-break" data-index="// § 07"></div>
+      <div class="atlas-section-break" data-index="// § 07 WHY IT'S BUILT THIS WAY"></div>
 
       <h2 id="current-state">08 Where this stands right now</h2>
       <p>This isn't a diagram — it's running. I'm building a game on top of this exact system: a maze-like city set in a late-1980s USSR aesthetic, with its own visual language and cast of characters. Gameplay scripting isn't finished, but the placement system already runs with real objects standing in for each abstraction — enemies, doors, rooms.</p>
 
+      <div class="atlas-callout atlas-callout--success">
+        <p>The placement system runs today with real stand-in objects for every abstraction — enemies, doors, rooms — not a diagram, not aspirational. Gameplay scripting on top of it is still in progress.</p>
+      </div>
+
+      <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="PLACEHOLDER — current in-engine build, Soviet-era maze-city aesthetic, real objects standing in for enemies/doors/rooms" loading="lazy">
-        <figcaption class="media-caption">PLACEHOLDER — replace with a real capture from the current build. Note whether objects shown are final art or stand-ins.</figcaption>
+        <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
+        <figcaption class="media-caption">FIG 03 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
+      <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="PLACEHOLDER — second angle or a short capture of the generation running live in-editor" loading="lazy">
-        <figcaption class="media-caption">PLACEHOLDER — a GIF or short clip of a live cook tends to land better than a static shot here; swap in whichever you have.</figcaption>
+        <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
+        <figcaption class="media-caption">FIG 04 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
-      <div class="atlas-section-break" data-index="// § 08"></div>
+      <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
 
       <h2 id="whats-next">09 What's next</h2>
       <p>This post is the shape of the thing. The next ones go into what makes it actually work: how a cell's content splits between shared instancing and individual Actors, how stacked rules get tuned without fighting each other — including one conflict I haven't solved yet — and the reachability check that makes the door/key guarantee real instead of aspirational.</p>
 
-      <div class="atlas-section-break" data-index="// § 09"></div>
+      <div class="atlas-callout atlas-callout--warning">
+        <p>Open, unsolved: what happens when two stacked rules in the same cell disagree — an action zone wanting high density against a puzzle rule wanting low density, for instance — has no resolution policy yet.</p>
+      </div>
+
+      <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
 
       <h2 id="result">10 Result</h2>
       <p>The maze is a convenient, testable surface for a system that isn't really about mazes: cells that carry design intent, not just geometry; a grid borrowed from how real maps already work, with a layer of pacing borrowed from how shipped games already zone their levels; and one reachability guarantee reused under different names. Built by one person, for one person to keep shipping content without hand-placing every instance of it.</p>
