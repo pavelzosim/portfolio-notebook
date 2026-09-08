@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Controlled Procedurality — How a Maze Generator Became a Level Design System · Pavel Zosim</title>
+  <meta name="description" content="A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/controlled-procedurality/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Controlled Procedurality — How a Maze Generator Became a Level Design System">
+  <meta property="og:description" content="A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/controlled-procedurality/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/controlled-procedurality/hero-placeholder.png">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/controlled-procedurality/hero-placeholder.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Controlled Procedurality — How a Maze Generator Became a Level Design System">
+  <meta name="twitter:description" content="A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Controlled Procedurality — How a Maze Generator Became a Level Design System","description":"A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.","url":"https://www.pavelzosim.com/post/controlled-procedurality/","mainEntityOfPage":"https://www.pavelzosim.com/post/controlled-procedurality/","image":"https://www.pavelzosim.com/public/media/posts/controlled-procedurality/hero-placeholder.png","datePublished":"2026-09-08","dateModified":"2026-09-08","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=55">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
+</head>
+<body id="top">
+  <h1 class="seo-heading">Controlled Procedurality — How a Maze Generator Became a Level Design System</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+
+      <div class="atlas-callout atlas-callout--warning">
+        <p><strong>DRAFT — placeholders pending real media.</strong> Every <span class="atlas-code-inline">figure.media-frame</span> below points to a placeholder path under <span class="atlas-code-inline">/public/media/posts/controlled-procedurality/</span>. Swap the <span class="atlas-code-inline">src</span> and <span class="atlas-code-inline">alt</span> for real screenshots before publishing, then delete this callout.</p>
+      </div>
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#real-maps"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Borrowing structure from real maps</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#cell"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">The cell as the unit of intent</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#obstacles-actions"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Two categories: obstacles and actions</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#guarantee"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">A guarantee, not a coincidence</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#rooms"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Rooms: space with intent</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#workflow"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Why it's built this way, and what it looks like for an artist</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#current-state"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">Where this stands right now</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#whats-next"><span class="atlas-toc__num">09</span><span class="atlas-toc__row"><span class="atlas-toc__title">What's next</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#result"><span class="atlas-toc__num">10</span><span class="atlas-toc__row"><span class="atlas-toc__title">Result</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+      <h2 id="overview">01 Overview</h2>
+      <p>I set out to build a maze generator in Houdini. It didn't stay one — and it was never really about finding the shortest path between two points anyway. A maze-solving algorithm does that in a page of code. What I ended up building is a modular system where abstractions describe <em>rules</em> for how a maze — or any level — gets assembled, and every stage of that assembly supports both randomization and manual placement.</p>
+
+      <p>Right now, every wall in the demo is a straight 90-degree segment. That's a deliberate constraint, not a corner I haven't gotten to yet. Angled corridors and non-orthogonal geometry mean more junction types to test, more assets to author for each of them, and a wall-building step that has to account for arbitrary angles instead of one fixed grid increment. Orthogonal walls keep the module count small and the placement math simple. Angled geometry is a real option later — once the rule system underneath is proven, not before.</p>
+
+      <div class="atlas-section-break" data-index="// § 01"></div>
+
+      <h2 id="real-maps">02 Borrowing structure from real maps</h2>
+      <p>Take a real map. It's divided into grid squares, and each of those squares divides again into smaller ones. That's not a metaphor — it's literally how military grid reference systems work: a large square gets a code, and inside it, smaller squares narrow the precision down further, from ten kilometers to one meter, depending on how exact you need to be.</p>
+
+      <p>That's one layer: a grid for <em>locating</em> things. It doesn't say anything about what belongs in any given square.</p>
+
+      <p>The second layer is what a level designer adds on top of it. Half-Life 2 is a clean example — its levels aren't laid out as generic "here's an area." Valve's own designers have described the process directly: an initial idea that a stretch of level should contain a puzzle or a combat encounter, checked against what comes immediately before and after to keep the overall pacing right, then corrected against what playtesting actually shows.</p>
+
+      <div class="atlas-callout atlas-callout--quote">
+        <p>"We might have an initial idea that we want a certain level to contain a puzzle or combat. We try to look at what comes before and after and keep in mind what we think the overall pacing should be. We learn everything from playtests." — Phil Co, Valve</p>
+      </div>
+
+      <p>Resident Evil runs a version of the same idea with different vocabulary. Nearly every game in the series, going back to 1996, uses save rooms — deliberately monster-free spaces that exist purely as a breather. Resident Evil Village layers a shop on top of that same pattern, through The Duke's Emporium — though that's specific to Village. The original RE7 has the save rooms but no merchant.</p>
+
+      <p>Neither game invented the grid. What both add is a layer of <em>intent</em> on top of spatial subdivision. The same square can be a shop, a fight, or a breather — and a level doesn't need to be built on literal squares at all for that idea to still apply.</p>
+
+      <div class="atlas-section-break" data-index="// § 02"></div>
+
+      <h2 id="cell">03 The cell as the unit of intent</h2>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/hero-placeholder.png" alt="PLACEHOLDER — hero shot from Pavel's own game running on this generator, third-person or ¾ view, final lighting, not a debug view" loading="lazy">
+        <figcaption class="media-caption">PLACEHOLDER — a level from [project name], generated through this system. Replace with a real in-game shot before publishing.</figcaption>
+      </figure>
+
+      <p>That's the layer I built into the generator. A cell is a slot that can carry a zone — shop, action, puzzle — independent of what fills it structurally, and independent of whatever prop rule applies inside it.</p>
+
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th>Cell</th><th>Zone rule</th><th>Prop rule</th><th>Structural rule</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>SHOP — a lull zone, room to breathe and pick up ammo or health</td><td>—</td><td>—</td></tr>
+            <tr><td>B</td><td>ACTION</td><td>PUZZLE</td><td>—</td></tr>
+            <tr><td>C</td><td>ACTION</td><td>LAMPPOST</td><td>HISM wall</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The lamppost in cell C isn't decoration. It's a landmark — the same way a real streetlamp standing alone in the middle of a real street quietly tells you <em>this is a place</em>, without a line of dialogue or a UI marker. Two cells can carry the identical zone label (B and C are both ACTION here) and still read completely differently, because the prop rule and the structural rule under that label aren't tied to it.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/zone-rule-split-placeholder.png" alt="PLACEHOLDER — split image, a shop/rest cell on the left next to an action cell on the right, in one frame" loading="lazy">
+        <figcaption class="media-caption">PLACEHOLDER — same abstraction, different rule per cell. Note in the caption whether this uses debug geometry or final art.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 03"></div>
+
+      <h2 id="obstacles-actions">04 Two categories: obstacles and actions</h2>
+      <p>Everything the system places falls into one of two buckets.</p>
+
+      <div class="comparison-matrix">
+        <div class="comp-col">
+          <div class="comp-label">Δ1 // Obstacles</div>
+          <div class="comp-body">Restrict or direct the player — a wall segment, a landmark like the lamppost above. Passive, spatial.</div>
+        </div>
+        <div class="comp-col">
+          <div class="comp-label">Δ2 // Actions</div>
+          <div class="comp-body">Behavior, resolved through Blueprint logic inside a given or randomly generated cell — spawning an enemy with its own initiation rules (proximity to other enemies, type, frequency), dropping loot, placing a chest.</div>
+        </div>
+      </div>
+
+      <p>Same underlying registration mechanism, different job.</p>
+
+      <div class="atlas-section-break" data-index="// § 04"></div>
+
+      <h2 id="guarantee">05 A guarantee, not a coincidence</h2>
+      <p>Doors and keys are one instance of this pattern. Each door carries an index, and the system guarantees a matching key exists somewhere the player can actually reach <em>before</em> that door has to be crossed. That's not validated after the fact and patched to fit — the guarantee is built into how the layout gets generated in the first place.</p>
+
+      <figure class="atlas-schematic">
+        <svg viewBox="0 0 760 300" role="img" aria-labelledby="rhythmTitle rhythmDesc" xmlns="http://www.w3.org/2000/svg">
+          <title id="rhythmTitle">Cell rhythm across a generated stretch, with a reachability guarantee between key and door</title>
+          <desc id="rhythmDesc">A bar chart showing intensity across six cells — rest, action with a key, puzzle, action, a gated door, rest — with a dashed arc marking that the key is always reachable before the door.</desc>
+          <line x1="40" y1="230" x2="740" y2="230" stroke="#000" stroke-width="1.5"/>
+          <line x1="40" y1="230" x2="40" y2="55" stroke="#000" stroke-width="1.5"/>
+          <text x="34" y="62" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">HIGH</text>
+          <text x="34" y="228" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">LOW</text>
+          <text x="20" y="145" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000" transform="rotate(-90 20 145)">INTENSITY</text>
+
+          <rect x="65" y="205" width="70" height="25" fill="none" stroke="#000" stroke-width="1.5"/>
+          <rect x="185" y="100" width="70" height="130" fill="#0000AA"/>
+          <rect x="305" y="150" width="70" height="80" fill="#888"/>
+          <rect x="425" y="90" width="70" height="140" fill="#0000AA"/>
+          <rect x="545" y="160" width="70" height="70" fill="none" stroke="#8B0000" stroke-width="2" stroke-dasharray="4 3"/>
+          <rect x="665" y="205" width="70" height="25" fill="none" stroke="#000" stroke-width="1.5"/>
+
+          <text x="100" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">SHOP</text>
+          <text x="100" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">rest</text>
+          <text x="220" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">ACTION</text>
+          <text x="220" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">key here</text>
+          <text x="340" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">PUZZLE</text>
+          <text x="460" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">ACTION</text>
+          <text x="580" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">DOOR</text>
+          <text x="580" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">gated</text>
+          <text x="700" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">SHOP</text>
+          <text x="700" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">rest</text>
+
+          <path d="M220,100 Q400,20 580,160" fill="none" stroke="#8B0000" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <text x="400" y="35" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8B0000">guaranteed reachable before DOOR</text>
+        </svg>
+        <figcaption class="media-caption">An original schematic of the rhythm concept — not a reproduction of any game's level. Intensity alternates by cell rule; the door/key pair is a formal reachability guarantee, not a level-design choice made by hand.</figcaption>
+      </figure>
+
+      <p>It's the same shape Resident Evil's map design has used since 1996, sometimes analyzed as "recursive unlocking": find a key, it opens a room, that room holds the next key, and the building opens up like a spiral. The difference is that in RE, that structure is hand-authored, room by room, by a level designer. Here, the same shape is a formal rule, checked automatically every time the layout regenerates.</p>
+
+      <p>Door and key is also just the current skin on it. The same guarantee holds for a hammer that breaks through a wall, a lever, a button that lowers a bridge over a moat — whatever the obstacle and whatever resolves it, the underlying rule doesn't change: never place the resolution somewhere the player can't reach first.</p>
+
+      <div class="atlas-section-break" data-index="// § 05"></div>
+
+      <h2 id="rooms">06 Rooms: space with intent</h2>
+      <p>A room is a separate abstraction — an n-dimensional, definable area. It might be a hall between corridors, or a whole biome. What makes it a room instead of leftover space is that it carries its own unique scatter of objects, distinct from whatever rules govern the corridor around it.</p>
+
+      <div class="atlas-section-break" data-index="// § 06"></div>
+
+      <h2 id="workflow">07 Why it's built this way, and what it looks like for an artist</h2>
+      <p>Four things hold the system together: modularity, abstraction, scalability, and the ability to keep adding new abstractions without rebuilding what already exists. A wall, a chest, a door, a room — every one of them is registered the same way, which is what makes it possible to add a fifth or sixth category later without touching the first four.</p>
+
+      <p>In practice, the workflow is three steps:</p>
+      <ol>
+        <li>Register the entity — wall, room, whatever it is.</li>
+        <li>Assign it a ruleset.</li>
+        <li>Scatter it. Every scatter is one of three modes: manual, random, or a pattern-driven mix — wall A duplicated X times at a fixed step, for instance.</li>
+      </ol>
+
+      <p>Everything is fast to reconfigure, and supports variation on top of that — through a shader or a Blueprint, whichever fits the object. On the Unreal side, registration happens through one of two paths: a container managing HISM, for anything that repeats structurally, or an individual Blueprint Actor, for anything that needs its own behavior. That split is what keeps a wall variant and a functioning door from having to be the same kind of thing under the hood — the mechanism itself is covered in a separate post: <a href="/post/houdini-unreal-typed-placement-routing/">Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors</a>. I also wrote a Houdini Digital Asset add-on to work with this registration live, which cut iteration time down considerably and got rid of the lag that used to come with editing it directly.</p>
+
+      <p>Above structural placement sits the gameplay layer — rooms, doors, keys, enemies — and it follows the same registration principle end to end, because that principle is the actual foundation of the tool, not a detail specific to walls. Above that sit props: benches, lampposts, whatever fills a space without changing how it plays.</p>
+
+      <div class="atlas-section-break" data-index="// § 07"></div>
+
+      <h2 id="current-state">08 Where this stands right now</h2>
+      <p>This isn't a diagram — it's running. I'm building a game on top of this exact system: a maze-like city set in a late-1980s USSR aesthetic, with its own visual language and cast of characters. Gameplay scripting isn't finished, but the placement system already runs with real objects standing in for each abstraction — enemies, doors, rooms.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="PLACEHOLDER — current in-engine build, Soviet-era maze-city aesthetic, real objects standing in for enemies/doors/rooms" loading="lazy">
+        <figcaption class="media-caption">PLACEHOLDER — replace with a real capture from the current build. Note whether objects shown are final art or stand-ins.</figcaption>
+      </figure>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="PLACEHOLDER — second angle or a short capture of the generation running live in-editor" loading="lazy">
+        <figcaption class="media-caption">PLACEHOLDER — a GIF or short clip of a live cook tends to land better than a static shot here; swap in whichever you have.</figcaption>
+      </figure>
+
+      <div class="atlas-section-break" data-index="// § 08"></div>
+
+      <h2 id="whats-next">09 What's next</h2>
+      <p>This post is the shape of the thing. The next ones go into what makes it actually work: how a cell's content splits between shared instancing and individual Actors, how stacked rules get tuned without fighting each other — including one conflict I haven't solved yet — and the reachability check that makes the door/key guarantee real instead of aspirational.</p>
+
+      <div class="atlas-section-break" data-index="// § 09"></div>
+
+      <h2 id="result">10 Result</h2>
+      <p>The maze is a convenient, testable surface for a system that isn't really about mazes: cells that carry design intent, not just geometry; a grid borrowed from how real maps already work, with a layer of pacing borrowed from how shipped games already zone their levels; and one reachability guarantee reused under different names. Built by one person, for one person to keep shipping content without hand-placing every instance of it.</p>
+
+      <div class="atlas-refs">
+        <p>Sources</p>
+        <ul class="atlas-ref-list">
+          <li><a href="https://en.wikipedia.org/wiki/Military_Grid_Reference_System" target="_blank" rel="noopener">Military Grid Reference System — Wikipedia</a></li>
+          <li><a href="https://interlopers.net/articles/phil-co-interview" target="_blank" rel="noopener">Phil Co (Valve), on planning level pacing around puzzle/combat — Interlopers.net</a></li>
+          <li><a href="https://egmnow.com/unsafe-rooms/" target="_blank" rel="noopener">"Unsafe Rooms" — EGM, on the design intent behind save rooms</a></li>
+          <li><a href="https://residentevil.fandom.com/wiki/The_Duke" target="_blank" rel="noopener">The Duke — Resident Evil Wiki</a></li>
+          <li><a href="https://horror.dreamdawn.com/?p=81213" target="_blank" rel="noopener">"Recursive Unlocking: Analyzing Resident Evil's Map Design with Data Visualization" — Chris's Survival Horror Quest</a></li>
+          <li><a href="https://book.leveldesignbook.com/process/preproduction/pacing" target="_blank" rel="noopener">Pacing — The Level Design Book</a></li>
+        </ul>
+      </div>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // CONTROLLED_PROCEDURALITY // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+  <script src="/scripts/article-page.js?v=14"></script>
+</body>
+</html>

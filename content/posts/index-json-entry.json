@@ -1,0 +1,18 @@
+{
+  "dateModified": "2026-09-08",
+  "datePublished": "2026-09-08",
+  "group": "pipeline",
+  "id": "RND-005",
+  "image": "/public/media/posts/controlled-procedurality/hero-placeholder.png",
+  "imageAlt": "A level generated through Pavel Zosim's cell-based procedural level generator",
+  "indexable": true,
+  "kind": "breakdown",
+  "localPath": "/content/posts/atlas-html/controlled-procedurality.html",
+  "publicUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
+  "slug": "controlled-procedurality",
+  "sourceUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
+  "state": "published",
+  "summary": "A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.",
+  "tags": ["houdini", "unreal", "procedural", "level-design"],
+  "title": "Controlled Procedurality — How a Maze Generator Became a Level Design System"
+}
