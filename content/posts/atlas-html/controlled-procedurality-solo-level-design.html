@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Controlled Procedurality — Cells, Rules, and Manual Override in Solo Level Design">
   <meta name="twitter:description" content="A cell-based rule system, not a maze tool: shared structure via HISM, unique content via Actors, one reachability algorithm reused across mechanics.">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Controlled Procedurality — Cells, Rules, and Manual Override in Solo Level Design","description":"A cell-based rule system, not a maze tool: shared structure via HISM, unique content via Actors, one reachability algorithm reused across mechanics.","url":"https://www.pavelzosim.com/post/controlled-procedurality-solo-level-design/","mainEntityOfPage":"https://www.pavelzosim.com/post/controlled-procedurality-solo-level-design/","image":"https://www.pavelzosim.com/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png","datePublished":"2026-09-01","dateModified":"2026-09-01","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Controlled Procedurality — Cells, Rules, and Manual Override in Solo Level Design","description":"A cell-based rule system, not a maze tool: shared structure via HISM, unique content via Actors, one reachability algorithm reused across mechanics.","url":"https://www.pavelzosim.com/post/controlled-procedurality-solo-level-design/","mainEntityOfPage":"https://www.pavelzosim.com/post/controlled-procedurality-solo-level-design/","image":"https://www.pavelzosim.com/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png","datePublished":"2026-09-01","dateModified":"2026-09-08","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
   <link rel="stylesheet" href="/styles/atlas.css?v=55">
   <link rel="stylesheet" href="/styles/posts.css?v=18">
 </head>
@@ -39,11 +39,11 @@
       </nav>
 
       <h2 id="overview">01 Overview</h2>
-      <p>I built a procedural maze/dungeon generator in Houdini, cooked into Unreal — except it didn't stay a maze generator. It grew past that concept into a level generator, and the maze is just the current demo surface for it. Underneath is a cell-based framework for controlled procedurality: rules that generate content, that a designer can still reach in and override by hand, one cell at a time.</p>
+      <p>This post goes under the hood of the cell-based rule system introduced in <a href="/post/controlled-procedurality/">Controlled Procedurality — How a Maze Generator Became a Level Design System</a>: how a cell's content splits between shared instancing and individual Actors, how stacked rules get tuned without fighting each other, and the reachability check that makes the door/key guarantee real instead of aspirational.</p>
 
       <figure class="media-frame">
         <img src="/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png" alt="Large procedurally generated level built from cell-based rules, cooked through Houdini into Unreal" loading="eager">
-        <figcaption class="media-caption">A generated level — the maze topology is the current test surface for the underlying rule system, not the point of it.</figcaption>
+        <figcaption class="media-caption">The same generated level from Part 1 — this post is about the mechanics running underneath it.</figcaption>
       </figure>
 
       <p>Spatial partitioning itself isn't the novelty here — chunking a world into cells for streaming and culling is old, deliberate engineering (Unreal's own World Partition is exactly that). What's different is what a cell carries. In a streaming system, a cell is a unit of loading. Here, a cell is a unit of <strong>design</strong>: it can hold a gameplay zone, a set of visual props, a density of enemies, and a rule for how it composes with its neighbors — all at once, all tunable.</p>
@@ -199,7 +199,7 @@ Passage   ←→ Boss defeated</code></pre>
       <div class="atlas-section-break" data-index="// § 06"></div>
 
       <h2 id="result">07 Result</h2>
-      <p>The maze is a convenient, testable surface for a system that isn't really about mazes: cells that carry design intent, not just geometry; structure split into what's shared and what's unique; rules that stack and stay tunable; and one reachability guarantee reused under different names. Built by one person, for one person to keep shipping content without hand-placing every instance of it.</p>
+      <p>The cell abstraction from <a href="/post/controlled-procedurality/">Part 1</a> becomes concrete here: a common/unique split that maps directly onto Unreal's HISM-vs-Actor divide, stacked rules that stay independently tunable, and one reachability guarantee — reused under different names — that's checked at generation time instead of patched in afterward. Built by one person, for one person to keep shipping content without hand-placing every instance of it.</p>
 
       <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // CONTROLLED_PROCEDURALITY // EOF</span><span class="atlas-eof-divider__line"></span></div>
     </div>

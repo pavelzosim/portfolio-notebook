@@ -232,6 +232,29 @@
       "indexable": true
     },
     {
+      "id": "NOTE-018",
+      "title": "Controlled Procedurality — How a Maze Generator Became a Level Design System",
+      "kind": "article",
+      "group": "procedural",
+      "summary": "A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.",
+      "tags": [
+        "procedural",
+        "level-design",
+        "houdini",
+        "unreal"
+      ],
+      "image": "/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png",
+      "localPath": "/content/posts/atlas-html/controlled-procedurality.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
+      "state": "published",
+      "publicUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
+      "slug": "controlled-procedurality",
+      "imageAlt": "Large procedurally generated level built from cell-based rules, cooked through Houdini into Unreal",
+      "datePublished": "2026-09-08",
+      "dateModified": "2026-09-08",
+      "indexable": true
+    },
+    {
       "id": "NOTE-017",
       "title": "Controlled Procedurality — Cells, Rules, and Manual Override in Solo Level Design",
       "kind": "article",
@@ -251,7 +274,7 @@
       "slug": "controlled-procedurality-solo-level-design",
       "imageAlt": "Large procedurally generated level built from cell-based rules, cooked through Houdini into Unreal",
       "datePublished": "2026-09-01",
-      "dateModified": "2026-09-01",
+      "dateModified": "2026-09-08",
       "indexable": true
     },
     {
