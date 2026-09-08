@@ -64,6 +64,42 @@
 
       <p>Neither game invented the grid. What both add is a layer of <em>intent</em> on top of spatial subdivision. The same square can be a shop, a fight, or a breather — and a level doesn't need to be built on literal squares at all for that idea to still apply.</p>
 
+      <figure class="atlas-schematic">
+        <figcaption class="atlas-schematic__header">TWO LAYERS OVER ONE GRID — LOCATION VS. INTENT</figcaption>
+        <div class="atlas-schematic__canvas">
+          <svg viewBox="0 0 560 220" style="font-size:11px" role="img" aria-labelledby="gridLayerTitle gridLayerDesc" xmlns="http://www.w3.org/2000/svg">
+            <title id="gridLayerTitle">A grid used for location versus the same grid carrying design intent</title>
+            <desc id="gridLayerDesc">Left panel: a nested reference grid with no meaning attached, subdividing coarse squares into finer ones like a military grid reference system. Right panel: the identical grid, now with each cell labeled by design intent — shop, action, or breather.</desc>
+
+            <rect class="atlas-schematic__primary" fill="none" x="20" y="20" width="220" height="150"/>
+            <line class="atlas-schematic__secondary" x1="130" y1="20" x2="130" y2="170"/>
+            <line class="atlas-schematic__secondary" x1="20" y1="95" x2="240" y2="95"/>
+            <line class="atlas-schematic__secondary" x1="75" y1="20" x2="75" y2="95"/>
+            <line class="atlas-schematic__secondary" x1="20" y1="57" x2="130" y2="57"/>
+            <text class="atlas-schematic__label" x="130" y="195" text-anchor="middle">GRID — LOCATES</text>
+
+            <rect class="atlas-schematic__primary" fill="none" x="320" y="20" width="220" height="150"/>
+            <line class="atlas-schematic__primary" x1="430" y1="20" x2="430" y2="170"/>
+            <line class="atlas-schematic__primary" x1="320" y1="95" x2="540" y2="95"/>
+            <text class="atlas-schematic__label" x="375" y="62" text-anchor="middle">SHOP</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="485" y="62" text-anchor="middle">ACTION</text>
+            <text class="atlas-schematic__label" x="375" y="137" text-anchor="middle">BREATHER</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="485" y="137" text-anchor="middle">ACTION</text>
+            <text class="atlas-schematic__label" x="430" y="195" text-anchor="middle">INTENT — DECIDES ROLE</text>
+
+            <line class="atlas-schematic__leader" x1="245" y1="95" x2="313" y2="95" marker-end="url(#arrowIntent)"/>
+            <defs>
+              <marker id="arrowIntent" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink-muted)"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+        <div class="atlas-schematic__legend">
+          <div><b>Same subdivision, two jobs</b><span>The grid on the left only says where a square is, the same way an MGRS reference narrows a location without describing it. The grid on the right is identical, but each square now carries a design role — the layer Half-Life 2 and Resident Evil each add on top of their own spatial subdivision.</span></div>
+        </div>
+      </figure>
+
       <div class="atlas-section-break" data-index="// § 02"></div>
 
       <h2 id="cell">03 The cell as the unit of intent</h2>
@@ -117,37 +153,41 @@
       <p>Doors and keys are one instance of this pattern. Each door carries an index, and the system guarantees a matching key exists somewhere the player can actually reach <em>before</em> that door has to be crossed. That's not validated after the fact and patched to fit — the guarantee is built into how the layout gets generated in the first place.</p>
 
       <figure class="atlas-schematic">
-        <svg viewBox="0 0 760 300" role="img" aria-labelledby="rhythmTitle rhythmDesc" xmlns="http://www.w3.org/2000/svg">
-          <title id="rhythmTitle">Cell rhythm across a generated stretch, with a reachability guarantee between key and door</title>
-          <desc id="rhythmDesc">A bar chart showing intensity across six cells — rest, action with a key, puzzle, action, a gated door, rest — with a dashed arc marking that the key is always reachable before the door.</desc>
-          <line x1="40" y1="230" x2="740" y2="230" stroke="#000" stroke-width="1.5"/>
-          <line x1="40" y1="230" x2="40" y2="55" stroke="#000" stroke-width="1.5"/>
-          <text x="34" y="62" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">HIGH</text>
-          <text x="34" y="228" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">LOW</text>
-          <text x="20" y="145" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000" transform="rotate(-90 20 145)">INTENSITY</text>
+        <figcaption class="atlas-schematic__header">CELL RHYTHM — INTENSITY ACROSS SIX CELLS</figcaption>
+        <div class="atlas-schematic__canvas">
+          <svg viewBox="0 0 760 260" style="font-size:11px" role="img" aria-labelledby="rhythmTitle rhythmDesc" xmlns="http://www.w3.org/2000/svg">
+            <title id="rhythmTitle">Cell rhythm across a generated stretch, with a reachability guarantee between key and door</title>
+            <desc id="rhythmDesc">A bar chart showing intensity across six cells — rest, action with a key, puzzle, action, a gated door, rest — with a dashed arc marking that the key is always reachable before the door.</desc>
+            <line class="atlas-schematic__primary" x1="40" y1="200" x2="740" y2="200"/>
+            <line class="atlas-schematic__primary" x1="40" y1="200" x2="40" y2="35"/>
+            <text class="atlas-schematic__label" x="34" y="42" text-anchor="end">HIGH</text>
+            <text class="atlas-schematic__label" x="34" y="198" text-anchor="end">LOW</text>
 
-          <rect x="65" y="205" width="70" height="25" fill="none" stroke="#000" stroke-width="1.5"/>
-          <rect x="185" y="100" width="70" height="130" fill="#0000AA"/>
-          <rect x="305" y="150" width="70" height="80" fill="#888"/>
-          <rect x="425" y="90" width="70" height="140" fill="#0000AA"/>
-          <rect x="545" y="160" width="70" height="70" fill="none" stroke="#8B0000" stroke-width="2" stroke-dasharray="4 3"/>
-          <rect x="665" y="205" width="70" height="25" fill="none" stroke="#000" stroke-width="1.5"/>
+            <rect class="atlas-schematic__primary" fill="none" x="65" y="175" width="70" height="25"/>
+            <rect x="185" y="70" width="70" height="130" style="fill:var(--atlas-accent)"/>
+            <rect class="atlas-schematic__secondary" fill="none" x="305" y="120" width="70" height="80"/>
+            <rect x="425" y="60" width="70" height="140" style="fill:var(--atlas-accent)"/>
+            <rect class="atlas-schematic__critical" fill="none" stroke-dasharray="4 3" x="545" y="130" width="70" height="70"/>
+            <rect class="atlas-schematic__primary" fill="none" x="665" y="175" width="70" height="25"/>
 
-          <text x="100" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">SHOP</text>
-          <text x="100" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">rest</text>
-          <text x="220" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">ACTION</text>
-          <text x="220" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">key here</text>
-          <text x="340" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">PUZZLE</text>
-          <text x="460" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">ACTION</text>
-          <text x="580" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">DOOR</text>
-          <text x="580" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">gated</text>
-          <text x="700" y="248" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#000">SHOP</text>
-          <text x="700" y="261" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#555">rest</text>
+            <text class="atlas-schematic__label" x="100" y="218" text-anchor="middle">SHOP</text>
+            <text class="atlas-schematic__label" x="100" y="231" text-anchor="middle" style="font-size:9px">rest</text>
+            <text class="atlas-schematic__label" x="220" y="218" text-anchor="middle">ACTION</text>
+            <text class="atlas-schematic__label" x="220" y="231" text-anchor="middle" style="font-size:9px">key here</text>
+            <text class="atlas-schematic__label" x="340" y="218" text-anchor="middle">PUZZLE</text>
+            <text class="atlas-schematic__label" x="460" y="218" text-anchor="middle">ACTION</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="580" y="218" text-anchor="middle">DOOR</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="580" y="231" text-anchor="middle" style="font-size:9px">gated</text>
+            <text class="atlas-schematic__label" x="700" y="218" text-anchor="middle">SHOP</text>
+            <text class="atlas-schematic__label" x="700" y="231" text-anchor="middle" style="font-size:9px">rest</text>
 
-          <path d="M220,100 Q400,20 580,160" fill="none" stroke="#8B0000" stroke-width="1.5" stroke-dasharray="5 4"/>
-          <text x="400" y="35" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8B0000">guaranteed reachable before DOOR</text>
-        </svg>
-        <figcaption class="media-caption">An original schematic of the rhythm concept — not a reproduction of any game's level. Intensity alternates by cell rule; the door/key pair is a formal reachability guarantee, not a level-design choice made by hand.</figcaption>
+            <path class="atlas-schematic__critical" fill="none" stroke-dasharray="5 4" d="M220,70 Q400,10 580,130"/>
+          </svg>
+        </div>
+        <div class="atlas-schematic__note">
+          <b>GUARANTEE</b>
+          <span>An original schematic, not a reproduction of any game's level. Intensity alternates by cell rule; the key is always reachable before the gated door — a formal reachability check, not a level-design choice made by hand.</span>
+        </div>
       </figure>
 
       <p>It's the same shape Resident Evil's map design has used since 1996, sometimes analyzed as "recursive unlocking": find a key, it opens a room, that room holds the next key, and the building opens up like a spiral. The difference is that in RE, that structure is hand-authored, room by room, by a level designer. Here, the same shape is a formal rule, checked automatically every time the layout regenerates.</p>
@@ -158,6 +198,17 @@
 
       <h2 id="rooms">06 Rooms: space with intent</h2>
       <p>A room is a separate abstraction — an n-dimensional, definable area. It might be a hall between corridors, or a whole biome. What makes it a room instead of leftover space is that it carries its own unique scatter of objects, distinct from whatever rules govern the corridor around it.</p>
+
+      <div class="comparison-matrix">
+        <div class="comp-col">
+          <div class="comp-label">Δ1 // Corridor</div>
+          <div class="comp-body">Governed by whatever rule applies to the surrounding cells — no scatter of its own, just the ambient rule passing through.</div>
+        </div>
+        <div class="comp-col">
+          <div class="comp-label">Δ2 // Room</div>
+          <div class="comp-body">Carries its own unique object scatter, independent of the corridor rule around it — what makes a bounded area a room instead of leftover space.</div>
+        </div>
+      </div>
 
       <div class="atlas-section-break" data-index="// § 06"></div>
 
@@ -170,6 +221,41 @@
         <li>Assign it a ruleset.</li>
         <li>Scatter it. Every scatter is one of three modes: manual, random, or a pattern-driven mix — wall A duplicated X times at a fixed step, for instance.</li>
       </ol>
+
+      <figure class="atlas-schematic">
+        <figcaption class="atlas-schematic__header">REGISTRATION PIPELINE — SAME THREE STEPS FOR ANY ABSTRACTION</figcaption>
+        <div class="atlas-schematic__canvas">
+          <svg viewBox="0 0 560 140" style="font-size:11px" role="img" aria-labelledby="pipelineTitle pipelineDesc" xmlns="http://www.w3.org/2000/svg">
+            <title id="pipelineTitle">Three-step registration pipeline shared by every module type</title>
+            <desc id="pipelineDesc">A left-to-right chain of three steps — Register, Assign Ruleset, Scatter — the same pipeline applied whether the entity being registered is a wall, a chest, a door, or a room.</desc>
+
+            <rect class="atlas-schematic__primary" fill="none" x="20" y="45" width="140" height="50"/>
+            <text class="atlas-schematic__label" x="90" y="66" text-anchor="middle">REGISTER</text>
+            <text class="atlas-schematic__label" x="90" y="80" text-anchor="middle" style="font-size:9px">wall / chest / door / room</text>
+
+            <line class="atlas-schematic__primary" x1="160" y1="70" x2="203" y2="70" marker-end="url(#arrowPipe)"/>
+
+            <rect class="atlas-schematic__primary" fill="none" x="210" y="45" width="140" height="50"/>
+            <text class="atlas-schematic__label" x="280" y="66" text-anchor="middle">ASSIGN RULESET</text>
+            <text class="atlas-schematic__label" x="280" y="80" text-anchor="middle" style="font-size:9px">zone / prop / structural</text>
+
+            <line class="atlas-schematic__primary" x1="350" y1="70" x2="393" y2="70" marker-end="url(#arrowPipe)"/>
+
+            <rect class="atlas-schematic__critical" fill="none" x="400" y="45" width="140" height="50"/>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="470" y="66" text-anchor="middle">SCATTER</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="470" y="80" text-anchor="middle" style="font-size:9px">manual / random / pattern</text>
+
+            <defs>
+              <marker id="arrowPipe" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+        <div class="atlas-schematic__legend">
+          <div><b>One pipeline, every abstraction</b><span>A wall, a chest, a door, a room — all three steps are identical regardless of which one is being registered, which is what makes adding a fifth or sixth category later a matter of reusing the pipeline, not rebuilding it.</span></div>
+        </div>
+      </figure>
 
       <p>Everything is fast to reconfigure, and supports variation on top of that — through a shader or a Blueprint, whichever fits the object. On the Unreal side, registration happens through one of two paths: a container managing HISM, for anything that repeats structurally, or an individual Blueprint Actor, for anything that needs its own behavior. That split is what keeps a wall variant and a functioning door from having to be the same kind of thing under the hood — the mechanism itself is covered in a separate post: <a href="/post/houdini-unreal-typed-placement-routing/">Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors</a>. I also wrote a Houdini Digital Asset add-on to work with this registration live, which cut iteration time down considerably and got rid of the lag that used to come with editing it directly.</p>
 
@@ -201,14 +287,31 @@
       <p>The maze is a convenient, testable surface for a system that isn't really about mazes: cells that carry design intent, not just geometry; a grid borrowed from how real maps already work, with a layer of pacing borrowed from how shipped games already zone their levels; and one reachability guarantee reused under different names. Built by one person, for one person to keep shipping content without hand-placing every instance of it.</p>
 
       <div class="atlas-refs">
-        <p>Sources</p>
         <ul class="atlas-ref-list">
-          <li><a href="https://en.wikipedia.org/wiki/Military_Grid_Reference_System" target="_blank" rel="noopener">Military Grid Reference System — Wikipedia</a></li>
-          <li><a href="https://interlopers.net/articles/phil-co-interview" target="_blank" rel="noopener">Phil Co (Valve), on planning level pacing around puzzle/combat — Interlopers.net</a></li>
-          <li><a href="https://egmnow.com/unsafe-rooms/" target="_blank" rel="noopener">"Unsafe Rooms" — EGM, on the design intent behind save rooms</a></li>
-          <li><a href="https://residentevil.fandom.com/wiki/The_Duke" target="_blank" rel="noopener">The Duke — Resident Evil Wiki</a></li>
-          <li><a href="https://horror.dreamdawn.com/?p=81213" target="_blank" rel="noopener">"Recursive Unlocking: Analyzing Resident Evil's Map Design with Data Visualization" — Chris's Survival Horror Quest</a></li>
-          <li><a href="https://book.leveldesignbook.com/process/preproduction/pacing" target="_blank" rel="noopener">Pacing — The Level Design Book</a></li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[01]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">WIKI</span><span class="atlas-ref-title">Military Grid Reference System</span><br><a class="atlas-ref-link" href="https://en.wikipedia.org/wiki/Military_Grid_Reference_System" target="_blank" rel="noopener">en.wikipedia.org/wiki/Military_Grid_Reference_System</a></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[02]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">Phil Co (Valve)</span> — on planning level pacing around puzzle and combat.<br><a class="atlas-ref-link" href="https://interlopers.net/articles/phil-co-interview" target="_blank" rel="noopener">interlopers.net/articles/phil-co-interview</a></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[03]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-title">"Unsafe Rooms"</span> — EGM, on the design intent behind save rooms.<br><a class="atlas-ref-link" href="https://egmnow.com/unsafe-rooms/" target="_blank" rel="noopener">egmnow.com/unsafe-rooms</a></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[04]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">WIKI</span><span class="atlas-ref-title">The Duke</span> — Resident Evil Wiki.<br><a class="atlas-ref-link" href="https://residentevil.fandom.com/wiki/The_Duke" target="_blank" rel="noopener">residentevil.fandom.com/wiki/The_Duke</a></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[05]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-title">"Recursive Unlocking: Analyzing Resident Evil's Map Design with Data Visualization"</span> — Chris's Survival Horror Quest.<br><a class="atlas-ref-link" href="https://horror.dreamdawn.com/?p=81213" target="_blank" rel="noopener">horror.dreamdawn.com/?p=81213</a></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[06]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-title">Pacing</span> — The Level Design Book.<br><a class="atlas-ref-link" href="https://book.leveldesignbook.com/process/preproduction/pacing" target="_blank" rel="noopener">book.leveldesignbook.com/process/preproduction/pacing</a></span>
+          </li>
         </ul>
       </div>
 
