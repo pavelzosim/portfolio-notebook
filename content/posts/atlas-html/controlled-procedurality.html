@@ -83,10 +83,10 @@
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>
           <div class="atlas-slider__viewport">
-            <img data-slide data-caption="Visualization Primitives -- oriented debug boxes per placement, colored per module" src="/public/media/posts/controlled-procedurality/houdini-debug-visualization-primitives.png" alt="Houdini Visualization Primitives debug view -- colored oriented boxes for every structural, gameplay, and prop placement in one generated maze" loading="lazy">
-            <img data-slide data-caption="Wall Anchor Index -- Wall Prop Scatter candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-wall-anchor-index.png" alt="Houdini Index Guide, Wall Anchor Index mode -- every Wall Prop Scatter candidate along the maze walls numbered" loading="lazy" hidden>
-            <img data-slide data-caption="Connection Point -- Door / Open Passage candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-connection-point.png" alt="Houdini Index Guide, Connection Point mode -- Door and Open Passage candidate points numbered" loading="lazy" hidden>
-            <img data-slide data-caption="Ground Anchor Index -- Ground Prop Scatter candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-ground-anchor-index.png" alt="Houdini Index Guide, Ground Anchor Index mode -- every Ground Prop Scatter candidate cell numbered" loading="lazy" hidden>
+            <img data-slide data-caption="Visualization Primitives -- oriented debug boxes per placement, colored per module" src="/public/media/posts/controlled-procedurality/houdini-debug-visualization-primitives.jpg" alt="Houdini Visualization Primitives debug view -- colored oriented boxes for every structural, gameplay, and prop placement in one generated maze" loading="lazy">
+            <img data-slide data-caption="Wall Anchor Index -- Wall Prop Scatter candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-wall-anchor-index.jpg" alt="Houdini Index Guide, Wall Anchor Index mode -- every Wall Prop Scatter candidate along the maze walls numbered" loading="lazy" hidden>
+            <img data-slide data-caption="Connection Point -- Door / Open Passage candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-connection-point.jpg" alt="Houdini Index Guide, Connection Point mode -- Door and Open Passage candidate points numbered" loading="lazy" hidden>
+            <img data-slide data-caption="Ground Anchor Index -- Ground Prop Scatter candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-ground-anchor-index.jpg" alt="Houdini Index Guide, Ground Anchor Index mode -- every Ground Prop Scatter candidate cell numbered" loading="lazy" hidden>
           </div>
           <div class="atlas-slider__bar">
             <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous debug view">‹ PREV</button>
@@ -100,8 +100,8 @@
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>
           <div class="atlas-slider__viewport">
-            <img data-slide data-caption="The generated layout running in Unreal, aerial view" src="/public/media/posts/controlled-procedurality/unreal-maze-aerial.png" alt="The generated maze layout cooked into Unreal, aerial view of the modular buildings and streetlights" loading="lazy">
-            <img data-slide data-caption="Street level, dusk lighting" src="/public/media/posts/controlled-procedurality/unreal-maze-street-dusk.png" alt="The same generated layout in Unreal at street level, dusk lighting with a streetlight and wet asphalt" loading="lazy" hidden>
+            <img data-slide data-caption="The generated layout running in Unreal, aerial view" src="/public/media/posts/controlled-procedurality/unreal-maze-aerial.jpg" alt="The generated maze layout cooked into Unreal, aerial view of the modular buildings and streetlights" loading="lazy">
+            <img data-slide data-caption="Street level, dusk lighting" src="/public/media/posts/controlled-procedurality/unreal-maze-street-dusk.jpg" alt="The same generated layout in Unreal at street level, dusk lighting with a streetlight and wet asphalt" loading="lazy" hidden>
           </div>
           <div class="atlas-slider__bar">
             <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous view">‹ PREV</button>
@@ -122,12 +122,11 @@
         <p>Every object in the views above — wall, room, door, prop — is placed by rule, not hand-drawn. But procedural here doesn't mean hands-off: the same rule that scatters an object randomly can just as easily take a manual entry instead — swap one wall module for a specific pick, insert a specific object at a specific point, override a single column's pattern. Manual and random are two settings on the same system, not two different systems. The module manually placed this way doesn't have to be decorative, either — a hand-inserted entrance in FIG 03 below can just as easily double as a teleport point, some other interaction object, or an alternate route through the same wall. Patterns stack, too: a vertical or cap pattern can run on top of the base scatter, and every pool of variants a rule picks from carries its own weight, so "random" here means weighted-random against an authored pool, not a flat coin flip.</p>
       </div>
 
-      <!-- TODO: replace src with real before/after captures of the wall vertical override example -- a blank wall run built entirely from window modules, then the same run with one column manually overridden to an entrance module. Update data-caption/alt text if the actual modules shown differ (e.g. a different module name than "entrance"). -->
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>
           <div class="atlas-slider__viewport">
-            <img data-slide data-caption="Before -- a blank wall run, all window modules" src="/public/media/posts/controlled-procedurality/manual-override-before-placeholder.png" alt="A wall run built entirely from window modules, before any manual override" loading="lazy">
-            <img data-slide data-caption="After -- one column manually overridden to an entrance" src="/public/media/posts/controlled-procedurality/manual-override-after-placeholder.png" alt="The same wall run after manually overriding one column to an entrance module, breaking up the blank window run" loading="lazy" hidden>
+            <img data-slide data-caption="Before -- a blank wall run, all window modules" src="/public/media/posts/controlled-procedurality/manual-override-before.jpg" alt="A wall run built entirely from window and blank panel modules, before any manual override, Unreal Editor with the Vertical Override panel open" loading="lazy">
+            <img data-slide data-caption="After -- one column manually overridden to an entrance" src="/public/media/posts/controlled-procedurality/manual-override-after.jpg" alt="The same wall run after manually overriding a column to an entrance with a canopy and glass-block windows above it, breaking up the blank run" loading="lazy" hidden>
           </div>
           <div class="atlas-slider__bar">
             <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
@@ -135,7 +134,7 @@
             <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
           </div>
         </div>
-        <figcaption class="media-caption">FIG 03 — A blank window wall, then the same run with one column manually overridden to an entrance. Debug view: no — same authoring context as FIG 02.</figcaption>
+        <figcaption class="media-caption">FIG 03 — A blank window wall, then the same run with one column manually overridden to an entrance. Debug view: yes — Unreal Editor with the Vertical Override panel open, same building as FIG 02.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
