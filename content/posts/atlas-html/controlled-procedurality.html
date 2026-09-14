@@ -80,14 +80,13 @@
       <h2 id="overview">01 Overview</h2>
       <p>I set out to build a maze generator in Houdini. It didn't stay one — and it was never really about finding the shortest path between two points anyway. A maze-solving algorithm does that in a page of code. What I ended up building is a modular system where abstractions describe <em>rules</em> for how a maze — or any level — gets assembled, and every stage of that assembly supports both randomization and manual placement.</p>
 
-      <!-- TODO: this slider ships with 4 example slots for Houdini's own debug/visualization views (topology, Visualization Primitives, Preview Source, Index Guide -- see ARCHITECTURE.md §9). If you prepared a different number of images or different views, add/remove <img data-slide> entries below to match and adjust the alt/data-caption text per slide -- the slider JS adapts to however many slides are present. -->
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>
           <div class="atlas-slider__viewport">
-            <img data-slide data-caption="Topology debug -- rooms, DFS corridors, entry/exit" src="/public/media/posts/controlled-procedurality/houdini-debug-topology-placeholder.png" alt="Houdini topology debug view -- rooms, DFS corridors, entry and exit" loading="lazy">
-            <img data-slide data-caption="Visualization Primitives -- oriented debug boxes per placement" src="/public/media/posts/controlled-procedurality/houdini-debug-visualization-primitives-placeholder.png" alt="Houdini Visualization Primitives debug view -- oriented boxes per structural/gameplay/prop placement" loading="lazy" hidden>
-            <img data-slide data-caption="Preview Source -- real mesh substituted for the debug box" src="/public/media/posts/controlled-procedurality/houdini-debug-preview-source-placeholder.png" alt="Houdini Preview Source debug view -- real mesh standing in for the abstract debug box" loading="lazy" hidden>
-            <img data-slide data-caption="Index Guide -- point/anchor index overlay" src="/public/media/posts/controlled-procedurality/houdini-debug-index-guide-placeholder.png" alt="Houdini Index Guide debug view -- point and anchor index overlay" loading="lazy" hidden>
+            <img data-slide data-caption="Visualization Primitives -- oriented debug boxes per placement, colored per module" src="/public/media/posts/controlled-procedurality/houdini-debug-visualization-primitives.png" alt="Houdini Visualization Primitives debug view -- colored oriented boxes for every structural, gameplay, and prop placement in one generated maze" loading="lazy">
+            <img data-slide data-caption="Wall Anchor Index -- Wall Prop Scatter candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-wall-anchor-index.png" alt="Houdini Index Guide, Wall Anchor Index mode -- every Wall Prop Scatter candidate along the maze walls numbered" loading="lazy" hidden>
+            <img data-slide data-caption="Connection Point -- Door / Open Passage candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-connection-point.png" alt="Houdini Index Guide, Connection Point mode -- Door and Open Passage candidate points numbered" loading="lazy" hidden>
+            <img data-slide data-caption="Ground Anchor Index -- Ground Prop Scatter candidate numbering" src="/public/media/posts/controlled-procedurality/houdini-debug-ground-anchor-index.png" alt="Houdini Index Guide, Ground Anchor Index mode -- every Ground Prop Scatter candidate cell numbered" loading="lazy" hidden>
           </div>
           <div class="atlas-slider__bar">
             <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous debug view">‹ PREV</button>
@@ -95,15 +94,14 @@
             <button type="button" class="atlas-btn" data-slider-next aria-label="Next debug view">NEXT ›</button>
           </div>
         </div>
-        <figcaption class="media-caption">FIG 01 — The generator's own debug/visualization views inside Houdini, one generated maze. Debug view: yes — these are authoring-time views, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 01 — Four of the generator's own debug/visualization views inside Houdini, same generated maze. Debug view: yes — these are authoring-time views, not final art.</figcaption>
       </figure>
 
-      <!-- TODO: this slider ships with 2 example slots for the same generated layout running in Unreal. Add/remove <img data-slide> entries to match how many shots you prepared, and adjust data-caption/alt text per slide. -->
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>
           <div class="atlas-slider__viewport">
-            <img data-slide data-caption="The generated layout running in Unreal" src="/public/media/posts/controlled-procedurality/unreal-maze-view-01-placeholder.png" alt="The same generated layout, cooked into Unreal and running in-engine" loading="lazy">
-            <img data-slide data-caption="Same layout, different angle" src="/public/media/posts/controlled-procedurality/unreal-maze-view-02-placeholder.png" alt="The same generated layout in Unreal, seen from a different angle" loading="lazy" hidden>
+            <img data-slide data-caption="The generated layout running in Unreal, aerial view" src="/public/media/posts/controlled-procedurality/unreal-maze-aerial.png" alt="The generated maze layout cooked into Unreal, aerial view of the modular buildings and streetlights" loading="lazy">
+            <img data-slide data-caption="Street level, dusk lighting" src="/public/media/posts/controlled-procedurality/unreal-maze-street-dusk.png" alt="The same generated layout in Unreal at street level, dusk lighting with a streetlight and wet asphalt" loading="lazy" hidden>
           </div>
           <div class="atlas-slider__bar">
             <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous view">‹ PREV</button>
