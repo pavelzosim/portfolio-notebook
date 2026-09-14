@@ -45,6 +45,22 @@
       <h2 id="overview">01 Overview</h2>
       <p>I set out to build a maze generator in Houdini. It didn't stay one — and it was never really about finding the shortest path between two points anyway. A maze-solving algorithm does that in a page of code. What I ended up building is a modular system where abstractions describe <em>rules</em> for how a maze — or any level — gets assembled, and every stage of that assembly supports both randomization and manual placement.</p>
 
+      <!-- TODO: replace src with a real short looping clip (GIF-style, muted, 5-10s) cycling through the generator's own preview/visualization modes in Houdini -- Module, Gameplay, and Props placement debug boxes -- for one generated maze. If the real clip covers something narrower (e.g. only one domain), update the caption below to match. -->
+      <figure class="media-frame">
+        <video autoplay loop muted playsinline>
+          <source src="/public/media/posts/controlled-procedurality/houdini-preview-modes-placeholder.mp4" type="video/mp4">
+        </video>
+        <figcaption class="media-caption">FIG 01 — Cycling through the generator's own preview/visualization modes inside Houdini, one generated maze. Debug view: yes — these are the authoring-time preview boxes, not final art.</figcaption>
+      </figure>
+
+      <!-- TODO: replace src with a real short looping clip of the same generated layout above, now placed and running in Unreal. If the layout shown differs from the Houdini clip, adjust the caption instead of claiming "the same maze." -->
+      <figure class="media-frame">
+        <video autoplay loop muted playsinline>
+          <source src="/public/media/posts/controlled-procedurality/unreal-maze-placeholder.mp4" type="video/mp4">
+        </video>
+        <figcaption class="media-caption">FIG 02 — The same generated layout, cooked into Unreal and running in-engine. Debug view: none — final placement output, not the Houdini authoring view.</figcaption>
+      </figure>
+
       <p>Right now, every wall in the demo is a straight 90-degree segment. That's a deliberate constraint, not a corner I haven't gotten to yet. Angled corridors and non-orthogonal geometry mean more junction types to test, more assets to author for each of them, and a wall-building step that has to account for arbitrary angles instead of one fixed grid increment. Orthogonal walls keep the module count small and the placement math simple. Angled geometry is a real option later — once the rule system underneath is proven, not before.</p>
 
       <div class="atlas-callout atlas-callout--important">
@@ -119,7 +135,7 @@
       <!-- TODO: replace src with a real in-game capture (third-person or 3/4 view, final lighting, not a debug view). If the real shot differs from this framing, update the caption's "Debug view" line to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/hero-placeholder.png" alt="A generated level running in the current game build, third-person view, final lighting" loading="lazy">
-        <figcaption class="media-caption">FIG 01 — A generated level from the current build. Debug view: none, final art and lighting. Note the module variety along one straight corridor stretch — same wall abstraction, different variants.</figcaption>
+        <figcaption class="media-caption">FIG 03 — A generated level from the current build. Debug view: none, final art and lighting. Note the module variety along one straight corridor stretch — same wall abstraction, different variants.</figcaption>
       </figure>
 
       <p>That's the layer I built into the generator. A cell is a slot that can carry a zone — shop, action, puzzle — independent of what fills it structurally, and independent of whatever prop rule applies inside it.</p>
@@ -144,7 +160,7 @@
       <!-- TODO: replace src with a real side-by-side capture of a shop/rest cell next to an action cell, in one frame. State plainly whether the shot uses debug geometry or final art if that differs from the caption below. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/zone-rule-split-placeholder.png" alt="A shop-zone cell next to an action-zone cell, same underlying grid, different zone rules" loading="lazy">
-        <figcaption class="media-caption">FIG 02 — Same cell abstraction, two different zone rules, side by side. Note how the shop cell (left) and the action cell (right) read as distinct places without any change to the underlying grid.</figcaption>
+        <figcaption class="media-caption">FIG 04 — Same cell abstraction, two different zone rules, side by side. Note how the shop cell (left) and the action cell (right) read as distinct places without any change to the underlying grid.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 03 THE CELL AS THE UNIT OF INTENT"></div>
@@ -318,13 +334,13 @@
       <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
-        <figcaption class="media-caption">FIG 03 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 05 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
       <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
-        <figcaption class="media-caption">FIG 04 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
+        <figcaption class="media-caption">FIG 06 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
