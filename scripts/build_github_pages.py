@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
 SITE_DIRECTORIES = ("blog", "content", "privacy", "projects", "public", "styles", "tools")
-SITE_FILES = ("index.html", "404.html", "home.css", "CNAME")
+SITE_FILES = ("index.html", "404.html", "home.css", "CNAME", "favicon.ico")
 TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".xml", ".txt"}
 
 
@@ -31,6 +31,24 @@ def add_noindex(document: str) -> str:
     return re.sub(
         r"(<head(?:\s[^>]*)?>)",
         r'\1<meta name="robots" content="noindex, nofollow">',
+        document,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+
+
+def add_favicon(document: str) -> str:
+    if 'rel="icon"' in document or "rel='icon'" in document:
+        return document
+    favicon_links = (
+        '<link rel="icon" href="/favicon.ico" sizes="any">'
+        '<link rel="icon" type="image/png" href="/public/media/brand/favicon-32.png" sizes="32x32">'
+        '<link rel="icon" type="image/png" href="/public/media/brand/favicon-16.png" sizes="16x16">'
+        '<link rel="apple-touch-icon" href="/public/media/brand/favicon-180.png">'
+    )
+    return re.sub(
+        r"(<head(?:\s[^>]*)?>)",
+        r"\1" + favicon_links,
         document,
         count=1,
         flags=re.IGNORECASE,
@@ -145,6 +163,7 @@ def transform_site(base_path: str, noindex: bool) -> None:
             continue
         text = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html":
+            text = add_favicon(text)
             text = add_analytics(text)
             relative = path.relative_to(OUTPUT).as_posix()
             if noindex or relative.startswith("content/templates/") or relative in {"404.html", "blog/style-guide/index.html"}:
