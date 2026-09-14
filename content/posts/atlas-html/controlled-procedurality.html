@@ -181,6 +181,12 @@
 
       <p>Same underlying registration mechanism, different job.</p>
 
+      <!-- TODO: replace src with a real capture of one generated stretch showing both categories at once -- a wall segment or landmark (obstacle) and an enemy/chest/loot spawn (action) in the same frame. If the shot can't show both at once, split it into two frames and adjust the caption below. -->
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/obstacles-actions-placeholder.png" alt="A generated area showing an obstacle -- a wall segment or landmark -- next to an action, such as an enemy or chest spawn" loading="lazy">
+        <figcaption class="media-caption">FIG 05 — Obstacles and actions placed together in one generated stretch. Debug view: none, final art. Note the wall/landmark (obstacle, passive) beside the enemy/chest spawn (action, resolved through Blueprint logic).</figcaption>
+      </figure>
+
       <div class="atlas-section-break" data-index="// § 04 OBSTACLES AND ACTIONS"></div>
 
       <h2 id="guarantee">05 A guarantee, not a coincidence</h2>
@@ -242,6 +248,12 @@
           <div class="comp-body">Carries its own unique object scatter, independent of the corridor rule around it — what makes a bounded area a room instead of leftover space.</div>
         </div>
       </div>
+
+      <!-- TODO: replace src with a real capture of a Room boundary next to an ordinary corridor stretch -- ideally in one frame, so the density/scatter difference reads at a glance. If the real shot only shows one or the other, split into two frames and adjust the caption below. -->
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/room-vs-corridor-placeholder.png" alt="A room with its own dense object scatter next to a plain corridor stretch without one" loading="lazy">
+        <figcaption class="media-caption">FIG 06 — A Room (left) carrying its own unique scatter, next to an ordinary corridor stretch (right) governed only by the ambient rule passing through it. Debug view: none, final art.</figcaption>
+      </figure>
 
       <div class="atlas-section-break" data-index="// § 06 ROOMS: SPACE WITH INTENT"></div>
 
@@ -334,13 +346,13 @@
       <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
-        <figcaption class="media-caption">FIG 05 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 07 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
       <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
-        <figcaption class="media-caption">FIG 06 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
+        <figcaption class="media-caption">FIG 08 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
@@ -351,6 +363,12 @@
       <div class="atlas-callout atlas-callout--warning">
         <p>Open, unsolved: what happens when two stacked rules in the same cell disagree — an action zone wanting high density against a puzzle rule wanting low density, for instance — has no resolution policy yet.</p>
       </div>
+
+      <!-- TODO: replace src with a real capture of the actual conflict described above -- a cell where a high-density action rule and a low-density puzzle rule are both active. A raw editor/debug view is fine here since the point is showing the unsolved state, not a finished result. If no such case exists yet to capture, keep this figure out until one does rather than staging a fake one. -->
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/stacked-rule-conflict-placeholder.png" alt="Two stacked rules disagreeing in the same cell -- a high-density action rule against a low-density puzzle rule" loading="lazy">
+        <figcaption class="media-caption">FIG 09 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
+      </figure>
 
       <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
 
