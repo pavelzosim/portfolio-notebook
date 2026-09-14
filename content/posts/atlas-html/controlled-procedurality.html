@@ -71,27 +71,35 @@
       <figure class="atlas-schematic">
         <figcaption class="atlas-schematic__header">TWO LAYERS OVER ONE GRID — LOCATION VS. INTENT</figcaption>
         <div class="atlas-schematic__canvas">
-          <svg viewBox="0 0 560 230" style="font-size:17px" role="img" aria-labelledby="gridLayerTitle gridLayerDesc" xmlns="http://www.w3.org/2000/svg">
-            <title id="gridLayerTitle">A grid used for location versus the same grid carrying design intent</title>
-            <desc id="gridLayerDesc">Left panel: a nested reference grid with no meaning attached, subdividing coarse squares into finer ones like a military grid reference system. Right panel: the identical grid, now with each cell labeled by design intent — shop, action, or breather.</desc>
+          <svg viewBox="0 0 560 250" role="img" aria-labelledby="gridLayerTitle gridLayerDesc" xmlns="http://www.w3.org/2000/svg">
+            <title id="gridLayerTitle">A floor plan used for location versus the same floor plan carrying design intent</title>
+            <desc id="gridLayerDesc">Left panel: a small floor plan of four rooms connected by corridors, drawn with no meaning attached, just structure. Right panel: the identical floor plan, now with each room labeled by design intent — shop, action, or breather.</desc>
 
-            <rect class="atlas-schematic__primary" fill="none" x="20" y="20" width="220" height="150"/>
-            <line class="atlas-schematic__secondary" x1="130" y1="20" x2="130" y2="170"/>
-            <line class="atlas-schematic__secondary" x1="20" y1="95" x2="240" y2="95"/>
-            <line class="atlas-schematic__secondary" x1="75" y1="20" x2="75" y2="95"/>
-            <line class="atlas-schematic__secondary" x1="20" y1="57" x2="130" y2="57"/>
-            <text class="atlas-schematic__label" x="130" y="200" text-anchor="middle" style="font-size:12.5px">GRID — LOCATES</text>
+            <rect class="atlas-schematic__primary" fill="none" x="20" y="20" width="90" height="70"/>
+            <rect class="atlas-schematic__primary" fill="none" x="150" y="20" width="90" height="70"/>
+            <rect class="atlas-schematic__primary" fill="none" x="20" y="130" width="90" height="70"/>
+            <rect class="atlas-schematic__primary" fill="none" x="150" y="130" width="90" height="70"/>
+            <line class="atlas-schematic__primary" x1="110" y1="55" x2="150" y2="55"/>
+            <line class="atlas-schematic__primary" x1="110" y1="165" x2="150" y2="165"/>
+            <line class="atlas-schematic__primary" x1="65" y1="90" x2="65" y2="130"/>
+            <line class="atlas-schematic__primary" x1="185" y1="90" x2="185" y2="130"/>
+            <text class="atlas-schematic__label" x="130" y="220" text-anchor="middle" style="font-size:12.5px">LAYOUT — LOCATES</text>
 
-            <rect class="atlas-schematic__primary" fill="none" x="320" y="20" width="220" height="150"/>
-            <line class="atlas-schematic__primary" x1="430" y1="20" x2="430" y2="170"/>
-            <line class="atlas-schematic__primary" x1="320" y1="95" x2="540" y2="95"/>
-            <text class="atlas-schematic__label" x="375" y="63" text-anchor="middle" style="font-size:13px">SHOP</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="485" y="63" text-anchor="middle" style="font-size:13px">ACTION</text>
-            <text class="atlas-schematic__label" x="375" y="138" text-anchor="middle" style="font-size:13px">BREATHER</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="485" y="138" text-anchor="middle" style="font-size:13px">ACTION</text>
-            <text class="atlas-schematic__label" x="430" y="200" text-anchor="middle" style="font-size:12.5px">INTENT — DECIDES ROLE</text>
+            <rect class="atlas-schematic__primary" fill="none" x="320" y="20" width="90" height="70"/>
+            <rect class="atlas-schematic__primary" fill="none" x="450" y="20" width="90" height="70"/>
+            <rect class="atlas-schematic__primary" fill="none" x="320" y="130" width="90" height="70"/>
+            <rect class="atlas-schematic__primary" fill="none" x="450" y="130" width="90" height="70"/>
+            <line class="atlas-schematic__primary" x1="410" y1="55" x2="450" y2="55"/>
+            <line class="atlas-schematic__primary" x1="410" y1="165" x2="450" y2="165"/>
+            <line class="atlas-schematic__primary" x1="365" y1="90" x2="365" y2="130"/>
+            <line class="atlas-schematic__primary" x1="485" y1="90" x2="485" y2="130"/>
+            <text class="atlas-schematic__label" x="365" y="60" text-anchor="middle" style="font-size:13px">SHOP</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="495" y="60" text-anchor="middle" style="font-size:13px">ACTION</text>
+            <text class="atlas-schematic__label" x="365" y="170" text-anchor="middle" style="font-size:13px">BREATHER</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="495" y="170" text-anchor="middle" style="font-size:13px">ACTION</text>
+            <text class="atlas-schematic__label" x="430" y="220" text-anchor="middle" style="font-size:12.5px">INTENT — DECIDES ROLE</text>
 
-            <line class="atlas-schematic__leader" x1="245" y1="95" x2="313" y2="95" marker-end="url(#arrowIntent)"/>
+            <line class="atlas-schematic__leader" x1="245" y1="110" x2="313" y2="110" marker-end="url(#arrowIntent)"/>
             <defs>
               <marker id="arrowIntent" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
                 <path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink-muted)"/>
@@ -234,25 +242,53 @@
       <figure class="atlas-schematic">
         <figcaption class="atlas-schematic__header">REGISTRATION PIPELINE — SAME THREE STEPS FOR ANY ABSTRACTION</figcaption>
         <div class="atlas-schematic__canvas">
-          <svg viewBox="0 0 700 150" style="font-size:18px" role="img" aria-labelledby="pipelineTitle pipelineDesc" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 700 150" role="img" aria-labelledby="pipelineTitle pipelineDesc" xmlns="http://www.w3.org/2000/svg">
             <title id="pipelineTitle">Three-step registration pipeline shared by every module type</title>
-            <desc id="pipelineDesc">A left-to-right chain of three steps — Register, Assign Ruleset, Scatter — the same pipeline applied whether the entity being registered is a wall, a chest, a door, or a room.</desc>
+            <desc id="pipelineDesc">A left-to-right chain of three steps. Register shows icons for a wall segment, a chest, a door, and a room. Assign Ruleset shows a generic object with three rule tags attached. Scatter shows the same kind of object placed multiple times across a small area.</desc>
 
-            <rect class="atlas-schematic__primary" fill="none" x="15" y="40" width="200" height="70"/>
-            <text class="atlas-schematic__label" x="115" y="68" text-anchor="middle" style="font-size:13px">REGISTER</text>
-            <text class="atlas-schematic__label" x="115" y="92" text-anchor="middle" style="font-size:11px">wall / chest / door / room</text>
+            <rect class="atlas-schematic__primary" fill="none" x="15" y="20" width="200" height="110"/>
+            <text class="atlas-schematic__label" x="115" y="38" text-anchor="middle" style="font-size:13px">REGISTER</text>
+
+            <rect x="42" y="58" width="8" height="32" fill="var(--atlas-ink)"/>
+            <rect class="atlas-schematic__primary" fill="none" x="75" y="72" width="22" height="16"/>
+            <line class="atlas-schematic__primary" x1="75" y1="78" x2="97" y2="78"/>
+            <rect class="atlas-schematic__primary" fill="none" x="118" y="56" width="14" height="34"/>
+            <line class="atlas-schematic__secondary" x1="118" y1="90" x2="140" y2="80"/>
+            <rect class="atlas-schematic__primary" fill="none" x="160" y="52" width="38" height="38"/>
+
+            <text class="atlas-schematic__label" x="115" y="118" text-anchor="middle" style="font-size:11px">wall / chest / door / room</text>
 
             <line class="atlas-schematic__primary" x1="215" y1="75" x2="248" y2="75" marker-end="url(#arrowPipe)"/>
 
-            <rect class="atlas-schematic__primary" fill="none" x="250" y="40" width="200" height="70"/>
-            <text class="atlas-schematic__label" x="350" y="68" text-anchor="middle" style="font-size:13px">ASSIGN RULESET</text>
-            <text class="atlas-schematic__label" x="350" y="92" text-anchor="middle" style="font-size:11px">zone / prop / structural</text>
+            <rect class="atlas-schematic__primary" fill="none" x="250" y="20" width="200" height="110"/>
+            <text class="atlas-schematic__label" x="350" y="38" text-anchor="middle" style="font-size:13px">ASSIGN RULESET</text>
+
+            <rect class="atlas-schematic__primary" fill="none" x="270" y="56" width="40" height="40"/>
+            <line class="atlas-schematic__leader" x1="310" y1="66" x2="345" y2="59"/>
+            <line class="atlas-schematic__leader" x1="310" y1="76" x2="345" y2="83"/>
+            <line class="atlas-schematic__leader" x1="310" y1="88" x2="345" y2="107"/>
+            <rect class="atlas-schematic__secondary" fill="none" x="345" y="52" width="60" height="14"/>
+            <rect class="atlas-schematic__secondary" fill="none" x="345" y="76" width="60" height="14"/>
+            <rect class="atlas-schematic__secondary" fill="none" x="345" y="100" width="60" height="14"/>
+
+            <text class="atlas-schematic__label" x="350" y="118" text-anchor="middle" style="font-size:11px">zone / prop / structural</text>
 
             <line class="atlas-schematic__primary" x1="450" y1="75" x2="483" y2="75" marker-end="url(#arrowPipe)"/>
 
-            <rect class="atlas-schematic__critical" fill="none" x="485" y="40" width="200" height="70"/>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="585" y="68" text-anchor="middle" style="font-size:13px">SCATTER</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="585" y="92" text-anchor="middle" style="font-size:11px">manual / random / pattern</text>
+            <rect class="atlas-schematic__critical" fill="none" x="485" y="20" width="200" height="110"/>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="585" y="38" text-anchor="middle" style="font-size:13px">SCATTER</text>
+
+            <rect x="510" y="54" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="545" y="62" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="580" y="52" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="615" y="70" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="650" y="58" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="522" y="88" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="560" y="94" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="600" y="86" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="638" y="80" width="6" height="6" fill="var(--atlas-crit)"/>
+
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="585" y="118" text-anchor="middle" style="font-size:11px">manual / random / pattern</text>
 
             <defs>
               <marker id="arrowPipe" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
