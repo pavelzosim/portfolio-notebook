@@ -18,6 +18,41 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Controlled Procedurality — How a Maze Generator Became a Level Design System","description":"A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.","url":"https://www.pavelzosim.com/post/controlled-procedurality/","mainEntityOfPage":"https://www.pavelzosim.com/post/controlled-procedurality/","image":"https://www.pavelzosim.com/public/media/posts/controlled-procedurality/hero-placeholder.png","datePublished":"2026-09-08","dateModified":"2026-09-08","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
   <link rel="stylesheet" href="/styles/atlas.css?v=55">
   <link rel="stylesheet" href="/styles/posts.css?v=18">
+  <style>
+    /* Scoped to this post only: no shared framework component for an image
+       slider yet, so this is built from Atlas tokens directly rather than
+       new hardcoded values. See ARCHITECTURE.md discussion for why this
+       replaced the earlier video placeholders. */
+    .atlas-container .content-block .media-frame:has(.atlas-slider)::before { content: "[ GALLERY // IMAGE_SEQUENCE ]"; }
+    .atlas-container .content-block .atlas-slider { width: 100%; }
+    .atlas-container .content-block .atlas-slider__viewport {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      border: 1px solid var(--atlas-border);
+      background: var(--atlas-bg-alt);
+    }
+    .atlas-container .content-block .atlas-slider__viewport img { display: block; max-width: 100%; height: auto; }
+    .atlas-container .content-block .atlas-slider__viewport img[hidden] { display: none; }
+    .atlas-container .content-block .atlas-slider__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .atlas-container .content-block .atlas-slider__bar .atlas-btn { padding: 6px 12px; }
+    .atlas-container .content-block .atlas-slider__label {
+      flex: 1;
+      text-align: center;
+      font-family: var(--atlas-font-mono);
+      font-size: var(--fs-meta);
+      color: var(--atlas-ink-muted);
+      letter-spacing: 0.04em;
+    }
+  </style>
 </head>
 <body id="top">
   <h1 class="seo-heading">Controlled Procedurality — How a Maze Generator Became a Level Design System</h1>
@@ -45,19 +80,37 @@
       <h2 id="overview">01 Overview</h2>
       <p>I set out to build a maze generator in Houdini. It didn't stay one — and it was never really about finding the shortest path between two points anyway. A maze-solving algorithm does that in a page of code. What I ended up building is a modular system where abstractions describe <em>rules</em> for how a maze — or any level — gets assembled, and every stage of that assembly supports both randomization and manual placement.</p>
 
-      <!-- TODO: replace src with a real short looping clip (GIF-style, muted, 5-10s) cycling through the generator's own preview/visualization modes in Houdini -- Module, Gameplay, and Props placement debug boxes -- for one generated maze. If the real clip covers something narrower (e.g. only one domain), update the caption below to match. -->
+      <!-- TODO: this slider ships with 4 example slots for Houdini's own debug/visualization views (topology, Visualization Primitives, Preview Source, Index Guide -- see ARCHITECTURE.md §9). If you prepared a different number of images or different views, add/remove <img data-slide> entries below to match and adjust the alt/data-caption text per slide -- the slider JS adapts to however many slides are present. -->
       <figure class="media-frame">
-        <video autoplay loop muted playsinline>
-          <source src="/public/media/posts/controlled-procedurality/houdini-preview-modes-placeholder.mp4" type="video/mp4">
-        </video>
-        <figcaption class="media-caption">FIG 01 — Cycling through the generator's own preview/visualization modes inside Houdini, one generated maze. Debug view: yes — these are the authoring-time preview boxes, not final art.</figcaption>
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Topology debug -- rooms, DFS corridors, entry/exit" src="/public/media/posts/controlled-procedurality/houdini-debug-topology-placeholder.png" alt="Houdini topology debug view -- rooms, DFS corridors, entry and exit" loading="lazy">
+            <img data-slide data-caption="Visualization Primitives -- oriented debug boxes per placement" src="/public/media/posts/controlled-procedurality/houdini-debug-visualization-primitives-placeholder.png" alt="Houdini Visualization Primitives debug view -- oriented boxes per structural/gameplay/prop placement" loading="lazy" hidden>
+            <img data-slide data-caption="Preview Source -- real mesh substituted for the debug box" src="/public/media/posts/controlled-procedurality/houdini-debug-preview-source-placeholder.png" alt="Houdini Preview Source debug view -- real mesh standing in for the abstract debug box" loading="lazy" hidden>
+            <img data-slide data-caption="Index Guide -- point/anchor index overlay" src="/public/media/posts/controlled-procedurality/houdini-debug-index-guide-placeholder.png" alt="Houdini Index Guide debug view -- point and anchor index overlay" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous debug view">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next debug view">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 01 — The generator's own debug/visualization views inside Houdini, one generated maze. Debug view: yes — these are authoring-time views, not final art.</figcaption>
       </figure>
 
-      <!-- TODO: replace src with a real short looping clip of the same generated layout above, now placed and running in Unreal. If the layout shown differs from the Houdini clip, adjust the caption instead of claiming "the same maze." -->
+      <!-- TODO: this slider ships with 2 example slots for the same generated layout running in Unreal. Add/remove <img data-slide> entries to match how many shots you prepared, and adjust data-caption/alt text per slide. -->
       <figure class="media-frame">
-        <video autoplay loop muted playsinline>
-          <source src="/public/media/posts/controlled-procedurality/unreal-maze-placeholder.mp4" type="video/mp4">
-        </video>
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="The generated layout running in Unreal" src="/public/media/posts/controlled-procedurality/unreal-maze-view-01-placeholder.png" alt="The same generated layout, cooked into Unreal and running in-engine" loading="lazy">
+            <img data-slide data-caption="Same layout, different angle" src="/public/media/posts/controlled-procedurality/unreal-maze-view-02-placeholder.png" alt="The same generated layout in Unreal, seen from a different angle" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous view">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next view">NEXT ›</button>
+          </div>
+        </div>
         <figcaption class="media-caption">FIG 02 — The same generated layout, cooked into Unreal and running in-engine. Debug view: none — final placement output, not the Houdini authoring view.</figcaption>
       </figure>
 
@@ -446,5 +499,34 @@
     </div>
   </div>
   <script src="/scripts/article-page.js?v=14"></script>
+  <script>
+    (function () {
+      document.querySelectorAll('[data-slider]').forEach(function (slider) {
+        var slides = Array.prototype.slice.call(slider.querySelectorAll('[data-slide]'));
+        if (!slides.length) return;
+        var label = slider.querySelector('[data-slider-label]');
+        var prevBtn = slider.querySelector('[data-slider-prev]');
+        var nextBtn = slider.querySelector('[data-slider-next]');
+        var index = 0;
+        function render() {
+          slides.forEach(function (img, i) { img.hidden = i !== index; });
+          if (label) {
+            var n = String(index + 1).padStart(2, '0');
+            var total = String(slides.length).padStart(2, '0');
+            label.textContent = n + ' / ' + total + ' — ' + (slides[index].dataset.caption || '');
+          }
+        }
+        if (prevBtn) prevBtn.addEventListener('click', function () {
+          index = (index - 1 + slides.length) % slides.length;
+          render();
+        });
+        if (nextBtn) nextBtn.addEventListener('click', function () {
+          index = (index + 1) % slides.length;
+          render();
+        });
+        render();
+      });
+    })();
+  </script>
 </body>
 </html>
