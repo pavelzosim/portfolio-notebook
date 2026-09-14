@@ -118,6 +118,26 @@
         <p>Orthogonal-only walls are a deliberate scope constraint, not an unfinished corner. Angled/non-orthogonal geometry is deferred until the rule system underneath is proven — not implemented and hidden.</p>
       </div>
 
+      <div class="atlas-callout atlas-callout--note">
+        <p>Every object in the views above — wall, room, door, prop — is placed by rule, not hand-drawn. But procedural here doesn't mean hands-off: the same rule that scatters an object randomly can just as easily take a manual entry instead — swap one wall module for a specific pick, insert a specific object at a specific point, override a single column's pattern. Manual and random are two settings on the same system, not two different systems. The module manually placed this way doesn't have to be decorative, either — a hand-inserted entrance in FIG 03 below can just as easily double as a teleport point, some other interaction object, or an alternate route through the same wall. Patterns stack, too: a vertical or cap pattern can run on top of the base scatter, and every pool of variants a rule picks from carries its own weight, so "random" here means weighted-random against an authored pool, not a flat coin flip.</p>
+      </div>
+
+      <!-- TODO: replace src with real before/after captures of the wall vertical override example -- a blank wall run built entirely from window modules, then the same run with one column manually overridden to an entrance module. Update data-caption/alt text if the actual modules shown differ (e.g. a different module name than "entrance"). -->
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Before -- a blank wall run, all window modules" src="/public/media/posts/controlled-procedurality/manual-override-before-placeholder.png" alt="A wall run built entirely from window modules, before any manual override" loading="lazy">
+            <img data-slide data-caption="After -- one column manually overridden to an entrance" src="/public/media/posts/controlled-procedurality/manual-override-after-placeholder.png" alt="The same wall run after manually overriding one column to an entrance module, breaking up the blank window run" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 03 — A blank window wall, then the same run with one column manually overridden to an entrance. Debug view: no — same authoring context as FIG 02.</figcaption>
+      </figure>
+
       <div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
 
       <h2 id="real-maps">02 Borrowing structure from real maps</h2>
@@ -186,7 +206,7 @@
       <!-- TODO: replace src with a real in-game capture (third-person or 3/4 view, final lighting, not a debug view). If the real shot differs from this framing, update the caption's "Debug view" line to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/hero-placeholder.png" alt="A generated level running in the current game build, third-person view, final lighting" loading="lazy">
-        <figcaption class="media-caption">FIG 03 — A generated level from the current build. Debug view: none, final art and lighting. Note the module variety along one straight corridor stretch — same wall abstraction, different variants.</figcaption>
+        <figcaption class="media-caption">FIG 04 — A generated level from the current build. Debug view: none, final art and lighting. Note the module variety along one straight corridor stretch — same wall abstraction, different variants.</figcaption>
       </figure>
 
       <p>That's the layer I built into the generator. A cell is a slot that can carry a zone — shop, action, puzzle — independent of what fills it structurally, and independent of whatever prop rule applies inside it.</p>
@@ -211,7 +231,7 @@
       <!-- TODO: replace src with a real side-by-side capture of a shop/rest cell next to an action cell, in one frame. State plainly whether the shot uses debug geometry or final art if that differs from the caption below. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/zone-rule-split-placeholder.png" alt="A shop-zone cell next to an action-zone cell, same underlying grid, different zone rules" loading="lazy">
-        <figcaption class="media-caption">FIG 04 — Same cell abstraction, two different zone rules, side by side. Note how the shop cell (left) and the action cell (right) read as distinct places without any change to the underlying grid.</figcaption>
+        <figcaption class="media-caption">FIG 05 — Same cell abstraction, two different zone rules, side by side. Note how the shop cell (left) and the action cell (right) read as distinct places without any change to the underlying grid.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 03 THE CELL AS THE UNIT OF INTENT"></div>
@@ -235,7 +255,7 @@
       <!-- TODO: replace src with a real capture of one generated stretch showing both categories at once -- a wall segment or landmark (obstacle) and an enemy/chest/loot spawn (action) in the same frame. If the shot can't show both at once, split it into two frames and adjust the caption below. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/obstacles-actions-placeholder.png" alt="A generated area showing an obstacle -- a wall segment or landmark -- next to an action, such as an enemy or chest spawn" loading="lazy">
-        <figcaption class="media-caption">FIG 05 — Obstacles and actions placed together in one generated stretch. Debug view: none, final art. Note the wall/landmark (obstacle, passive) beside the enemy/chest spawn (action, resolved through Blueprint logic).</figcaption>
+        <figcaption class="media-caption">FIG 06 — Obstacles and actions placed together in one generated stretch. Debug view: none, final art. Note the wall/landmark (obstacle, passive) beside the enemy/chest spawn (action, resolved through Blueprint logic).</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 04 OBSTACLES AND ACTIONS"></div>
@@ -303,7 +323,7 @@
       <!-- TODO: replace src with a real capture of a Room boundary next to an ordinary corridor stretch -- ideally in one frame, so the density/scatter difference reads at a glance. If the real shot only shows one or the other, split into two frames and adjust the caption below. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/room-vs-corridor-placeholder.png" alt="A room with its own dense object scatter next to a plain corridor stretch without one" loading="lazy">
-        <figcaption class="media-caption">FIG 06 — A Room (left) carrying its own unique scatter, next to an ordinary corridor stretch (right) governed only by the ambient rule passing through it. Debug view: none, final art.</figcaption>
+        <figcaption class="media-caption">FIG 07 — A Room (left) carrying its own unique scatter, next to an ordinary corridor stretch (right) governed only by the ambient rule passing through it. Debug view: none, final art.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 06 ROOMS: SPACE WITH INTENT"></div>
@@ -397,13 +417,13 @@
       <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
-        <figcaption class="media-caption">FIG 07 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 08 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
       <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
-        <figcaption class="media-caption">FIG 08 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
+        <figcaption class="media-caption">FIG 09 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
@@ -418,7 +438,7 @@
       <!-- TODO: replace src with a real capture of the actual conflict described above -- a cell where a high-density action rule and a low-density puzzle rule are both active. A raw editor/debug view is fine here since the point is showing the unsolved state, not a finished result. If no such case exists yet to capture, keep this figure out until one does rather than staging a fake one. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/stacked-rule-conflict-placeholder.png" alt="Two stacked rules disagreeing in the same cell -- a high-density action rule against a low-density puzzle rule" loading="lazy">
-        <figcaption class="media-caption">FIG 09 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
+        <figcaption class="media-caption">FIG 10 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
