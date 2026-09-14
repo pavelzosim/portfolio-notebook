@@ -402,7 +402,58 @@
 
       <p>Everything is fast to reconfigure, and supports variation on top of that — through a shader or a Blueprint, whichever fits the object. On the Unreal side, registration happens through one of two paths: a container managing HISM, for anything that repeats structurally, or an individual Blueprint Actor, for anything that needs its own behavior. That split is what keeps a wall variant and a functioning door from having to be the same kind of thing under the hood — the mechanism itself is covered in a separate post: <a href="/post/houdini-unreal-typed-placement-routing/">Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors</a>. I also wrote a Houdini Digital Asset add-on to work with this registration live, which cut iteration time down considerably and got rid of the lag that used to come with editing it directly.</p>
 
-      <p>Above structural placement sits the gameplay layer — rooms, doors, keys, enemies — and it follows the same registration principle end to end, because that principle is the actual foundation of the tool, not a detail specific to walls. Above that sit props: benches, lampposts, whatever fills a space without changing how it plays.</p>
+      <p>Above structural placement sits the gameplay layer — rooms, doors, keys, enemies — and it follows the same registration principle end to end, because that principle is the actual foundation of the tool, not a detail specific to walls. Above that sit props: benches, lampposts, whatever fills a space without changing how it plays. All three sit on the same Register → Scatter pipeline from the schematic above; what changes between them is what gets registered, what the scatter step targets, and how much built-in behavior — if any — comes attached to the result.</p>
+
+      <h3 id="module-domain">Module: the structural basis</h3>
+      <p>Module is the base layer — walls, ceiling, and everything the floor is built from. Registering a module reserves a name for it in the container, and that name is exactly what the scatter step looks up later — nothing gets placed unless it was reserved first. Ground modules come in five mutually exclusive topology types by connection count — I, L, T, U, X — each its own weighted pool of variants, so a straight corridor tile and a four-way crossing never compete for the same pool. Walls split into two kinds: standard panels along a run, and caps at every dead end or opening. Ceiling reuses the exact same five-type registration as the floor, on a per-floor toggle — nothing stops a ceiling module from being a chandelier or a set of stalactites instead of a flat panel; that's a game-design choice, not a limit of the system.</p>
+
+      <!-- TODO: replace src with a real capture of the Module registry/pattern UI, or a wall run showing a clear pattern (e.g. a repeating [A-B] sequence) in the generated level. -->
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/module-pattern-placeholder.png" alt="A wall run showing a clear repeating module pattern, or the Module registry and pattern UI" loading="lazy">
+        <figcaption class="media-caption">FIG 08 — A registered wall pattern running across a floor. Debug view: none, final art.</figcaption>
+      </figure>
+
+      <p>Floors stack, and each enabled floor gets its own height and its own pattern — expressed with the same small grammar, whether it's driving a wall's vertical module sequence or a wall/cap run along one floor:</p>
+
+      <pre class="atlas-code-block" data-language="PATTERN_GRAMMAR"><code>Rigid:              [A], [A-B], [A][B], [A-B-A]
+Rigid (repeated):   [A]3, [A-B]2
+Fill (repeated):    &lt;A&gt;, &lt;A-B&gt;, &lt;A-B-A&gt;
+Variations:         [A*], [B*], &lt;A-B*&gt;, [A*-B]
+Incorrect:          &lt;*&gt;, [*], &lt;A&gt;2, &lt;A&gt;&lt;B&gt;, having no Fill modules
+
+A and B represent Building Modules</code></pre>
+
+      <p>Square brackets pin an exact, rigid sequence; angle brackets repeat and fill whatever space is left. A number after a bracket repeats that block a fixed number of times, and an asterisk pulls from that slot's own weighted variant pool instead of one fixed pick — so a pattern can stay structurally rigid while still varying which exact module fills it every time it runs. Every pattern is overridable on top of that: pick a specific column manually, or let the override roll randomly with its own count — either way it rewrites that one column's module or height sequence without touching the pattern the rest of the wall still follows (the FIG 03 example above is exactly this: a manual override rewriting one column of an otherwise pattern-driven wall).</p>
+
+      <h3 id="gameplay-domain">Gameplay: the same registration, real behavior on top</h3>
+      <p>Doors, chests, keys, traps, enemies, loot, and rooms all register through the identical Module-style entry — pick an abstract type, assign a representation, done. What's different is that the tool itself already knows what each of these types means: a Door checks the reachability guarantee from §05, a Key carries a lock ID, an Enemy spawn carries its own density and pairing rules. Scatter here doesn't walk a wall run — it picks a point on the floor and drops the registered entity there, Manual or Random exactly like everywhere else, including the player's own start point, which is registered the same way as everything else. Density is a first-class option too: nothing stops one cell from spawning several enemy types at once, each with its own variant weighting, instead of exactly one enemy per cell.</p>
+
+      <!-- TODO: replace src with a real capture of the Gameplay Scatter UI (Door/Chest/Key/Enemy tabs) or a generated area showing multiple enemy types/variants scattered in one cell. -->
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/gameplay-scatter-placeholder.png" alt="Multiple enemy types and variants scattered in one generated cell, or the Gameplay Scatter registry UI" loading="lazy">
+        <figcaption class="media-caption">FIG 09 — Gameplay entities scattered by point, not by wall run — several enemy variants in one cell. Debug view: none, final art.</figcaption>
+      </figure>
+
+      <h3 id="props-domain">Props: decoration with no rules attached</h3>
+      <p>Props are the one domain with no registration constraints at all — nothing to reserve, no topology it has to fit. A streetlight, a bench, a poster — anything that fills a scene without changing how it plays — registers freely and scatters directly on top of an already-placed Module surface: wall, floor, or ceiling. The scatter step carries the same Manual/Random/Both choice as everywhere else, plus its own offset, rotation, mesh/material variant, and scale randomization, each on its own seed. And it can be scoped as tightly as it needs to be — restricted to one specific room or biome, or to a single topology type, like only the T-junctions in a floor's corridor network.</p>
+
+      <!-- TODO: replace src with a real capture of Props Scatter output -- e.g. streetlights along a corridor, or a topology-filtered prop (like something placed only at T-junctions). -->
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/props-scatter-placeholder.png" alt="Streetlights or another decorative prop scattered along a generated corridor, filtered to a specific topology type" loading="lazy">
+        <figcaption class="media-caption">FIG 10 — Props layered on top of Module surfaces, filtered to a specific topology type. Debug view: none, final art.</figcaption>
+      </figure>
+
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th></th><th>Module</th><th>Gameplay</th><th>Props</th></tr></thead>
+          <tbody>
+            <tr><td>Covers</td><td>Walls, caps, ground, ceiling</td><td>Room, Door, Chest, Trap, Enemy, Loot, Key</td><td>Streetlights, benches, decals — anything decorative</td></tr>
+            <tr><td>Scatter targets</td><td>Cell / column, by topology type</td><td>A point on the floor</td><td>A Module surface — wall, floor, or ceiling</td></tr>
+            <tr><td>Built-in behavior</td><td>None — pure geometry</td><td>Domain rules baked in (reachability, lock/key, density)</td><td>None — pure decoration</td></tr>
+            <tr><td>Representation</td><td>Container/HISM or Blueprint Actor</td><td>Container/HISM or Blueprint Actor</td><td>Container/HISM or Blueprint Actor</td></tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="atlas-section-break" data-index="// § 07 WHY IT'S BUILT THIS WAY"></div>
 
@@ -416,13 +467,13 @@
       <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
-        <figcaption class="media-caption">FIG 08 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 11 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
       <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
-        <figcaption class="media-caption">FIG 09 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
+        <figcaption class="media-caption">FIG 12 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
@@ -437,7 +488,7 @@
       <!-- TODO: replace src with a real capture of the actual conflict described above -- a cell where a high-density action rule and a low-density puzzle rule are both active. A raw editor/debug view is fine here since the point is showing the unsolved state, not a finished result. If no such case exists yet to capture, keep this figure out until one does rather than staging a fake one. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/stacked-rule-conflict-placeholder.png" alt="Two stacked rules disagreeing in the same cell -- a high-density action rule against a low-density puzzle rule" loading="lazy">
-        <figcaption class="media-caption">FIG 10 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
+        <figcaption class="media-caption">FIG 13 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
