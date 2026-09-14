@@ -165,19 +165,32 @@
       <figure class="atlas-schematic">
         <figcaption class="atlas-schematic__header">REACHABILITY GUARANTEE — KEY → PATH → GATED DOOR</figcaption>
         <div class="atlas-schematic__canvas">
-          <svg viewBox="0 0 580 160" style="font-size:19px" role="img" aria-labelledby="reachTitle reachDesc" xmlns="http://www.w3.org/2000/svg">
-            <title id="reachTitle">Reachability chain from a key to its gated door</title>
-            <desc id="reachDesc">A left-to-right chain: a Key, then a path connecting it, then a gated Door, illustrating that the key always sits somewhere reachable before the door has to be crossed.</desc>
+          <svg viewBox="0 0 640 280" role="img" aria-labelledby="reachTitle reachDesc" xmlns="http://www.w3.org/2000/svg">
+            <title id="reachTitle">Reachability chain from a key to its gated door along a winding corridor</title>
+            <desc id="reachDesc">A winding corridor drawn as a line with four right-angle turns, from the player's start position, through a key placed along the way, to a gated door at the far end, with a locked area beyond the door that the key/door pair blocks off.</desc>
 
-            <circle class="atlas-schematic__primary" fill="none" cx="70" cy="85" r="36"/>
-            <text class="atlas-schematic__label" x="70" y="91" text-anchor="middle" style="font-size:13px">KEY</text>
+            <rect class="atlas-schematic__secondary" fill="none" x="605" y="30" width="30" height="80"/>
+            <text class="atlas-schematic__label" x="620" y="21" text-anchor="middle" style="font-size:11px">LOCKED</text>
 
-            <line class="atlas-schematic__secondary" x1="106" y1="85" x2="410" y2="85"/>
-            <text class="atlas-schematic__label" x="258" y="63" text-anchor="middle" style="font-size:11px">PATH — always reachable first</text>
+            <path class="atlas-schematic__primary" fill="none" d="M40,220 L160,220 L160,110 L320,110 L320,220 L460,220 L460,70 L590,70" marker-end="url(#arrowReach)"/>
 
-            <rect class="atlas-schematic__critical" fill="none" x="410" y="50" width="150" height="70"/>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="485" y="92" text-anchor="middle" style="font-size:13px">DOOR</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="485" y="111" text-anchor="middle" style="font-size:11px">gated</text>
+            <line class="atlas-schematic__critical" x1="596" y1="48" x2="596" y2="92" stroke-width="3"/>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="596" y="36" text-anchor="middle" style="font-size:13px">DOOR</text>
+            <text class="atlas-schematic__label atlas-schematic__label--critical" x="596" y="107" text-anchor="middle" style="font-size:11px">gated</text>
+
+            <circle class="atlas-schematic__primary" cx="40" cy="220" r="8" fill="var(--atlas-ink)"/>
+            <text class="atlas-schematic__label" x="40" y="248" text-anchor="middle" style="font-size:13px">PLAYER</text>
+
+            <circle class="atlas-schematic__primary" cx="240" cy="110" r="7" fill="var(--atlas-ink)"/>
+            <text class="atlas-schematic__label" x="240" y="93" text-anchor="middle" style="font-size:13px">KEY</text>
+
+            <text class="atlas-schematic__label" x="390" y="245" text-anchor="middle" style="font-size:11px">PATH — always reachable first</text>
+
+            <defs>
+              <marker id="arrowReach" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/>
+              </marker>
+            </defs>
           </svg>
         </div>
         <div class="atlas-schematic__note">
