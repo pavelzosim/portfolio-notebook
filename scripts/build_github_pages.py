@@ -37,6 +37,25 @@ def add_noindex(document: str) -> str:
     )
 
 
+def add_clock(document: str) -> str:
+    if "data-clock" not in document:
+        document = re.sub(
+            r"SYS\.ONLINE / UTC\+3",
+            r'SYS.ONLINE / UTC+3 <span class="clock" data-clock aria-hidden="true">--:--</span>',
+            document,
+            count=1,
+        )
+    if "live-clock.js" in document:
+        return document
+    return re.sub(
+        r"</head>",
+        '<script src="/scripts/live-clock.js?v=1" defer></script></head>',
+        document,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+
+
 def add_favicon(document: str) -> str:
     if 'rel="icon"' in document or "rel='icon'" in document:
         return document
@@ -161,6 +180,7 @@ def transform_site(base_path: str, noindex: bool) -> None:
         text = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html":
             text = add_favicon(text)
+            text = add_clock(text)
             text = add_analytics(text)
             relative = path.relative_to(OUTPUT).as_posix()
             if noindex or relative.startswith("content/templates/") or relative in {"404.html", "blog/style-guide/index.html"}:
