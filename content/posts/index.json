@@ -243,15 +243,15 @@
         "houdini",
         "unreal"
       ],
-      "image": "/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png",
+      "image": "/public/media/posts/controlled-procedurality/unreal-maze-aerial.jpg",
       "localPath": "/content/posts/atlas-html/controlled-procedurality.html",
       "sourceUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
       "state": "published",
       "publicUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
       "slug": "controlled-procedurality",
-      "imageAlt": "Large procedurally generated level built from cell-based rules, cooked through Houdini into Unreal",
+      "imageAlt": "Aerial view of the generated modular city layout in Unreal Editor",
       "datePublished": "2026-09-08",
-      "dateModified": "2026-09-08",
+      "dateModified": "2026-09-15",
       "indexable": true
     },
     {
