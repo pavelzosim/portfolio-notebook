@@ -9,7 +9,12 @@ ICO_OUTPUT = ROOT / "favicon.ico"
 
 DARK = "#171827"
 CYAN = "#00e5d4"
-PNG_SIZES = (16, 32, 48, 180, 512)
+# Only the sizes actually referenced by a <link> tag (see add_favicon() in
+# build_github_pages.py) get saved as standalone PNGs. 512 is generated only
+# as the in-memory master to downsample the rest from -- keep it out of
+# PNG_SIZES so a rerun doesn't leave an unreferenced file behind.
+MASTER_SIZE = 512
+PNG_SIZES = (16, 32, 180)
 ICO_SIZES = ((16, 16), (32, 32), (48, 48))
 
 
@@ -58,10 +63,10 @@ def square_icon(size: int, mark: Image.Image) -> Image.Image:
 def main() -> None:
     BRAND_DIR.mkdir(parents=True, exist_ok=True)
     mark = letters_mark()
-    largest = square_icon(512, mark)
+    largest = square_icon(MASTER_SIZE, mark)
 
     for size in PNG_SIZES:
-        icon = largest.resize((size, size), Image.Resampling.LANCZOS) if size != 512 else largest
+        icon = largest.resize((size, size), Image.Resampling.LANCZOS)
         out = BRAND_DIR / f"favicon-{size}.png"
         icon.save(out, "PNG", optimize=True)
         print(f"Built {out} ({size}x{size})")

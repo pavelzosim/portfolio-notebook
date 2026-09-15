@@ -129,9 +129,6 @@ def materialize_post_routes() -> list[dict]:
     source_documents = OUTPUT / "content" / "posts" / "atlas-html"
     if source_documents.exists():
         shutil.rmtree(source_documents)
-    obsolete_template = OUTPUT / "content" / "templates" / "atlas-post.html"
-    if obsolete_template.exists():
-        obsolete_template.unlink()
     registry_path.write_text(json.dumps(registry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     return records
 
