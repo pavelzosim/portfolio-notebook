@@ -22,6 +22,35 @@
 .doc-head { padding-bottom: 18px; }
 .doc-flags { margin: 10px 0 10px; }
 
+.wire-block {
+  margin: 0 0 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.wire-wrap { width: 170px; height: 170px; }
+#wireCanvas { width: 170px; height: 170px; display: block; cursor: grab; }
+#wireCanvas:active { cursor: grabbing; }
+.wire-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--atlas-ink-faint);
+}
+.wire-meta #shapeName { color: var(--ink); font-weight: 500; }
+
+.hero-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+.hero-text { min-width: 0; }
+
 .doc-head h1 {
   max-width: 720px;
   margin: 0 0 4px;
@@ -46,18 +75,45 @@
   text-transform: none;
 }
 
-.scope-line { margin: 0 0 10px; color: var(--atlas-ink-muted); font-size: 9px; }
+.scope-line { margin: 0 0 6px; color: var(--atlas-ink-muted); font-size: 9px; }
+.tagline-mark { margin: 0 0 10px; color: var(--red); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .doc-head .abstract { max-width: 58ch; margin: 0 0 10px; color: var(--atlas-ink-soft); font: 13px/1.5 var(--mono); }
+
+.hero-cta {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid var(--atlas-border);
+  background: transparent;
+  color: var(--atlas-accent);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.hero-cta:hover, .hero-cta:focus-visible { background: var(--atlas-bg-alt); }
+.hero-cta:active { transform: translateY(1px); }
+
+.profile-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+.profile-row .hero-cta { flex: 0 0 auto; display: flex; align-items: center; }
 
 .profile-facts {
   display: flex;
+  flex: 1 1 320px;
   flex-wrap: wrap;
-  margin: 0 0 14px;
+  margin: 0;
   border: 1px solid var(--line);
   background: var(--atlas-bg-panel);
 }
 .profile-facts div {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   display: flex;
   align-items: baseline;
   gap: 5px;
@@ -65,42 +121,32 @@
   border: 0;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  white-space: nowrap;
 }
 .profile-facts div:nth-last-child(-n + 2) { border-bottom: 0; }
 .profile-facts div:nth-child(2n) { border-right: 0; }
 .profile-facts dt { margin: 0; color: var(--atlas-ink-faint); font-size: 9px; white-space: nowrap; }
-.profile-facts dd { margin: 0; font-size: 10px; }
+.profile-facts dd { margin: 0; font-size: 10px; white-space: nowrap; }
 
-.media-record {
-  display: block;
-  margin: 0 0 14px;
+.hero-video {
+  margin: 0;
   border: 1px solid var(--line2);
   background: var(--atlas-bg-sunken);
 }
-.media-record video {
+.hero-video video {
+  display: block;
   width: 100%;
-  max-height: none;
   aspect-ratio: 16 / 9;
   object-fit: contain;
   background: #1a1816;
 }
-.media-record figcaption {
-  min-height: 0;
-  padding: 10px 14px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 3px 16px;
-  border: 0;
-  border-top: 1px solid var(--line);
-}
-.media-record figcaption span { grid-column: 1 / -1; }
-.media-record figcaption small { text-align: right; }
 
 @media (min-width: 761px) {
   .profile-facts div:nth-child(n) { border-bottom: 0; }
   .profile-facts div:not(:last-child) { border-right: 1px solid var(--line); }
   .profile-facts div:nth-child(2n) { border-right: 1px solid var(--line); }
   .profile-facts div:last-child { border-right: 0; }
+  .hero-row { grid-template-columns: 1fr 1.15fr; gap: 22px; }
 }
 
 @media (max-width: 760px) {
@@ -108,6 +154,4 @@
   .profile-facts div { flex-basis: 100%; border-right: 0; }
   .profile-facts div:nth-last-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .profile-facts div:last-child { border-bottom: 0; }
-  .media-record figcaption { grid-template-columns: 1fr; gap: 4px; }
-  .media-record figcaption small { text-align: left; }
 }

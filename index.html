@@ -36,6 +36,7 @@
   <script src="/scripts/tools-content.js?v=4" defer></script>
   <script src="/scripts/section-actions.js?v=1" defer></script>
   <script src="/scripts/gumroad-shelf.js?v=1" defer></script>
+  <script src="/scripts/wireframe-shape.js?v=1" defer></script>
 </head>
 <body>
   <a class="skip" href="#content">Skip to content</a>
@@ -54,6 +55,10 @@
 
   <div class="workspace" id="top">
     <aside class="rail" aria-label="Document contents">
+      <div class="wire-block" aria-hidden="true">
+        <div class="wire-wrap"><canvas id="wireCanvas" width="400" height="400"></canvas></div>
+        <div class="wire-meta"><span id="shapeName">—</span></div>
+      </div>
       <p class="rail-title">CONTENTS.md</p>
       <ol>
         <li><a href="#overview"><span>01</span><b>Overview</b></a></li>
@@ -77,21 +82,27 @@
       <section class="doc-head" id="overview">
         <div class="breadcrumb">/home/pavel/technical-art/index.md</div>
         <div class="doc-flags"><span>STATUS: MAINTAINED</span><span>REV: 2026.08</span></div>
-        <h1><span class="title-name">Pavel Zosim</span><span class="title-role">Technical Artist / realtime systems</span></h1>
-        <p class="scope-line">ENGINE-AGNOSTIC REAL-TIME SYSTEMS / HARDWARE-AWARE R&amp;D</p>
-        <p class="abstract">Technical Artist with 6+ years in real-time production and nearly two decades in computer graphics. I work across Houdini, Unity, Unreal, and proprietary engines — building scalable systems that bridge art and engineering: shaders, procedural workflows, VFX, asset pipelines, and tools that stay performant and practical day to day.</p>
-        <dl class="profile-facts">
-          <div><dt>Exp</dt><dd>6+ yr RT · ~20 yr CG</dd></div>
-          <div><dt>Stack</dt><dd>Houdini · Unity · Unreal</dd></div>
-          <div><dt>Loc</dt><dd>Chișinău · UTC+3</dd></div>
-          <div><dt>Status</dt><dd><span>●</span> Open to collaborate</dd></div>
-        </dl>
-        <figure class="media-record">
-          <video controls muted preload="metadata" playsinline aria-label="Pavel Zosim technical art demo reel">
-            <source src="/public/media/home/home/asset-80ec1ae328b8d595.mp4" type="video/mp4">
-          </video>
-          <figcaption><span>MEDIA / DEMO_REEL.MP4</span><strong>Selected real-time VFX, simulations, and production work.</strong><small>play on demand</small></figcaption>
-        </figure>
+        <div class="hero-row">
+          <div class="hero-text">
+            <h1><span class="title-name">Pavel Zosim</span><span class="title-role">Technical Artist / realtime systems</span></h1>
+            <p class="tagline-mark">code × art → automate</p>
+            <p class="abstract">Technical Artist with 6+ years in real-time production and nearly two decades in computer graphics. I work across Houdini, Unity, Unreal, and other proprietary engines — building real-time VFX, shaders, and procedural pipeline tools that bridge art and engineering.</p>
+          </div>
+          <figure class="hero-video">
+            <video controls muted preload="metadata" playsinline poster="/public/media/brand/pavel-zosim-brand-source.png" aria-label="Pavel Zosim technical art demo reel — selected real-time VFX, simulations, and production work">
+              <source src="/public/media/home/home/asset-80ec1ae328b8d595.mp4" type="video/mp4">
+            </video>
+          </figure>
+        </div>
+        <div class="profile-row">
+          <dl class="profile-facts">
+            <div><dt>Exp</dt><dd>6+ yr RT · ~20 yr CG</dd></div>
+            <div><dt>Stack</dt><dd>Houdini · Unity · Unreal</dd></div>
+            <div><dt>Loc</dt><dd>Chișinău · UTC+3</dd></div>
+            <div><dt>Status</dt><dd><span>●</span> Open to collaborate</dd></div>
+          </dl>
+          <a class="hero-cta" href="mailto:pavel.zosim@protonmail.com">✉ Write a message</a>
+        </div>
         <form class="command" id="searchForm" role="search">
           <label for="siteSearch"><span>$</span> grep -Ri</label>
           <input id="siteSearch" type="search" autocomplete="off" placeholder="notes, projects, tags…" aria-describedby="searchResult">
