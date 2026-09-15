@@ -27,7 +27,10 @@ SLIDE_RE = re.compile(
     r'[^>]*>(.*?)</a>'
 )
 PRICE_RE = re.compile(r'product:price:amount"\s+content="([\d.]+)"')
-PRICE_CENTS_RE = re.compile(r"price_cents&quot;:(\d+)")
+# Matches the product's own "price_cents" key, not lookalikes such as
+# "buyer_local_price_cents" (a locale-dependent currency conversion that
+# varies with the requester's IP) or "rental_price_cents".
+SUGGESTED_PRICE_CENTS_RE = re.compile(r"(?<![A-Za-z0-9_])suggested_price_cents&quot;:(\d+)")
 SALES_RE = re.compile(r"sales_count&quot;:(\d+)")
 
 
@@ -40,8 +43,8 @@ def fetch_product(url: str) -> tuple[str | None, int | None]:
     price_match = PRICE_RE.search(html)
     if price_match:
         price = float(price_match.group(1))
-        tiers = {int(value) for value in PRICE_CENTS_RE.findall(html)}
-        label = f"€{price:g}" + ("+" if len(tiers) > 1 else "")
+        has_suggested_price = bool(SUGGESTED_PRICE_CENTS_RE.search(html))
+        label = f"€{price:g}" + ("+" if has_suggested_price else "")
 
     # Gumroad only publishes sales_count when the seller has "show sales
     # count" enabled for that product; it's null (no digits) otherwise.
