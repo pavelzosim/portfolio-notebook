@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Controlled Procedurality — How a Maze Generator Became a Level Design System · Pavel Zosim</title>
-  <meta name="description" content="A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.">
+  <meta name="description" content="Procedural environment generation and level design in Houdini and Unreal: modular structures, prop scatter, lighting, and gameplay placement driven by authored rules.">
   <link rel="canonical" href="https://www.pavelzosim.com/post/controlled-procedurality/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="Controlled Procedurality — How a Maze Generator Became a Level Design System">
-  <meta property="og:description" content="A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.">
+  <meta property="og:description" content="Procedural environment generation and level design in Houdini and Unreal: modular structures, prop scatter, lighting, and gameplay placement driven by authored rules.">
   <meta property="og:url" content="https://www.pavelzosim.com/post/controlled-procedurality/">
   <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/controlled-procedurality/unreal-maze-aerial.jpg">
   <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/controlled-procedurality/unreal-maze-aerial.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Controlled Procedurality — How a Maze Generator Became a Level Design System">
-  <meta name="twitter:description" content="A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Controlled Procedurality — How a Maze Generator Became a Level Design System","description":"A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.","url":"https://www.pavelzosim.com/post/controlled-procedurality/","mainEntityOfPage":"https://www.pavelzosim.com/post/controlled-procedurality/","image":"https://www.pavelzosim.com/public/media/posts/controlled-procedurality/unreal-maze-aerial.jpg","datePublished":"2026-09-08","dateModified":"2026-09-15","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <meta name="twitter:description" content="Procedural environment generation and level design in Houdini and Unreal: modular structures, prop scatter, lighting, and gameplay placement driven by authored rules.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Controlled Procedurality — How a Maze Generator Became a Level Design System","description":"Procedural environment generation and level design in Houdini and Unreal: modular structures, prop scatter, lighting, and gameplay placement driven by authored rules.","url":"https://www.pavelzosim.com/post/controlled-procedurality/","mainEntityOfPage":"https://www.pavelzosim.com/post/controlled-procedurality/","image":"https://www.pavelzosim.com/public/media/posts/controlled-procedurality/unreal-maze-aerial.jpg","datePublished":"2026-09-08","dateModified":"2026-09-15","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
   <link rel="stylesheet" href="/styles/atlas.css?v=60">
   <link rel="stylesheet" href="/styles/posts.css?v=18">
   <style>
@@ -79,6 +79,8 @@
 
       <h2 id="overview">01 Overview</h2>
       <p>I set out to build a maze generator in Houdini. It didn't stay one — and it was never really about finding the shortest path between two points anyway. Finding a path through a maze is a different problem from deciding what the player encounters along it. What I ended up building is a modular system where abstractions describe <em>rules</em> for how a maze — or any level — gets assembled, and every stage of that assembly supports both randomization and manual placement.</p>
+
+      <p>This is also a <b>procedural environment generation</b> pipeline. Structural modules assemble walls, floors, ceilings, and building facades; prop scatter adds objects such as streetlights, benches, and snow; Unreal-side rules layer lighting and other details onto the placed instances. Zone and gameplay rules give those spaces a purpose. The same pipeline supports both environment assembly and level design, with manual control over individual placements.</p>
 
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>

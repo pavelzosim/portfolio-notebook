@@ -236,9 +236,10 @@
       "title": "Controlled Procedurality — How a Maze Generator Became a Level Design System",
       "kind": "article",
       "group": "procedural",
-      "summary": "A modular, rule-based level generator built in Houdini and cooked into Unreal — why it isn't about mazes, how it borrows structure from real map grids and level-pacing patterns, and how it guarantees a locked door is always solvable.",
+      "summary": "Procedural environment generation and level design in Houdini and Unreal: modular structures, prop scatter, lighting, and gameplay placement driven by authored rules.",
       "tags": [
         "procedural",
+        "procedural-environments",
         "level-design",
         "houdini",
         "unreal"
