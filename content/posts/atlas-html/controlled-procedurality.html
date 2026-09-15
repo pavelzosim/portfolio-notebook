@@ -501,10 +501,11 @@ A and B represent Building Modules</code></pre>
       <h3 id="props-domain">Props: decoration with no rules attached</h3>
       <p>Props are the one domain with no registration constraints at all — nothing to reserve, no topology it has to fit. A streetlight, a bench, a poster — anything that fills a scene without changing how it plays — registers freely and scatters directly on top of an already-placed Module surface: wall, floor, or ceiling. The scatter step carries the same Manual/Random/Both choice as everywhere else, plus its own offset, rotation, mesh/material variant, and scale randomization, each on its own seed. And it can be scoped as tightly as it needs to be — restricted to one specific room or biome, or to a single topology type, like only the T-junctions in a floor's corridor network.</p>
 
-      <!-- TODO: replace src with a real capture of Props Scatter output -- e.g. streetlights along a corridor, or a topology-filtered prop (like something placed only at T-junctions). -->
+      <p>A concrete pair from this build: a snow pile prop, carrying two mesh variations, with its Topology Filter narrowed to straight segments only, so it only ever settles along a plain corridor stretch — and a streetlight, filtered the opposite way, to L-corners only, so it only ever stands at a turn. Same registry, same scatter step, two unrelated placement rules living side by side. None of this is unique to ground props, either — Wall Props filter by the same kind of topology (corner, straight, cap), and Manual mode on any of these systems can lock one exact point instead of a whole category, down to a single Anchor Index. Stacked together, that's enough to direct a genuinely deliberate moment — snow gathering only in dead corners, a streetlight only at junctions, one hand-placed prop marking one specific spot — instead of every scene reading like the same generic scatter pass.</p>
+
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/props-scatter-placeholder.png" alt="Streetlights or another decorative prop scattered along a generated corridor, filtered to a specific topology type" loading="lazy">
-        <figcaption class="media-caption">FIG 13 — Props layered on top of Module surfaces, filtered to a specific topology type. Debug view: none, final art.</figcaption>
+        <img src="/public/media/posts/controlled-procedurality/props-snow-streetlight-topology.jpg" alt="A snow pile prop and a streetlight in a generated street, next to the Ground Prop Scatter UI showing their opposite Topology Filters -- straight-only for snow, L-corner-only for the streetlight" loading="lazy">
+        <figcaption class="media-caption">FIG 13 — Snow (straight segments only) and a streetlight (L-corners only), same registry, opposite Topology Filters. Debug view: yes — HDA panel visible alongside the rendered result.</figcaption>
       </figure>
 
       <div class="atlas-table-frame">
