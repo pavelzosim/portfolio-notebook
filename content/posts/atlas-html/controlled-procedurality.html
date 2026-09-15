@@ -78,7 +78,7 @@
       </nav>
 
       <h2 id="overview">01 Overview</h2>
-      <p>I set out to build a maze generator in Houdini. It didn't stay one — and it was never really about finding the shortest path between two points anyway. A maze-solving algorithm does that in a page of code. What I ended up building is a modular system where abstractions describe <em>rules</em> for how a maze — or any level — gets assembled, and every stage of that assembly supports both randomization and manual placement.</p>
+      <p>I set out to build a maze generator in Houdini. It didn't stay one — and it was never really about finding the shortest path between two points anyway. Finding a path through a maze is a different problem from deciding what the player encounters along it. What I ended up building is a modular system where abstractions describe <em>rules</em> for how a maze — or any level — gets assembled, and every stage of that assembly supports both randomization and manual placement.</p>
 
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>
@@ -112,11 +112,9 @@
         <figcaption class="media-caption">FIG 02 — The same generated layout, cooked into Unreal and running in-engine. Debug view: none — final placement output, not the Houdini authoring view.</figcaption>
       </figure>
 
-      <p>Right now, every wall in the demo is a straight 90-degree segment. That's a deliberate constraint, not a corner I haven't gotten to yet. Angled corridors and non-orthogonal geometry mean more junction types to test, more assets to author for each of them, and a wall-building step that has to account for arbitrary angles instead of one fixed grid increment. Orthogonal walls keep the module count small and the placement math simple. Angled geometry is a real option later — once the rule system underneath is proven, not before.</p>
+      <p>The current demo uses straight wall segments meeting at right angles. This keeps the module set and junction rules manageable while I develop the placement system. The next step is non-orthogonal geometry: more complex modules, more flexible placement steps, and wall and floor scatter that can follow the resulting shapes. Section 09 describes that direction.</p>
 
-<div class="atlas-callout atlas-callout--note">
-        <p>Every object in the views above — wall, room, door, prop — is placed by rule, not hand-drawn. But procedural here doesn't mean hands-off: the same rule that scatters an object randomly can just as easily take a manual entry instead — swap one wall module for a specific pick, insert a specific object at a specific point, override a single column's pattern. Manual and random are two settings on the same system, not two different systems. The module manually placed this way doesn't have to be decorative, either — a hand-inserted entrance in FIG 03 below can just as easily double as a teleport point, some other interaction object, or an alternate route through the same wall. Patterns stack, too: a vertical or cap pattern can run on top of the base scatter, and every pool of variants a rule picks from carries its own weight, so "random" here means weighted-random against an authored pool, not a flat coin flip.</p>
-      </div>
+<p>Placement rules accept both random selection and manual entries. In FIG 03, a manual override replaces one wall column with an entrance. Vertical and cap patterns can layer over the base scatter, while weights on the authored variant pools control how often each option is chosen.</p>
 
       <figure class="media-frame">
         <div class="atlas-slider" data-slider>
@@ -136,19 +134,19 @@
       <div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
 
       <h2 id="real-maps">02 Borrowing structure from real maps</h2>
-      <p>Take a real map. It's divided into grid squares, and each of those squares divides again into smaller ones. That's not a metaphor — it's literally how military grid reference systems work: a large square gets a code, and inside it, smaller squares narrow the precision down further, from ten kilometers to one meter, depending on how exact you need to be.</p>
+      <p>A map grid provides a useful model for addressing space. In the <a href="https://earth-info.nga.mil/?action=coordsys&amp;dir=coordsys" target="_blank" rel="noopener">Military Grid Reference System (MGRS)</a>, a grid-zone designation and a 100 km square identifier locate a broad area; paired easting and northing digits refine the reference, down to 1 m with five digits per axis. This describes coordinate precision, not a guarantee of measurement accuracy.</p>
 
       <p>That's one layer: a grid for <em>locating</em> things. It doesn't say anything about what belongs in any given square.</p>
 
-      <p>The second layer is what a level designer adds on top of it. Half-Life 2 is a clean example — its levels aren't laid out as generic "here's an area." Valve's own designers have described the process directly: an initial idea that a stretch of level should contain a puzzle or a combat encounter, checked against what comes immediately before and after to keep the overall pacing right, then corrected against what playtesting actually shows.</p>
+      <p>The second layer is design intent. In an <a href="https://www.interlopers.net/articles/valve-interview-phil-co" target="_blank" rel="noopener">interview with Phil Co</a>, the Valve level designer describes planning puzzle and combat beats in relation to adjacent sections, then revising them through playtesting. His concrete example comes from Half-Life 2: Episode Two, where combat was added near the bridge and car sequence in response to playtest feedback.</p>
 
       <div class="atlas-callout atlas-callout--quote">
-        <p>"We might have an initial idea that we want a certain level to contain a puzzle or combat. We try to look at what comes before and after and keep in mind what we think the overall pacing should be. We learn everything from playtests." — Phil Co, Valve</p>
+        <p>“We might have an initial idea that we want a certain level to contain a puzzle or combat.” — Phil Co, <a href="https://www.interlopers.net/articles/valve-interview-phil-co" target="_blank" rel="noopener">Interlopers interview</a></p>
       </div>
 
-      <p>Resident Evil runs a version of the same idea with different vocabulary. Nearly every game in the series, going back to 1996, uses save rooms — deliberately monster-free spaces that exist purely as a breather. Resident Evil Village layers a shop on top of that same pattern, through The Duke's Emporium — though that's specific to Village. The original RE7 has the save rooms but no merchant.</p>
+      <p>Resident Evil offers another example of pacing through space. In <a href="https://www.pcgamer.com/the-art-of-crafting-the-perfect-videogame-safe-room/" target="_blank" rel="noopener">an interview with PC Gamer</a>, Resident Evil 2 remake director Kazunori Kadoi describes save rooms as relief from sustained tension and as bases for exploration. In Resident Evil Village, <a href="https://blog.playstation.com/2021/01/21/resident-evil-village-maiden-demo-hits-ps5-today/" target="_blank" rel="noopener">Capcom presents the Duke as a merchant</a> for buying, selling, and upgrading weapons. I use those rest and resupply functions as references for a shop zone; a merchant location and a safe room are not automatically the same thing.</p>
 
-      <p>Neither game invented the grid. What both add is a layer of <em>intent</em> on top of spatial subdivision. The same square can be a shop, a fight, or a breather — and a level doesn't need to be built on literal squares at all for that idea to still apply.</p>
+      <p>The connection to my generator is a design analogy: spatial subdivision locates content, while zone rules express its intended role. This does not imply that either game uses my cell model or a literal square grid. For a broader discussion of beats and zones, see <a href="https://book.leveldesignbook.com/process/preproduction/pacing" target="_blank" rel="noopener">The Level Design Book: Pacing</a>.</p>
 
       <figure class="atlas-schematic">
         <figcaption class="atlas-schematic__header">TWO LAYERS OVER ONE GRID — LOCATION VS. INTENT</figcaption>
@@ -176,9 +174,9 @@
             <line class="atlas-schematic__primary" x1="365" y1="90" x2="365" y2="130"/>
             <line class="atlas-schematic__primary" x1="485" y1="90" x2="485" y2="130"/>
             <text class="atlas-schematic__label" x="365" y="60" text-anchor="middle" style="font-size:13px">SHOP</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="495" y="60" text-anchor="middle" style="font-size:13px">ACTION</text>
+            <text class="atlas-schematic__label" x="495" y="60" text-anchor="middle" style="font-size:13px">ACTION</text>
             <text class="atlas-schematic__label" x="365" y="170" text-anchor="middle" style="font-size:13px">BREATHER</text>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="495" y="170" text-anchor="middle" style="font-size:13px">ACTION</text>
+            <text class="atlas-schematic__label" x="495" y="170" text-anchor="middle" style="font-size:13px">ACTION</text>
             <text class="atlas-schematic__label" x="430" y="220" text-anchor="middle" style="font-size:12.5px">INTENT — DECIDES ROLE</text>
 
             <line class="atlas-schematic__leader" x1="245" y1="110" x2="313" y2="110" marker-end="url(#arrowIntent)"/>
@@ -190,7 +188,7 @@
           </svg>
         </div>
         <div class="atlas-schematic__legend">
-          <div><b>Same subdivision, two jobs</b><span>The grid on the left only says where a square is, the same way an MGRS reference narrows a location without describing it. The grid on the right is identical, but each square now carries a design role — the layer Half-Life 2 and Resident Evil each add on top of their own spatial subdivision.</span></div>
+          <div><b>Same subdivision, two jobs</b><span>The same illustrative floor plan appears twice: first as connected spaces, then with intended roles assigned. This is my conceptual model, not a map from Half-Life 2 or Resident Evil and not a diagram of the MGRS standard.</span></div>
         </div>
       </figure>
 
@@ -346,13 +344,13 @@
         </div>
       </figure>
 
-      <p>It's the same shape Resident Evil's map design has used since 1996, sometimes analyzed as "recursive unlocking": find a key, it opens a room, that room holds the next key, and the building opens up like a spiral. The difference is that in RE, that structure is hand-authored, room by room, by a level designer. Here, the same shape is a formal rule, checked automatically every time the layout regenerates.</p>
+      <p>A useful comparison is Chris Pruett’s <a href="https://horror.dreamdawn.com/?p=81213" target="_blank" rel="noopener">analysis of “Recursive Unlocking”</a>: returning to earlier areas with newly acquired items gradually opens more of Resident Evil’s mansion. His analysis follows a Resident Evil: Director’s Cut speedrun in Arrange Mode. It describes a traversal pattern, rather than documenting Capcom’s generation algorithm or the behavior of a typical first-time player. My system applies a related dependency principle to generated layouts.</p>
 
-      <p>Door and key is also just the current skin on it. The same guarantee holds for a hammer that breaks through a wall, a lever, a button that lowers a bridge over a moat — whatever the obstacle and whatever resolves it, the underlying rule doesn't change: never place the resolution somewhere the player can't reach first.</p>
+      <p>The same dependency principle could support a hammer and breakable wall, a lever, or a button-controlled bridge: the player must be able to reach the means of opening a route before that route is required. Those are possible extensions of the lock/key model, not additional mechanics demonstrated here.</p>
 
       <p>The generation rule and the debug display have different jobs. The rule requires a matching key to be reachable before its locked door must be crossed. Matching indices establish which door a key opens; reachability also depends on the layout's connections and which gates are still closed at that point in the progression.</p>
 
-      <p>The debug view below helps inspect the generated result. It overlays the Entry → Exit progression route and color-coded Key/Door pair connections, making unexpected pairings easier to spot. A line connecting a key to a door does not, by itself, prove that the player can reach the key. That guarantee comes from the generation logic operating on the layout graph; the overlay is a diagnostic view of its output.</p>
+      <p>The debug view below helps inspect the generated result. It overlays the Entry → Exit progression route and color-coded Key/Door pair connections, making unexpected pairings easier to spot. A line connecting a key to a door does not, by itself, prove that the player can reach the key. That guarantee comes from the generation logic operating on the layout graph; the overlay is a diagnostic view of its output. This is a graph-level guarantee: collision, navigation, and interaction behavior in Unreal still need to preserve those connections and be tested in-engine.</p>
 
       <!-- These two are from the same earlier prototype as the Gameplay scatter figure above (not the 3.4 HDA covered elsewhere in this post) -- used here because the Key/Door path debug view happened to be captured there. Replace with a matching pair from the 3.4 build if/when convenient. -->
       <figure class="media-frame">
@@ -373,7 +371,7 @@
       <div class="atlas-section-break" data-index="// § 05 A GUARANTEE, NOT A COINCIDENCE"></div>
 
       <h2 id="rooms">06 Rooms: space with intent</h2>
-      <p>A room is a separate abstraction — an n-dimensional, definable area. It might be a hall between corridors, or a whole biome. What makes it a room instead of leftover space is that it carries its own unique scatter of objects, distinct from whatever rules govern the corridor around it.</p>
+      <p>A room is a separate abstraction — a defined region with its own placement rules. It might be a hall between corridors, or a whole biome. What makes it a room instead of leftover space is that it carries its own unique scatter of objects, distinct from whatever rules govern the corridor around it.</p>
 
       <div class="comparison-matrix">
         <div class="comp-col">
@@ -400,7 +398,7 @@
             <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
           </div>
         </div>
-        <figcaption class="media-caption">FIG 08 — A playground scattered only into Room-type cells, next to an aerial view of several Room cells inside one courtyard block. Debug view: first slide yes (HDA panel), second no (final art).</figcaption>
+        <figcaption class="media-caption">FIG 08 — A playground scattered only into Room-type cells, next to an aerial view of several Room cells inside one courtyard block. Debug view: first slide yes (HDA panel), second shows the in-engine work in progress.</figcaption>
       </figure>
 
       <p>Room isn't just a density flag, either — its own Room Type is a registered category (treasure, boss, regular, and so on, the same registration pattern as everywhere else), and that type is what other systems key their spawn rules off: a boss enemy set to spawn only in boss-type rooms, a specific reward or key set to only ever land in a treasure-type room, all through the same Manual/Random/Both choice as everywhere else. The same idea reaches into a room's own interior, too — specific cells inside it can carry their own spawn rules, and the walls bounding it can pull from a room- or biome-specific set of decals and wall variants instead of the level's general pool.</p>
@@ -430,7 +428,7 @@
       <ol>
         <li>Register the entity — wall, room, whatever it is.</li>
         <li>Assign it a ruleset.</li>
-        <li>Scatter it. Every scatter is one of three modes: manual, random, or a pattern-driven mix — wall A duplicated X times at a fixed step, for instance.</li>
+        <li>Scatter it. Scatter modes are Manual, Random, and Both. Where supported, patterns additionally control module sequences and repetition — wall A repeated X times at a fixed step, for instance.</li>
       </ol>
 
       <figure class="atlas-schematic">
@@ -469,20 +467,20 @@
 
             <line class="atlas-schematic__primary" x1="450" y1="75" x2="483" y2="75" marker-end="url(#arrowPipe)"/>
 
-            <rect class="atlas-schematic__critical" fill="none" x="485" y="20" width="200" height="110"/>
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="585" y="38" text-anchor="middle" style="font-size:13px">SCATTER</text>
+            <rect class="atlas-schematic__primary" fill="none" x="485" y="20" width="200" height="110"/>
+            <text class="atlas-schematic__label" x="585" y="38" text-anchor="middle" style="font-size:13px">SCATTER</text>
 
-            <rect x="510" y="54" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="545" y="62" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="580" y="52" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="615" y="70" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="650" y="58" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="522" y="88" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="560" y="94" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="600" y="86" width="6" height="6" fill="var(--atlas-crit)"/>
-            <rect x="638" y="80" width="6" height="6" fill="var(--atlas-crit)"/>
+            <rect x="510" y="54" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="545" y="62" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="580" y="52" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="615" y="70" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="650" y="58" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="522" y="88" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="560" y="94" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="600" y="86" width="6" height="6" fill="var(--atlas-ink)"/>
+            <rect x="638" y="80" width="6" height="6" fill="var(--atlas-ink)"/>
 
-            <text class="atlas-schematic__label atlas-schematic__label--critical" x="585" y="118" text-anchor="middle" style="font-size:11px">manual / random / pattern</text>
+            <text class="atlas-schematic__label" x="585" y="118" text-anchor="middle" style="font-size:11px">manual / random / both</text>
 
             <defs>
               <marker id="arrowPipe" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
@@ -492,7 +490,7 @@
           </svg>
         </div>
         <div class="atlas-schematic__legend">
-          <div><b>One pipeline, every abstraction</b><span>A wall, a chest, a door, a room — all three steps are identical regardless of which one is being registered, which is what makes adding a fifth or sixth category later a matter of reusing the pipeline, not rebuilding it.</span></div>
+          <div><b>One pipeline, every abstraction</b><span>A wall, a chest, a door, a room — the same authoring sequence applies, while each domain retains its own registration fields, placement targets, and constraints.</span></div>
         </div>
       </figure>
 
@@ -501,7 +499,7 @@
       <p>Above structural placement sits the gameplay layer — rooms, doors, keys, enemies — and it follows the same registration principle end to end, because that principle is the actual foundation of the tool, not a detail specific to walls. Above that sit props: benches, lampposts, whatever fills a space without changing how it plays. All three sit on the same Register → Scatter pipeline from the schematic above; what changes between them is what gets registered, what the scatter step targets, and how much built-in behavior — if any — comes attached to the result.</p>
 
       <h3 id="module-domain">Module: the structural basis</h3>
-      <p>Module is the base layer — walls, ceiling, and everything the floor is built from. Registering a module reserves a name for it in the container, and that name is exactly what the scatter step looks up later — nothing gets placed unless it was reserved first. Ground modules come in five mutually exclusive topology types by connection count — I, L, T, U, X — each its own weighted pool of variants, so a straight corridor tile and a four-way crossing never compete for the same pool. Walls split into two kinds: standard panels along a run, and caps at every dead end or opening. Ceiling reuses the exact same five-type registration as the floor, on a per-floor toggle — nothing stops a ceiling module from being a chandelier or a set of stalactites instead of a flat panel; that's a game-design choice, not a limit of the system.</p>
+      <p>Module is the base layer — walls, ceiling, and everything the floor is built from. Registering a module reserves a name for it in the container, and that name is exactly what the scatter step looks up later — nothing gets placed unless it was reserved first. Ground modules come in five topology types distinguished by connection count and arrangement — I, L, T, U, X — each its own weighted pool of variants, so a straight corridor tile and a four-way crossing never compete for the same pool. Walls split into two kinds: standard panels along a run, and caps at every dead end or opening. Ceiling reuses the exact same five-type registration as the floor, on a per-floor toggle — nothing stops a ceiling module from being a chandelier or a set of stalactites instead of a flat panel; that's a game-design choice, not a limit of the system.</p>
 
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/module-ground-topology-registry.jpg" alt="A top-down generated maze with I, L, T, U, and X ground topology crossings, next to the Data Registry listing Ground and Wall structural types by topology and their HISM component names" loading="lazy">
@@ -548,8 +546,8 @@ A and B represent Building Modules</code></pre>
         <figcaption class="media-caption">FIG 12 — Trap, room, and loot scatter, schematic and with proxy assets. Captured from an earlier prototype in the same project rather than the 3.4 HDA covered elsewhere in this post — used here because the zoning reads more clearly on this simpler setup. Debug view: yes.</figcaption>
       </figure>
 
-      <h3 id="props-domain">Props: decoration with no rules attached</h3>
-      <p>Props are the one domain with no registration constraints at all — nothing to reserve, no topology it has to fit. A streetlight, a bench, a poster — anything that fills a scene without changing how it plays — registers freely and scatters directly on top of an already-placed Module surface: wall, floor, or ceiling. The scatter step carries the same Manual/Random/Both choice as everywhere else, plus its own offset, rotation, mesh/material variant, and scale randomization, each on its own seed. And it can be scoped as tightly as it needs to be — restricted to one specific room or biome, or to a single topology type, like only the T-junctions in a floor's corridor network.</p>
+      <h3 id="props-domain">Props: decoration with placement filters</h3>
+      <p>Props add decoration without the lock/key dependencies of the Gameplay domain. Their placement can still be constrained by topology filters, target surfaces, and manual anchor selection. A streetlight, a bench, a poster — anything that fills a scene without changing how it plays — registers freely and scatters directly on top of an already-placed Module surface: wall, floor, or ceiling. The scatter step carries the same Manual/Random/Both choice as everywhere else, plus its own offset, rotation, mesh/material variant, and scale randomization, each on its own seed. And it can be scoped as tightly as it needs to be — restricted to one specific room or biome, or to a single topology type, like only the T-junctions in a floor's corridor network.</p>
 
       <p>A concrete pair from this build: a snow pile prop, carrying two mesh variations, with its Topology Filter narrowed to straight segments only, so it only ever settles along a plain corridor stretch — and a streetlight, filtered the opposite way, to L-corners only, so it only ever stands at a turn. Same registry, same scatter step, two unrelated placement rules living side by side. None of this is unique to ground props, either — Wall Props filter by the same kind of topology (corner, straight, cap), and Manual mode on any of these systems can lock one exact point instead of a whole category, down to a single Anchor Index. Stacked together, that's enough to direct a genuinely deliberate moment — snow gathering only in dead corners, a streetlight only at junctions, one hand-placed prop marking one specific spot — instead of every scene reading like the same generic scatter pass.</p>
 
@@ -592,7 +590,7 @@ A and B represent Building Modules</code></pre>
             <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
           </div>
         </div>
-        <figcaption class="media-caption">FIG 14 — The rule config, the interior-cubemap material it pairs with, and the result on the street. Debug view: first two slides yes (editor UI), last two no (final art).</figcaption>
+        <figcaption class="media-caption">FIG 14 — The rule config, the interior-cubemap material it pairs with, and the result on the street. Debug view: first two slides yes (editor UI), last two show the in-engine work in progress.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 07 WHY IT'S BUILT THIS WAY"></div>
@@ -604,13 +602,16 @@ A and B represent Building Modules</code></pre>
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
 
       <h2 id="whats-next">09 What's next</h2>
-      <p>This post outlines the system. The <a href="/post/houdini-unreal-typed-placement-routing/">placement-routing breakdown</a> covers how content splits between shared instancing and individual Actors. Future posts will examine scatter and randomization, the graph logic behind lock/key reachability, and how to tune stacked rules.</p>
+      <p>The next development goal is to move beyond the current 90-degree layout and support more complex generated structures. That means extending the module system, the placement step, and the way walls and floors are scattered.</p>
+      <ul>
+        <li><b>Non-orthogonal geometry:</b> support angled runs and the junctions where they meet.</li>
+        <li><b>More complex modules:</b> account for their shapes and connection requirements when assembling a structure.</li>
+        <li><b>A more flexible placement step:</b> adapt spacing to module dimensions and the geometry being generated.</li>
+        <li><b>Wall and floor scatter:</b> extend placement and orientation rules to work with these more complex layouts.</li>
+      </ul>
+      <p>These are development goals. The examples in this article show the current orthogonal system. I'll publish experiments and results on the blog as this work progresses.</p>
 
-      <div class="atlas-callout atlas-callout--warning">
-        <p>Open, unsolved: what happens when two stacked rules in the same cell disagree — an action zone wanting high density against a puzzle rule wanting low density, for instance — has no resolution policy yet.</p>
-      </div>
-
-<div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
+      <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
 
       <h2 id="result">10 Result</h2>
       <p>The maze is a convenient, testable surface for a system that isn't really about mazes: cells that carry design intent, not just geometry; a grid borrowed from how real maps already work, with a layer of pacing borrowed from how shipped games already zone their levels; and one reachability guarantee reused under different names. Built by one person, for one person to keep shipping content without hand-placing every instance of it.</p>
@@ -626,30 +627,9 @@ A and B represent Building Modules</code></pre>
             <span class="atlas-ref-num">[02]</span>
             <span class="atlas-ref-body"><span class="atlas-ref-tag">LIVE</span><span class="atlas-ref-title">Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors</span> — the registration split (container/HISM vs. individual Blueprint Actor) mentioned in §07, covered end to end.<br><a class="atlas-ref-link" href="/post/houdini-unreal-typed-placement-routing/">pavelzosim.com/post/houdini-unreal-typed-placement-routing</a></span>
           </li>
-          <li class="atlas-ref-item">
-            <span class="atlas-ref-num">[03]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">PLANNED</span><span class="atlas-ref-title">Per-Floor Walls and the Cap Orientation Fix</span> — moving wall generation from one flat 2D net to genuinely per-floor, and the eight-part debugging trail that followed reintroducing Loop Chance.</span>
-          </li>
-          <li class="atlas-ref-item">
-            <span class="atlas-ref-num">[04]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">PLANNED</span><span class="atlas-ref-title">Openings: From Monolith to Clean Cutout</span> — unifying Door and Open Passage into one connection model, and six iterations on Room-boundary openings that ended in "just remove the wall."</span>
-          </li>
-          <li class="atlas-ref-item">
-            <span class="atlas-ref-num">[05]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">PLANNED</span><span class="atlas-ref-title">Scatter and Randomization</span> — Manual/Random/Both across every placement system, and the deterministic per-purpose RNG streams keyed off stable strings instead of array index.</span>
-          </li>
-          <li class="atlas-ref-item">
-            <span class="atlas-ref-num">[06]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">PLANNED</span><span class="atlas-ref-title">Lock/Key Reachability, Formalized</span> — the graph algorithm behind the guarantee in §05: verified bridges over the DFS tree, not a rule checked after the fact.</span>
-          </li>
-          <li class="atlas-ref-item">
-            <span class="atlas-ref-num">[07]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">PLANNED</span><span class="atlas-ref-title">MazePlacementExtras</span> — the separate Unreal-side system layering lights, snow, and decals onto already-placed instances, driven by metadata handed off from the placement consumer.</span>
-          </li>
-          <li class="atlas-ref-item">
-            <span class="atlas-ref-num">[08]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">PLANNED</span><span class="atlas-ref-title">Tuning stacked rules with no resolution policy yet</span> — the open conflict named in §09.</span>
-          </li>
+
+
+
         </ul>
       </div>
 
@@ -657,23 +637,23 @@ A and B represent Building Modules</code></pre>
         <ul class="atlas-ref-list">
           <li class="atlas-ref-item">
             <span class="atlas-ref-num">[01]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">WIKI</span><span class="atlas-ref-title">Military Grid Reference System</span><br><a class="atlas-ref-link" href="https://en.wikipedia.org/wiki/Military_Grid_Reference_System" target="_blank" rel="noopener">en.wikipedia.org/wiki/Military_Grid_Reference_System</a></span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">DOCS</span><span class="atlas-ref-title">Military Grid Reference System — NGA</span><br><a class="atlas-ref-link" href="https://earth-info.nga.mil/?action=coordsys&amp;dir=coordsys" target="_blank" rel="noopener">NGA Office of Geomatics — Coordinate Systems</a></span>
           </li>
           <li class="atlas-ref-item">
             <span class="atlas-ref-num">[02]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">Phil Co (Valve)</span> — on planning level pacing around puzzle and combat.<br><a class="atlas-ref-link" href="https://interlopers.net/articles/phil-co-interview" target="_blank" rel="noopener">interlopers.net/articles/phil-co-interview</a></span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-author">Phil Co (Valve)</span> — on planning level pacing around puzzle and combat.<br><a class="atlas-ref-link" href="https://www.interlopers.net/articles/valve-interview-phil-co" target="_blank" rel="noopener">interlopers.net/articles/valve-interview-phil-co</a></span>
           </li>
           <li class="atlas-ref-item">
             <span class="atlas-ref-num">[03]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-title">"Unsafe Rooms"</span> — EGM, on the design intent behind save rooms.<br><a class="atlas-ref-link" href="https://egmnow.com/unsafe-rooms/" target="_blank" rel="noopener">egmnow.com/unsafe-rooms</a></span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-title">The art of crafting the perfect videogame safe room</span> — PC Gamer, including an interview with Kazunori Kadoi.<br><a class="atlas-ref-link" href="https://www.pcgamer.com/the-art-of-crafting-the-perfect-videogame-safe-room/" target="_blank" rel="noopener">PC Gamer — interview with Kazunori Kadoi</a></span>
           </li>
           <li class="atlas-ref-item">
             <span class="atlas-ref-num">[04]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">WIKI</span><span class="atlas-ref-title">The Duke</span> — Resident Evil Wiki.<br><a class="atlas-ref-link" href="https://residentevil.fandom.com/wiki/The_Duke" target="_blank" rel="noopener">residentevil.fandom.com/wiki/The_Duke</a></span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">OFFICIAL</span><span class="atlas-ref-title">Resident Evil Village Maiden demo hits PS5 today</span> — Kellen Haney, Capcom; introduces the Duke’s merchant role.<br><a class="atlas-ref-link" href="https://blog.playstation.com/2021/01/21/resident-evil-village-maiden-demo-hits-ps5-today/" target="_blank" rel="noopener">PlayStation Blog — Capcom announcement</a></span>
           </li>
           <li class="atlas-ref-item">
             <span class="atlas-ref-num">[05]</span>
-            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-title">"Recursive Unlocking: Analyzing Resident Evil's Map Design with Data Visualization"</span> — Chris's Survival Horror Quest.<br><a class="atlas-ref-link" href="https://horror.dreamdawn.com/?p=81213" target="_blank" rel="noopener">horror.dreamdawn.com/?p=81213</a></span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">ARTICLE</span><span class="atlas-ref-title">"Recursive Unlocking: Analyzing Resident Evil's Map Design with Data Visualization"</span> — Chris Pruett, Chris's Survival Horror Quest.<br><a class="atlas-ref-link" href="https://horror.dreamdawn.com/?p=81213" target="_blank" rel="noopener">horror.dreamdawn.com/?p=81213</a></span>
           </li>
           <li class="atlas-ref-item">
             <span class="atlas-ref-num">[06]</span>
