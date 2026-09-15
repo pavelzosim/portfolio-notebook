@@ -507,10 +507,24 @@ A and B represent Building Modules</code></pre>
 
       <p>Selection can run two ways: by raw instance order, or by a Stable Placement Key — a deterministic pick hashed from that placement's own domain, key, and seed, so which specific windows end up lit stays the same even if the underlying HISM's instance order shifts on a later re-cook. For lights specifically, every rule carries its own color, intensity, attenuation radius, source size, and shadow toggle, so a window-lighting rule and an entrance-lighting rule on the same building can look completely different without the two ever touching each other. Clearing and reapplying extras follows the same idempotent pattern as the rest of the pipeline — re-cooking never doubles up a light that's already there.</p>
 
-      <!-- TODO: replace src with a real night shot showing MazePlacementExtras-driven window lights -- some windows lit, some dark, varying color/intensity, on one building facade. -->
+      <p>Lighting is just the case this section keeps using as an example — the actual mechanism underneath is a plain deterministic 0/1 draw per instance, and that draw doesn't know or care what it's feeding. The same interior rooms visible through a lit window come from a separate cubemap-array material with its own randomizer wired the same way, picking which fake room shows up behind which window independently of whether that window is lit at all. Wire that same 0/1 output somewhere else and it drives a decal, a particle system, or which variant of a custom Blueprint spawns — the light rule is one consumer of a generic signal, not a special case baked into it.</p>
+
+      <!-- These four are from the same project: the MazePlacementExtras rule config itself, the interior-cubemap material it can be paired with, and two street-level results (close + wide) with windows lit via this system. -->
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/placement-extras-window-lights-placeholder.png" alt="A building facade at night with some windows lit via MazePlacementExtras, varying color and intensity, others dark" loading="lazy">
-        <figcaption class="media-caption">FIG 13 — Window lights added entirely on the Unreal side, synced to the same HISM instances Houdini placed. Debug view: none, final art.</figcaption>
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="The MazePlacementExtras rule config in the Blueprint" src="/public/media/posts/controlled-procedurality/placement-extras-blueprint.jpg" alt="The MazePlacementExtras component in BP_Building, showing a Rules array with light parameters for a window HISM" loading="lazy">
+            <img data-slide data-caption="Interior cubemap material -- its own randomizer" src="/public/media/posts/controlled-procedurality/placement-extras-material.jpg" alt="A material graph for an interior cubemap array with its own emission randomizer, used behind windows independently of whether the window is lit" loading="lazy" hidden>
+            <img data-slide data-caption="Result -- one streetlight, some windows lit" src="/public/media/posts/controlled-procedurality/placement-extras-street-close.jpg" alt="A building facade at dusk with some windows lit via MazePlacementExtras and a streetlight illuminating wet asphalt" loading="lazy" hidden>
+            <img data-slide data-caption="Result -- wider street, several buildings" src="/public/media/posts/controlled-procedurality/placement-extras-street-wide.jpg" alt="A wider dusk street view with several streetlights and multiple buildings showing a mix of lit and dark windows" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 13 — The rule config, the interior-cubemap material it pairs with, and the result on the street. Debug view: first two slides yes (editor UI), last two no (final art).</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 07 WHY IT'S BUILT THIS WAY"></div>
