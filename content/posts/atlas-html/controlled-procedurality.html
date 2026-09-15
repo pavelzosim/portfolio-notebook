@@ -442,10 +442,9 @@
       <h3 id="module-domain">Module: the structural basis</h3>
       <p>Module is the base layer — walls, ceiling, and everything the floor is built from. Registering a module reserves a name for it in the container, and that name is exactly what the scatter step looks up later — nothing gets placed unless it was reserved first. Ground modules come in five mutually exclusive topology types by connection count — I, L, T, U, X — each its own weighted pool of variants, so a straight corridor tile and a four-way crossing never compete for the same pool. Walls split into two kinds: standard panels along a run, and caps at every dead end or opening. Ceiling reuses the exact same five-type registration as the floor, on a per-floor toggle — nothing stops a ceiling module from being a chandelier or a set of stalactites instead of a flat panel; that's a game-design choice, not a limit of the system.</p>
 
-      <!-- TODO: replace src with a real capture of the Module registry/pattern UI, or a wall run showing a clear pattern (e.g. a repeating [A-B] sequence) in the generated level. -->
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/module-pattern-placeholder.png" alt="A wall run showing a clear repeating module pattern, or the Module registry and pattern UI" loading="lazy">
-        <figcaption class="media-caption">FIG 10 — A registered wall pattern running across a floor. Debug view: none, final art.</figcaption>
+        <img src="/public/media/posts/controlled-procedurality/module-ground-topology-registry.jpg" alt="A top-down generated maze with I, L, T, U, and X ground topology crossings, next to the Data Registry listing Ground and Wall structural types by topology and their HISM component names" loading="lazy">
+        <figcaption class="media-caption">FIG 10 — A generated maze, top-down, showing the I/L/T/U/X ground topology in the corridor crossings, next to the actual Data Registry entries (Structural Type, Topology Type, HISM Component Name) behind them. Debug view: yes — registry panel plus a plain top-down viewport, not final art.</figcaption>
       </figure>
 
       <p>Floors stack, and each enabled floor gets its own height and its own pattern — expressed with the same small grammar, whether it's driving a wall's vertical module sequence or a wall/cap run along one floor:</p>
@@ -459,6 +458,13 @@ Incorrect:          &lt;*&gt;, [*], &lt;A&gt;2, &lt;A&gt;&lt;B&gt;, having no Fi
 A and B represent Building Modules</code></pre>
 
       <p>Square brackets pin an exact, rigid sequence; angle brackets repeat and fill whatever space is left. A number after a bracket repeats that block a fixed number of times, and an asterisk pulls from that slot's own weighted variant pool instead of one fixed pick — so a pattern can stay structurally rigid while still varying which exact module fills it every time it runs. Every pattern is overridable on top of that: pick a specific column manually, or let the override roll randomly with its own count — either way it rewrites that one column's module or height sequence without touching the pattern the rest of the wall still follows (the FIG 03 example above is exactly this: a manual override rewriting one column of an otherwise pattern-driven wall).</p>
+
+      <p>A real example, straight from this build's own Floor Pattern field: <code class="atlas-code-inline">[Floor_1]<Floor_2><Floor_3></code> — a rigid, one-off ground floor, then two floor treatments that repeat to fill however many stories the building ends up with. Four floors are configured underneath that: the ground floor sits at a lower 0.6m plinth height running a plain panel wall and cap, and the three floors above it each run at 2.9m with a richer wall pattern mixing windows and balconies into the run. Variety doesn't stop at the module level, either — this build drives curtain position inside the window modules through a vertex shader, one more layer of visual variation riding on top of a system that otherwise only knows about modules and patterns.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/module-wall-pattern-wireframe.jpg" alt="Wireframe view of a wall run built from the Floor Pattern config, next to the Pattern Walls and Floors UI showing the Floor Pattern field and four configured floor entries" loading="lazy">
+        <figcaption class="media-caption">FIG 11 — This build's actual Floor Pattern config, next to the wireframe result — note the denser triangulation on window and balcony modules versus the plain panels around them. Debug view: yes — wireframe render plus the authoring UI, not final art.</figcaption>
+      </figure>
 
       <h3 id="gameplay-domain">Gameplay: the same registration, real behavior on top</h3>
       <p>Doors, chests, keys, traps, enemies, loot, and rooms all register through the identical Module-style entry — pick an abstract type, assign a representation, done. What's different is that the tool itself already knows what each of these types means: a Door checks the reachability guarantee from §05, a Key carries a lock ID, an Enemy spawn carries its own density and pairing rules. Scatter here doesn't walk a wall run — it picks a point on the floor and drops the registered entity there, Manual or Random exactly like everywhere else, including the player's own start point, which is registered the same way as everything else. Density is a first-class option too: nothing stops one cell from spawning several enemy types at once, each with its own variant weighting, instead of exactly one enemy per cell.</p>
@@ -478,7 +484,7 @@ A and B represent Building Modules</code></pre>
             <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
           </div>
         </div>
-        <figcaption class="media-caption">FIG 11 — Trap, room, and loot scatter, schematic and with proxy assets. Captured from an earlier prototype in the same project rather than the 3.4 HDA covered elsewhere in this post — used here because the zoning reads more clearly on this simpler setup. Debug view: yes.</figcaption>
+        <figcaption class="media-caption">FIG 12 — Trap, room, and loot scatter, schematic and with proxy assets. Captured from an earlier prototype in the same project rather than the 3.4 HDA covered elsewhere in this post — used here because the zoning reads more clearly on this simpler setup. Debug view: yes.</figcaption>
       </figure>
 
       <h3 id="props-domain">Props: decoration with no rules attached</h3>
@@ -487,7 +493,7 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture of Props Scatter output -- e.g. streetlights along a corridor, or a topology-filtered prop (like something placed only at T-junctions). -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/props-scatter-placeholder.png" alt="Streetlights or another decorative prop scattered along a generated corridor, filtered to a specific topology type" loading="lazy">
-        <figcaption class="media-caption">FIG 12 — Props layered on top of Module surfaces, filtered to a specific topology type. Debug view: none, final art.</figcaption>
+        <figcaption class="media-caption">FIG 13 — Props layered on top of Module surfaces, filtered to a specific topology type. Debug view: none, final art.</figcaption>
       </figure>
 
       <div class="atlas-table-frame">
@@ -524,7 +530,7 @@ A and B represent Building Modules</code></pre>
             <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
           </div>
         </div>
-        <figcaption class="media-caption">FIG 13 — The rule config, the interior-cubemap material it pairs with, and the result on the street. Debug view: first two slides yes (editor UI), last two no (final art).</figcaption>
+        <figcaption class="media-caption">FIG 14 — The rule config, the interior-cubemap material it pairs with, and the result on the street. Debug view: first two slides yes (editor UI), last two no (final art).</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 07 WHY IT'S BUILT THIS WAY"></div>
@@ -539,13 +545,13 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
-        <figcaption class="media-caption">FIG 14 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 15 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
       <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
-        <figcaption class="media-caption">FIG 15 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
+        <figcaption class="media-caption">FIG 16 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
@@ -560,7 +566,7 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture of the actual conflict described above -- a cell where a high-density action rule and a low-density puzzle rule are both active. A raw editor/debug view is fine here since the point is showing the unsolved state, not a finished result. If no such case exists yet to capture, keep this figure out until one does rather than staging a fake one. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/stacked-rule-conflict-placeholder.png" alt="Two stacked rules disagreeing in the same cell -- a high-density action rule against a low-density puzzle rule" loading="lazy">
-        <figcaption class="media-caption">FIG 16 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
+        <figcaption class="media-caption">FIG 17 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
