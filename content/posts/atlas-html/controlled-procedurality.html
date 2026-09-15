@@ -454,6 +454,17 @@ A and B represent Building Modules</code></pre>
         </table>
       </div>
 
+      <h3 id="placement-extras">MazePlacementExtras: syncing lights, materials, and objects to the same instances</h3>
+      <p>One more layer sits entirely on the Unreal side, independent of Houdini: <b>MazePlacementExtras</b>, a Blueprint component that attaches rules directly to an already-registered HISM — pick a Registered Module (a window panel, say) in the Blueprint and hand it a rule, no round-trip through the generator. Each rule picks an object type — a light, a decal, a particle system, snow, or a custom Blueprint — sets its own probability and seed, and applies a local offset relative to the instance it's attached to.</p>
+
+      <p>Selection can run two ways: by raw instance order, or by a Stable Placement Key — a deterministic pick hashed from that placement's own domain, key, and seed, so which specific windows end up lit stays the same even if the underlying HISM's instance order shifts on a later re-cook. For lights specifically, every rule carries its own color, intensity, attenuation radius, source size, and shadow toggle, so a window-lighting rule and an entrance-lighting rule on the same building can look completely different without the two ever touching each other. Clearing and reapplying extras follows the same idempotent pattern as the rest of the pipeline — re-cooking never doubles up a light that's already there.</p>
+
+      <!-- TODO: replace src with a real night shot showing MazePlacementExtras-driven window lights -- some windows lit, some dark, varying color/intensity, on one building facade. -->
+      <figure class="media-frame">
+        <img src="/public/media/posts/controlled-procedurality/placement-extras-window-lights-placeholder.png" alt="A building facade at night with some windows lit via MazePlacementExtras, varying color and intensity, others dark" loading="lazy">
+        <figcaption class="media-caption">FIG 11 — Window lights added entirely on the Unreal side, synced to the same HISM instances Houdini placed. Debug view: none, final art.</figcaption>
+      </figure>
+
       <div class="atlas-section-break" data-index="// § 07 WHY IT'S BUILT THIS WAY"></div>
 
       <h2 id="current-state">08 Where this stands right now</h2>
@@ -466,13 +477,13 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
-        <figcaption class="media-caption">FIG 11 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 12 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
       <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
-        <figcaption class="media-caption">FIG 12 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
+        <figcaption class="media-caption">FIG 13 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
@@ -487,7 +498,7 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture of the actual conflict described above -- a cell where a high-density action rule and a low-density puzzle rule are both active. A raw editor/debug view is fine here since the point is showing the unsolved state, not a finished result. If no such case exists yet to capture, keep this figure out until one does rather than staging a fake one. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/stacked-rule-conflict-placeholder.png" alt="Two stacked rules disagreeing in the same cell -- a high-density action rule against a low-density puzzle rule" loading="lazy">
-        <figcaption class="media-caption">FIG 13 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
+        <figcaption class="media-caption">FIG 14 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
