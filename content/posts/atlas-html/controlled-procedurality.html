@@ -336,10 +336,21 @@
         </div>
       </div>
 
-      <!-- TODO: replace src with a real capture of a Room boundary next to an ordinary corridor stretch -- ideally in one frame, so the density/scatter difference reads at a glance. If the real shot only shows one or the other, split into two frames and adjust the caption below. -->
+      <p>A courtyard playground is a direct example: it's a Ground Prop like any other, but its Topology Filter allows only the Room category, so it only ever lands inside a Room cell — placed there Manually, locked to a specific Anchor Index in this build, rather than left to Random. The same filter runs the other way just as easily: a streetlight in the same registry can be restricted to one topology type instead — L-corners only, say — so it shows up exactly at street corners and nowhere else.</p>
+
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/room-vs-corridor-placeholder.png" alt="A room with its own dense object scatter next to a plain corridor stretch without one" loading="lazy">
-        <figcaption class="media-caption">FIG 08 — A Room (left) carrying its own unique scatter, next to an ordinary corridor stretch (right) governed only by the ambient rule passing through it. Debug view: none, final art.</figcaption>
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Room-only Ground Prop -- Topology Filter set to Room alone" src="/public/media/posts/controlled-procedurality/room-playground-config.jpg" alt="A courtyard playground rendered next to the Ground Prop Scatter UI, Topology Filter set to Room only, Mode Manual with a locked Anchor Index" loading="lazy">
+            <img data-slide data-caption="Wider view -- several Room cells inside one courtyard block" src="/public/media/posts/controlled-procedurality/room-courtyard-aerial.jpg" alt="An aerial view of a full courtyard block showing several distinct Room cells at once, each with its own scatter" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 08 — A playground scattered only into Room-type cells, next to an aerial view of several Room cells inside one courtyard block. Debug view: first slide yes (HDA panel), second no (final art).</figcaption>
       </figure>
 
       <p>Room isn't just a density flag, either — its own Room Type is a registered category (treasure, boss, regular, and so on, the same registration pattern as everywhere else), and that type is what other systems key their spawn rules off: a boss enemy set to spawn only in boss-type rooms, a specific reward or key set to only ever land in a treasure-type room, all through the same Manual/Random/Both choice as everywhere else. The same idea reaches into a room's own interior, too — specific cells inside it can carry their own spawn rules, and the walls bounding it can pull from a room- or biome-specific set of decals and wall variants instead of the level's general pool.</p>
