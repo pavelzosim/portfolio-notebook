@@ -427,10 +427,22 @@ A and B represent Building Modules</code></pre>
       <h3 id="gameplay-domain">Gameplay: the same registration, real behavior on top</h3>
       <p>Doors, chests, keys, traps, enemies, loot, and rooms all register through the identical Module-style entry — pick an abstract type, assign a representation, done. What's different is that the tool itself already knows what each of these types means: a Door checks the reachability guarantee from §05, a Key carries a lock ID, an Enemy spawn carries its own density and pairing rules. Scatter here doesn't walk a wall run — it picks a point on the floor and drops the registered entity there, Manual or Random exactly like everywhere else, including the player's own start point, which is registered the same way as everything else. Density is a first-class option too: nothing stops one cell from spawning several enemy types at once, each with its own variant weighting, instead of exactly one enemy per cell.</p>
 
-      <!-- TODO: replace src with a real capture of the Gameplay Scatter UI (Door/Chest/Key/Enemy tabs) or a generated area showing multiple enemy types/variants scattered in one cell. -->
+      <p>A Trap doesn't have to sit on a single point, either — the same registration can claim an area spanning several cells at once, set through a size parameter, so one trap reads as a hazard zone instead of one tile. And a spawn point isn't necessarily atomic: the cell it occupies can be subdivided into several sub-cells, each carrying its own Blueprint or object, for finer control over what actually spawns where inside that footprint — a Room with a loot pile in one corner and a guard standing in another, both still coming out of the same registered spawn point.</p>
+
+      <!-- These two are from an earlier prototype in the same project (a "Dungeon Level Generator" test build), not the 3.4 HDA covered elsewhere in this post -- used here because the trap/loot/room zoning reads more clearly on this simpler setup. Replace with a matching pair from the 3.4 build if/when convenient; update the caption if so. -->
       <figure class="media-frame">
-        <img src="/public/media/posts/controlled-procedurality/gameplay-scatter-placeholder.png" alt="Multiple enemy types and variants scattered in one generated cell, or the Gameplay Scatter registry UI" loading="lazy">
-        <figcaption class="media-caption">FIG 09 — Gameplay entities scattered by point, not by wall run — several enemy variants in one cell. Debug view: none, final art.</figcaption>
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Schematic -- trap zones and room/loot markers over the layout" src="/public/media/posts/controlled-procedurality/gameplay-scatter-schematic.jpg" alt="Schematic debug markers over a generated dungeon layout -- flat colored zones for traps, doors, and loot" loading="lazy">
+            <img data-slide data-caption="With proxy assets -- enemy and loot placements in the same layout" src="/public/media/posts/controlled-procedurality/gameplay-scatter-assets.jpg" alt="The same generated dungeon layout with proxy enemy and loot assets standing in for the final placements" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 09 — Trap, room, and loot scatter, schematic and with proxy assets. Captured from an earlier prototype in the same project rather than the 3.4 HDA covered elsewhere in this post — used here because the zoning reads more clearly on this simpler setup. Debug view: yes.</figcaption>
       </figure>
 
       <h3 id="props-domain">Props: decoration with no rules attached</h3>
