@@ -302,6 +302,24 @@
 
       <p>Door and key is also just the current skin on it. The same guarantee holds for a hammer that breaks through a wall, a lever, a button that lowers a bridge over a moat — whatever the obstacle and whatever resolves it, the underlying rule doesn't change: never place the resolution somewhere the player can't reach first.</p>
 
+      <p>The schematic above is the idea; this is the actual debug tool that enforces it. Every generated layout gets an Entry → Exit progression route (the winding yellow line below) plus one colored path per Key/Door pair, drawn straight from a key to the door it actually opens. That second part is what rules out the failure case that matters most — a door reading index 2 sitting next to a key that only ever resolves to index 1 or some other zone's key, so the player is standing right next to the door with no way through. Because the path is drawn and colored per matched pair at generation time, a mismatch like that is visible immediately, before it ever ships.</p>
+
+      <!-- These two are from the same earlier prototype as the Gameplay scatter figure above (not the 3.4 HDA covered elsewhere in this post) -- used here because the Key/Door path debug view happened to be captured there. Replace with a matching pair from the 3.4 build if/when convenient. -->
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Schematic -- progression route and colored Key/Door paths" src="/public/media/posts/controlled-procedurality/reachability-debug-schematic.jpg" alt="Debug schematic showing the entry-exit progression route and color-coded key-door path pairs over a generated dungeon layout" loading="lazy">
+            <img data-slide data-caption="With proxy assets -- same paths over the built level" src="/public/media/posts/controlled-procedurality/reachability-debug-assets.jpg" alt="The same progression route and key-door paths overlaid on the generated layout with proxy wall and enemy assets" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 07 — The real debug view behind the schematic above: progression route plus one colored path per Key/Door pair. Captured from the same earlier prototype as the Gameplay scatter figure in §07, not the 3.4 HDA covered elsewhere in this post. Debug view: yes.</figcaption>
+      </figure>
+
       <div class="atlas-section-break" data-index="// § 05 A GUARANTEE, NOT A COINCIDENCE"></div>
 
       <h2 id="rooms">06 Rooms: space with intent</h2>
@@ -321,7 +339,7 @@
       <!-- TODO: replace src with a real capture of a Room boundary next to an ordinary corridor stretch -- ideally in one frame, so the density/scatter difference reads at a glance. If the real shot only shows one or the other, split into two frames and adjust the caption below. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/room-vs-corridor-placeholder.png" alt="A room with its own dense object scatter next to a plain corridor stretch without one" loading="lazy">
-        <figcaption class="media-caption">FIG 07 — A Room (left) carrying its own unique scatter, next to an ordinary corridor stretch (right) governed only by the ambient rule passing through it. Debug view: none, final art.</figcaption>
+        <figcaption class="media-caption">FIG 08 — A Room (left) carrying its own unique scatter, next to an ordinary corridor stretch (right) governed only by the ambient rule passing through it. Debug view: none, final art.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 06 ROOMS: SPACE WITH INTENT"></div>
@@ -409,7 +427,7 @@
       <!-- TODO: replace src with a real capture of the Module registry/pattern UI, or a wall run showing a clear pattern (e.g. a repeating [A-B] sequence) in the generated level. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/module-pattern-placeholder.png" alt="A wall run showing a clear repeating module pattern, or the Module registry and pattern UI" loading="lazy">
-        <figcaption class="media-caption">FIG 08 — A registered wall pattern running across a floor. Debug view: none, final art.</figcaption>
+        <figcaption class="media-caption">FIG 09 — A registered wall pattern running across a floor. Debug view: none, final art.</figcaption>
       </figure>
 
       <p>Floors stack, and each enabled floor gets its own height and its own pattern — expressed with the same small grammar, whether it's driving a wall's vertical module sequence or a wall/cap run along one floor:</p>
@@ -442,7 +460,7 @@ A and B represent Building Modules</code></pre>
             <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
           </div>
         </div>
-        <figcaption class="media-caption">FIG 09 — Trap, room, and loot scatter, schematic and with proxy assets. Captured from an earlier prototype in the same project rather than the 3.4 HDA covered elsewhere in this post — used here because the zoning reads more clearly on this simpler setup. Debug view: yes.</figcaption>
+        <figcaption class="media-caption">FIG 10 — Trap, room, and loot scatter, schematic and with proxy assets. Captured from an earlier prototype in the same project rather than the 3.4 HDA covered elsewhere in this post — used here because the zoning reads more clearly on this simpler setup. Debug view: yes.</figcaption>
       </figure>
 
       <h3 id="props-domain">Props: decoration with no rules attached</h3>
@@ -451,7 +469,7 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture of Props Scatter output -- e.g. streetlights along a corridor, or a topology-filtered prop (like something placed only at T-junctions). -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/props-scatter-placeholder.png" alt="Streetlights or another decorative prop scattered along a generated corridor, filtered to a specific topology type" loading="lazy">
-        <figcaption class="media-caption">FIG 10 — Props layered on top of Module surfaces, filtered to a specific topology type. Debug view: none, final art.</figcaption>
+        <figcaption class="media-caption">FIG 11 — Props layered on top of Module surfaces, filtered to a specific topology type. Debug view: none, final art.</figcaption>
       </figure>
 
       <div class="atlas-table-frame">
@@ -474,7 +492,7 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real night shot showing MazePlacementExtras-driven window lights -- some windows lit, some dark, varying color/intensity, on one building facade. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/placement-extras-window-lights-placeholder.png" alt="A building facade at night with some windows lit via MazePlacementExtras, varying color and intensity, others dark" loading="lazy">
-        <figcaption class="media-caption">FIG 11 — Window lights added entirely on the Unreal side, synced to the same HISM instances Houdini placed. Debug view: none, final art.</figcaption>
+        <figcaption class="media-caption">FIG 12 — Window lights added entirely on the Unreal side, synced to the same HISM instances Houdini placed. Debug view: none, final art.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 07 WHY IT'S BUILT THIS WAY"></div>
@@ -489,13 +507,13 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture from the current build. If the objects shown are final art rather than stand-ins, update the caption below to say so. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-01.png" alt="Current in-engine build, Soviet-era maze-city aesthetic, stand-in objects for enemies, doors, and rooms" loading="lazy">
-        <figcaption class="media-caption">FIG 12 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
+        <figcaption class="media-caption">FIG 13 — The current build running in-engine. Debug view: none — placement system output with stand-in objects for enemies/doors/rooms. Note these are functional stand-ins, not final art.</figcaption>
       </figure>
 
       <!-- TODO: replace src with a real GIF or short clip of a live cook (preferred here over a static shot). If the final clip shows something other than a live cook, update the caption below to match. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/current-build-placeholder-02.png" alt="The maze generator cooking live, in-editor" loading="lazy">
-        <figcaption class="media-caption">FIG 13 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
+        <figcaption class="media-caption">FIG 14 — The generator cooking live, in-editor. Debug view: yes — this is the authoring tool, not gameplay. Note the placement system updating in real time as the layout regenerates.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
@@ -510,7 +528,7 @@ A and B represent Building Modules</code></pre>
       <!-- TODO: replace src with a real capture of the actual conflict described above -- a cell where a high-density action rule and a low-density puzzle rule are both active. A raw editor/debug view is fine here since the point is showing the unsolved state, not a finished result. If no such case exists yet to capture, keep this figure out until one does rather than staging a fake one. -->
       <figure class="media-frame">
         <img src="/public/media/posts/controlled-procedurality/stacked-rule-conflict-placeholder.png" alt="Two stacked rules disagreeing in the same cell -- a high-density action rule against a low-density puzzle rule" loading="lazy">
-        <figcaption class="media-caption">FIG 14 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
+        <figcaption class="media-caption">FIG 15 — A cell where an action rule (high density) and a puzzle rule (low density) are both active at once — the exact kind of conflict this system doesn't resolve yet. Debug view: yes, raw authoring-time state, not a finished placement.</figcaption>
       </figure>
 
       <div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
