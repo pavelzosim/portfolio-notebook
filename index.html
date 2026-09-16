@@ -29,14 +29,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles/atlas.css?v=60">
+  <link rel="stylesheet" href="/styles/atlas.css?v=61">
   <script src="/scripts/vfx-flipbooks.js?v=33" defer></script>
   <script src="/scripts/post-registry.js?v=2" defer></script>
   <script src="/scripts/home-content.js?v=5" defer></script>
   <script src="/scripts/tools-content.js?v=4" defer></script>
   <script src="/scripts/section-actions.js?v=1" defer></script>
   <script src="/scripts/gumroad-shelf.js?v=1" defer></script>
-  <script src="/scripts/wireframe-shape.js?v=1" defer></script>
+  <script src="/scripts/wireframe-shape.js?v=2" defer></script>
 </head>
 <body>
   <a class="skip" href="#content">Skip to content</a>
@@ -55,9 +55,9 @@
 
   <div class="workspace" id="top">
     <aside class="rail" aria-label="Document contents">
-      <div class="wire-block" aria-hidden="true">
-        <div class="wire-wrap"><canvas id="wireCanvas" width="400" height="400"></canvas></div>
-        <div class="wire-meta"><span id="shapeName">—</span></div>
+      <div class="wire-block">
+        <button class="wire-wrap" id="reshuffleBtn" type="button" aria-label="Show another geometric shape" title="Click to change shape"><canvas id="wireCanvas" width="400" height="400" aria-hidden="true"></canvas></button>
+        <div class="wire-meta"><span id="shapeName" aria-live="polite" aria-atomic="true">—</span></div>
       </div>
       <p class="rail-title">CONTENTS.md</p>
       <ol>
@@ -111,7 +111,7 @@
       </section>
 
       <section class="doc-section" id="notes">
-        <header class="section-label"><span>§ 02</span><h2>Recent notes</h2><em>UPDATED 2026-08-04</em></header>
+        <header class="section-label"><span>§ 02</span><h2>Recent notes</h2><em>UPDATED 2026-09-16</em></header>
         <div class="highlight-strip" data-home-highlights aria-label="Featured recent posts"></div>
         <div class="section-split"><span>Latest · implementation records</span></div>
         <div class="record-list" data-home-recent role="list" aria-live="polite"></div>

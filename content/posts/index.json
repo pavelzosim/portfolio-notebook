@@ -133,7 +133,7 @@
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders/",
       "state": "published",
       "homepage": {
-        "highlight": true,
+        "highlight": false,
         "recent": true,
         "rank": 30,
         "date": "2026.07"
@@ -248,6 +248,10 @@
       "localPath": "/content/posts/atlas-html/controlled-procedurality.html",
       "sourceUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
       "state": "published",
+      "homepage": {
+        "highlight": true,
+        "rank": 30
+      },
       "publicUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
       "slug": "controlled-procedurality",
       "imageAlt": "Aerial view of the generated modular city layout in Unreal Editor",

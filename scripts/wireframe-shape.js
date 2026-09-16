@@ -173,15 +173,61 @@
     return { name: 'PYRAMID', verts, edges: edgesFromFaces(faces) };
   }
 
-  const SHAPES = [icosahedron, octahedron, cube, tetrahedron, dodecahedron, torus, stella, pyramid];
+  // Revolve a radius/height profile, sharing a single vertex at each pole.
+  function revolved(name, profile, segments = 12) {
+    const verts = [], edges = [], rings = [];
+    profile.forEach(([radius, height]) => {
+      const ring = [];
+      const count = radius === 0 ? 1 : segments;
+      for (let i = 0; i < count; i++) {
+        const angle = i * Math.PI * 2 / segments;
+        ring.push(verts.length);
+        verts.push([radius * Math.cos(angle), height, radius * Math.sin(angle)]);
+      }
+      if (count > 1) ring.forEach((v, i) => edges.push([v, ring[(i + 1) % count]]));
+      rings.push(ring);
+    });
+    for (let r = 1; r < rings.length; r++) {
+      const a = rings[r - 1], b = rings[r];
+      for (let i = 0; i < Math.max(a.length, b.length); i++) edges.push([a[i % a.length], b[i % b.length]]);
+    }
+    const radius = Math.max(...verts.map((v) => Math.hypot(...v)));
+    return { name, verts: verts.map((v) => v.map((n) => n / radius)), edges };
+  }
+
+  function sphere() {
+    const profile = [[0, -1]];
+    for (let i = 1; i < 8; i++) {
+      const angle = i * Math.PI / 8;
+      profile.push([Math.sin(angle), -Math.cos(angle)]);
+    }
+    profile.push([0, 1]);
+    return revolved('SPHERE', profile);
+  }
+
+  const SHAPES = [
+    icosahedron, octahedron, cube, tetrahedron, dodecahedron, torus, stella, pyramid,
+    sphere,
+    () => revolved('CYLINDER', [[0.7, -0.8], [0.7, 0.8]]),
+    () => revolved('CONE', [[0.8, -0.6], [0, 1]]),
+    () => revolved('FRUSTUM', [[0.85, -0.65], [0.4, 0.65]]),
+    () => revolved('TRI PRISM', [[0.8, -0.7], [0.8, 0.7]], 3),
+    () => revolved('HEX PRISM', [[0.8, -0.7], [0.8, 0.7]], 6),
+    () => revolved('BIPYRAMID', [[0, -1], [0.75, 0], [0, 1]], 6),
+  ];
 
   let current = null;
+  let currentIndex = -1;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let rotX = 0.35, rotY = 0.4;
   let targetRotX = rotX, targetRotY = rotY;
   let mouseActive = false;
 
   function pickShape() {
-    const fn = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    // Every activation changes the shape, even when random picks repeat.
+    const offset = 1 + Math.floor(Math.random() * (SHAPES.length - 1));
+    currentIndex = currentIndex < 0 ? Math.floor(Math.random() * SHAPES.length) : (currentIndex + offset) % SHAPES.length;
+    const fn = SHAPES[currentIndex];
     current = fn();
     if (shapeNameEl) shapeNameEl.textContent = current.name;
     rotX = 0.2 + Math.random() * 0.5;
@@ -222,7 +268,7 @@
   }
 
   function draw() {
-    if (!mouseActive) targetRotY += 0.007;
+    if (!mouseActive && !reducedMotion.matches) targetRotY += 0.007;
     rotX += (targetRotX - rotX) * 0.09;
     rotY += (targetRotY - rotY) * 0.09;
 

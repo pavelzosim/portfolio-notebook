@@ -29,9 +29,9 @@
   align-items: center;
   gap: 8px;
 }
-.wire-wrap { width: 170px; height: 170px; }
-#wireCanvas { width: 170px; height: 170px; display: block; cursor: grab; }
-#wireCanvas:active { cursor: grabbing; }
+.wire-wrap { width: 170px; height: 170px; display: block; padding: 0; border: 0; background: transparent; border-radius: 50%; cursor: pointer; }
+.wire-wrap:focus-visible { outline: 2px solid var(--atlas-accent); outline-offset: 2px; }
+#wireCanvas { width: 170px; height: 170px; display: block; cursor: pointer; }
 .wire-meta {
   display: flex;
   gap: 10px;
