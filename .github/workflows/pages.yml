@@ -29,6 +29,12 @@ jobs:
       - name: Build production
         run: python scripts/build_github_pages.py --base-path "/"
 
+      - name: Check analytics consent and conversion events
+        run: node --test scripts/analytics.test.cjs
+
+      - name: Audit production SEO and internal links
+        run: python scripts/audit_site.py
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

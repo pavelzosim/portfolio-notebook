@@ -29,7 +29,7 @@ SEO is not a separate writing pass. A page is not migrated until its content, me
 | Public production page | indexable | included | self-referencing production URL |
 | Redirected or replaced page | redirect to the replacement | old URL excluded | replacement URL |
 
-The current GitHub Pages workflow already builds with `--noindex`. Keep that behavior until the custom domain is transferred and production launch validation is complete.
+The current GitHub Pages workflow publishes production at `https://www.pavelzosim.com/` with `--base-path "/"`, then runs the SEO/link audit before deployment. Use `--noindex` for a separate preview build; preview output must omit CNAME and sitemap.xml. Do not deploy a preview build to the production domain.
 
 `robots.txt` is a crawl-control file, not a privacy mechanism. A page that must not appear in search needs `noindex`; confidential analytics requires authentication. Do not disallow a `noindex` HTML page in `robots.txt`, because a crawler must be able to fetch the page to read the directive.
 
@@ -181,10 +181,12 @@ Current implementation:
 - GA4 Measurement ID: `G-LX3PFT5QR4` (a public tag identifier, not a secret).
 - `/scripts/analytics.js` is the single analytics entry point.
 - The build injects that entry point into every generated HTML page.
-- Localhost is excluded from collection.
+- Only HTTPS on `www.pavelzosim.com` collects production analytics. Localhost, GitHub preview domains, source templates, and the Style Guide are excluded. Local consent previews never load Google Analytics.
 - Basic Consent Mode blocks the Google tag until the visitor allows analytics.
 - Analytics storage may be granted; advertising storage, advertising user data, personalization, and Google Signals remain disabled.
 - The visitor's choice is stored locally as `atlas.analytics.consent.v1` and can be reset from `/privacy/`.
+- `contact_click` records an email-link click (intent, not a submitted lead); `cv_download` records a CV-link click. Neither custom event includes link query parameters, contact addresses, or form contents. Enhanced Measurement continues to own generic `click` and `file_download` events.
+- Mark `contact_click` and `cv_download` as key events in GA4, counted once per session. Do not mark generic page views, scrolls, or site-search `form_start` events as leads.
 
 A static `/admin/` page on GitHub Pages can be hidden from Google with `noindex`, but it cannot be made private. Source files, JavaScript, and embedded credentials remain downloadable. If a custom Atlas-styled dashboard is required later, host it behind real authentication and fetch aggregated analytics through a server-side API. It must also use `noindex`, be absent from the sitemap and public navigation, and expose no credentials to the browser.
 

@@ -9,8 +9,13 @@
 
   const isLocal = localHosts.has(window.location.hostname);
   const isConsentPreview = isLocal && new URLSearchParams(window.location.search).get('analytics-preview') === '1';
+  const isProduction = window.location.protocol === 'https:' && window.location.hostname === 'www.pavelzosim.com';
+  const isInternal = /^\/(?:content|blog\/style-guide)(?:\/|$)/.test(window.location.pathname);
 
-  if (isLocal && !isConsentPreview) return;
+  // Preview domains and internal reference pages must not pollute production data.
+  if ((!isProduction || isInternal) && !isConsentPreview) return;
+  if (window.__atlasAnalyticsInitialized) return;
+  window.__atlasAnalyticsInitialized = true;
 
   const readConsent = () => {
     try {
@@ -29,6 +34,7 @@
   };
 
   const loadGoogleAnalytics = () => {
+    if (!isProduction || readConsent() !== 'granted') return;
     if (document.querySelector(`script[src*="googletagmanager.com/gtag/js?id=${measurementId}"]`)) return;
 
     window.dataLayer = window.dataLayer || [];
@@ -122,6 +128,19 @@
 
   const start = () => {
     bindConsentReset();
+    document.addEventListener('click', (event) => {
+      if (!isProduction || readConsent() !== 'granted') return;
+      const link = event.target.closest?.('a[href]');
+      if (!link) return;
+      const url = new URL(link.href, window.location.href);
+      // Record intent only, never the email address, subject, or query parameters.
+      if (url.protocol === 'mailto:') {
+        window.gtag?.('event', 'contact_click', { contact_method: 'email' });
+      } else if (url.origin === window.location.origin &&
+          /^\/public\/documents\/pavel-zosim-[^/]+\.pdf$/i.test(url.pathname)) {
+        window.gtag?.('event', 'cv_download', { content_type: 'cv' });
+      }
+    });
     const consent = readConsent();
     if (consent === 'granted') loadGoogleAnalytics();
     else if (consent !== 'denied') mountConsentBanner();

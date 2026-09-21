@@ -9,6 +9,7 @@ import sys
 import urllib.parse
 from html.parser import HTMLParser
 from pathlib import Path
+from build_github_pages import validate_discovery
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -91,9 +92,10 @@ def main() -> int:
             if marker not in text:
                 errors.append(f"Missing {marker} in post/{record['slug']}")
     sitemap_count = len(re.findall(r"<url>", (SITE / "sitemap.xml").read_text(encoding="utf-8")))
-    expected_sitemap_count = len(records) + 10
-    if sitemap_count != expected_sitemap_count:
-        errors.append(f"Sitemap has {sitemap_count} URLs instead of {expected_sitemap_count}")
+    try:
+        validate_discovery()
+    except (RuntimeError, OSError) as error:
+        errors.append(str(error))
 
     print(f"Audited {len(documents)} HTML documents, {len(records)} posts, and {sitemap_count} sitemap URLs")
     for warning in warnings:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a GitHub Pages preview without changing production source paths."""
+"""Build production or an explicitly noindex GitHub Pages preview."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import json
 import re
 import shutil
 import urllib.parse
+import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape as xml_escape
 from pathlib import Path
 
@@ -26,8 +27,7 @@ def normalized_base_path(value: str) -> str:
 
 
 def add_noindex(document: str) -> str:
-    if re.search(r'<meta\s+name=["\']robots["\']', document, re.IGNORECASE):
-        return document
+    document = re.sub(r'<meta\b(?=[^>]*\bname=["\']robots["\'])[^>]*>', '', document, flags=re.IGNORECASE)
     return re.sub(
         r"(<head(?:\s[^>]*)?>)",
         r'\1<meta name="robots" content="noindex, nofollow">',
@@ -80,7 +80,7 @@ def add_analytics(document: str) -> str:
     analytics_assets = ''
     if '11-atlas-consent.css' not in document:
         analytics_assets += '<link rel="stylesheet" href="/styles/framework/11-atlas-consent.css?v=1">'
-    analytics_assets += '<script src="/scripts/analytics.js?v=1" defer data-atlas-analytics></script>'
+    analytics_assets += '<script src="/scripts/analytics.js?v=2" defer data-atlas-analytics></script>'
     return re.sub(
         r"</head>",
         analytics_assets + "</head>",
@@ -119,6 +119,8 @@ def copy_site() -> None:
             shutil.copytree(source, OUTPUT / name)
     for name in SITE_FILES:
         shutil.copy2(ROOT / name, OUTPUT / name)
+    # Authoring scratch record, not the live registry; contains placeholder URLs.
+    (OUTPUT / "content" / "posts" / "index-json-entry.json").unlink(missing_ok=True)
     scripts_output = OUTPUT / "scripts"
     scripts_output.mkdir()
     for source in (ROOT / "scripts").glob("*.js"):
@@ -155,6 +157,8 @@ def materialize_post_routes() -> list[dict]:
 def write_discovery_files(records: list[dict], noindex: bool) -> None:
     domain = "https://www.pavelzosim.com"
     if noindex:
+        (OUTPUT / "CNAME").unlink(missing_ok=True)
+        (OUTPUT / "sitemap.xml").unlink(missing_ok=True)
         (OUTPUT / "robots.txt").write_text("User-agent: *\nDisallow:\n", encoding="utf-8", newline="\n")
         return
     urls = [
@@ -165,7 +169,11 @@ def write_discovery_files(records: list[dict], noindex: bool) -> None:
     urls.extend((f"{domain}/projects/{project['slug']}/", "") for project in projects)
     urls.extend((record["publicUrl"], record.get("dateModified") or record.get("datePublished") or "") for record in records)
     entries = []
+    seen = set()
     for location, modified in urls:
+        if location in seen:
+            raise RuntimeError(f"Duplicate sitemap URL: {location}")
+        seen.add(location)
         lastmod = f"<lastmod>{xml_escape(modified)}</lastmod>" if modified else ""
         entries.append(f"  <url><loc>{xml_escape(location)}</loc>{lastmod}</url>")
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(entries) + "\n</urlset>\n"
@@ -188,6 +196,24 @@ def transform_site(base_path: str, noindex: bool) -> None:
         text = rewrite_root_paths(text, base_path, path.suffix.lower())
         path.write_text(text, encoding="utf-8", newline="\n")
     (OUTPUT / ".nojekyll").write_text("", encoding="utf-8")
+
+
+def validate_discovery() -> int:
+    """Check sitemap URLs against actual indexable canonical HTML, not a fixed count."""
+    namespace = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    locations = [node.text or "" for node in ET.parse(OUTPUT / "sitemap.xml").findall("s:url/s:loc", namespace)]
+    if len(locations) != len(set(locations)):
+        raise RuntimeError("Duplicate sitemap URLs")
+    for location in locations:
+        url = urllib.parse.urlsplit(location)
+        if url.scheme != "https" or url.netloc != "www.pavelzosim.com" or url.query or url.fragment or not url.path.endswith("/"):
+            raise RuntimeError(f"Noncanonical sitemap URL: {location}")
+        route = OUTPUT / url.path.lstrip("/") / "index.html"
+        document = route.read_text(encoding="utf-8")
+        canonical = re.findall(r'<link\b[^>]*rel=["\']canonical["\'][^>]*href=["\']([^"\']+)', document, re.I)
+        if canonical != [location] or re.search(r'<meta\b[^>]*\bnoindex\b', document, re.I):
+            raise RuntimeError(f"Sitemap/canonical/indexing mismatch: {location}")
+    return len(locations)
 
 
 def validate_site(base_path: str, noindex: bool) -> None:
@@ -226,9 +252,7 @@ def validate_site(base_path: str, noindex: bool) -> None:
         if any(value not in document for value in required):
             raise RuntimeError(f"Incomplete post metadata: {record['slug']}")
     if not noindex:
-        expected_sitemap_urls = len(expected_posts) + 10
-        if len(re.findall(r"<url>", (OUTPUT / "sitemap.xml").read_text(encoding="utf-8"))) != expected_sitemap_urls:
-            raise RuntimeError("Unexpected sitemap URL count")
+        validate_discovery()
         if (OUTPUT / "content" / "posts" / "atlas-html").exists():
             raise RuntimeError("Duplicate source post routes remain in output")
     print(f"Validated {html_documents} HTML documents, {len(expected_posts)} canonical post routes, and discovery files")
