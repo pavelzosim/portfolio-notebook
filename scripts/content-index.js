@@ -45,6 +45,12 @@
     return element;
   };
 
+  // Newest first, same fallback as the "Latest" widgets in post-registry.js.
+  // Records without any parseable date keep their relative order (stable sort)
+  // and sink below every dated record, rather than jumping to the top.
+  const recordDate = (record) => Date.parse(record.siteDate || record.datePublished) || 0;
+  const byRecency = (a, b) => recordDate(b) - recordDate(a);
+
   const registryPath = view === 'projects' ? '/content/projects/index.json' : '/content/posts/index.json';
 
   Promise.all([
@@ -71,7 +77,7 @@
     })
     .then((allRecords) => {
       const config = pageConfig[view];
-      const records = view === 'tools' ? allRecords.filter((record) => record.resource) : allRecords;
+      const records = (view === 'tools' ? allRecords.filter((record) => record.resource) : allRecords).slice().sort(byRecency);
       const text = (selector, value) => {
         const element = document.querySelector(selector);
         if (element) element.textContent = value;
