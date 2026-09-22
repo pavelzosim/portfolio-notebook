@@ -260,6 +260,30 @@
       "indexable": true
     },
     {
+      "id": "NOTE-019",
+      "title": "The Light System — Randomized and Synchronized Lighting on Generated Geometry",
+      "kind": "article",
+      "group": "procedural",
+      "summary": "How lights on windows and streetlights attach to procedurally placed instances in Unreal — sockets, stable selection, a material mask, and data that survives a rebuild.",
+      "tags": [
+        "procedural",
+        "lighting",
+        "unreal",
+        "houdini",
+        "technical-art"
+      ],
+      "image": "/public/media/posts/lighting-generated-geometry/night-courtyard-hero.jpg",
+      "imageAlt": "Unreal Editor view of the generated courtyard at night, streetlights on and windows lit with varied interiors visible through the glass",
+      "localPath": "/content/posts/atlas-html/lighting-generated-geometry.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/lighting-generated-geometry/",
+      "publicUrl": "https://www.pavelzosim.com/post/lighting-generated-geometry/",
+      "slug": "lighting-generated-geometry",
+      "datePublished": "2026-09-22",
+      "dateModified": "2026-09-22",
+      "state": "published",
+      "indexable": true
+    },
+    {
       "id": "CASE-001",
       "title": "Procedural Interiors with Houdini & USD",
       "kind": "case study",

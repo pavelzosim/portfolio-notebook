@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Light System — Randomized and Synchronized Lighting on Generated Geometry · Pavel Zosim</title>
+  <meta name="description" content="How lights on windows and streetlights attach to procedurally placed instances in Unreal — sockets, stable selection, a material mask, and data that survives a rebuild.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/lighting-generated-geometry/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Light System — Randomized and Synchronized Lighting on Generated Geometry">
+  <meta property="og:description" content="How lights on windows and streetlights attach to procedurally placed instances in Unreal — sockets, stable selection, a material mask, and data that survives a rebuild.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/lighting-generated-geometry/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/lighting-generated-geometry/night-courtyard-hero.jpg">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/lighting-generated-geometry/night-courtyard-hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Light System — Randomized and Synchronized Lighting on Generated Geometry">
+  <meta name="twitter:description" content="How lights on windows and streetlights attach to procedurally placed instances in Unreal — sockets, stable selection, a material mask, and data that survives a rebuild.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Light System — Randomized and Synchronized Lighting on Generated Geometry","description":"How lights on windows and streetlights attach to procedurally placed instances in Unreal — sockets, stable selection, a material mask, and data that survives a rebuild.","url":"https://www.pavelzosim.com/post/lighting-generated-geometry/","mainEntityOfPage":"https://www.pavelzosim.com/post/lighting-generated-geometry/","image":"https://www.pavelzosim.com/public/media/posts/lighting-generated-geometry/night-courtyard-hero.jpg","datePublished":"2026-09-22","dateModified":"2026-09-22","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=60">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
+  <style>
+    /* Scoped to this post only: same slider component as Controlled Procedurality,
+       no shared framework component for an image slider yet. */
+    .atlas-container .content-block .media-frame:has(.atlas-slider)::before { content: "[ GALLERY // IMAGE_SEQUENCE ]"; }
+    .atlas-container .content-block .atlas-slider { width: 100%; }
+    .atlas-container .content-block .atlas-slider__viewport {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      border: 1px solid var(--atlas-border);
+      background: var(--atlas-bg-alt);
+    }
+    .atlas-container .content-block .atlas-slider__viewport img { display: block; max-width: 100%; height: auto; }
+    .atlas-container .content-block .atlas-slider__viewport img[hidden] { display: none; }
+    .atlas-container .content-block .atlas-slider__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .atlas-container .content-block .atlas-slider__bar .atlas-btn { padding: 6px 12px; }
+    .atlas-container .content-block .atlas-slider__label {
+      flex: 1;
+      text-align: center;
+      font-family: var(--atlas-font-mono);
+      font-size: var(--fs-meta);
+      color: var(--atlas-ink-muted);
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body id="top">
+  <h1 class="seo-heading">The Light System — Randomized and Synchronized Lighting on Generated Geometry</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#not-in-hda"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Why a lamp is not a generator problem</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#boundary"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">The boundary: what the generator publishes</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#anchoring"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Anchoring a light to an instance</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#selection"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Which ones light up</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#emissive"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">The emissive half: a mask in the material</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#control"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Control beyond random</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#rebuild"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">Surviving a rebuild</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#limits"><span class="atlas-toc__num">09</span><span class="atlas-toc__row"><span class="atlas-toc__title">Limits, and what this does not do</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#result"><span class="atlas-toc__num">10</span><span class="atlas-toc__row"><span class="atlas-toc__title">Result</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+      <h2 id="overview">01 Overview</h2>
+      <p>This article continues <a href="/post/controlled-procedurality/">Controlled Procedurality</a>, the main write-up on this project's generator and the level design system built around it. That article mentions lighting only in passing, as one example of a rule layered onto placed instances from the Unreal side. This one is entirely about that layer: a superstructure that works with randomization and with lighting synchronized to the material, producing the effect of a lit window, a streetlight with the same kind of control, or any other repeated or standalone object this system scatters.</p>
+      <p><b>Implementation context:</b> Unreal Engine 5.8.1, Houdini Engine, and the project’s custom <code class="atlas-code-inline">MazePlacementExtras</code> component.</p>
+      <p>I needed windows to light up at dusk and a streetlight to actually cast light on wet asphalt, and the two approaches I reached for first both ran into a wall. A Blueprint Actor per window, each carrying its own light at a socket, gives full control over that one window — but a full Actor per window is expensive to spawn and manage at the density a generated city needs — substantially more UObject and component overhead per copy than a HISM instance carries — and HISM instancing exists specifically to avoid paying that cost. A per-instance random draw in the material instead, along the lines of a <code class="atlas-code-inline">PerInstanceRandom</code> node, is close to free and gives a plausible mix of lit and dark windows — but a shader has no way to know whether that glow corresponds to an actual light-casting source nearby, and no way to be told "turn this one window off" for a story beat. It solves variation. It does not solve synchronization, and it gives no control.</p>
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Nothing on: Maze Placement Extras disabled" src="/public/media/posts/lighting-generated-geometry/unreal-no-light-dusk.jpg" alt="The generated courtyard at dusk with Maze Placement Extras disabled: no streetlights, no lit windows, just the base scene" loading="eager">
+            <img data-slide data-caption="Plain emission turned on in every window" src="/public/media/posts/lighting-generated-geometry/unreal-emission-all-windows.jpg" alt="The same courtyard with a uniform emissive material lighting every window, before any selection, probability or real light component" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 01 — Where this started: nothing on, then plain emission in every window, uniform and unselective. Debug view: yes — Unreal Editor viewport, same scene both times.</figcaption>
+      </figure>
+      <p>The way out was to stop treating a lit window as an object to spawn, and start treating it as a placement to attach behavior to — without asking the Houdini generator to know anything about lighting. Read the identity the generator already publishes for every instance, and build an engine-side pass on top of the existing HISM that can attach real objects and write data keyed to that same identity. A material reading the same key a light was created from cannot drift out of sync with it, because both answer to one source of truth instead of two separate systems guessing at each other. Nothing about that mechanism is specific to light, either — underneath, it's one boolean per placement that can spawn an object and drive a material's emissive channel at the same time; this article just keeps using a lit window as the example, because it's the concrete case that's actually built.</p>
+      <p><a href="/post/houdini-unreal-typed-placement-routing/">Typed Placement Routing</a> is the other piece worth knowing going in — it covers how Houdini placements reach Unreal as named HISM components or Blueprint Actors in the first place. This article covers the layer built on top of both: attaching lights to placed instances, choosing which ones are on, and keeping that choice — and that synchronization — stable while the maze is rebuilt.</p>
+      <p>The generator itself is deliberately kept out of this. The Houdini asset does its own job — structure, scatter, topology, identity — and carries no light components, emissive values or volumetric effects. The lighting is a superstructure written for the game engine, on top of an unchanged core.</p>
+      <figure class="atlas-schematic" id="zones-of-responsibility">
+        <figcaption class="atlas-schematic__header">FIG 02 — THREE ZONES OF RESPONSIBILITY</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 560 300" role="img" aria-labelledby="zones-title zones-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="zones-title">Three zones of responsibility</title><desc id="zones-desc">HDA and HISM are the foundation, generating structure and holding placed instances. Maze Placement Extras is the superstructure built on top, reading that foundation and attaching real objects.</desc>
+          <rect class="atlas-schematic__primary" fill="none" x="140" y="14" width="380" height="72"/><text class="atlas-schematic__label" x="330" y="38" text-anchor="middle" style="font-size:13px">HDA (HOUDINI)</text><text class="atlas-schematic__label" x="330" y="58" text-anchor="middle" style="font-size:11px">structure, scatter, topology, identity</text><text class="atlas-schematic__label" x="330" y="74" text-anchor="middle" style="font-size:11px">no lighting knowledge</text>
+          <line class="atlas-schematic__primary" x1="330" y1="86" x2="330" y2="97"/><line class="atlas-schematic__primary" x1="330" y1="109" x2="330" y2="118" marker-end="url(#arrowZones)"/><text class="atlas-schematic__label" x="330" y="105" text-anchor="middle" style="font-size:11px">Consumer writes instances</text>
+          <rect class="atlas-schematic__primary" fill="none" x="140" y="118" width="380" height="66"/><text class="atlas-schematic__label" x="330" y="146" text-anchor="middle" style="font-size:13px">HISM (UNREAL)</text><text class="atlas-schematic__label" x="330" y="166" text-anchor="middle" style="font-size:11px">placed instances, published metadata</text>
+          <line class="atlas-schematic__primary" x1="330" y1="184" x2="330" y2="195"/><line class="atlas-schematic__primary" x1="330" y1="207" x2="330" y2="216" marker-end="url(#arrowZones)"/><text class="atlas-schematic__label" x="330" y="203" text-anchor="middle" style="font-size:11px">Extras reads that metadata</text>
+          <rect class="atlas-schematic__primary" fill="none" stroke-width="2" x="110" y="216" width="440" height="80"/><text class="atlas-schematic__label" x="330" y="244" text-anchor="middle" style="font-size:13px">MAZEPLACEMENTEXTRAS</text><text class="atlas-schematic__label" x="330" y="264" text-anchor="middle" style="font-size:11px">attaches a real object, writes to custom data —</text><text class="atlas-schematic__label" x="330" y="280" text-anchor="middle" style="font-size:11px">the superstructure this article is about</text>
+          <path class="atlas-schematic__secondary" fill="none" d="M90,14 H140 M90,14 V184 M90,184 H140"/><text class="atlas-schematic__label" x="70" y="99" text-anchor="middle" style="font-size:11px" transform="rotate(-90 70 99)">FOUNDATION</text>
+          <defs><marker id="arrowZones" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker></defs>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>MODEL</b><span>HDA carries no lighting knowledge; HISM only stores and publishes what the HDA produced. Everything this article covers lives in the third box.</span></div>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
+      <h2 id="not-in-hda">02 Why a lamp is not a generator problem</h2>
+      <p>I treat the visible source, its illumination, and any beam or haze as separate controls. An emissive material makes the window or bulb appear bright. A light component provides controllable illumination and shadows. Volumetric fog or an authored effect can make a beam visible when the scene needs it. Not every lamp needs all three.</p>
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Emissive only — the bulb mesh glows, nothing else is on" src="/public/media/posts/lighting-generated-geometry/streetlight-emissive-only.jpg" alt="The streetlight with only its emissive material active: the bulb glows but nothing is cast onto the surrounding scene" loading="eager">
+            <img data-slide data-caption="Point Light only — the source, illuminating the scene" src="/public/media/posts/lighting-generated-geometry/streetlight-point-light-only.jpg" alt="The same streetlight with only its Point Light component active, illuminating the surrounding area" loading="lazy" hidden>
+            <img data-slide data-caption="Off — no emissive, no light" src="/public/media/posts/lighting-generated-geometry/streetlight-off.jpg" alt="The same streetlight with neither the emissive material nor the light component active" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 03 — The same streetlight, one control at a time: emissive only, Point Light only, then off. Debug view: yes — Unreal Editor viewport, same pole each time.</figcaption>
+      </figure>
+
+      <p>Putting those into the generator would load it with objects that are specific to one engine. Every engine names and handles them differently, and each of them changes the cost of a cook. So the generator stays the source of <em>where</em> and <em>what kind of place</em>, and the engine layer decides <em>what happens there</em>.</p>
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th>Part of a light</th><th>Lives in</th><th>Why there</th></tr></thead>
+          <tbody>
+            <tr><td>Where a lamp can exist</td><td>Houdini (placement, topology, key)</td><td>Structure and identity are the generator's job</td></tr>
+            <tr><td>Emissive surface</td><td>Material (per-instance custom data)</td><td>Per-instance values without a separate material instance for every window</td></tr>
+            <tr><td>Light source</td><td>Unreal object attached at a socket</td><td>Engine-specific type, units and shadow method</td></tr>
+            <tr><td>Beam / haze</td><td>Engine effect or texture</td><td>Technique and cost depend on the intended effect</td></tr>
+            <tr><td>Which lamps are on</td><td>Engine layer, keyed to the placement</td><td>Must survive a rebuild of the maze</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Emissive materials can also illuminate the scene through <a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine" target="_blank" rel="noopener">Lumen</a>. Small, bright emitters can be noisy, so this setup uses explicit lights for control rather than assuming emissive contributes no light.</p>
+      <div class="atlas-section-break" data-index="// § 02 WHY A LAMP IS NOT A GENERATOR PROBLEM"></div>
+      <h2 id="boundary">03 The boundary: what the generator publishes</h2>
+      <p>The Unreal Consumer publishes a metadata snapshot alongside the HISM instances it creates. In the current adapter, structural placements use domain <code class="atlas-code-inline">structural</code> and props use <code class="atlas-code-inline">prop</code>. Structural records include placement key, topology and floor fields; prop records include key, prop type, scatter identifiers and side. Prop floor fields are currently unavailable. Gameplay and standalone Actor placements do not have this HISM source mapping. Extras reads those fields rather than inferring them from mesh geometry.</p>
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="MazeHoudiniDataConsumer, on the HDA actor itself" src="/public/media/posts/lighting-generated-geometry/consumer-component-on-hda-actor.jpg" alt="The MazeHoudiniDataConsumer component attached to the HDA actor, alongside its Houdini Asset Component" loading="lazy">
+            <img data-slide data-caption="Maze Placement Extras, on the container that owns the HISM" src="/public/media/posts/lighting-generated-geometry/extras-component-streetlight-rule.jpg" alt="The Maze Placement Extras component on BP_Ground_Props, with its StreetLight rule expanded: source HISM, socket, probability, seed, max objects and actor class" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 04 — Two separate components, not one system wearing two names: the Consumer on the HDA actor, Extras on the container that owns the HISM. Debug view: yes — Unreal Editor Details panel, both captures.</figcaption>
+      </figure>
+      <p>Extras is a Blueprint-facing component on the container that owns the HISM. It is separate from the generator, and the Consumer rebuilds it automatically after every completed HISM update. Nothing on the Houdini side knows it exists.</p>
+      <div class="atlas-section-break" data-index="// § 03 THE BOUNDARY"></div>
+      <h2 id="anchoring">04 Anchoring a light to an instance</h2>
+      <p>A rule names a source HISM and, optionally, a mesh socket. For each selected instance, the light anchor combines the mesh-local socket transform with that instance’s transform and the configured local offset. A socket belongs to the shared mesh asset; the instance transform is what places that anchor on each copy. With Inherit Source Scale off, the implementation removes scale from the instance transform before combining it with the socket and local offset. This affects anchor spacing as well as the spawned object’s scale; use it deliberately on scaled source meshes.</p>
+
+      <h3 id="window-lights">Windows: a rect light at a socket</h3>
+      <p>The window rule targets the window HISM and the socket named <code class="atlas-code-inline">WindowLight</code> on the window mesh. Its object is a rect light with its own color, intensity, attenuation radius, source size and shadow toggle, so a window rule and an entrance rule on the same building can look completely different without either touching the other.</p>
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="The WindowLight socket, placed on the window mesh" src="/public/media/posts/lighting-generated-geometry/window-light-socket-location.jpg" alt="The WindowLight socket in the Static Mesh Editor, positioned on the window mesh's glass panel" loading="lazy">
+            <img data-slide data-caption="The result: every light lands at that exact point" src="/public/media/posts/lighting-generated-geometry/light-radii-debug-view.jpg" alt="A debug wireframe view of the courtyard showing light attenuation radii, each one centered on a window's or streetlight's socket" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 05 — The socket's fixed position on the mesh, and the result: a light at exactly that point on every instance, adjustable per rule without moving the socket. Debug view: yes — Static Mesh Editor, then a light-radius debug view in the level.</figcaption>
+      </figure>
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th>Rule field</th><th>Window Lights, as configured</th></tr></thead>
+          <tbody>
+            <tr><td>Socket</td><td><code class="atlas-code-inline">WindowLight</code></td></tr>
+            <tr><td>Selection mode</td><td>Stable Placement Key</td></tr>
+            <tr><td>Probability / Seed / Max Objects</td><td>1.0 / 1337 / 1024</td></tr>
+            <tr><td>Light</td><td>Rect light, white, 2 lm, 120 × 120 cm, attenuation 500 cm, shadows off</td></tr>
+            <tr><td>Write Selection To Custom Data</td><td>on, channel 0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Changing the probability, cap, or light parameters changes the result without requiring a change to the Houdini generator.</p>
+
+      <h3 id="streetlight">Streetlights: a Blueprint Actor at a socket</h3>
+      <p>The streetlight uses the same placement mechanism with a Blueprint Actor at the <code class="atlas-code-inline">LampLight</code> socket. The Blueprint can group spot and point light components and expose their settings together. An IES profile controls the light’s angular intensity distribution; volumetric scattering controls its contribution to fog. These settings belong to the Unreal lighting setup, not to the placement identity.</p>
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="Each placed streetlight is its own Actor instance, individually named" src="/public/media/posts/lighting-generated-geometry/streetlight-instances-extras-rule.jpg" alt="The StreetLight rule on BP_Ground_Props, and a row of individually named BP_StreetLight_SpotLight actor instances in the Outliner, each with its own light-radius debug wireframe" loading="lazy">
+            <img data-slide data-caption="Inside one streetlight: a SpotLight with an IES profile, plus a nested Point Light" src="/public/media/posts/lighting-generated-geometry/streetlight-spotlight-pointlight-ies.jpg" alt="The BP_StreetLight_SpotLight Blueprint's component hierarchy: a SpotLight component with an IES texture assigned, and a Point Light nested under it" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 06 — Because the object is a Blueprint Actor, not a bare light, it can carry more than one source: this one groups a SpotLight (with an IES profile shaping the beam) and a nested Point Light providing the glow at the bulb itself. Debug view: yes — Unreal Editor Outliner/Details, then the Blueprint's own component view.</figcaption>
+      </figure>
+      <figure class="atlas-schematic" id="socket-anchor">
+        <figcaption class="atlas-schematic__header">FIG 07 — ONE MESH SOCKET / MANY INSTANCE ANCHORS</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 560 260" role="img" aria-labelledby="socket-anchor-title socket-anchor-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="socket-anchor-title">FIG 07 — ONE MESH SOCKET / MANY INSTANCE ANCHORS</title><desc id="socket-anchor-desc">The shared mesh socket is transformed separately for each placed instance. A local light offset is then applied, resolving to a distinct anchor point per instance.</desc>
+          <rect class="atlas-schematic__primary" fill="none" x="190" y="8" width="180" height="50"/><text class="atlas-schematic__label" x="280" y="30" text-anchor="middle" style="font-size:13px">MESH-LOCAL SOCKET</text><text class="atlas-schematic__label" x="280" y="48" text-anchor="middle" style="font-size:11px">WindowLight / LampLight</text>
+          <path class="atlas-schematic__primary" fill="none" d="M280,58 V78 M280,78 H80 M280,78 H480"/>
+          <line class="atlas-schematic__primary" x1="80" y1="78" x2="80" y2="100" marker-end="url(#arrowSocket)"/><line class="atlas-schematic__primary" x1="480" y1="78" x2="480" y2="100" marker-end="url(#arrowSocket)"/>
+          <rect class="atlas-schematic__primary" fill="none" x="20" y="100" width="120" height="56"/><text class="atlas-schematic__label" x="80" y="124" text-anchor="middle" style="font-size:12px">INSTANCE A</text><text class="atlas-schematic__label" x="80" y="142" text-anchor="middle" style="font-size:11px">transform A</text>
+          <rect class="atlas-schematic__primary" fill="none" x="420" y="100" width="120" height="56"/><text class="atlas-schematic__label" x="480" y="124" text-anchor="middle" style="font-size:12px">INSTANCE B</text><text class="atlas-schematic__label" x="480" y="142" text-anchor="middle" style="font-size:11px">transform B</text>
+          <line class="atlas-schematic__primary" x1="80" y1="156" x2="80" y2="182" marker-end="url(#arrowSocket)"/><line class="atlas-schematic__primary" x1="480" y1="156" x2="480" y2="182" marker-end="url(#arrowSocket)"/>
+          <rect class="atlas-schematic__primary" fill="none" x="20" y="182" width="120" height="56"/><text class="atlas-schematic__label" x="80" y="206" text-anchor="middle" style="font-size:12px">LIGHT ANCHOR A</text><text class="atlas-schematic__label" x="80" y="224" text-anchor="middle" style="font-size:11px">+ local offset</text><circle class="atlas-schematic__primary" cx="80" cy="238" r="4" style="fill:var(--atlas-ink)"/>
+          <rect class="atlas-schematic__primary" fill="none" x="420" y="182" width="120" height="56"/><text class="atlas-schematic__label" x="480" y="206" text-anchor="middle" style="font-size:12px">LIGHT ANCHOR B</text><text class="atlas-schematic__label" x="480" y="224" text-anchor="middle" style="font-size:11px">+ local offset</text><circle class="atlas-schematic__primary" cx="480" cy="238" r="4" style="fill:var(--atlas-ink)"/>
+          <defs><marker id="arrowSocket" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker></defs>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>MODEL</b><span>Conceptual transform flow, not a socket-editor capture. Each instance needs its own resolved anchor; a component-level socket alone does not identify a particular HISM instance.</span></div>
+      </figure>
+      <p><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/megalights-in-unreal-engine" target="_blank" rel="noopener">MegaLights</a> is a rendering path, not a property of the socket or Blueprint architecture. Its use depends on the project’s engine version, renderer settings, and supported platform; selecting a shadow method on a light is not sufficient to enable it.</p>
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th>Rule field</th><th>StreetLight, as configured</th></tr></thead>
+          <tbody>
+            <tr><td>Source HISM</td><td><code class="atlas-code-inline">HISM_StreetLight_A</code></td></tr>
+            <tr><td>Socket</td><td><code class="atlas-code-inline">LampLight</code></td></tr>
+            <tr><td>Selection mode</td><td>Instance Order</td></tr>
+            <tr><td>Probability / Seed / Max Objects</td><td>0.3 / 1337 / 256</td></tr>
+            <tr><td>Object</td><td>Blueprint Actor, <code class="atlas-code-inline">BP_StreetLight_SpotLight</code></td></tr>
+            <tr><td>Write Selection To Custom Data</td><td>on, channel 0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="atlas-section-break" data-index="// § 04 ANCHORING A LIGHT TO AN INSTANCE"></div>
+      <h2 id="selection">05 Which ones light up</h2>
+      <p>A rule can select a subset of windows. <b>Instance Order</b> operates on HISM indices, which can refer to different placements after a rebuild. <b>Stable Placement Key</b> bases the decision on placement identity instead. Reordering alone does not change the result when the keys and rule inputs remain unchanged.</p>
+
+      <p>In stable mode, the probability decision comes from the rule seed, domain, placement key, and a purpose identifier. A separate purpose produces the priority used for the object cap. The result is deterministic for unchanged inputs; it is not a promise that the final selected set stays fixed when placements or rule settings change.</p>
+      <pre class="atlas-code-block" data-language="PSEUDOCODE"><code>// Selection flow, not a drop-in implementation.
+validateCurrentUniqueKeysForEntireSource(placements)
+candidates = filterByMetadata(placements, rule)
+for each placement in candidates:
+    chance = stableDraw(seed, domain, placement.key, purpose = 0)
+    priority = stableDraw(seed, domain, placement.key, purpose = 1)
+    if chance &lt; probability:
+        eligible.add(placement, priority)
+selected = takeUpToLimit(sortByStablePriority(eligible), maxObjects)</code></pre>
+      <p>The implementation uses a fixed 64-bit FNV-1a byte fold followed by an avalanche step. It serializes the purpose byte, a 32-bit seed in low-byte-first order, and length-prefixed UTF-8 domain and key strings. Purpose 0 supplies the probability draw; purpose 1 supplies cap priority. Ties use case-sensitive domain/key ordering. That explicit contract makes the selection independent of HISM index order and platform character width.</p>
+
+      <p>Metadata filters narrow the candidates before they consume the object cap. Values within one allowlist are OR; populated lists combine with AND, using exact case-sensitive text matches. Missing fields do not match populated lists, so a floor filter excludes current prop records. Stable selection requires current metadata and nonempty, unique keys for the whole source; invalid metadata skips the rule with a diagnostic rather than silently falling back to instance order.</p>
+      <figure class="media-frame">
+        <div class="atlas-slider" data-slider>
+          <div class="atlas-slider__viewport">
+            <img data-slide data-caption="The full Metadata Filter surface, every list empty — unrestricted" src="/public/media/posts/lighting-generated-geometry/metadata-filter-full-surface.jpg" alt="The Metadata Filter fields on a MazePlacementExtras rule, expanded: domain, structural and topology type, variant, floor, prop type, scatter id, side and registry index, all empty" loading="lazy">
+            <img data-slide data-caption="Floor Indices = [3]: light restricted to that one floor" src="/public/media/posts/lighting-generated-geometry/metadata-filter-floor-index-result.jpg" alt="The same rule with Floor Indices set to 3, and the result in the viewport: only that floor's windows are lit" loading="lazy" hidden>
+          </div>
+          <div class="atlas-slider__bar">
+            <button type="button" class="atlas-btn" data-slider-prev aria-label="Previous">‹ PREV</button>
+            <span class="atlas-slider__label" data-slider-label></span>
+            <button type="button" class="atlas-btn" data-slider-next aria-label="Next">NEXT ›</button>
+          </div>
+        </div>
+        <figcaption class="media-caption">FIG 08 — One filter, isolated: <code class="atlas-code-inline">Floor Indices = [3]</code> against an otherwise-empty filter turns every other floor's windows into non-candidates before probability ever runs. Debug view: yes — Unreal Editor Details panel and viewport, one state per slide.</figcaption>
+      </figure>
+      <p>Floor Indices addresses one axis. There's no equivalent key for position along a floor — a window-column or facade-slot identifier — so a rule can pick a floor, a side, or a scatter group, but not an arbitrary horizontal position within one. Adding that key would turn floor-level banding into addressing individual windows: a grid, in principle capable of spelling something out in lit glass rather than just lighting a band. Per-instance control down to a single point is a planned extension of the same filter mechanism, not something built yet.</p>
+      <div class="atlas-section-break" data-index="// § 05 WHICH ONES LIGHT UP"></div>
+      <h2 id="emissive">06 The emissive half: a mask in the material</h2>
+      <p>A light object alone does not make a window look lit. The glass has to glow in the same places where a light exists. Extras handles this by writing a mask straight into the source HISM: with <b>Write Selection To Custom Data</b> on, an instance gets <code class="atlas-code-inline">1</code> if its light was created and <code class="atlas-code-inline">0</code> in every other case — excluded by probability, by the object limit, or by an invalid asset. The window material reads that channel as per-instance custom data and drives its emissive from it.</p>
+
+      <p>The material and light creation therefore share one decision. Keeping them synchronized also requires reserving the chosen custom-data channel, clearing stale values, and reapplying the rule when its configuration changes. Extras rejects conflicting mask writers and scalar bindings with diagnostics; unrelated external writers still need to respect that channel ownership. The interior-room material can choose its cubemap independently of this on/off state.</p>
+      <figure class="atlas-schematic" id="selection-mask">
+        <figcaption class="atlas-schematic__header">FIG 09 — ONE CREATION RESULT / TWO OUTPUTS</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 560 280" role="img" aria-labelledby="selection-mask-title selection-mask-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="selection-mask-title">FIG 09 — ONE CREATION RESULT / TWO OUTPUTS</title><desc id="selection-mask-desc">Successful light creation sets the instance mask to one, shown filled. Excluded or failed placements retain zero, shown outlined. The material reads that mask for its emissive.</desc>
+          <rect class="atlas-schematic__primary" fill="none" x="170" y="10" width="220" height="50"/><text class="atlas-schematic__label" x="280" y="40" text-anchor="middle" style="font-size:12px">FILTER + DRAW + OBJECT CAP</text>
+          <line class="atlas-schematic__primary" x1="280" y1="60" x2="280" y2="90" marker-end="url(#arrowMask)"/>
+          <rect class="atlas-schematic__primary" fill="none" x="170" y="90" width="220" height="50"/><text class="atlas-schematic__label" x="280" y="120" text-anchor="middle" style="font-size:12px">TRY TO CREATE LIGHT</text>
+          <path class="atlas-schematic__primary" fill="none" d="M280,140 V158 M280,158 H130 M280,158 H430"/>
+          <line class="atlas-schematic__primary" x1="130" y1="158" x2="130" y2="180" marker-end="url(#arrowMaskOn)"/><line class="atlas-schematic__secondary" x1="430" y1="158" x2="430" y2="180" marker-end="url(#arrowMaskOff)"/>
+          <rect class="atlas-schematic__primary" x="20" y="180" width="220" height="70" style="fill:var(--atlas-ink)"/><text class="atlas-schematic__label" x="130" y="210" text-anchor="middle" style="font-size:13px;fill:var(--atlas-bg)">CREATED</text><text class="atlas-schematic__label" x="130" y="230" text-anchor="middle" style="font-size:11px;fill:var(--atlas-bg)">light + mask = 1</text>
+          <rect class="atlas-schematic__primary" fill="none" x="320" y="180" width="220" height="70"/><text class="atlas-schematic__label" x="430" y="210" text-anchor="middle" style="font-size:13px">NOT CREATED</text><text class="atlas-schematic__label" x="430" y="230" text-anchor="middle" style="font-size:11px">no light / mask = 0</text>
+          <defs><marker id="arrowMask" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker><marker id="arrowMaskOn" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker><marker id="arrowMaskOff" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink-muted)"/></marker></defs>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>MODEL</b><span>Conceptual data flow. A mask of 1 records successful creation, not measured brightness or visibility. The material reads mask × authored emissive from the allocated per-instance channel.</span></div>
+      </figure>
+
+      <h3 id="window-setup">This project's window: a mask-gated room behind the glass</h3>
+      <p>The mask above decides only whether a window is lit. A second, independent question is what shows through the glass once it is: this project answers that with a cubemap array, not room geometry. A window's material carries a small library of captured interiors, and each instance picks one. The two decisions are deliberately uncoupled — the earlier article on this project already says as much in passing — because it means the interior can be swapped, re-authored or re-randomized without touching whether a given window is switched on at all.</p>
+      <p>Uncoupling them also pays for itself, at least as a logical early-out. Ray-casting into a virtual room and sampling a cubemap array is not free per pixel, and a facade can carry a lot of windows. So the same mask that gates the light gates the interior too: a window with no light skips the room reconstruction in the shader graph and reads as a flat dark surface instead. What that's worth on the GPU depends on the compiled shader and branch coherence — a custom HLSL expression like this one doesn't automatically compile to a cheap dynamic branch — so it's an optimization the mask makes possible, not a measured saving; profiling the actual shader would be the way to claim one.</p>
+
+      <figure class="media-frame">
+        <img src="/public/media/posts/lighting-generated-geometry/window-material-interior-cubemap-graph.jpg" alt="M_Master_InteriorCubemapArray material graph in Unreal: cubemap ray-cast on the left, the Random-driven Emission Randomizer on the right, both feeding one Output node" loading="lazy">
+        <figcaption class="media-caption">FIG 10 — <code class="atlas-code-inline">M_Master_InteriorCubemapArray</code>: the interior ray-cast and cubemap sample on the left, the Random-driven Emission Randomizer on the right, both feeding one Output node. Debug view: yes — Unreal Material Editor, not a rendered result.</figcaption>
+      </figure>
+
+      <h3 id="window-cubemap">A ray-cast room, not a modeled one</h3>
+      <p>The interior is a custom HLSL expression, in a tangent-space convention where +X is window-right, +Y is window-up, and +Z points outward from the facade. For every pixel of the glass it reconstructs a camera ray, finds where that ray actually crosses the glass plane — the flat proxy the material is painted on doesn't have to sit exactly there — and re-expresses that point relative to the center of a virtual room sized in centimeters. A safe ray/box intersection then finds where the ray would exit that room; the exit point, offset by an authored capture position and re-projected through the cubemap's own basis vectors, is the direction actually sampled from the array. Two fades soften the illusion where it would otherwise break: one fades the room out near the window frame, measured in real centimeters rather than UV space, and one fades it out at a grazing viewing angle. A last check rejects any reconstructed point that the window opening itself would physically block from view.</p>
+      <pre class="atlas-code-block" data-language="HLSL"><code>// Tangent-space convention: +X window right, +Y window up,
+// +Z outward from the facade (-Z = into the building).
+
+float3 halfRoom = max(abs(RoomSizeCm), 1.0) * 0.5;
+
+// Camera ray in tangent space, flipped to point into the room.
+float3 rayDirectionN = -ViewDirectionTS / max(length(ViewDirectionTS), 1e-5);
+
+// Reconstruct the ray at the real glass plane, room-centered.
+float2 roomPlanePosition = windowPosition - RoomCenterFromWindowCm;
+float3 rayOrigin = float3(roomPlanePosition, halfRoom.z - frontInset);
+
+// Safe ray / box intersection against the room bounds.
+float3 directionSign = lerp(-1.0, 1.0, step(0.0, rayDirectionN));
+float3 safeDirection  = directionSign * max(abs(rayDirectionN), 1e-5);
+float3 tExitPerAxis   = max((-halfRoom - rayOrigin) / safeDirection,
+                             ( halfRoom - rayOrigin) / safeDirection);
+float  tExit = min(tExitPerAxis.x, min(tExitPerAxis.y, tExitPerAxis.z));
+float3 hitLocal = rayOrigin + rayDirectionN * max(tExit, 0.0);
+
+// hitLocal, minus an authored capture point and re-projected
+// through the cubemap's basis, becomes the sampled direction —
+// on the array slice this instance's RoomSlice selects.</code></pre>
+      <p>The condensed listing above keeps the ray/box core; the full expression also derives the capture position from an authored offset, applies the two fades, and clamps the array slice. None of it runs unless the mask says the window is on. What actually sits in the array is a set of captured room panoramas — this project holds seven, each an authored kitchen, bedroom or living room — and <code class="atlas-code-inline">RoomSlice</code>, resolved by the Random function's Balanced Discrete mode described below, just indexes into that array.</p>
+
+      <h3 id="window-random">One random function, four modes</h3>
+      <p>Both "is this window lit" and "which room appears behind it" ultimately trace back to a single reusable Random custom expression, switched between four modes by a <code class="atlas-code-inline">RandomType</code> input. It hashes an instance seed through two independent sine-based draws — one for a probability-style decision, one for picking a value — so the two questions don't correlate with each other by accident.</p>
+      <pre class="atlas-code-block" data-language="HLSL"><code>float probability = saturate(Probability);
+float rangeMin = min(MinValue, MaxValue);
+float rangeMax = max(MinValue, MaxValue);
+float count = max(1.0, floor(ValueCount));
+
+float instanceSeed = InstanceRandom + Seed * 19.193;
+float selectionRandom = frac(sin(instanceSeed * 12.9898 + 78.233) * 43758.5453);
+float valueRandom     = frac(sin(instanceSeed * 39.3467 + 11.135) * 24634.6345);
+
+float finalValue = 0.0;
+float selected   = 1.0;
+
+if (RandomType &lt; 0.5)                       // MODE 0 -- continuous random
+{
+    finalValue = lerp(rangeMin, rangeMax, valueRandom);
+}
+else if (RandomType &lt; 1.5)                  // MODE 1 -- binary probability
+{
+    selected = selectionRandom &lt; probability ? 1.0 : 0.0;
+    finalValue = selected;
+}
+else if (RandomType &lt; 2.5)                  // MODE 2 -- discrete random, N equally likely values
+{
+    float index = min(floor(valueRandom * count), count - 1.0);
+    float t = count &gt; 1.0 ? index / (count - 1.0) : 0.0;
+    finalValue = lerp(rangeMin, rangeMax, t);
+}
+else                                          // MODE 3 -- balanced discrete, evenly spread by instance
+{
+    float seedOffset = floor(abs(Seed) * 17.0);
+    float index = fmod(floor(InstanceIndex) + seedOffset, count);
+    float t = count &gt; 1.0 ? index / (count - 1.0) : 0.0;
+    finalValue = lerp(rangeMin, rangeMax, t);
+}
+
+Mask = selected;
+return finalValue;</code></pre>
+      <p>Mode 1 is a plain weighted coin flip — useful anywhere a material needs its own probability draw independent of the placement-key hash described in section 05. Modes 2 and 3 both pick one of <code class="atlas-code-inline">ValueCount</code> discrete values, but differently: Mode 2 draws uniformly at random, so with enough instances some values run hot and others barely appear; Mode 3 ignores the random draw entirely and instead cycles through every value by instance index, offset by the seed, so every room variant this array holds shows up roughly the same number of times across a whole facade. That is the mode a cubemap array wants — an even spread of interiors reads as variety; a random draw that happens to favor two rooms out of eight reads as a bug. Room variation is intentionally cosmetic and tied to instance index rather than placement key, unlike the lighting selection in section 06 — it is not guaranteed to survive a reorder unchanged, and for which fake room sits behind a window, that trade is fine.</p>
+      <figure class="atlas-schematic" id="random-modes-compared">
+        <figcaption class="atlas-schematic__header">FIG 11 — FOUR MODES, FOUR SHAPES OF RANDOM</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 560 400" role="img" aria-labelledby="modes-title modes-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="modes-title">Four modes, four shapes of random</title><desc id="modes-desc">Mode 0 draws any value along a continuous range. Mode 1 is a weighted coin flip into an on or off state. Mode 2 picks one of several discrete values uniformly at random, producing an uneven spread across many instances. Mode 3 cycles through the same discrete values by instance index, producing an even spread.</desc>
+          <rect class="atlas-schematic__primary" fill="none" x="20" y="20" width="250" height="170"/>
+          <text class="atlas-schematic__label" x="145" y="44" text-anchor="middle" style="font-size:13px">MODE 0 — CONTINUOUS</text>
+          <line class="atlas-schematic__primary" x1="45" y1="110" x2="245" y2="110"/><line class="atlas-schematic__primary" x1="45" y1="104" x2="45" y2="116"/><line class="atlas-schematic__primary" x1="245" y1="104" x2="245" y2="116"/>
+          <circle class="atlas-schematic__primary" cx="170" cy="110" r="5" style="fill:var(--atlas-ink)"/>
+          <text class="atlas-schematic__label" x="45" y="130" text-anchor="middle" style="font-size:11px">Min</text><text class="atlas-schematic__label" x="245" y="130" text-anchor="middle" style="font-size:11px">Max</text>
+          <text class="atlas-schematic__label" x="145" y="180" text-anchor="middle" style="font-size:11px">any value in the range</text>
+
+          <rect class="atlas-schematic__primary" fill="none" x="290" y="20" width="250" height="170"/>
+          <text class="atlas-schematic__label" x="415" y="44" text-anchor="middle" style="font-size:13px">MODE 1 — PROBABILITY</text>
+          <rect class="atlas-schematic__primary" fill="none" x="315" y="90" width="200" height="14"/><rect x="315" y="90" width="115" height="14" style="fill:var(--atlas-ink)"/>
+          <line class="atlas-schematic__secondary" x1="430" y1="84" x2="430" y2="104"/><text class="atlas-schematic__label" x="430" y="78" text-anchor="middle" style="font-size:11px">threshold</text>
+          <circle class="atlas-schematic__primary" cx="390" cy="97" r="4" style="fill:var(--atlas-bg)"/>
+          <line class="atlas-schematic__primary" x1="390" y1="101" x2="390" y2="120" marker-end="url(#arrowModes)"/>
+          <rect class="atlas-schematic__primary" x="365" y="124" width="50" height="32" style="fill:var(--atlas-ink)"/><text class="atlas-schematic__label" x="390" y="145" text-anchor="middle" style="font-size:12px;fill:var(--atlas-bg)">ON</text>
+          <rect class="atlas-schematic__primary" fill="none" x="440" y="124" width="50" height="32"/><text class="atlas-schematic__label" x="465" y="145" text-anchor="middle" style="font-size:12px">OFF</text>
+          <text class="atlas-schematic__label" x="415" y="180" text-anchor="middle" style="font-size:11px">a weighted coin flip, per instance</text>
+
+          <rect class="atlas-schematic__primary" fill="none" x="20" y="210" width="250" height="170"/>
+          <text class="atlas-schematic__label" x="145" y="234" text-anchor="middle" style="font-size:13px">MODE 2 — DISCRETE RANDOM</text>
+          <line class="atlas-schematic__primary" x1="40" y1="340" x2="250" y2="340"/>
+          <rect x="50" y="315" width="30" height="25" style="fill:var(--atlas-ink)"/><rect x="110" y="270" width="30" height="70" style="fill:var(--atlas-ink)"/><rect x="170" y="325" width="30" height="15" style="fill:var(--atlas-ink)"/><rect x="230" y="255" width="30" height="85" style="fill:var(--atlas-ink)"/>
+          <text class="atlas-schematic__label" x="145" y="368" text-anchor="middle" style="font-size:11px">uneven across instances</text>
+
+          <rect class="atlas-schematic__primary" fill="none" x="290" y="210" width="250" height="170"/>
+          <text class="atlas-schematic__label" x="415" y="234" text-anchor="middle" style="font-size:13px">MODE 3 — BALANCED</text>
+          <line class="atlas-schematic__primary" x1="310" y1="340" x2="540" y2="340"/>
+          <rect x="320" y="290" width="30" height="50" style="fill:var(--atlas-ink)"/><rect x="380" y="290" width="30" height="50" style="fill:var(--atlas-ink)"/><rect x="440" y="290" width="30" height="50" style="fill:var(--atlas-ink)"/><rect x="500" y="290" width="30" height="50" style="fill:var(--atlas-ink)"/>
+          <text class="atlas-schematic__label" x="415" y="368" text-anchor="middle" style="font-size:11px">even across instances, by index</text>
+
+          <defs><marker id="arrowModes" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker></defs>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>MODEL</b><span>Modes 2 and 3 draw from the same <code class="atlas-code-inline">ValueCount</code> set; the bars are illustrative frequency, not a measured distribution. Mode 3 is deterministic by instance index, not random at all — "balanced" describes its output, not its mechanism.</span></div>
+      </figure>
+      <figure class="media-frame" id="window-variation-demo">
+        <iframe src="https://www.youtube.com/embed/scRmKm3KYqk" title="Procedural Window Variation — Seed, Vertex Shader &amp; Cubemap | Unreal Engine" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <figcaption class="media-caption">FIG 12 — Seed, vertex shader and cubemap slice together, on the same window. <a href="https://www.youtube.com/watch?v=scRmKm3KYqk" target="_blank" rel="noopener">Watch on YouTube</a>.</figcaption>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 06 THE EMISSIVE HALF"></div>
+      <h2 id="control">07 Control beyond random</h2>
+      <p>Random selection answers "which windows, roughly." It does not answer "turn day into night," or "the player needs to notice this exact window, right now," or "this one streetlamp has to flicker because the story needs it to." Those need one control per placement, addressable by name, not a probability draw.</p>
+      <p>For a lamp that only needs to become something else entirely, the Extras metadata filter can already narrow a rule to a specific structural type, floor, or scatter group — the same allowlist fields covered in section 05 — and spawn a Blueprint Actor there instead of the default light. That's a category filter, not an address; it can single out "windows on floor 3," not one arbitrary instance by name. Full runtime control over a light that's already there — dimming it for a day/night cycle, driving a flicker while it keeps casting real light and real shadows, without swapping the object out — goes through a separate general data layer instead: a number per placement, keyed by a name and addressed by a handle made of the source HISM name and the placement key — never an instance index, which is only temporary. The handle is scoped to its owning container. Together with a data key, it resolves through four layers, first match wins.</p>
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th>Layer</th><th>Where it is set</th><th>Behavior</th></tr></thead>
+          <tbody>
+            <tr><td>Runtime override</td><td>Blueprint / C++ call at play time</td><td>Highest priority, not saved</td></tr>
+            <tr><td>Authored</td><td>Component details, per handle</td><td>Saved with the level</td></tr>
+            <tr><td>Generated</td><td>Rule with seed and min/max range</td><td>Deterministic from seed, domain, key and data key</td></tr>
+            <tr><td>Default</td><td>Argument of the read or the binding</td><td>Fallback when nothing else applies</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>A resolved value can be projected into a material channel through a binding from a data key to a custom data index. The engine layer does not interpret the number. What a value like <code class="atlas-code-inline">Visual.Intensity</code> means for a lamp is defined by the material or game code that reads it.</p>
+      <figure class="atlas-schematic" id="handle-to-material">
+        <figcaption class="atlas-schematic__header">FIG 13 — HANDLE TO MATERIAL CHANNEL</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 560 300" role="img" aria-labelledby="handle-title handle-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="handle-title">Handle to material channel</title><desc id="handle-desc">A placement handle, keyed by source HISM name and placement key, resolves to a value through SetScalarOverride and GetResolvedScalar, then optionally projects into a material's custom data channel through a binding.</desc>
+          <rect class="atlas-schematic__primary" fill="none" x="120" y="8" width="320" height="64"/><text class="atlas-schematic__label" x="280" y="34" text-anchor="middle" style="font-size:13px">HANDLE</text><text class="atlas-schematic__label" x="280" y="54" text-anchor="middle" style="font-size:11px">SourceHismName + PlacementKey</text>
+          <line class="atlas-schematic__primary" x1="280" y1="72" x2="280" y2="86"/><line class="atlas-schematic__primary" x1="280" y1="102" x2="280" y2="112" marker-end="url(#arrowHandle)"/><text class="atlas-schematic__label" x="280" y="98" text-anchor="middle" style="font-size:11px">Set or resolve the value</text>
+          <rect class="atlas-schematic__primary" fill="none" x="120" y="112" width="320" height="64"/><text class="atlas-schematic__label" x="280" y="138" text-anchor="middle" style="font-size:13px">RESOLVED VALUE</text><text class="atlas-schematic__label" x="280" y="158" text-anchor="middle" style="font-size:11px">one float, first matching layer</text>
+          <line class="atlas-schematic__primary" x1="280" y1="176" x2="280" y2="190"/><line class="atlas-schematic__primary" x1="280" y1="206" x2="280" y2="216" marker-end="url(#arrowHandle)"/><text class="atlas-schematic__label" x="280" y="202" text-anchor="middle" style="font-size:11px">optional custom data binding</text>
+          <rect class="atlas-schematic__primary" fill="none" x="120" y="216" width="320" height="64"/><text class="atlas-schematic__label" x="280" y="242" text-anchor="middle" style="font-size:13px">MATERIAL CHANNEL</text><text class="atlas-schematic__label" x="280" y="262" text-anchor="middle" style="font-size:11px">CustomDataIndex, read by the shader</text>
+          <defs><marker id="arrowHandle" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker></defs>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>MODEL</b><span>The handle is <code class="atlas-code-inline">SourceHismName + PlacementKey</code>, never an instance index — it survives a rebuild, the index does not. The value's meaning — intensity, color temperature, anything else — is defined by whatever reads the channel, not by this pipeline.</span></div>
+      </figure>
+      <p>The project's streetlight uses this path for real, continuous control rather than an on/off swap. Its light Blueprint exposes intensity and color temperature as parameters, and those same values drive the pole mesh's emissive through the data layer above, so the glass and the actual light source read from one resolved value instead of two systems that happen to agree for now. A day/night controller can write one override across every streetlight in a level this way. For a window that already has a light — one the rule in section 06 actually created — a scripted beat can override its resolved intensity by placement key, independent of whatever the generated rule would otherwise have produced. It can't conjure a light for a window the selection draw excluded; that's still gated by section 06, not by this layer.</p>
+      <div class="atlas-callout atlas-callout--note">
+        <p>The light rules in section 06 use the selection mask, a separate 0/1 mechanism with its own lifecycle. The scalar data layer here is what carries an actual value — intensity, color temperature, or anything else keyed by name. Decals and house numbers, covered in a later article, read the same layer for a different kind of value.</p>
+      </div>
+      <div class="atlas-section-break" data-index="// § 07 CONTROL BEYOND RANDOM"></div>
+      <h2 id="rebuild">08 Surviving a rebuild</h2>
+      <p>The point of all of this is that a rebuild of the maze does not throw the lighting away — for a rule on Stable Placement Key. Every instance is identified by its source HISM name and the placement key from the generator regardless of selection mode, and that identity is what the metadata snapshot republishes on every re-cook or reorder; a window rule reading that key keeps lighting the same logical windows because the placement has the same key, not because it sits at the same position in an array. The streetlight rule shown in section 04 is still on Instance Order — the mechanism supports stability, this particular rule hasn't been switched to use it, and its own selection can shift after a reorder the same way an unconverted window rule's would.</p>
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th>Event</th><th>What happens</th></tr></thead>
+          <tbody>
+            <tr><td>Instances reordered</td><td>With unchanged rule inputs and candidates, values and selection follow the same HISM name and key</td></tr>
+            <tr><td>Candidates added or removed</td><td>Per-key draws stay stable; the object cap can change which candidates receive lights</td></tr>
+            <tr><td>Consumer recook</td><td>Metadata republished, extras and bindings applied again</td></tr>
+            <tr><td>Clear Extras</td><td>Removes generated objects and owned masks; data layers stay</td></tr>
+            <tr><td>Save and reload</td><td>Authored data, rules and bindings persist; runtime overrides do not</td></tr>
+            <tr><td>HISM renamed or key changed</td><td>A different identity; old entries do not migrate</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="atlas-schematic" id="stable-reorder">
+        <figcaption class="atlas-schematic__header">FIG 14 — INDICES CHANGE / IDENTITIES REMAIN</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 560 240" role="img" aria-labelledby="stable-reorder-title stable-reorder-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="stable-reorder-title">FIG 14 — INDICES CHANGE / IDENTITIES REMAIN</title><desc id="stable-reorder-desc">Four placements before and after a HISM reorder. Keys A and D are lit, shown filled; B and C are off, shown outlined. Leader lines trace each key from its old index to its new one. After the shuffle each key keeps its own state — being at index 1 instead of index 3 changes nothing.</desc>
+          <text class="atlas-schematic__label" x="280" y="22" text-anchor="middle" style="font-size:13px">BEFORE</text>
+          <rect class="atlas-schematic__primary" x="78" y="34" width="64" height="64" style="fill:var(--atlas-ink)"/><text class="atlas-schematic__label" x="110" y="72" text-anchor="middle" style="font-size:15px;fill:var(--atlas-bg)">A</text><text class="atlas-schematic__label" x="110" y="112" text-anchor="middle" style="font-size:11px">idx 0 · ON</text>
+          <rect class="atlas-schematic__primary" x="198" y="34" width="64" height="64" fill="none"/><text class="atlas-schematic__label" x="230" y="72" text-anchor="middle" style="font-size:15px">B</text><text class="atlas-schematic__label" x="230" y="112" text-anchor="middle" style="font-size:11px">idx 1 · off</text>
+          <rect class="atlas-schematic__primary" x="318" y="34" width="64" height="64" fill="none"/><text class="atlas-schematic__label" x="350" y="72" text-anchor="middle" style="font-size:15px">C</text><text class="atlas-schematic__label" x="350" y="112" text-anchor="middle" style="font-size:11px">idx 2 · off</text>
+          <rect class="atlas-schematic__primary" x="438" y="34" width="64" height="64" style="fill:var(--atlas-ink)"/><text class="atlas-schematic__label" x="470" y="72" text-anchor="middle" style="font-size:15px;fill:var(--atlas-bg)">D</text><text class="atlas-schematic__label" x="470" y="112" text-anchor="middle" style="font-size:11px">idx 3 · ON</text>
+
+          <path class="atlas-schematic__primary" fill="none" d="M110,98 L230,150" marker-end="url(#arrowReorderOn)"/>
+          <path class="atlas-schematic__secondary" fill="none" d="M230,98 L470,150" marker-end="url(#arrowReorderOff)"/>
+          <path class="atlas-schematic__secondary" fill="none" d="M350,98 L110,150" marker-end="url(#arrowReorderOff)"/>
+          <path class="atlas-schematic__primary" fill="none" d="M470,98 L350,150" marker-end="url(#arrowReorderOn)"/>
+
+          <text class="atlas-schematic__label" x="280" y="142" text-anchor="middle" style="font-size:13px">AFTER REORDER</text>
+          <rect class="atlas-schematic__primary" x="78" y="154" width="64" height="64" fill="none"/><text class="atlas-schematic__label" x="110" y="192" text-anchor="middle" style="font-size:15px">C</text><text class="atlas-schematic__label" x="110" y="232" text-anchor="middle" style="font-size:11px">idx 0 · off</text>
+          <rect class="atlas-schematic__primary" x="198" y="154" width="64" height="64" style="fill:var(--atlas-ink)"/><text class="atlas-schematic__label" x="230" y="192" text-anchor="middle" style="font-size:15px;fill:var(--atlas-bg)">A</text><text class="atlas-schematic__label" x="230" y="232" text-anchor="middle" style="font-size:11px">idx 1 · ON</text>
+          <rect class="atlas-schematic__primary" x="318" y="154" width="64" height="64" style="fill:var(--atlas-ink)"/><text class="atlas-schematic__label" x="350" y="192" text-anchor="middle" style="font-size:15px;fill:var(--atlas-bg)">D</text><text class="atlas-schematic__label" x="350" y="232" text-anchor="middle" style="font-size:11px">idx 2 · ON</text>
+          <rect class="atlas-schematic__primary" x="438" y="154" width="64" height="64" fill="none"/><text class="atlas-schematic__label" x="470" y="192" text-anchor="middle" style="font-size:15px">B</text><text class="atlas-schematic__label" x="470" y="232" text-anchor="middle" style="font-size:11px">idx 3 · off</text>
+
+          <defs>
+            <marker id="arrowReorderOn" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker>
+            <marker id="arrowReorderOff" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink-muted)"/></marker>
+          </defs>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>MODEL</b><span>Illustrative reorder, not before/after engine captures. Filled = lit, outlined = off; each leader line follows one key from its old index to its new one, not a fixed slot. Assumes unchanged HISM name, keys, candidate set, seed, filters, probability, and cap.</span></div>
+      </figure>
+      <div class="atlas-callout atlas-callout--note"><p><b>Apply without a cook:</b> after changing light rules, press <b>Rebuild Extras</b>. Editing the Details panel alone does not rebuild the lights. After editing scalar data or bindings, use <b>Apply Scalar Custom Data</b> or Rebuild Extras. A Consumer update supplies fresh metadata automatically; Rebuild Extras alone cannot recover missing keys.</p></div>
+      <div class="atlas-section-break" data-index="// § 08 SURVIVING A REBUILD"></div>
+      <h2 id="limits">09 Limits, and what this does not do</h2>
+      <p>The data layer currently writes to the source HISM only; producing a separate generated HISM for extras is a different feature that is not built yet. Removing a scalar binding or disabling scalar projection leaves its last values in the material buffer; selection-mask cleanup is a separate lifecycle. Write the desired defaults before removing a binding if those values should reset. </p>
+      <p>Runtime overrides live in memory: keeping them across game sessions needs a save game or adapter on the game side. Authored entries are tied to a handle, so a changed key means a new placement, not a moved one. </p>
+      <p>The object cap limits spawned extras, not GPU time. A Blueprint may contain several lights, and cost also depends on shadowing, screen coverage, overlapping lights, fog, and the rendering path. Profile the resulting scene on the target hardware.</p>
+
+      <p>None of the layers decides what a value <em>means</em>. That is the point: a scalar tied to a placement can drive the brightness of a lamp today and something entirely unrelated tomorrow.</p>
+      <div class="atlas-section-break" data-index="// § 09 LIMITS"></div>
+      <h2 id="result">10 Result</h2>
+      <p>Zoomed out, this was never really about one lit window or one streetlamp — it's about where a generated game's content lives once meshes stop being the only thing a generator hands off. Environment is meshes: the structural and prop placements Houdini already produces and Unreal already registers into HISM. Lighting turned out to need a layer of its own — engine-side, addressed by the same placement identity, answering to nobody in Houdini — and this project has now proven that layer twice, on a multi-story building's windows and on a street's lamp posts. A material layer looks like a plausible next one, routing a different Material Instance per HISM the way rules already route objects, but that shape hasn't been worked out yet; it's a direction, not a claim.</p>
+      <figure class="atlas-schematic" id="layer-stack">
+        <figcaption class="atlas-schematic__header">FIG 15 — THREE LAYERS, ONE PLACEMENT IDENTITY</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 560 300" role="img" aria-labelledby="layer-stack-title layer-stack-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="layer-stack-title">FIG 15 — Three layers, one placement identity</title><desc id="layer-stack-desc">Environment as meshes, Light System as the engine-side layer covered by this article, and a possible future Shader/Material layer, all addressed by the same placement identity.</desc>
+          <rect class="atlas-schematic__primary" fill="none" x="140" y="14" width="380" height="64"/><text class="atlas-schematic__label" x="330" y="42" text-anchor="middle" style="font-size:13px">ENVIRONMENT</text><text class="atlas-schematic__label" x="330" y="62" text-anchor="middle" style="font-size:11px">meshes — Houdini + HISM registration</text>
+          <line class="atlas-schematic__primary" x1="330" y1="78" x2="330" y2="110" marker-end="url(#arrowLayers)"/>
+          <rect class="atlas-schematic__primary" fill="none" x="140" y="110" width="380" height="64"/><text class="atlas-schematic__label" x="330" y="138" text-anchor="middle" style="font-size:13px">LIGHT SYSTEM</text><text class="atlas-schematic__label" x="330" y="158" text-anchor="middle" style="font-size:11px">this article — proven on windows + streetlights</text>
+          <line class="atlas-schematic__secondary" x1="330" y1="174" x2="330" y2="206"/>
+          <rect class="atlas-schematic__secondary" fill="none" x="140" y="206" width="380" height="64"/><text class="atlas-schematic__label" x="330" y="234" text-anchor="middle" style="font-size:13px">SHADER / MATERIAL</text><text class="atlas-schematic__label" x="330" y="254" text-anchor="middle" style="font-size:11px">possible next layer — not designed yet</text>
+          <path class="atlas-schematic__secondary" fill="none" d="M90,14 H140 M90,14 V238 M90,238 H140"/><text class="atlas-schematic__label" x="70" y="128" text-anchor="middle" style="font-size:11px" transform="rotate(-90 70 128)">SAME PLACEMENT IDENTITY</text>
+          <defs><marker id="arrowLayers" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--atlas-ink)"/></marker></defs>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>MODEL</b><span>A way of grouping what this project's layers do, not an org chart. The Shader/Material row is a direction being considered, not a shipped mechanism.</span></div>
+      </figure>
+      <p>The saved automation report from 20 September 2026 records seven passing placement tests: six Extras tests and one scalar-data test. They cover selection, metadata, cleanup, layer precedence, channel preservation, and projection. These headless checks validate data and component behavior; the viewport captures show the separate visual result.</p>
+      <p>Light on a generated city ended up as three small decisions, each in the right place: the generator publishes an identity, the engine layer attaches objects and writes a mask — or, for the streetlight, a synchronized value — at that identity, and the material turns it into a glow. With unchanged identities, candidates, and rule settings, reordering the maze preserves the lighting selection, and because none of it lives in the generator, the core stays as lean as it was.</p>
+
+      <p>Light was the concrete case because it's close to unavoidable in any generated environment — every generated building needs a lit window sooner or later. But the object a rule spawns doesn't have to be a light: the same rule mechanism already supports a Niagara system at that socket instead, for an explosion or a dust effect tied to one specific wall segment, or a Blueprint Actor — an enemy that appears in one specific window, for a sniper encounter. None of that needs new code; it's the same <code class="atlas-code-inline">Object Type</code> choice already used for the streetlight's Blueprint. What's actually built and proven here isn't a lighting system specifically — it's a placement identity that can drive a spawned engine object, per-instance material data, and runtime or authored scalar state, all from the same key, all kept in sync because none of them are guessing at each other. Lighting is the first thing that identity got used for.</p>
+      <p>The same identity can also carry a plain number instead of an object. Later articles will cover decals and house numbers, using that scalar layer for a different kind of value, and how it reaches the material that displays it.</p>
+      <div class="atlas-table-frame atlas-table-frame--solid">
+        <div class="atlas-table-header-solid">PROJECT MAP // RELATED WRITE-UPS</div>
+        <ul class="atlas-ref-list">
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[01]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">CURRENT</span><span class="atlas-ref-title">The Light System — Randomized and Synchronized Lighting on Generated Geometry</span></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[02]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">LIVE</span><span class="atlas-ref-title">Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors</span> — how placements reach Unreal as named HISM components or Blueprint Actors.<br><a class="atlas-ref-link" href="/post/houdini-unreal-typed-placement-routing/">pavelzosim.com/post/houdini-unreal-typed-placement-routing</a></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[03]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">LIVE</span><span class="atlas-ref-title">Controlled Procedurality — How a Maze Generator Became a Level Design System</span> — what the generator decides, and why it works as a level design system.<br><a class="atlas-ref-link" href="/post/controlled-procedurality/">pavelzosim.com/post/controlled-procedurality</a></span>
+          </li>
+          <li class="atlas-ref-item">
+            <span class="atlas-ref-num">[04]</span>
+            <span class="atlas-ref-body"><span class="atlas-ref-tag">PLANNED</span><span class="atlas-ref-title">House numbers — a per-building number projected into a decal material</span></span>
+          </li>
+        </ul>
+      </div>
+
+<div class="atlas-refs"><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">EPIC DOCS</span><a class="atlas-ref-link" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/using-sockets-with-static-meshes-in-unreal-engine" target="_blank" rel="noopener">Static Mesh sockets</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">EPIC DOCS</span><a class="atlas-ref-link" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-static-mesh-component-in-unreal-engine" target="_blank" rel="noopener">Instanced Static Mesh custom data</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[03]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">EPIC DOCS</span><a class="atlas-ref-link" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine" target="_blank" rel="noopener">Lumen and emissive materials</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[04]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">EPIC DOCS</span><a class="atlas-ref-link" href="https://dev.epicgames.com/documentation/en-us/unreal-engine/megalights-in-unreal-engine" target="_blank" rel="noopener">MegaLights</a></span></li></ul></div>
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // LIGHTING_GENERATED_GEOMETRY // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+
+<script src="/scripts/article-page.js?v=14"></script>
+<script>
+    (function () {
+      document.querySelectorAll('[data-slider]').forEach(function (slider) {
+        var slides = Array.prototype.slice.call(slider.querySelectorAll('[data-slide]'));
+        if (!slides.length) return;
+        var label = slider.querySelector('[data-slider-label]');
+        var prevBtn = slider.querySelector('[data-slider-prev]');
+        var nextBtn = slider.querySelector('[data-slider-next]');
+        var index = 0;
+        function render() {
+          slides.forEach(function (img, i) { img.hidden = i !== index; });
+          if (label) {
+            var n = String(index + 1).padStart(2, '0');
+            var total = String(slides.length).padStart(2, '0');
+            label.textContent = n + ' / ' + total + ' — ' + (slides[index].dataset.caption || '');
+          }
+        }
+        if (prevBtn) prevBtn.addEventListener('click', function () {
+          index = (index - 1 + slides.length) % slides.length;
+          render();
+        });
+        if (nextBtn) nextBtn.addEventListener('click', function () {
+          index = (index + 1) % slides.length;
+          render();
+        });
+        render();
+      });
+    })();
+</script>
+
+</body>
+</html>
