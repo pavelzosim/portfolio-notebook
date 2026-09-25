@@ -523,7 +523,14 @@
       "imageAlt": "Procedural Skeleton Generator",
       "datePublished": "2024-09-20",
       "dateModified": "2024-09-20",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "rank": 30,
+        "highlightKind": "HDA · RIGGING",
+        "blurb": "Procedural rig-bone skeletons",
+        "url": "https://pavelzosim.gumroad.com/l/houdini-rig-bones"
+      }
     },
     {
       "id": "TOOL-006",
@@ -633,7 +640,7 @@
       "dateModified": "2026-08-24",
       "indexable": true,
       "toolsHome": {
-        "highlight": true,
+        "highlight": false,
         "recent": true,
         "rank": 30,
         "highlightKind": "ASSET · 3D",

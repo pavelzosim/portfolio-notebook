@@ -36,6 +36,8 @@ Only set `siteDate` when a post's `datePublished` is a historical/backdated date
 "toolsHome": { "highlight": true, "rank": 10, "highlightKind": "TOOL · PYTHON", "blurb": "Short pitch line" }
 ```
 
+`toolsHome.url` is optional: when set, the card (and its "Download →" link) points there instead of the post — used for a Gumroad listing — and opens in a new tab.
+
 - `highlight` places the post in the four-card strip.
 - `rank` controls the order within the strip; lower values appear first.
 - § 07's own four-card strip and § 03 Selected Projects' "Latest · in progress" list are both still hand-authored directly in `index.html` — § 03 isn't a clean 1:1 mapping onto registry records (it mixes project-status narrative with post links), so it's deliberately left out of this automation.

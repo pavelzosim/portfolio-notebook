@@ -10,15 +10,17 @@
     return element;
   };
 
-  const postUrl = post => post.localPath || post.sourceUrl;
+  const postUrl = post => post.toolsHome?.url || post.localPath || post.sourceUrl;
+  const isExternal = url => /^https?:\/\//.test(url) && new URL(url).origin !== location.origin;
   const sorted = posts => posts.slice().sort((a, b) => (a.toolsHome.rank ?? 0) - (b.toolsHome.rank ?? 0));
 
   const renderHighlights = posts => {
     highlightTarget.replaceChildren();
     posts.filter(post => post.image).slice(0, 4).forEach(post => {
       const article = make('article', 'highlight-card');
+      const url = postUrl(post);
       const cover = make('a', 'card-cover');
-      cover.href = postUrl(post);
+      cover.href = url;
       const image = document.createElement('img');
       image.src = post.image;
       image.alt = post.imageAlt || post.title;
@@ -30,7 +32,13 @@
       cover.append(image, meta);
       const actions = make('span', 'card-actions');
       const link = make('a', '', 'Download →');
-      link.href = postUrl(post);
+      link.href = url;
+      if (isExternal(url)) {
+        [cover, link].forEach(anchor => {
+          anchor.target = '_blank';
+          anchor.rel = 'noopener noreferrer';
+        });
+      }
       actions.append(link);
       article.append(cover, actions);
       highlightTarget.append(article);
