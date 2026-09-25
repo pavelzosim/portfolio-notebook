@@ -22,6 +22,53 @@
     return link;
   };
 
+  const initLightbox = (scope) => {
+    const selector = '.media-frame img';
+    if (!scope.querySelector(selector)) return;
+
+    if (!document.querySelector('link[href*="12-atlas-lightbox"]')) {
+      const stylesheet = make('link');
+      stylesheet.rel = 'stylesheet';
+      stylesheet.href = siteHref('/styles/framework/12-atlas-lightbox.css?v=1');
+      document.head.append(stylesheet);
+    }
+
+    const dialog = make('dialog', 'atlas-lightbox');
+    dialog.setAttribute('aria-label', 'Enlarged image');
+    const image = make('img', 'atlas-lightbox__img');
+    dialog.append(image);
+    document.body.append(dialog);
+
+    const open = (source) => {
+      image.src = source.currentSrc || source.src;
+      image.alt = source.alt;
+      dialog.showModal();
+      document.documentElement.classList.add('atlas-lightbox-open');
+    };
+
+    scope.querySelectorAll(selector).forEach((img) => {
+      img.tabIndex = 0;
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', `Enlarge image: ${img.alt || 'article image'}`);
+    });
+    scope.addEventListener('click', (event) => {
+      const source = event.target.closest(selector);
+      if (source && scope.contains(source)) open(source);
+    });
+    scope.addEventListener('keydown', (event) => {
+      const source = event.target.closest?.(selector);
+      if (source && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        open(source);
+      }
+    });
+    dialog.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('atlas-lightbox-open');
+      image.removeAttribute('src');
+    });
+  };
+
   const boot = async () => {
     const content = document.querySelector('.atlas-container, .post-shell');
     if (!content || document.querySelector('.article-workspace')) return;
@@ -331,6 +378,7 @@
       makeLink('/#top', 'return 0; ↑')
     );
     workspace.after(siteFooter);
+    initLightbox(content);
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
