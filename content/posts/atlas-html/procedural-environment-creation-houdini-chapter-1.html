@@ -2,111 +2,263 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1"><title>Procedural environment creation houdini — chapter 1 · Pavel Zosim</title><meta name="description" content="Procedural environment creation houdini chapter 1 covering asset optimization and production pipelines for real-time projects."><link rel="canonical" href="https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/"><meta property="og:type" content="article"><meta property="og:title" content="Procedural environment creation houdini — chapter 1"><meta property="og:description" content="Procedural environment creation houdini chapter 1 covering asset optimization and production pipelines for real-time projects."><meta property="og:url" content="https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-838345dc6aff7971.gif"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-838345dc6aff7971.gif"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Procedural environment creation houdini — chapter 1"><meta name="twitter:description" content="Procedural environment creation houdini chapter 1 covering asset optimization and production pipelines for real-time projects."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Procedural environment creation houdini — chapter 1", "description": "Procedural environment creation houdini chapter 1 covering asset optimization and production pipelines for real-time projects.", "url": "https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/", "mainEntityOfPage": "https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/", "image": "https://www.pavelzosim.com/public/media/posts/index/asset-838345dc6aff7971.gif", "datePublished": "2025-01-29", "dateModified": "2026-02-04", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
-
-
-
-
-
-
-  <link rel="stylesheet" href="/styles/atlas.css?v=60"><link rel="stylesheet" href="/styles/posts.css?v=18">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Procedural Environment Creation in Houdini, Chapter 1 — Low-Poly Terrain, Road, and Splat Maps for Unity · Pavel Zosim</title>
+  <meta name="description" content="Low-poly terrain and road in Houdini for Unity: road alignment, per-zone remeshing, splat map baking, two UV sets, and a wrapped tile atlas shader.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Procedural Environment Creation in Houdini, Chapter 1 — Low-Poly Terrain, Road, and Splat Maps for Unity">
+  <meta property="og:description" content="Low-poly terrain and road in Houdini for Unity: road alignment, per-zone remeshing, splat map baking, two UV sets, and a wrapped tile atlas shader.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-838345dc6aff7971.gif">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-838345dc6aff7971.gif">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Procedural Environment Creation in Houdini, Chapter 1 — Low-Poly Terrain, Road, and Splat Maps for Unity">
+  <meta name="twitter:description" content="Low-poly terrain and road in Houdini for Unity: road alignment, per-zone remeshing, splat map baking, two UV sets, and a wrapped tile atlas shader.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Procedural Environment Creation in Houdini, Chapter 1 — Low-Poly Terrain, Road, and Splat Maps for Unity","description":"Low-poly terrain and road in Houdini for Unity: road alignment, per-zone remeshing, splat map baking, two UV sets, and a wrapped tile atlas shader.","url":"https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/","mainEntityOfPage":"https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/","image":"https://www.pavelzosim.com/public/media/posts/index/asset-838345dc6aff7971.gif","datePublished":"2025-01-29","dateModified":"2026-09-25","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=60">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
 </head>
-<body class="migrated-post" id="top">
+<body id="top">
+  <h1 class="seo-heading">Procedural Environment Creation in Houdini, Chapter 1 — Low-Poly Terrain, Road, and Splat Maps for Unity</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
-  <main class="post-shell">
-    <header class="post-header"><p class="post-path">~/blog/procedural-environment-creation-houdini-chapter-1.md</p><h1>Procedural environment creation houdini — chapter 1</h1><p class="post-summary">Procedural environment creation houdini chapter 1 covering asset optimization and production pipelines for real-time projects.</p><div class="post-meta"><span>Pavel Zosim</span><span>2025-01-29</span><span>#game-development</span><span>#unity</span><span>#automation</span><span>#houdini</span><span>#unreal-engine</span><span>#breakdowns</span><span>#tutorials</span></div></header>
-    <article class="atlas-container"><div class="content-block"><h2>Procedural Environment Creation in Houdini – Overview</h2>
-<p>This chapter focuses on procedural environment creation houdini workflows for real-time production pipelines.</p>
-<p>&nbsp;</p>
-<p>In this article, I will walk through the process of creating a procedural environment and optimizing assets for game development using Houdini. The focus will be on modeling, texturing, and preparing assets efficiently while maintaining optimal performance for a game engine such as Unity.</p>
-<p>&nbsp;</p>
-<h2>Project Scope</h2>
-<p>The goal of this project is to model and texture the provided assets: a modular building, and a terrain with a road. Each asset has specific low texel density, polygon count, and material usage. The final deliverables will include:</p>
-<ul><li>Splat map mask for terrain</li><li>Wrapped Tile Atlas shader for one texture with possibility to break tilable ground frame</li><li>Procedural modular building to minimize performance impact</li></ul>
-<p>&nbsp;</p>
-<h2>Generation of the Procedural Terrain and Road</h2>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-0ad3a8e383e447e2.jpg" alt="Generation of the Procedural Terrain and Road" loading="lazy"><div class="media-caption">This Is The Terrain Reference That We Will Replicate Using A Low-Poly 3D Mesh.</div></div>
-<p>&nbsp;</p>
-<hr>
-<p>&nbsp;</p>
-<p><strong>1.HEIGHFIELD GENERATION</strong></p>
-<p>Generate terrain and draw the road using curves and Labs Road Generator, Expand2D, Sweep or your custom solution. At this stage, it is crucial to store masks of the zones and terrain types, as this will help with remeshing and the wrapped tile atlas.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-c141a7523207d57e.gif" alt="3D terrain map with labeled textures: Pavement, Grass, Rock, and Road. Red and green axes overlay. Text instructions at the bottom." loading="lazy"><div class="media-caption">Generating Masks</div></div>
-<hr>
-<p><strong>2.ROAD ALIGNMENT</strong></p>
-<p>Since the road passes through mountainous terrain, and the generated mountain surfaces (heightfield) are high-density volumes, they have unevenness. Projecting a low-poly road mesh onto this volume can distort the geometry and add unnecessary slopes to the road surface. To fix this, at this stage, I used several steps. The first one is the projection of geometry points onto the volume.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-cd9ff881d879a14e.gif" alt="A 3D modeling interface shows a curving blue line on a grid background with red axes. The mood is technical and precise." loading="lazy"><div class="media-caption">Projection of the Geometry to Volume</div></div>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>2nd Step: Define and Group Edges by Max Y Point Position Value in the Row</p>
-<div class="media-frame"><div class="gallery-grid"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-3522f15673273f91.png" alt="Code snippet displaying `void groupEdgeLoops` function for grouping edge loops." loading="lazy"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-f760ac355ed7c32c.png" alt="Houdini VEX GetNextEdge function code to find primitive edge points." loading="lazy"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-b47cb25d2ad3fcbf.png" alt="C-like code function getPrimsFromEdge for connected primitives." loading="lazy"></div></div>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>3rd Step: Transfer to the Lowest Point Y Position in the Row the Position of the Highest Point</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-4788a8088086c90d.gif" alt="Abstract 3D model with a winding, checkered path over smooth, hilly terrain. Background blends gray and green hues. Text: View, Persp, No cam." loading="lazy"><div class="media-caption">Align Points by Maximum Y Position in the Row</div></div>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>In 4th Step adjust the terrain heightfield based on the newly repositioned road. Since the road has been aligned in the previous steps, it’s essential to smooth the transitions and slopes along the road path to avoid harsh geometry changes.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-cbe4293e51ce5879.png" alt="3D terrain with red and white paths winding over hills. A hand cursor hovers above. Text displays navigation controls." loading="lazy"><div class="media-caption">Adjust Heightfield Based On The Road New Point Positions </div></div>
-<hr>
-<p>&nbsp;</p>
-<p><strong>3.CONVERT HEIGHFIELD AND STORE LAYERS TO ATTRIBUTE</strong></p>
-<p>Once we’ve stored the terrain layers to a primitive attribute and completed the necessary road alignment and smoothing, we can now convert the heightfield volume into a dense mesh. This step is particularly important when we need to perform texture baking for normal maps, ambient occlusion (AO), or curvature maps.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-838345dc6aff7971.gif" alt="A 3D terrain model with red and green areas, curved gray lines, and grid background. Text &quot;View&quot; visible in a digital design interface." loading="lazy"><div class="media-caption">Converting Heightfield to The Dense Mesh</div></div>
-<hr>
-<p>&nbsp;</p>
-<p><strong>4.BAKING SPLAT MAP MASK TEXTURE</strong></p>
-<p>In this step, we will assign different colored zones to the terrain, which will be used in the Splat Map mask baking process. This will allow us to specify areas with different terrain types (e.g., roads, grass, dirt) for later use in texture blending within the game engine or rendering software.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-2bdac1fce9b51b56.gif" alt="Digital 3D model with three color regions (teal, red, orange) divided by paths. Checkerboard pattern and grid background. Cursor visible." loading="lazy"><div class="media-caption">Adding Different Terrain Zones as Colors to the Color Channels (RGB/RGBA)</div></div>
-<hr>
-<p>&nbsp;</p>
-<p><strong>5.REMESHING</strong></p>
-<p>The remeshing process is divided into several substeps to ensure optimal polycount reduction without losing essential geometry, especially along mesh boundaries. In the first substep, we focus on reducing the polycount individually for each terrain zone. This approach is necessary because each zone may have different surface area, and using uniform remesh settings across the entire mesh can result in improper interpretations, causing the loss of crucial geometry — particularly at the edges.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-266a919add804f56.gif" alt="3D mesh with teal, maroon, and orange sections, outlined in blue. Grid background. Text reads &quot;View&quot; and controls are visible." loading="lazy"><div class="media-caption">Remeshing Process - 1st Iteration: Mesh Looks Acceptable. :3</div></div>
-<p>&nbsp;</p>
-<p>This part of the process was the most <strong>interesting and challenging</strong> for me. The goal was to seamlessly weld all terrain points to the road while ensuring that the road mesh itself <strong>remained unchanged</strong>.</p>
-<p>&nbsp;</p>
-<p>At this stage, I grouped all borders of each terrain zone to prepare for the next welding and division process. This step was essential to ensure that different terrain areas could be seamlessly connected while maintaining their distinct characteristics.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-6c0973f76b445028.gif" alt="A 3D modeling mesh with curved blue lines and grid pattern on a gray surface, featuring orange points and numerical annotations." loading="lazy"><div class="media-caption">Grouping Zone Points, Edges and Primitives </div></div>
-<p>&nbsp;</p>
-<p>The process of combining meshes with different polycounts was designed to be fully procedural, allowing for efficient and automated blending between different terrain zones and road without changing road geometry.</p>
-<p>&nbsp;</p>
-<p><strong>How it works:</strong> Points that <strong>touch</strong> the road at the terrain zone borders are added to a group, and this group is then <strong>promoted</strong> to edges and primitives. Next, the <strong>outer contour</strong> is subtracted from these groups—this is necessary to determine which points need to be welded with the road mesh points later.</p>
-<p>Knowing which points and edges form the <strong>boundary</strong> between the terrain and the road mesh, we can add a <strong>central point</strong> to these "contact edges" and then draw a <strong>bisector</strong> from this vertex, effectively <strong>triangulating</strong> the polygon.</p>
-<p>The newly created point is then <strong>added to a separate group</strong> to be used in the welding process with the <strong>nearest edge point</strong> of the road mesh based on <strong>distance</strong>. This entire process runs inside a <strong>For-Each Loop with Feedback</strong>, iterating <strong>until no new groups</strong> are formed.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-ac5898ef995b86b5.gif" alt="Gray 3D modeling software interface showing a grid with blue outlines and a settings panel on the right. Text at bottom guides navigation." loading="lazy"><div class="media-caption">I love Houdini for solving these processes, even the iteration number might be defined based on checking the mesh for non-connected polygons.  Now Geometry are ready for the game. Total tris: 3111 </div></div>
-<hr>
-<p>&nbsp;</p>
-<p><strong>6.AUTO UV's</strong></p>
-<p>I made two UV channels. The first UV is for using a Wrapped Tile Atlas—depending on the number of terrain types, you might divide the UV into sections. In my case, there are three sections, which means each tile is equal to x0.5. The second UV channel is used for splat map masking and light baking.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-053077f42c731833.gif" alt="Technical article illustration" loading="lazy"></div>
-<hr>
-<p>&nbsp;</p>
-<p><strong>7.PREPARING ATLASES AND OTHER TEXTURES</strong></p>
-<p>I bake the color information of the splat map into a texture using the second UV. I also created an atlas containing two different grass textures and two different rocky textures. This type of texture atlas helps reduce draw calls and break the repetitiveness of the terrain texture. Let's get jump in to the Unity!</p>
-<p>&nbsp;</p>
-<div class="media-frame"><div class="gallery-grid"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-78358a47ab158094.jpg" alt="Dark gray textured background framed by two thin vertical white lines." loading="lazy"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-713ecbb06e69a9b7.png" alt="Four distinct procedural ground textures for procedural environment creation Houdini." loading="lazy"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-b39c550bd4e19109.png" alt="Abstract procedural environment creation houdini artwork, vibrant glowing red, blue shapes." loading="lazy"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-71be410bdc994dfb.jpg" alt="Scattered white smoke or clouds against a dark black background." loading="lazy"></div></div>
-<hr>
-<p>&nbsp;</p>
-<p><strong>8.DEVELOPING SHADER AND SUBGRAPHS FOR USING ATLASES FOR WRAPPED TILED ATLAS TEXTURES</strong></p>
-<p>The Splat Map setup is pretty straightforward. By splitting the color channels, we can easily mask terrain zones.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-51bf0a888bfd7d35.png" alt="Diagram showing a SplatMap process with nodes including Sample Texture 2D, Colorspace Conversion, Normalize, and Split on a dark background." loading="lazy"></div>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-ae7cb744aed6aa6d.png" alt="3D terrain map in Unity editor displaying colorful elevation data with red, green, and blue areas. UI panels show project assets." loading="lazy"><div class="media-caption">Each color channel that represents terrain zones needs to be multiplied with the wrapped tiled subgraph described below. </div></div>
-<p>Let's remap our terrain texture atlas, which will help scale it on the geometry and feed it into the tiling node using the first UV. The next step is the Fraction function, which returns the fractional part of the input value. For example, if the input value is 3.75, the Fraction function will return 0.75 that means it works in the borders of the one UV tile in our case x0.5. This can be useful for creating repeating or cyclical effects. In our case, this is used to work within the tile UV, which we define in the Flipbook node. In our case, this value is a Vector2 Tiling, and we then connect it to the input of our texture atlas.</p>
-<p>&nbsp;</p>
-<p>Now we can use a single texture, scale it, set the offset, and all of this will be within the bounds of the tile UV and the single texture. Additionally, we can mix it with the neighboring texture using a noise mask multiplier, which will help break the repetitiveness of the terrain.</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-df3c92cb130a9587.png" alt="Node graph showing &quot;UV Scale Global&quot;, &quot;Tiling&quot;, &quot;Output&quot; in Houdini." loading="lazy"></div>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-2f653d097d2d98d1.png" alt="Aerial view of a map with a winding road through green, textured terrain and a large brown area. No visible text or people." loading="lazy"><div class="media-caption">Before</div></div>
-<div class="media-frame"><img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-b1fcf966f6de84f3.png" alt="Aerial view of a terrain map with a winding road dividing a brown rocky area and green vegetation. The background is dark gray." loading="lazy"><div class="media-caption">After. Same Tile Size.  1 Texture = 4 Textures :3</div></div>
-<p>In the next chapter, I'll demonstrate how to create a <strong>procedural, optimized modular building</strong>. Stay in touch!</p>
-<p>&nbsp;</p>
-<hr>
-<p><strong>Like this post? </strong>( ´◔ ω◔`) ノシ </p>
-<p><strong>Support:</strong> <u><a href="https://buymeacoffee.com/pavel.zosim" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a></u> | <u><a href="https://www.patreon.com/c/pavel_zosim" target="_blank" rel="noopener noreferrer">Patreon</a></u> | <u><a href="https://github.com/pavelzosim" target="_blank" rel="noopener noreferrer">GitHub</a></u> | <u><a href="https://pavelzosim.gumroad.com/" target="_blank" rel="noopener noreferrer">Gumroad</a></u><u> </u>| <u><a href="https://www.youtube.com/@VFX_PavelZosim/videos" target="_blank" rel="noopener noreferrer">YouTube</a></u> </p></div></article>
-    <footer class="post-end"><a href="/blog/">← Blog index</a><span>Wix archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
-  </main>
-  <script src="/scripts/article-page.js?v=14"></script>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#scope"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Project scope</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#heightfield-road"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Heightfield and road alignment</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#mesh-zones"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Dense mesh and terrain zones</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#remeshing"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Remeshing and welding to the road</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#uv-atlas"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">UVs, splat map, and atlas textures</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#shader"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Shader: splat map and wrapped tile atlas</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#result"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">Result and next chapter</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+      <h2 id="overview">01 Overview</h2>
+      <p>This chapter covers a procedural environment creation workflow in Houdini for real-time production pipelines. It walks through building a procedural environment and optimizing its assets for game development, with the focus on modeling, texturing, and preparing assets efficiently while keeping performance suitable for a game engine such as Unity.</p>
+      <p><b>Implementation context:</b> Houdini for terrain, road, remeshing, UVs, and baking; Unity for the splat map and wrapped tile atlas shader.</p>
+      <div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
+
+      <h2 id="scope">02 Project scope</h2>
+      <p>The goal is to model and texture the provided assets: a modular building, and a terrain with a road. Each asset has a specific low texel density, polygon count, and material usage. The final deliverables are:</p>
+      <ul>
+        <li>a splat map mask for the terrain;</li>
+        <li>a Wrapped Tile Atlas shader that uses a single texture, with the possibility of breaking the tiling of the ground;</li>
+        <li>a procedural modular building that keeps the performance impact low.</li>
+      </ul>
+      <p>This chapter covers the terrain and the road. The modular building is planned for the next chapter.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-0ad3a8e383e447e2.jpg" alt="Reference image of the terrain with a road that is replicated with a low-poly 3D mesh" loading="lazy">
+        <figcaption class="media-caption">FIG 01 — The terrain reference that is replicated with a low-poly 3D mesh.</figcaption>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 02 PROJECT SCOPE"></div>
+
+      <h2 id="heightfield-road">03 Heightfield and road alignment</h2>
+
+      <h3 id="heightfield">Heightfield generation</h3>
+      <p>Generate the terrain and draw the road using curves and the Labs Road Generator, Expand2D, Sweep, or a custom solution. At this stage it is crucial to store masks of the zones and terrain types, because they help with remeshing and with the wrapped tile atlas later.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-c141a7523207d57e.gif" alt="Houdini viewport of a 3D terrain with labeled zones: Pavement, Grass, Rock, and Road" loading="lazy">
+        <figcaption class="media-caption">FIG 02 — Generating masks: the terrain zones (pavement, grass, rock, road) are stored while the heightfield is built.</figcaption>
+      </figure>
+
+      <h3 id="road-alignment">Road alignment</h3>
+      <p>The road passes through mountainous terrain, and the generated mountain surface (the heightfield) is a high-density volume with unevenness. Projecting a low-poly road mesh onto this volume can distort the geometry and add unnecessary slopes to the road surface. Aligning the road takes several steps.</p>
+
+      <h4>Step 1 — project the points onto the volume</h4>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-cd9ff881d879a14e.gif" alt="Houdini viewport: a curving blue line of road points being projected onto the terrain volume" loading="lazy">
+        <figcaption class="media-caption">FIG 03 — Projection of the road geometry onto the volume.</figcaption>
+      </figure>
+
+      <h4>Step 2 — define and group edges by the maximum Y position in the row</h4>
+      <p>These VEX helpers group edge loops, find the next edge from the current primitive, and collect the primitives connected by an edge. They are shown as they were written for this setup.</p>
+      <pre class="atlas-code-block" data-language="VEX"><code class="language-c">// Main function for grouping edge loops
+void GroupEdgeLoops(int input, string edgegroup, groupname) {
+    if (edgegroup == "") {
+        setedgegroup(geoself(), groupname, 0, 0, 0);  // If the edge group is empty, clear the group
+        return;
+    }
+
+    int edges[] = expandedgegroup(input, edgegroup);  // Expand the edge group into an array of edges
+    if (len(edges) == 0) {
+        setedgegroup(geoself(), groupname, 0, 0, 0);  // If no edges are found, clear the group
+        return;
+    }
+
+    int count = int(0.5 * len(edges));  // Calculate the number of edges
+    for (int i = 0; i &lt; count; ++i) {
+        int edgepts[] = sort(array(edges[2*i], edges[1+2*i]));  // Sort the edge points
+        int index0 = find(loopedgepts, edgepts[0]);  // Find the index of the first edge point in the loop
+        int index1 = find(loopedgepts, edgepts[1]);  // Find the index of the second edge point in the loop
+        if (!edgefound) {
+            // The logic for processing edge loops continues here
+        }
+    }
+}</code></pre>
+      <pre class="atlas-code-block" data-language="VEX"><code class="language-c">// Function to get the next edge based on the current primitive and edge points
+function int[] GetNextEdge(int input, int edgept0, int edgept1, int currentprim) {
+    int primpts[];
+    int count = primvertexcount(input, currentprim);  // Get the number of vertices in the primitive
+    for (int f = 0; f &lt; count; ++f) {
+        int vertIndex = vertexindex(input, currentprim, f);  // Get the vertex index
+        int pointIndex = vertexpoint(input, vertIndex);  // Get the point index
+        if (pointIndex != edgept0 &amp;&amp; pointIndex != edgept1)
+            append(primpts, pointIndex);  // Add the point index if it's not part of the edge
+    }
+    int pt0 = min(primpts[0], primpts[1]);  // Get the minimum point index
+    int pt1 = max(primpts[0], primpts[1]);  // Get the maximum point index
+    return array(pt0, pt1);  // Return the array of next edge points
+}</code></pre>
+      <pre class="atlas-code-block" data-language="VEX"><code class="language-c">// Function to get all primitives connected by a given edge
+function int[] GetPrimsFromEdge(int input, int pt0, int pt1) {
+    int prims[];
+    int hedge = pointedge(input, pt0, pt1);  // Get half-edge from the given points
+    if (hedge != -1) {
+        int count = hedge_equivcount(input, hedge);  // Get the equivalent count of the half-edge
+        for (int i = 0; i &lt; count; ++i) {
+            int pr = hedge_prim(input, hedge);  // Get the primitive from the half-edge
+            if (pr != -1) {
+                append(prims, pr);  // Add the primitive to the array
+                hedge = hedge_nextequiv(input, hedge);  // Move to the next equivalent half-edge
+            }
+        }
+    }
+    return prims;  // Return the array of primitives
+}</code></pre>
+
+      <h4>Step 3 — copy the highest point's Y position to the lowest points in the row</h4>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-4788a8088086c90d.gif" alt="Houdini viewport: a winding checkered road over smooth hilly terrain, its points being aligned row by row" loading="lazy">
+        <figcaption class="media-caption">FIG 04 — Aligning the points by the maximum Y position in the row.</figcaption>
+      </figure>
+
+      <h4>Step 4 — adjust the terrain heightfield to the road</h4>
+      <p>The heightfield is adjusted to the newly repositioned road. Since the road is already aligned by the previous steps, the transitions and slopes along the road path have to be smoothed to avoid harsh geometry changes.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-cbe4293e51ce5879.png" alt="Houdini viewport: terrain with red and white road paths winding over hills, the heightfield being adjusted to the road" loading="lazy">
+        <figcaption class="media-caption">FIG 05 — Adjusting the heightfield to the road's new point positions.</figcaption>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 03 HEIGHTFIELD AND ROAD ALIGNMENT"></div>
+
+      <h2 id="mesh-zones">04 Dense mesh and terrain zones</h2>
+
+      <h3 id="to-mesh">Convert the heightfield and store the layers</h3>
+      <p>Once the terrain layers are stored in a primitive attribute and the road alignment and smoothing are complete, the heightfield volume can be converted into a dense mesh. This step matters most when texture baking is needed for normal maps, ambient occlusion (AO), or curvature maps.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-838345dc6aff7971.gif" alt="Houdini viewport: a terrain with red and green zones, curved gray road lines, and a grid background, converted from a heightfield to a dense mesh" loading="lazy">
+        <figcaption class="media-caption">FIG 06 — Converting the heightfield to a dense mesh.</figcaption>
+      </figure>
+
+      <h3 id="splat-zones">Assign the splat map zones</h3>
+      <p>Different colored zones are assigned to the terrain for the splat map mask baking. They mark areas with different terrain types (for example roads, grass, dirt) that are later used for texture blending in a game engine or rendering software.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-2bdac1fce9b51b56.gif" alt="Houdini viewport: a terrain divided by paths into three colored regions (teal, red, orange) over a checkerboard pattern" loading="lazy">
+        <figcaption class="media-caption">FIG 07 — Terrain zones added as colors in the color channels (RGB/RGBA).</figcaption>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 04 DENSE MESH AND TERRAIN ZONES"></div>
+
+      <h2 id="remeshing">05 Remeshing and welding to the road</h2>
+      <p>Remeshing is divided into several substeps to reduce the polycount without losing essential geometry, especially along mesh boundaries.</p>
+
+      <h3 id="per-zone">Reduce the polycount per zone</h3>
+      <p>The first substep reduces the polycount individually for each terrain zone. Each zone can have a different surface area, so uniform remesh settings across the entire mesh can be interpreted badly and lose crucial geometry, particularly at the edges.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-266a919add804f56.gif" alt="Houdini viewport: a remeshed terrain with teal, maroon, and orange zones outlined in blue" loading="lazy">
+        <figcaption class="media-caption">FIG 08 — Remeshing, first iteration: the mesh looks acceptable.</figcaption>
+      </figure>
+
+      <h3 id="welding">Weld the terrain to the road</h3>
+      <p>This was the most <b>interesting and challenging</b> part of the process. The goal was to weld all terrain points to the road seamlessly while the road mesh itself <b>remained unchanged</b>.</p>
+      <p>First, all borders of each terrain zone are grouped to prepare for the welding and division process. This is what lets different terrain areas connect seamlessly while keeping their distinct characteristics.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-6c0973f76b445028.gif" alt="Houdini viewport: a mesh with curved blue border lines, orange points, and numeric annotations showing grouped zone points, edges, and primitives" loading="lazy">
+        <figcaption class="media-caption">FIG 09 — Grouping zone points, edges, and primitives.</figcaption>
+      </figure>
+      <p>Combining meshes of different polycounts is designed to be fully procedural, so terrain zones and the road blend automatically without changing the road geometry.</p>
+      <p><b>How it works:</b></p>
+      <ul>
+        <li>Points that <b>touch</b> the road at the terrain zone borders are added to a group, and the group is <b>promoted</b> to edges and primitives.</li>
+        <li>The <b>outer contour</b> is subtracted from these groups, which determines which points need to be welded with the road mesh points later.</li>
+        <li>Knowing which points and edges form the <b>boundary</b> between the terrain and the road mesh, a <b>central point</b> is added to each of these "contact edges", and a <b>bisector</b> is drawn from that vertex, which triangulates the polygon.</li>
+        <li>The new point is <b>added to a separate group</b> and later welded with the <b>nearest edge point</b> of the road mesh, based on <b>distance</b>.</li>
+        <li>The whole process runs inside a <b>For-Each Loop with Feedback</b> that iterates <b>until no new groups</b> are formed.</li>
+      </ul>
+      <p>Houdini is well suited to problems like this: even the iteration count can be derived by checking the mesh for non-connected polygons.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-ac5898ef995b86b5.gif" alt="Houdini viewport and parameter panel: the terrain and road welded into one gray mesh with blue outlines on a grid" loading="lazy">
+        <figcaption class="media-caption">FIG 10 — The welded result: the geometry is ready for the game, 3111 triangles in total.</figcaption>
+      </figure>
+      <div class="atlas-callout atlas-callout--success"><p><b>Result of this stage:</b> the terrain and road form a single game-ready mesh at 3111 triangles in total, and the road mesh is unchanged.</p></div>
+      <div class="atlas-section-break" data-index="// § 05 REMESHING AND WELDING TO THE ROAD"></div>
+
+      <h2 id="uv-atlas">06 UVs, splat map, and atlas textures</h2>
+
+      <h3 id="uvs">Auto UVs</h3>
+      <p>The mesh gets two UV channels. The first UV is for the Wrapped Tile Atlas: depending on the number of terrain types, the UV can be divided into sections. Here there are three sections, so each tile is equal to x0.5. The second UV channel is used for splat map masking and light baking.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-053077f42c731833.gif" alt="The second UV channel (UV2): three terrain-zone islands laid out over a lettered checker grid" loading="lazy">
+        <figcaption class="media-caption">FIG 11 — The second UV channel (UV2): the three terrain zones laid out for splat map masking and light baking.</figcaption>
+      </figure>
+
+      <h3 id="atlases">Preparing the atlases and other textures</h3>
+      <p>The color information of the splat map is baked into a texture using the second UV. An atlas is also created with two different grass textures and two different rocky textures. This kind of texture atlas reduces draw calls and breaks the repetitiveness of the terrain texture.</p>
+      <figure class="media-frame">
+        <div class="gallery-grid gallery-grid--2col">
+          <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-78358a47ab158094.jpg" alt="Seamless asphalt road texture with two white lane lines" loading="lazy">
+          <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-713ecbb06e69a9b7.png" alt="Two-by-two texture atlas: two mossy grass textures on top, and grass-speckled ground and a rocky surface below" loading="lazy">
+          <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-b39c550bd4e19109.png" alt="The baked splat map on the second UV: blue, red, and green color regions marking the terrain zones" loading="lazy">
+          <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-71be410bdc994dfb.jpg" alt="Grayscale cloud noise mask on a black background" loading="lazy">
+        </div>
+        <figcaption class="media-caption">FIG 12 — The textures: the road texture, the 2×2 atlas (two grass, two rocky), the baked splat map on UV2, and the noise mask used to break repetition.</figcaption>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 06 UVS, SPLAT MAP, AND ATLAS TEXTURES"></div>
+
+      <h2 id="shader">07 Shader: splat map and wrapped tile atlas</h2>
+      <p>The splat map setup is straightforward: splitting the color channels makes it easy to mask the terrain zones.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-51bf0a888bfd7d35.png" alt="Shader graph for the splat map: Sample Texture 2D, Colorspace Conversion, Normalize, and Split nodes on a dark background" loading="lazy">
+        <figcaption class="media-caption">FIG 13 — Splat map sampling: sample the texture, convert the color space, normalize, and split the channels.</figcaption>
+      </figure>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-ae7cb744aed6aa6d.png" alt="Unity editor showing the terrain colored by red, green, and blue splat map channels, with project panels around it" loading="lazy">
+        <figcaption class="media-caption">FIG 14 — Each color channel represents a terrain zone and is multiplied by the wrapped tiled subgraph described below.</figcaption>
+      </figure>
+
+      <h3 id="wrapped-tiling">The wrapped tile subgraph</h3>
+      <p>The terrain texture atlas is remapped, which helps scale it on the geometry, and it is fed into the tiling node using the first UV. The next step is the <b>Fraction</b> function, which returns the fractional part of its input. For example, if the input is 3.75, Fraction returns 0.75, which means it works within the borders of one UV tile, here x0.5. This is useful for repeating or cyclical effects, and here it keeps the sampling inside the tile UV that is defined in the <b>Flipbook</b> node. The value is a Vector2 Tiling, which is then connected to the input of the texture atlas.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-df3c92cb130a9587.png" alt="Shader subgraph: a UV Scale Global group (Remap, Tiling And Offset, Fraction) and a Tiling group (Split, Flipbook) feeding Sample Texture 2D and Output" loading="lazy">
+        <figcaption class="media-caption">FIG 15 — The wrapped tile subgraph: UV Scale Global (Remap, Tiling And Offset, Fraction) and Tiling (Split, Flipbook) feed Sample Texture 2D.</figcaption>
+      </figure>
+      <p>With this setup a single texture can be scaled and offset, and all of it stays within the bounds of the tile UV and that single texture. It can also be mixed with the neighboring texture using a noise mask multiplier, which helps break the repetitiveness of the terrain.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-2f653d097d2d98d1.png" alt="Aerial view of the terrain with a winding road through green textured ground and a large brown area, before the wrapped tile atlas" loading="lazy">
+        <figcaption class="media-caption">FIG 16 — Before.</figcaption>
+      </figure>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-environment-creation-houdini-chapter-1/asset-b1fcf966f6de84f3.png" alt="Aerial view of the same terrain after the wrapped tile atlas: the road divides a brown rocky area and green vegetation with less visible repetition" loading="lazy">
+        <figcaption class="media-caption">FIG 17 — After, with the same tile size: 1 texture = 4 textures.</figcaption>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 07 SHADER"></div>
+
+      <h2 id="result">08 Result and next chapter</h2>
+      <p>The terrain and road are a single low-poly mesh with two UV channels, a baked splat map, and a texture atlas that breaks repetition with a single shader setup. In the next chapter, I'll demonstrate how to create a <b>procedural, optimized modular building</b>.</p>
+
+      <hr>
+      <p><strong>Like this post? </strong>( ´◔ ω◔`) ノシ</p>
+      <p><strong>Support:</strong> <a href="https://buymeacoffee.com/pavel.zosim" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a> | <a href="https://www.patreon.com/c/pavel_zosim" target="_blank" rel="noopener noreferrer">Patreon</a> | <a href="https://github.com/pavelzosim" target="_blank" rel="noopener noreferrer">GitHub</a> | <a href="https://pavelzosim.gumroad.com/" target="_blank" rel="noopener noreferrer">Gumroad</a> | <a href="https://www.youtube.com/@VFX_PavelZosim/videos" target="_blank" rel="noopener noreferrer">YouTube</a></p>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // PROCEDURAL_ENVIRONMENT_CHAPTER_1 // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+
+<script src="/scripts/article-page.js?v=14"></script>
 </body>
 </html>

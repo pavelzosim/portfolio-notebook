@@ -16,7 +16,7 @@
       "sourceUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-01/",
       "state": "published",
       "homepage": {
-        "highlight": true,
+        "highlight": false,
         "recent": true,
         "rank": 30,
         "date": "2026.06"
@@ -917,11 +917,11 @@
     },
     {
       "id": "NOTE-014",
-      "title": "Procedural Camera Transition with Controlled Chaos (Houdini)",
+      "title": "Soft-Body Simulation of Many Objects — Controlled Chaos as a Procedural Camera Transition (Houdini)",
       "slug": "procedural-camera-transition-controlled-chaos-houdini",
       "kind": "article",
       "group": "houdini",
-      "summary": "Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization.",
+      "summary": "How a Houdini camera transition simulates a large number of soft bodies: camera-frustum layout, velocity-field trajectories, Vellum, and staggered stick-and-release.",
       "tags": [
         "technical art",
         "houdini",
@@ -932,12 +932,12 @@
         "procedural workflow"
       ],
       "image": "/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif",
-      "imageAlt": "Procedural Camera Transition with Controlled Chaos (Houdini)",
+      "imageAlt": "Houdini viewport and node network for the soft-body camera transition: Vellum constraints on the proxy objects and the attributes that drive them",
       "localPath": "/content/posts/atlas-html/procedural-camera-transition-controlled-chaos-houdini.html",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/",
       "publicUrl": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/",
       "datePublished": "2026-02-04",
-      "dateModified": "2026-02-04",
+      "dateModified": "2026-09-25",
       "state": "published",
       "indexable": true,
       "homepage": {
@@ -947,11 +947,11 @@
     },
     {
       "id": "NOTE-015",
-      "title": "Procedural environment creation houdini — chapter 1",
+      "title": "Procedural Environment Creation in Houdini, Chapter 1 — Low-Poly Terrain, Road, and Splat Maps for Unity",
       "slug": "procedural-environment-creation-houdini-chapter-1",
       "kind": "article",
       "group": "houdini",
-      "summary": "Procedural environment creation houdini chapter 1 covering asset optimization and production pipelines for real-time projects.",
+      "summary": "Low-poly terrain and road in Houdini for Unity: road alignment, per-zone remeshing, splat map baking, two UV sets, and a wrapped tile atlas shader.",
       "tags": [
         "Game Development",
         "Unity",
@@ -963,14 +963,18 @@
         "procedural-environments"
       ],
       "image": "/public/media/posts/index/asset-838345dc6aff7971.gif",
-      "imageAlt": "Procedural environment creation houdini — chapter 1",
+      "imageAlt": "Houdini viewport: a terrain with red and green zones and curved road lines, converted from a heightfield to a dense mesh",
       "localPath": "/content/posts/atlas-html/procedural-environment-creation-houdini-chapter-1.html",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/",
       "publicUrl": "https://www.pavelzosim.com/post/procedural-environment-creation-houdini-chapter-1/",
       "datePublished": "2025-01-29",
-      "dateModified": "2026-02-04",
+      "dateModified": "2026-09-25",
       "state": "published",
-      "indexable": true
+      "indexable": true,
+      "homepage": {
+        "highlight": true,
+        "rank": 30
+      }
     },
     {
       "id": "NOTE-016",

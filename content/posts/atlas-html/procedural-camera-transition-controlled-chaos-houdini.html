@@ -2,91 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1"><title>Procedural Camera Transition with Controlled Chaos (Houdini) · Pavel Zosim</title><meta name="description" content="Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization."><link rel="canonical" href="https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/"><meta property="og:type" content="article"><meta property="og:title" content="Procedural Camera Transition with Controlled Chaos (Houdini)"><meta property="og:description" content="Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization."><meta property="og:url" content="https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/"><meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif"><meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Procedural Camera Transition with Controlled Chaos (Houdini)"><meta name="twitter:description" content="Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization."><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Procedural Camera Transition with Controlled Chaos (Houdini)", "description": "Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization.", "url": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/", "mainEntityOfPage": "https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/", "image": "https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif", "datePublished": "2026-02-04", "dateModified": "2026-02-04", "author": {"@type": "Person", "name": "Pavel Zosim", "url": "https://www.pavelzosim.com/"}}</script>
-
-
-
-
-
-
-  <link rel="stylesheet" href="/styles/atlas.css?v=60"><link rel="stylesheet" href="/styles/posts.css?v=18">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Soft-Body Simulation of Many Objects — Controlled Chaos as a Procedural Camera Transition (Houdini) · Pavel Zosim</title>
+  <meta name="description" content="How a Houdini camera transition simulates a large number of soft bodies: camera-frustum layout, velocity-field trajectories, Vellum, and staggered stick-and-release.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Soft-Body Simulation of Many Objects — Controlled Chaos as a Procedural Camera Transition (Houdini)">
+  <meta property="og:description" content="How a Houdini camera transition simulates a large number of soft bodies: camera-frustum layout, velocity-field trajectories, Vellum, and staggered stick-and-release.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Soft-Body Simulation of Many Objects — Controlled Chaos as a Procedural Camera Transition (Houdini)">
+  <meta name="twitter:description" content="How a Houdini camera transition simulates a large number of soft bodies: camera-frustum layout, velocity-field trajectories, Vellum, and staggered stick-and-release.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Soft-Body Simulation of Many Objects — Controlled Chaos as a Procedural Camera Transition (Houdini)","description":"How a Houdini camera transition simulates a large number of soft bodies: camera-frustum layout, velocity-field trajectories, Vellum, and staggered stick-and-release.","url":"https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/","mainEntityOfPage":"https://www.pavelzosim.com/post/procedural-camera-transition-controlled-chaos-houdini/","image":"https://www.pavelzosim.com/public/media/posts/index/asset-c81bf2bdf6cc5b23.gif","datePublished":"2026-02-04","dateModified":"2026-09-25","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=60">
+  <link rel="stylesheet" href="/styles/posts.css?v=18">
 </head>
-<body class="migrated-post" id="top">
+<body id="top">
+  <h1 class="seo-heading">Soft-Body Simulation of Many Objects — Controlled Chaos as a Procedural Camera Transition (Houdini)</h1>
   <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
-  <main class="post-shell">
-    <header class="post-header"><p class="post-path">~/blog/procedural-camera-transition-controlled-chaos-houdini.md</p><h1>Procedural Camera Transition with Controlled Chaos (Houdini)</h1><p class="post-summary">Technical breakdown of a procedural camera transition in Houdini using soft-body simulation, camera-driven layout, and controlled randomization.</p><div class="post-meta"><span>Pavel Zosim</span><span>2026-02-04</span><span>#technical-art</span><span>#houdini</span><span>#game-pipeline</span><span>#procedural-animation</span><span>#soft-body-simulation</span><span>#vellum</span><span>#procedural-workflow</span></div></header>
-    <article class="atlas-container"><div class="content-block"><div class="media-frame"><iframe src="https://www.youtube.com/embed/q25PkDgioKU" title="Controlled Chaos — Procedural Camera Transition with Soft Bodies | Houdini" loading="lazy" allowfullscreen></iframe><div class="media-caption">Controlled Chaos — Procedural Camera Transition with Soft Bodies | Houdini</div></div>
-<p>&nbsp;</p>
-<h2>What is this project</h2>
-<p>This project demonstrates a procedural camera transition system built in Houdini.</p>
-<p>&nbsp;</p>
-<p>The system animates a large number of objects interacting with each other as soft bodies and with a surface.  </p>
-<p>&nbsp;</p>
-<p>Objects are launched along ballistic trajectories, collide with an imaginary screen, stick to it, fully cover the visible area, and then detach over time.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-1512a5c14327d293.gif" alt="Technical article illustration" loading="lazy"></div>
-<p>&nbsp;</p>
-<p>The core idea of the project is controlled chaos:  </p>
-<p>motion is driven by physical simulation, while variation is introduced intentionally and selectively.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-60361b0a1e61de97.gif" alt="Technical article illustration" loading="lazy"></div>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>---</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-c4b7a2f3dd3f9184.png" alt="Technical article illustration" loading="lazy"></div>
-<h2>How the system works</h2>
-<p>The entire setup is camera-driven.  </p>
-<p>The camera frustum is used as a spatial template to define final object positions, ensuring fixed object count, stable screen coverage, and predictable composition.</p>
-<p>&nbsp;</p>
-<p>Initial and final positions are defined per object and connected into procedural trajectories. These trajectories define flight direction and curvature.</p>
-<p>&nbsp;</p>
-<p>Rather than moving objects directly along splines, spline tangents are converted into a velocity field. This velocity field drives the simulation, allowing acceleration, deceleration, rotation, and noise to be applied while keeping target positions deterministic.</p>
-<p>&nbsp;</p>
-<p>Variation is introduced through controlled offsets in timing, orientation, and velocity strength. Randomness is never global and never breaks the underlying structure.</p>
-<p>&nbsp;</p>
-<p>---</p>
-<p>&nbsp;</p>
-<h2>Soft-body simulation and state logic</h2>
-<p>Physical interaction is handled using Vellum soft-body simulation.</p>
-<p>&nbsp;</p>
-<p>Objects deform on impact and interact with each other during collisions.  </p>
-<p>Collision volumes are also used to track object states, including screen contact, sticking, and release timing.</p>
-<p>&nbsp;</p>
-<p>All state changes are stored as attributes and interpreted inside a custom DOP network.  </p>
-<p>Velocity is applied only to selected object groups, allowing different launch phases.</p>
-<p>&nbsp;</p>
-<p>Key hero objects are activated first, followed by the main group after a controlled delay.  </p>
-<p>This sequencing allows the chaos to build up gradually rather than appearing all at once.</p>
-<p>&nbsp;</p>
-<p>---</p>
-<p>&nbsp;</p>
-<h2>Stick and release behavior</h2>
-<p>When objects reach the screen surface, stick constraints are activated.  </p>
-<p>Release is not triggered simultaneously.</p>
-<p>&nbsp;</p>
-<div class="media-frame"><img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-c81bf2bdf6cc5b23.gif" alt="Technical article illustration" loading="lazy"></div>
-<p>&nbsp;</p>
-<p>Each object has its own release timing based on randomized thresholds, causing objects to detach one by one instead of collapsing as a single layer.</p>
-<p>&nbsp;</p>
-<p>Additional velocity masking is applied to slightly slow objects during flight and accelerate them before impact, reinforcing the perception of weight and contact.</p>
-<p>&nbsp;</p>
-<p>---</p>
-<p>&nbsp;</p>
-<h2>Pipeline usage</h2>
-<p>The simulation runs on low-poly proxy geometry.</p>
-<p>&nbsp;</p>
-<p>Motion is transferred to final meshes using Point Deformer and then cached.  </p>
-<p>The result can be rendered directly in Houdini or Solaris, or exported to a game engine using VAT.</p>
-<p>&nbsp;</p>
-<p>The example focuses on system design and problem-solving rather than on a specific engine integration.  </p>
-<p>The same approach can be adapted to game cinematics, real-time effects, and stylized transitions.</p>
-<p> </p>
-<hr>
-<p><strong>Like this post? </strong>( ´◔ ω◔`) ノシ</p>
-<p><strong>Support:</strong> <u><a href="https://buymeacoffee.com/pavel.zosim" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a></u> | <u><a href="https://www.patreon.com/c/pavel_zosim" target="_blank" rel="noopener noreferrer">Patreon</a></u> | <u><a href="https://github.com/pavelzosim" target="_blank" rel="noopener noreferrer">GitHub</a></u> | <u><a href="https://pavelzosim.gumroad.com/" target="_blank" rel="noopener noreferrer">Gumroad</a></u><u> </u>| <u><a href="https://www.youtube.com/@VFX_PavelZosim/videos" target="_blank" rel="noopener noreferrer">YouTube</a></u> </p></div></article>
-    <footer class="post-end"><a href="/blog/">← Blog index</a><span>Wix archive / UTF-8</span><a href="#top">return 0; ↑</a></footer>
-  </main>
-  <script src="/scripts/article-page.js?v=14"></script>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+
+      <nav class="atlas-toc" aria-label="Article table of contents">
+        <ul class="atlas-toc__list">
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#goals"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Design goals</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#layout"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">Camera-driven layout</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#trajectories"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Trajectories and the velocity field</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#simulation"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Soft-body simulation and state logic</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#release"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">Stick and release</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#pipeline"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Pipeline usage</span><span class="atlas-toc__dots"></span></span></a></li>
+          <li class="atlas-toc__item atlas-toc__item--h2"><a href="#result"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">Result and scope</span><span class="atlas-toc__dots"></span></span></a></li>
+        </ul>
+      </nav>
+
+      <h2 id="overview">01 Overview</h2>
+      <p>This project is a procedural camera transition built in Houdini. A large number of objects, simulated as soft bodies, interact with each other and with a surface: they are launched along ballistic trajectories, collide with an imaginary screen, stick to it until the visible area is fully covered, and then detach over time.</p>
+      <p><b>Implementation context:</b> Houdini, Vellum soft-body simulation, and a custom DOP network. The result is cached, and can be rendered in Houdini or Solaris or exported to a game engine with VAT.</p>
+      <figure class="media-frame">
+        <iframe src="https://www.youtube.com/embed/q25PkDgioKU" title="Controlled Chaos — Procedural Camera Transition with Soft Bodies | Houdini" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <figcaption class="media-caption">FIG 01 — The finished transition: many soft-body objects reach the screen, cover it, and release. <a href="https://www.youtube.com/watch?v=q25PkDgioKU" target="_blank" rel="noopener">Watch on YouTube</a>.</figcaption>
+      </figure>
+      <div class="atlas-callout atlas-callout--note"><p><b>Core idea — controlled chaos.</b> Motion is driven by physical simulation, while variation is introduced intentionally and selectively.</p></div>
+      <p>The sections below follow the system in the order it runs: what the setup has to guarantee, how the camera defines the layout, how trajectories become a velocity field, how the simulation and its state logic work, and how objects stick to the screen and release.</p>
+      <div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
+
+      <h2 id="goals">02 Design goals</h2>
+      <p>The transition needs motion that is physical but an outcome that is predictable. That set the requirements for the setup:</p>
+      <ul>
+        <li>a fixed object count;</li>
+        <li>stable screen coverage;</li>
+        <li>predictable composition;</li>
+        <li>deterministic target positions, even though motion comes from a simulation;</li>
+        <li>variation that is never global and never breaks the underlying structure.</li>
+      </ul>
+      <p>The next sections show how each requirement is met: the camera fixes the layout, the trajectories fix the targets, and randomness is applied only to selected properties.</p>
+      <div class="atlas-section-break" data-index="// § 02 DESIGN GOALS"></div>
+
+      <h2 id="layout">03 Camera-driven layout</h2>
+      <p>The entire setup is camera-driven. The camera frustum is used as a spatial template to define the final object positions, which is what ensures a fixed object count, stable screen coverage, and predictable composition.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-1512a5c14327d293.gif" alt="Two Houdini viewports: a dense grid of objects filling the frame on the left, and the camera frustum volume on the right" loading="lazy">
+        <figcaption class="media-caption">FIG 02 — Houdini viewports: a grid of objects filling the frame (left) and the camera frustum volume that serves as the spatial template (right).</figcaption>
+      </figure>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-c4b7a2f3dd3f9184.png" alt="Bottom view in Houdini: a camera icon on the right, the frustum volume in front of it, and a column of objects on the left" loading="lazy">
+        <figcaption class="media-caption">FIG 03 — Bottom view of the setup: the camera (right), the frustum volume it defines, and a column of objects at the other end (left).</figcaption>
+      </figure>
+      <div class="atlas-section-break" data-index="// § 03 CAMERA-DRIVEN LAYOUT"></div>
+
+      <h2 id="trajectories">04 Trajectories and the velocity field</h2>
+      <p>Initial and final positions are defined per object and connected into procedural trajectories. These trajectories define flight direction and curvature.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-60361b0a1e61de97.gif" alt="Two Houdini viewports showing many curved trajectory lines rising and arcing toward the target area" loading="lazy">
+        <figcaption class="media-caption">FIG 04 — Procedural trajectories as curves, in two viewports of the same setup. Each curve connects an object's initial and final position.</figcaption>
+      </figure>
+      <p>Objects are not moved directly along splines. Instead, the spline tangents are converted into a velocity field, and that field drives the simulation. This allows acceleration, deceleration, rotation, and noise to be applied while the target positions stay deterministic.</p>
+
+      <h3 id="variation">Controlled variation</h3>
+      <p>Variation is introduced through controlled offsets in timing, orientation, and velocity strength. Randomness is never global and never breaks the underlying structure: the trajectories still end where the layout says they should.</p>
+      <div class="atlas-section-break" data-index="// § 04 TRAJECTORIES AND THE VELOCITY FIELD"></div>
+
+      <h2 id="simulation">05 Soft-body simulation and state logic</h2>
+      <p>Physical interaction is handled with Vellum soft-body simulation. Objects deform on impact and interact with each other during collisions.</p>
+      <p>Collision volumes are also used to track object states, including screen contact, sticking, and release timing. All state changes are stored as attributes and interpreted inside a custom DOP network.</p>
+
+      <h3 id="launch-phases">Launch phases</h3>
+      <p>Velocity is applied only to selected object groups, which allows different launch phases. Key hero objects are activated first, followed by the main group after a controlled delay. This sequencing lets the chaos build up gradually rather than appearing all at once.</p>
+
+      <div class="atlas-table-frame">
+        <table class="atlas-table">
+          <thead><tr><th>Stage</th><th>What drives it</th></tr></thead>
+          <tbody>
+            <tr><td>Layout</td><td>Camera frustum used as a spatial template for final positions</td></tr>
+            <tr><td>Launch</td><td>Velocity field from spline tangents, applied to selected groups: hero objects first, then the main group after a delay</td></tr>
+            <tr><td>Flight</td><td>Velocity masking: objects are slightly slowed during flight and accelerated before impact</td></tr>
+            <tr><td>Contact</td><td>Collision volumes track screen contact; stick constraints are activated</td></tr>
+            <tr><td>Release</td><td>Per-object timing from randomized thresholds</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="atlas-section-break" data-index="// § 05 SOFT-BODY SIMULATION AND STATE LOGIC"></div>
+
+      <h2 id="release">06 Stick and release</h2>
+      <p>When objects reach the screen surface, stick constraints are activated. Release is not triggered simultaneously.</p>
+      <figure class="media-frame">
+        <img src="/public/media/posts/procedural-camera-transition-controlled-chaos-houdini/asset-c81bf2bdf6cc5b23.gif" alt="Houdini viewport and node network showing the Vellum constraint setup and the attributes that drive the soft-body objects" loading="lazy">
+        <figcaption class="media-caption">FIG 05 — The Houdini network behind the simulation: Vellum constraints on the proxy objects and the attributes that drive them.</figcaption>
+      </figure>
+      <p>Each object has its own release timing based on randomized thresholds, so objects detach one by one instead of collapsing as a single layer.</p>
+      <p>Additional velocity masking is applied to slightly slow objects during flight and accelerate them before impact, which reinforces the perception of weight and contact.</p>
+      <div class="atlas-section-break" data-index="// § 06 STICK AND RELEASE"></div>
+
+      <h2 id="pipeline">07 Pipeline usage</h2>
+      <p>The simulation runs on low-poly proxy geometry. Motion is transferred to the final meshes using <code class="atlas-code-inline">Point Deformer</code> and then cached.</p>
+      <p>The cached result can be rendered directly in Houdini or Solaris, or exported to a game engine using <code class="atlas-code-inline">VAT</code>.</p>
+      <div class="atlas-section-break" data-index="// § 07 PIPELINE USAGE"></div>
+
+      <h2 id="result">08 Result and scope</h2>
+      <p>The outcome is a transition whose motion comes from simulation, while its layout, targets, and timing stay under control. The same approach can be adapted to game cinematics, real-time effects, and stylized transitions.</p>
+      <div class="atlas-callout atlas-callout--note"><p><b>Scope.</b> The example focuses on system design and problem-solving rather than on a specific engine integration.</p></div>
+
+      <hr>
+      <p><strong>Like this post? </strong>( ´◔ ω◔`) ノシ</p>
+      <p><strong>Support:</strong> <a href="https://buymeacoffee.com/pavel.zosim" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a> | <a href="https://www.patreon.com/c/pavel_zosim" target="_blank" rel="noopener noreferrer">Patreon</a> | <a href="https://github.com/pavelzosim" target="_blank" rel="noopener noreferrer">GitHub</a> | <a href="https://pavelzosim.gumroad.com/" target="_blank" rel="noopener noreferrer">Gumroad</a> | <a href="https://www.youtube.com/@VFX_PavelZosim/videos" target="_blank" rel="noopener noreferrer">YouTube</a></p>
+
+      <div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // CONTROLLED_CHAOS_CAMERA_TRANSITION // EOF</span><span class="atlas-eof-divider__line"></span></div>
+    </div>
+  </div>
+
+<script src="/scripts/article-page.js?v=14"></script>
 </body>
 </html>
