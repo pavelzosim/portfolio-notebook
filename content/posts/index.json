@@ -218,7 +218,8 @@
         "houdini",
         "unreal",
         "procedural",
-        "pipeline"
+        "pipeline",
+        "procedural-environments"
       ],
       "image": "/public/media/posts/houdini-unreal-typed-placement-routing/generated-maze-after-cook.png",
       "localPath": "/content/posts/atlas-html/houdini-unreal-typed-placement-routing.html",
@@ -270,7 +271,8 @@
         "lighting",
         "unreal",
         "houdini",
-        "technical-art"
+        "technical-art",
+        "procedural-environments"
       ],
       "image": "/public/media/posts/lighting-generated-geometry/night-courtyard-hero.jpg",
       "imageAlt": "Unreal Editor view of the generated courtyard at night, streetlights on and windows lit with varied interiors visible through the glass",
@@ -292,7 +294,8 @@
       "tags": [
         "houdini",
         "usd",
-        "pipeline"
+        "pipeline",
+        "procedural-environments"
       ],
       "image": "/public/media/home/home/asset-b9bb1240178d9cc3.jpg",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-interior-design-pipeline-houdini-usd/",
@@ -543,7 +546,13 @@
       "imageAlt": "Procedural Tire Generator",
       "datePublished": "2024-06-10",
       "dateModified": "2024-06-10",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "rank": 20,
+        "highlightKind": "HDA · MODELING",
+        "blurb": "Parametric tire + tread systems"
+      }
     },
     {
       "id": "TOOL-007",
@@ -568,7 +577,7 @@
       "dateModified": "2026-01-10",
       "indexable": true,
       "toolsHome": {
-        "highlight": true,
+        "highlight": false,
         "recent": true,
         "rank": 20,
         "highlightKind": "TOOL · CLI",
@@ -939,7 +948,8 @@
         "Houdini",
         "Unreal Engine",
         "Breakdowns",
-        "Tutorials"
+        "Tutorials",
+        "procedural-environments"
       ],
       "image": "/public/media/posts/index/asset-838345dc6aff7971.gif",
       "imageAlt": "Procedural environment creation houdini — chapter 1",

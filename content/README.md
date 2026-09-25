@@ -21,12 +21,15 @@ Every post uses YAML front matter with at least `title`, `slug`, `published`, `s
 | Section | List scope |
 | --- | --- |
 | § 02 Recent notes | every published record |
-| § 05 Tools and assets ("Latest · in progress") | `resource: true` only |
-| § 06 Blog ("Latest · recent notes") | `resource` excluded (keeps it distinct from § 05) |
+| § 04 Procedural environments (card strip) | every published record tagged `procedural-environments`, newest first, up to four with an `image` |
+| § 06 Tools and assets ("Latest · in progress") | `resource: true` only |
+| § 07 Blog ("Latest · recent notes") | `resource` excluded (keeps it distinct from § 06) |
+
+To add an article to § 04, add the `procedural-environments` tag to its record. The same tag powers the "all environment notes" link (`/blog/?tag=procedural-environments`) and the `environments` link in § 08 Technical specialization.
 
 Only set `siteDate` when a post's `datePublished` is a historical/backdated date (e.g. R&D work written up long after it was made) and you need the post to sort by when it was actually added to the site rather than by that historical date.
 
-**Highlights** (the four-card strips in § 02 and § 05) are still manually curated — add a `homepage` object (or `toolsHome` for § 05) to feature a post there:
+**Highlights** (the four-card strips in § 02 and § 06) are still manually curated — add a `homepage` object (or `toolsHome` for § 06) to feature a post there:
 
 ```json
 "homepage": { "highlight": true, "rank": 10 }
@@ -35,4 +38,4 @@ Only set `siteDate` when a post's `datePublished` is a historical/backdated date
 
 - `highlight` places the post in the four-card strip.
 - `rank` controls the order within the strip; lower values appear first.
-- § 06's own four-card strip and § 03 Selected Projects' "Latest · in progress" list are both still hand-authored directly in `index.html` — § 03 isn't a clean 1:1 mapping onto registry records (it mixes project-status narrative with post links), so it's deliberately left out of this automation.
+- § 07's own four-card strip and § 03 Selected Projects' "Latest · in progress" list are both still hand-authored directly in `index.html` — § 03 isn't a clean 1:1 mapping onto registry records (it mixes project-status narrative with post links), so it's deliberately left out of this automation.

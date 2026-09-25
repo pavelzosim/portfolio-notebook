@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="/styles/atlas.css?v=61">
   <script src="/scripts/vfx-flipbooks.js?v=33" defer></script>
   <script src="/scripts/post-registry.js?v=2" defer></script>
-  <script src="/scripts/home-content.js?v=5" defer></script>
+  <script src="/scripts/home-content.js?v=6" defer></script>
   <script src="/scripts/tools-content.js?v=4" defer></script>
   <script src="/scripts/section-actions.js?v=1" defer></script>
   <script src="/scripts/gumroad-shelf.js?v=1" defer></script>
@@ -65,12 +65,13 @@
         <li><a href="#overview"><span>01</span><b>Overview</b></a></li>
         <li><a href="#notes"><span>02</span><b>Recent notes</b></a></li>
         <li><a href="#projects"><span>03</span><b>Projects</b></a></li>
-        <li><a href="#vfx"><span>04</span><b>VFX flipbooks</b></a></li>
-        <li><a href="#tools"><span>05</span><b>Tools &amp; assets</b></a></li>
-        <li><a href="#blog"><span>06</span><b>Blog index</b></a></li>
-        <li><a href="#specialization"><span>07</span><b>Specialization</b></a></li>
-        <li><a href="#about"><span>08</span><b>About</b></a></li>
-        <li><a href="#contacts"><span>09</span><b>Contacts</b></a></li>
+        <li><a href="#environment"><span>04</span><b>Environments</b></a></li>
+        <li><a href="#vfx"><span>05</span><b>VFX flipbooks</b></a></li>
+        <li><a href="#tools"><span>06</span><b>Tools &amp; assets</b></a></li>
+        <li><a href="#blog"><span>07</span><b>Blog index</b></a></li>
+        <li><a href="#specialization"><span>08</span><b>Specialization</b></a></li>
+        <li><a href="#about"><span>09</span><b>About</b></a></li>
+        <li><a href="#contacts"><span>10</span><b>Contacts</b></a></li>
       </ol>
       <div class="rail-links">
         <a href="https://github.com/pavelzosim">[github]</a>
@@ -137,8 +138,15 @@
         <p class="section-foot"><span>clients include NASA, Meta, FAA, Deloitte</span><a href="/projects/">browse all projects →</a></p>
       </section>
 
+      <section class="doc-section" id="environment">
+        <header class="section-label"><span>§ 04</span><h2>Procedural environments</h2><em>SYSTEMS / BREAKDOWNS</em></header>
+        <p class="section-intro">Rule-driven level layout, modular structures, prop scatter, and Houdini to Unreal/Unity pipelines for building real-time worlds. Each entry documents the mechanism behind the result, not only the result.</p>
+        <div class="highlight-strip" data-env-highlights aria-label="Procedural environment articles"></div>
+        <p class="section-foot"><span>houdini · unreal · usd · level design</span><a href="/blog/?tag=procedural-environments">all environment notes →</a></p>
+      </section>
+
       <section class="doc-section vfx-section" id="vfx" data-vfx-section>
-        <header class="section-label"><span>§ 04</span><h2>Realtime VFX &amp; Simulations</h2><em>FLIPBOOK SHOTS / PRACTICE ARCHIVE</em></header>
+        <header class="section-label"><span>§ 05</span><h2>Realtime VFX &amp; Simulations</h2><em>FLIPBOOK SHOTS / PRACTICE ARCHIVE</em></header>
         <p class="vfx-intro">Short loop studies collected during day-to-day practice: particles, fluids, destruction, fire, weather, and simulation tests. These are working shots rather than polished case studies.</p>
         <div class="vfx-grid">
           <figure class="vfx-loop"><video muted loop playsinline preload="none" tabindex="0" poster="/public/media/home/vfx-flipbooks/22-glassblock-shader-non-translucent.jpg" data-src="/public/media/home/vfx-flipbooks/22-glassblock-shader-non-translucent.mp4" aria-label="Glass block shader practice loop, using an opaque material instead of translucency"></video><figcaption><span>SHADER-001</span><strong>Glass Block (No Translucency)</strong><small>opaque material trick · UE5 · 00:15</small></figcaption></figure>
@@ -168,7 +176,7 @@
       </section>
 
       <section class="doc-section" id="tools">
-        <header class="section-label"><span>§ 05</span><h2>Tools and assets</h2><em>QUICK ACCESS</em></header>
+        <header class="section-label"><span>§ 06</span><h2>Tools and assets</h2><em>QUICK ACCESS</em></header>
         <p class="section-intro">Reusable utilities, production helpers, and game-ready assets. Each entry includes implementation notes rather than only a download link.</p>
         <div class="highlight-strip" data-tools-highlights aria-label="Selected tools and assets"></div>
         <div class="section-split"><span>Latest · in progress</span></div>
@@ -177,7 +185,7 @@
       </section>
 
       <section class="doc-section" id="blog">
-        <header class="section-label"><span>§ 06</span><h2>Blog — Breakdowns and lessons</h2><em>READING INDEX</em></header>
+        <header class="section-label"><span>§ 07</span><h2>Blog — Breakdowns and lessons</h2><em>READING INDEX</em></header>
         <div class="highlight-strip" aria-label="Selected blog posts">
           <a class="highlight-card" href="/post/from-file-to-pixel-part-01/"><img src="/public/media/home/home/asset-7c59da9a33eb4d36.jpg" alt="From File to Pixel article cover" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">FOUNDATIONS</span><strong>From File to Pixel</strong><small>GPU · memory · frame path</small></span></a>
           <a class="highlight-card" href="/post/houdini-procedural-explosion-vfx/"><img src="/public/media/home/home/asset-d9f1ca6b786259a5.gif" alt="Procedural explosion VFX breakdown" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">BREAKDOWN</span><strong>Procedural Explosion VFX</strong><small>Pyro · VAT · lighting</small></span></a>
@@ -190,9 +198,9 @@
       </section>
 
       <section class="doc-section" id="specialization">
-        <header class="section-label"><span>§ 07</span><h2>Technical specialization</h2><em>WORKING SET</em></header>
+        <header class="section-label"><span>§ 08</span><h2>Technical specialization</h2><em>WORKING SET</em></header>
         <div class="definition-grid">
-          <article><h3>procedural.systems</h3><p>Houdini HDAs, VEX, Python, USD workflows, procedural modeling and simulation systems.</p><code><a href="/blog/?tag=houdini">houdini</a> / <a href="/blog/?tag=vex">vex</a> / <a href="/blog/?tag=python">python</a> / <a href="/blog/?tag=usd">usd</a></code></article>
+          <article><h3>procedural.systems</h3><p>Houdini HDAs, VEX, Python, USD workflows, procedural modeling and simulation systems.</p><code><a href="/blog/?tag=houdini">houdini</a> / <a href="/blog/?tag=vex">vex</a> / <a href="/blog/?tag=python">python</a> / <a href="/blog/?tag=usd">usd</a> / <a href="/blog/?tag=procedural-environments">environments</a></code></article>
           <article><h3>realtime.graphics</h3><p>HLSL, compute shaders, Unreal materials, Niagara, Unity VFX Graph, GPU profiling.</p><code><a href="/blog/?tag=hlsl">hlsl</a> / <a href="/blog/?tag=compute">compute</a> / <a href="/blog/?tag=ue">ue</a> / <a href="/blog/?tag=unity">unity</a></code></article>
           <article><h3>pipeline.tooling</h3><p>Editor tools, batch operations, content validation, export systems and deterministic automation.</p><code><a href="/blog/?tag=c%23">c#</a> / <a href="/blog/?tag=python">python</a> / <a href="/blog/?tag=data">data</a> / <a href="/blog/?tag=automation">automation</a></code></article>
           <article><h3>engine.integration</h3><p>Moving authored systems into runtime constraints without losing useful artist control.</p><code><a href="/blog/?tag=gpu">gpu</a> / <a href="/blog/?tag=api">api</a> / <a href="/blog/?tag=optimization">optimization</a></code></article>
@@ -200,7 +208,7 @@
       </section>
 
       <section class="doc-section" id="about">
-        <header class="section-label"><span>§ 08</span><h2>About this notebook</h2><em>AUTHOR RECORD</em></header>
+        <header class="section-label"><span>§ 09</span><h2>About this notebook</h2><em>AUTHOR RECORD</em></header>
         <div class="about-layout">
           <div class="prose">
             <p>The pattern repeats across every project regardless of studio size: find the production bottleneck, build the tool or system that removes it, then document it well enough to survive without me in the room. I treat pipelines as contracts — registries, naming conventions, data-driven inputs — because that is what keeps a system predictable as a team grows around it. This site is where that documentation lives: breakdowns, R&amp;D notes, and the reasoning behind each system, not just the finished result.</p>
@@ -211,7 +219,7 @@
       </section>
 
       <section class="doc-section" id="contacts">
-        <header class="section-label"><span>§ 09</span><h2>Contacts</h2><em>OPEN CHANNELS</em></header>
+        <header class="section-label"><span>§ 10</span><h2>Contacts</h2><em>OPEN CHANNELS</em></header>
         <div class="contact-layout">
           <div><p class="contact-lead">Open to collaboration on technical art, procedural systems, real-time VFX, engine-facing workflows, and production tools.</p><p>This is a working notebook first. If the systems documented here overlap with a problem your team is solving, write to me directly.</p></div>
           <dl><div><dt>email</dt><dd><a href="mailto:pavel.zosim@protonmail.com">pavel.zosim@protonmail.com</a></dd></div><div><dt>linkedin</dt><dd><a href="https://www.linkedin.com/in/pavelzosim/">/in/pavelzosim</a></dd></div><div><dt>github</dt><dd><a href="https://github.com/pavelzosim">@pavelzosim</a></dd></div><div><dt>youtube</dt><dd><a href="https://www.youtube.com/@pavel_zosim">@pavel_zosim</a></dd></div><div><dt>cv</dt><dd><a href="/public/documents/pavel-zosim-technical-artist-cv-2026.pdf" download>Pavel Zosim · PDF</a></dd></div><div><dt>location</dt><dd>Chișinău · UTC+3</dd></div></dl>
