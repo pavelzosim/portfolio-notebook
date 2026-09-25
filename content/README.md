@@ -38,7 +38,7 @@ Only set `siteDate` when a post's `datePublished` is a historical/backdated date
 
 `toolsHome.actionLabel` is optional too (default `Download →`) — use it for entries that have notes but no download yet, e.g. `"Read notes →"`.
 
-`toolsHome.url` is optional: when set, the card (and its "Download →" link) points there instead of the post — used for a Gumroad listing — and opens in a new tab.
+§ 06 links only to posts on this site; Gumroad listings belong to the sidebar shelf (`data-gumroad-shelf`), not the Tools carousel.
 
 - `highlight` places the post in the four-card strip.
 - `rank` controls the order within the strip; lower values appear first.
