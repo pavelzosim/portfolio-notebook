@@ -18,7 +18,7 @@
       "homepage": {
         "highlight": true,
         "recent": true,
-        "rank": 40,
+        "rank": 30,
         "date": "2026.06"
       },
       "publicUrl": "https://www.pavelzosim.com/post/from-file-to-pixel-part-01/",
@@ -251,7 +251,7 @@
       "state": "published",
       "homepage": {
         "highlight": true,
-        "rank": 30
+        "rank": 10
       },
       "publicUrl": "https://www.pavelzosim.com/post/controlled-procedurality/",
       "slug": "controlled-procedurality",
@@ -302,7 +302,7 @@
       "state": "published",
       "localPath": "/content/posts/atlas-html/procedural-interior-design-pipeline-houdini-usd.html",
       "homepage": {
-        "highlight": true,
+        "highlight": false,
         "recent": true,
         "rank": 10,
         "date": "2026.08"
@@ -939,7 +939,11 @@
       "datePublished": "2026-02-04",
       "dateModified": "2026-02-04",
       "state": "published",
-      "indexable": true
+      "indexable": true,
+      "homepage": {
+        "highlight": true,
+        "rank": 40
+      }
     },
     {
       "id": "NOTE-015",
