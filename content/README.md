@@ -36,6 +36,8 @@ Only set `siteDate` when a post's `datePublished` is a historical/backdated date
 "toolsHome": { "highlight": true, "rank": 10, "highlightKind": "TOOL · PYTHON", "blurb": "Short pitch line" }
 ```
 
+`toolsHome.actionLabel` is optional too (default `Download →`) — use it for entries that have notes but no download yet, e.g. `"Read notes →"`.
+
 `toolsHome.url` is optional: when set, the card (and its "Download →" link) points there instead of the post — used for a Gumroad listing — and opens in a new tab.
 
 - `highlight` places the post in the four-card strip.

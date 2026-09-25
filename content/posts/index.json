@@ -513,7 +513,7 @@
         "rigging",
         "procedural"
       ],
-      "image": "/public/media/posts/houdini_rig_bones_generator/asset-12cb00f93c86a0d9.png",
+      "image": "/public/media/posts/houdini_rig_bones_generator/asset-ec49a23bee27e271.png",
       "localPath": "/content/posts/atlas-html/houdini_rig_bones_generator.html",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-skeleton-houdini/",
       "state": "published",
@@ -558,7 +558,8 @@
         "highlight": true,
         "rank": 20,
         "highlightKind": "HDA · MODELING",
-        "blurb": "Parametric tire + tread systems"
+        "blurb": "Parametric tire + tread systems",
+        "actionLabel": "Read notes →"
       }
     },
     {

@@ -31,7 +31,7 @@
       meta.append(make('small', '', post.toolsHome.blurb));
       cover.append(image, meta);
       const actions = make('span', 'card-actions');
-      const link = make('a', '', 'Download →');
+      const link = make('a', '', post.toolsHome.actionLabel || 'Download →');
       link.href = url;
       if (isExternal(url)) {
         [cover, link].forEach(anchor => {
