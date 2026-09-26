@@ -544,7 +544,7 @@
       "dateModified": "2024-09-20",
       "indexable": true,
       "toolsHome": {
-        "highlight": true,
+        "highlight": false,
         "rank": 30,
         "highlightKind": "HDA · RIGGING",
         "blurb": "Procedural rig-bone skeletons"
@@ -1055,7 +1055,13 @@
       "dateModified": "2026-08-24",
       "state": "published",
       "resource": true,
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "rank": 30,
+        "highlightKind": "ASSET · 3D",
+        "blurb": "FBX + Cinema 4D delivery"
+      }
     },
     {
       "id": "TOOL-009",
