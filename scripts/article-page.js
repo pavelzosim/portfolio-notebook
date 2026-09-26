@@ -269,6 +269,7 @@
     const related = records
       .map((candidate, index) => {
         if (!candidate.localPath || candidate === record) return null;
+        if (candidate.state !== 'published' || candidate.indexable === false) return null;
         const sharedTags = (candidate.tags || []).filter((tag) => currentTags.has(tag)).length;
         const score = sharedTags * 10 + (record && candidate.group === record.group ? 6 : 0) +
           (record && candidate.kind === record.kind ? 2 : 0) + (candidate.image ? 1 : 0);
@@ -321,18 +322,22 @@
         const localFooter = make('div', 'atlas-local-footer');
         const groups = [
           ['PROD_PIPELINES', [
+            ['/blog/?tag=procedural-environments', '/ Procedural Environments'],
             ['/tools/?tag=houdini', '/ Houdini HDAs'],
-            ['/blog/?tag=vfx', '/ Real-time VFX'],
-            ['/blog/?tag=procedural', '/ Procedural Systems']
+            ['/#vfx', '/ Real-time VFX'],
+            ['/tools/', '/ Tools & Assets']
           ]],
           ['R&D_LOGS', [
+            ['/blog/?tag=procedural', '/ Procedural Systems'],
             ['/blog/?tag=unity', '/ Unity Shaders'],
             ['/blog/?tag=unreal', '/ Unreal Engine'],
             ['/blog/?tag=gpu', '/ GPU Optimization']
           ]],
           ['SYSTEM_ROOT', [
             ['/public/documents/pavel-zosim-technical-artist-cv-2026.pdf', '/ Curriculum Vitae'],
-            ['https://github.com/pavelzosim', '/ GitHub Profile']
+            ['https://github.com/pavelzosim', '/ GitHub Profile'],
+            ['https://www.linkedin.com/in/pavelzosim/', '/ LinkedIn Profile'],
+            ['/#contacts', '/ Contacts']
           ]]
         ];
         groups.forEach(([title, links]) => {
