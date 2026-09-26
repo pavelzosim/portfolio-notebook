@@ -230,7 +230,11 @@
       "imageAlt": "Large procedurally generated level cooked through the Houdini-to-Unreal typed placement bridge",
       "datePublished": "2026-08-31",
       "dateModified": "2026-08-31",
-      "indexable": true
+      "indexable": true,
+      "environmentHome": {
+        "highlight": true,
+        "rank": 30
+      }
     },
     {
       "id": "NOTE-018",
@@ -283,7 +287,11 @@
       "datePublished": "2026-09-22",
       "dateModified": "2026-09-22",
       "state": "published",
-      "indexable": true
+      "indexable": true,
+      "environmentHome": {
+        "highlight": true,
+        "rank": 10
+      }
     },
     {
       "id": "CASE-001",
@@ -312,7 +320,11 @@
       "imageAlt": "Procedural Interiors with Houdini & USD",
       "datePublished": "2026-01-17",
       "dateModified": "2026-01-17",
-      "indexable": true
+      "indexable": true,
+      "environmentHome": {
+        "highlight": true,
+        "rank": 40
+      }
     },
     {
       "id": "REF-001",
@@ -491,16 +503,23 @@
         "python",
         "after-effects"
       ],
+      "image": "/public/media/posts/houdini-tool-data-export-from-houdini-to-after-effects/gumroad-thumbnail.jpg",
       "localPath": "/content/posts/atlas-html/houdini-tool-data-export-from-houdini-to-after-effects.html",
       "sourceUrl": "https://www.pavelzosim.com/post/houdini-tool-data-export-from-houdini-to-after-effects/",
       "state": "published",
       "resource": true,
       "publicUrl": "https://www.pavelzosim.com/post/houdini-tool-data-export-from-houdini-to-after-effects/",
       "slug": "houdini-tool-data-export-from-houdini-to-after-effects",
-      "imageAlt": "Houdini to After Effects Data Export",
+      "imageAlt": "Houdini scene with the After Effects exporter node and its parameters: file path, composition settings, and camera list",
       "datePublished": "2024-03-15",
       "dateModified": "2024-03-15",
-      "indexable": true
+      "indexable": true,
+      "toolsHome": {
+        "highlight": true,
+        "rank": 20,
+        "highlightKind": "HDA · AFTER EFFECTS",
+        "blurb": "Camera and animation export"
+      }
     },
     {
       "id": "TOOL-005",
@@ -529,6 +548,10 @@
         "rank": 30,
         "highlightKind": "HDA · RIGGING",
         "blurb": "Procedural rig-bone skeletons"
+      },
+      "homepage": {
+        "highlight": true,
+        "rank": 30
       }
     },
     {
@@ -554,11 +577,15 @@
       "dateModified": "2024-06-10",
       "indexable": true,
       "toolsHome": {
-        "highlight": true,
+        "highlight": false,
         "rank": 20,
         "highlightKind": "HDA · MODELING",
         "blurb": "Parametric tire + tread systems",
         "actionLabel": "Read notes →"
+      },
+      "homepage": {
+        "highlight": true,
+        "rank": 40
       }
     },
     {
@@ -941,7 +968,7 @@
       "state": "published",
       "indexable": true,
       "homepage": {
-        "highlight": true,
+        "highlight": false,
         "rank": 40
       }
     },
@@ -972,8 +999,12 @@
       "state": "published",
       "indexable": true,
       "homepage": {
-        "highlight": true,
+        "highlight": false,
         "rank": 30
+      },
+      "environmentHome": {
+        "highlight": true,
+        "rank": 20
       }
     },
     {

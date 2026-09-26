@@ -5,8 +5,6 @@
   const envTarget = document.querySelector('[data-env-highlights]');
   if (!highlightTarget || !recentTarget) return;
 
-  const ENV_TAG = 'procedural-environments';
-
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
     if (className) element.className = className;
@@ -16,7 +14,7 @@
 
   const postUrl = post => post.localPath || post.sourceUrl;
   const sorted = posts => posts.sort((a, b) => (a.homepage.rank ?? 0) - (b.homepage.rank ?? 0));
-  const recency = post => Date.parse(post.siteDate || post.datePublished) || 0;
+  const environmentSorted = posts => posts.sort((a, b) => (a.environmentHome.rank ?? 0) - (b.environmentHome.rank ?? 0));
 
   const renderHighlights = (target, posts) => {
     target.replaceChildren();
@@ -41,10 +39,8 @@
       const highlighted = data.records.filter(post => post.homepage && post.homepage.highlight);
       renderHighlights(highlightTarget, sorted(highlighted));
       if (envTarget) {
-        const environment = data.records
-          .filter(post => post.state === 'published' && post.indexable !== false && post.tags.includes(ENV_TAG))
-          .sort((a, b) => recency(b) - recency(a));
-        renderHighlights(envTarget, environment);
+        const environment = data.records.filter(post => post.environmentHome && post.environmentHome.highlight);
+        renderHighlights(envTarget, environmentSorted(environment));
       }
       window.atlasRenderRecentList(recentTarget, data.records, { limit: 5 });
       window.atlasRenderRecentList(blogRecentTarget, data.records, { limit: 5, filter: post => !post.resource });

@@ -21,11 +21,11 @@ Every post uses YAML front matter with at least `title`, `slug`, `published`, `s
 | Section | List scope |
 | --- | --- |
 | § 02 Recent notes | every published record |
-| § 04 Procedural environments (card strip) | every published record tagged `procedural-environments`, newest first, up to four with an `image` |
+| § 04 Procedural environments (card strip) | curated: records with `environmentHome.highlight`, ordered by `rank`, up to four with an `image` |
 | § 06 Tools and assets ("Latest · in progress") | `resource: true` only |
 | § 07 Blog ("Latest · recent notes") | `resource` excluded (keeps it distinct from § 06) |
 
-To add an article to § 04, add the `procedural-environments` tag to its record. The same tag powers the "all environment notes" link (`/blog/?tag=procedural-environments`) and the `environments` link in § 08 Technical specialization.
+To feature an article in § 04, add `"environmentHome": { "highlight": true, "rank": 10 }` to its record (lower rank appears first). The `procedural-environments` tag is separate: it powers the "all environment notes" link (`/blog/?tag=procedural-environments`) and the `environments` link in § 08 Technical specialization, so keep it on every environment article.
 
 Only set `siteDate` when a post's `datePublished` is a historical/backdated date (e.g. R&D work written up long after it was made) and you need the post to sort by when it was actually added to the site rather than by that historical date.
 
