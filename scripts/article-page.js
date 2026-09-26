@@ -69,6 +69,48 @@
     });
   };
 
+  // Slides of different sizes make the viewport change height on every switch, which
+  // moves the buttons below it. Reserve the height of the tallest slide instead.
+  const stabilizeSliders = (scope) => {
+    scope.querySelectorAll('.atlas-slider').forEach((slider) => {
+      const viewport = slider.querySelector('.atlas-slider__viewport');
+      const slides = viewport ? [...viewport.querySelectorAll('img')] : [];
+      if (slides.length < 2) return;
+
+      const sizes = new Map();
+      let lastWidth = 0;
+      const fit = () => {
+        const width = viewport.clientWidth;
+        if (!width || sizes.size < slides.length) return;
+        lastWidth = width;
+        const tallest = Math.max(...[...sizes.values()].map(({ w, h }) => h * Math.min(1, width / w)));
+        viewport.style.height = `${Math.ceil(tallest) + 2}px`;
+      };
+
+      const measure = () => {
+        slides.forEach((slide) => {
+          const probe = new Image();
+          probe.onload = () => {
+            sizes.set(slide, { w: probe.naturalWidth, h: probe.naturalHeight });
+            fit();
+          };
+          probe.src = slide.currentSrc || slide.src;
+        });
+        new ResizeObserver(() => {
+          if (viewport.clientWidth !== lastWidth) fit();
+        }).observe(viewport);
+      };
+
+      if (!('IntersectionObserver' in window)) return measure();
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        measure();
+      }, { rootMargin: '800px 0px' });
+      observer.observe(slider);
+    });
+  };
+
   const boot = async () => {
     const content = document.querySelector('.atlas-container, .post-shell');
     if (!content || document.querySelector('.article-workspace')) return;
@@ -384,6 +426,7 @@
     );
     workspace.after(siteFooter);
     initLightbox(content);
+    stabilizeSliders(content);
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
