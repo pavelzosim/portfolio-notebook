@@ -1,0 +1,24 @@
+{
+  "records": [
+    {
+      "id": "TOOL-001",
+      "title": "Sprite Sheet Assembly Tool",
+      "slug": "sprite-sheet-assembly",
+      "kind": "tool",
+      "summary": "Assemble ordered PNG and JPEG frames into transparent sprite sheets locally in your browser.",
+      "localPath": "/online-tools/sprite-sheet-assembly/index.html",
+      "publicUrl": "https://www.pavelzosim.com/online-tools/sprite-sheet-assembly/",
+      "image": "/public/media/online-tools/sprite-sheet-assembly.png",
+      "imageAlt": "Ordered animation frames assembled into a sprite sheet",
+      "tags": [
+        "sprite-sheet",
+        "animation",
+        "game-art"
+      ],
+      "datePublished": "2026-10-02",
+      "dateModified": "2026-10-02",
+      "state": "published",
+      "indexable": true
+    }
+  ]
+}

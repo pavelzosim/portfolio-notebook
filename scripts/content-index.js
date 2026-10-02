@@ -54,7 +54,7 @@
   const registryPath = view === 'projects' ? '/content/projects/index.json' : '/content/posts/index.json';
 
   Promise.all([
-    fetch(`${withBase('/content/templates/content-index.html')}?v=2`, { cache: 'no-store' }),
+    fetch(`${withBase('/content/templates/content-index.html')}?v=3`, { cache: 'no-store' }),
     fetch(withBase(registryPath), { cache: 'no-store' })
   ])
     .then(async ([templateResponse, indexResponse]) => {

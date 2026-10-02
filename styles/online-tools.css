@@ -1,0 +1,88 @@
+/* Tool composition uses the existing Atlas controls and notebook geometry. */
+.online-tools-page .tool-section{padding:22px 32px;border-bottom:1px solid var(--atlas-border)}
+.online-tools-page .tool-section h2{font-size:var(--fs-h4)}
+.online-tools-page .tool-section h3{font-size:var(--fs-h5)}
+.online-tools-page .tool-section p,.online-tools-page .tool-section li{font-size:var(--fs-body)}
+.online-tools-page .tool-record{display:grid;grid-template-columns:180px minmax(0,1fr);gap:22px}
+.online-tools-page .tool-record img{width:100%;height:auto;object-fit:contain;border:1px solid var(--atlas-border)}
+.online-tools-page .tool-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:16px 0}
+.online-tools-page .atlas-btn{min-height:36px;white-space:normal}
+.online-tools-page .atlas-btn:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
+.online-tools-page button:disabled{opacity:.5;cursor:default}
+.online-tools-page input,.online-tools-page select{min-width:0;width:100%;padding:8px;border:1px solid var(--atlas-border-strong);background:var(--atlas-bg-raised);color:var(--atlas-ink);font:inherit;border-radius:0}
+.online-tools-page :is(input,select,button,a):focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
+.online-tools-page .tool-dropzone{border:1px dashed var(--atlas-border-strong);padding:16px;background:var(--atlas-bg-alt)}
+.online-tools-page .tool-dropzone.is-dragging{border-color:var(--atlas-accent);background:var(--atlas-accent-soft)}
+.online-tools-page .file-control{display:block;flex:1 1 180px;font-size:var(--fs-meta)}
+.online-tools-page .file-control input{margin-top:4px;max-width:100%}
+.online-tools-page .tool-settings{display:grid;grid-template-columns:1fr 2fr 1fr;gap:12px}
+.online-tools-page .tool-settings label{font-size:var(--fs-meta)}
+.online-tools-page .tool-settings :is(input,select){display:block;margin-top:4px;min-height:40px}
+.online-tools-page .frame-list{list-style:none;padding:0;max-height:360px;overflow:auto;border-block:1px solid var(--atlas-border)}
+.online-tools-page .frame-list:empty{display:none}
+.online-tools-page .frame-list li{display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--atlas-border)}
+.online-tools-page .frame-list canvas{width:48px;height:48px;object-fit:contain;background:var(--atlas-bg-alt);image-rendering:pixelated}
+.online-tools-page .frame-list span{overflow-wrap:anywhere;font-size:var(--fs-meta)}
+.online-tools-page .frame-actions{display:flex;gap:4px}
+.online-tools-page .frame-actions button{width:36px;min-height:36px;border:1px solid var(--atlas-border-strong);color:var(--atlas-ink);background:var(--atlas-bg-raised);font:inherit;cursor:pointer}
+.online-tools-page .tool-previews{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.online-tools-page .tool-previews figure{margin:0;min-width:0}
+.online-tools-page .checker{min-height:160px;border:1px solid var(--atlas-border);display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--atlas-bg-alt)}
+.online-tools-page .checker canvas{display:block;max-width:100%;height:auto;max-height:360px;object-fit:contain;image-rendering:pixelated}
+.online-tools-page .tool-previews figcaption{font-size:var(--fs-meta);padding:8px 0;overflow-wrap:anywhere}
+.online-tools-page .tool-warning{color:var(--atlas-crit)}
+.online-tools-page #filename,.online-tools-page #status{overflow-wrap:anywhere}
+.online-tools-page .meta-rail p{overflow-wrap:anywhere}
+@media(max-width:760px){.online-tools-page .tool-section{padding:22px 18px}.online-tools-page .tool-record{grid-template-columns:1fr}.online-tools-page .tool-record img{max-width:320px}.online-tools-page .tool-settings{grid-template-columns:1fr}.online-tools-page .tool-previews{grid-template-columns:1fr}.online-tools-page .frame-list li{grid-template-columns:36px minmax(0,1fr)}.online-tools-page .frame-list canvas{width:36px;height:36px}.online-tools-page .frame-actions{grid-column:2}}
+
+/* Instrument-panel composition: paper shell, explicit stages, visible image evidence. */
+.online-tools-page .content-index-head{padding:24px 32px 0}
+.online-tools-page .tool-titlebar{display:flex;flex-wrap:wrap;gap:8px 16px;padding:12px 0;border-top:1px solid var(--atlas-border);font-size:var(--fs-status);letter-spacing:.05em}
+.online-tools-page .tool-titlebar>span:first-child{color:var(--atlas-accent)}
+.online-tools-page .tool-titlebar .tool-local{margin-left:auto;color:var(--atlas-ok)}
+.online-tools-page .tool-heading{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:22px;align-items:center;padding:8px 0 22px}
+.online-tools-page .tool-heading h1{margin:0 0 16px;font-size:var(--fs-h1);line-height:1.15;letter-spacing:-.04em}
+.online-tools-page .tool-heading p{margin:0;max-width:470px;font-size:var(--fs-body);line-height:1.75}
+.online-tools-page .tool-diagram{width:150px;color:var(--atlas-accent)}
+.online-tools-page .tool-workflow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;margin:0 -32px;padding:0;border-top:1px solid var(--atlas-border)}
+.online-tools-page .tool-workflow li+li{border-left:1px solid var(--atlas-border)}
+.online-tools-page .tool-workflow a{display:flex;gap:8px;align-items:center;padding:12px 16px;text-decoration:none;font-size:var(--fs-meta)}
+.online-tools-page .tool-workflow b{color:var(--atlas-accent);font-size:var(--fs-meta)}
+.online-tools-page .tool-workflow a:hover{background:var(--atlas-accent-soft)}
+.online-tools-page .tool-section{scroll-margin-top:70px}
+.online-tools-page .tool-dropzone{position:relative;padding:22px;border:1px dashed var(--atlas-accent);background:var(--atlas-accent-soft)}
+.online-tools-page .drop-intro{display:flex;align-items:center;gap:16px}
+.online-tools-page .drop-symbol{display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--atlas-accent);color:var(--atlas-accent);font-size:var(--fs-h1)}
+.online-tools-page .drop-intro strong{font-size:var(--fs-h5)}
+.online-tools-page .drop-intro p{margin:4px 0;color:var(--atlas-ink-soft);font-size:var(--fs-meta)}
+.online-tools-page input::file-selector-button{background:var(--atlas-bg-raised);color:var(--atlas-ink);font:inherit;padding:6px 8px;border:1px solid var(--atlas-border-strong);margin-right:8px;cursor:pointer}
+.online-tools-page #count{margin-left:auto;border:1px solid var(--atlas-border);padding:4px 8px;font-size:var(--fs-meta)}
+.online-tools-page #status{padding:8px 12px;border-left:2px solid var(--atlas-accent);background:var(--atlas-bg-alt);font-size:var(--fs-meta)}
+.online-tools-page .frame-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-height:340px;padding:8px;border:1px solid var(--atlas-border);background:var(--atlas-bg-alt)}
+.online-tools-page .frame-list li{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:8px;border:1px solid var(--atlas-border);background:var(--atlas-bg-raised)}
+.online-tools-page .frame-list canvas{width:100%;height:72px;object-fit:contain}
+.online-tools-page .frame-list span{font-size:var(--fs-status);line-height:1.5}
+.online-tools-page .frame-actions{margin-top:auto;justify-content:space-between}
+.online-tools-page .frame-actions button{width:30px;min-height:32px}
+.online-tools-page .tool-settings{padding:16px;background:var(--atlas-bg-alt);border:1px solid var(--atlas-border)}
+.online-tools-page #presets{gap:8px}
+.online-tools-page #presets .atlas-btn{flex:1 1 140px;text-align:left;font-size:var(--fs-status);line-height:1.5}
+.online-tools-page #presets .preset-selected{border-color:var(--atlas-accent);box-shadow:inset 3px 0 0 var(--atlas-accent);color:var(--atlas-accent);background:var(--atlas-accent-soft)}
+.online-tools-page #dimensions{padding:12px;border:1px solid var(--atlas-border);font-size:var(--fs-meta);font-variant-numeric:tabular-nums}
+.online-tools-page .preview-label{display:flex;justify-content:space-between;gap:8px;margin:0;padding:8px 12px;background:var(--atlas-ink);color:var(--atlas-bg-raised);font-size:var(--fs-status)}
+.online-tools-page .tool-previews .preview-label{font-size:var(--fs-status)}
+.online-tools-page .checker{position:relative;min-height:220px;padding:16px;background-color:var(--atlas-bg-raised);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath fill='%23000000' fill-opacity='.07' d='M0 0h8v8H0zM8 8h8v8H8z'/%3E%3C/svg%3E")}
+.online-tools-page .checker:has(canvas[width="1"])::before{content:"Awaiting source frames";color:var(--atlas-ink-soft);font-size:var(--fs-meta)}
+.online-tools-page .checker canvas[width="1"]{display:none}
+.online-tools-page .checker canvas{width:100%;max-height:300px}
+.online-tools-page .animation-preview canvas{width:128px;max-width:100%}
+.online-tools-page .tool-export{border-left:3px solid var(--atlas-accent);background:var(--atlas-accent-soft)}
+.online-tools-page #filename{font-size:var(--fs-meta);padding:12px;border:1px solid var(--atlas-border);background:var(--atlas-bg-raised)}
+.online-tools-page .tool-support{position:relative;background:var(--atlas-bg-alt)}
+/* Only show the direct link when the supplied widget did not render. */
+.online-tools-page .coffee-button:has(.bmc-btn)+.coffee-fallback{display:none}
+.online-tools-page .tool-record{grid-template-columns:1fr}
+.online-tools-page .tool-record img{width:100%;max-width:100%;height:auto}
+@media(max-width:1000px){.online-tools-page .frame-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.online-tools-page .content-index-head{padding:22px 18px 0}.online-tools-page .tool-heading{grid-template-columns:minmax(0,1fr) 96px;gap:12px}.online-tools-page .tool-diagram{width:96px}.online-tools-page .tool-heading h1{font-size:var(--fs-h2)}.online-tools-page .tool-titlebar .tool-local{margin-left:0}.online-tools-page .tool-workflow{margin-inline:-18px}.online-tools-page .tool-workflow a{padding:12px 8px;flex-direction:column;align-items:flex-start}.online-tools-page .frame-list{grid-template-columns:repeat(2,minmax(0,1fr))}.online-tools-page .tool-dropzone{padding:16px}.online-tools-page .checker{min-height:180px}.online-tools-page .tool-workflow a{font-size:var(--fs-status)}}
+@media(max-width:380px){.online-tools-page .tool-heading{grid-template-columns:1fr}.online-tools-page .tool-diagram{display:none}.online-tools-page .coffee-button .bmc-btn{padding-inline:12px;min-width:0}}

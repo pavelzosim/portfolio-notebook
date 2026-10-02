@@ -91,6 +91,30 @@ def main() -> int:
         for marker in ('name="description"', 'property="og:title"', 'name="twitter:card"', 'application/ld+json', 'data-atlas-analytics', '<h1'):
             if marker not in text:
                 errors.append(f"Missing {marker} in post/{record['slug']}")
+    tool_registry = json.loads((SITE / "content" / "online-tools" / "index.json").read_text(encoding="utf-8"))
+    for record in tool_registry["records"]:
+        required = {"id", "title", "slug", "kind", "summary", "localPath", "publicUrl", "image", "imageAlt", "tags", "datePublished", "dateModified", "state", "indexable"}
+        if required - record.keys():
+            errors.append(f"Incomplete online tool registry: {record.get('id')}")
+        if record.get("state") != "published" or not record.get("indexable"):
+            continue
+        route = SITE / urllib.parse.urlsplit(record["publicUrl"]).path.lstrip("/") / "index.html"
+        if not route.exists():
+            errors.append(f"Missing online tool route: {record['publicUrl']}")
+            continue
+        text = route.read_text(encoding="utf-8")
+        for marker in ('name="description"', 'property="og:image"', 'name="twitter:image"', 'application/ld+json', 'WebApplication', 'data-atlas-analytics'):
+            if marker not in text:
+                errors.append(f"Missing {marker} in online tool {record['slug']}")
+        if len(re.findall(r"<h1(?:\s|>)", text, re.I)) != 1:
+            errors.append(f"Online tool must have one h1: {record['slug']}")
+        for payload in re.findall(r'<script type="application/ld\+json">(.*?)</script>', text, re.S):
+            try:
+                json.loads(payload)
+            except ValueError:
+                errors.append(f"Invalid online tool JSON-LD: {record['slug']}")
+        if not (SITE / record["image"].lstrip("/")).is_file():
+            errors.append(f"Missing online tool social image: {record['slug']}")
     sitemap_count = len(re.findall(r"<url>", (SITE / "sitemap.xml").read_text(encoding="utf-8")))
     try:
         validate_discovery()

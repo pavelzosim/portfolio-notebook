@@ -32,6 +32,9 @@ jobs:
       - name: Check analytics consent and conversion events
         run: node --test scripts/analytics.test.cjs
 
+      - name: Check sprite-sheet assembly algorithms
+        run: node --test scripts/sprite-sheet-core.test.cjs
+
       - name: Audit production SEO and internal links
         run: python scripts/audit_site.py
 

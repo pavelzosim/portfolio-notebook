@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
-SITE_DIRECTORIES = ("blog", "content", "privacy", "projects", "public", "styles", "tools")
+SITE_DIRECTORIES = ("blog", "content", "privacy", "projects", "public", "styles", "tools", "online-tools")
 SITE_FILES = ("index.html", "404.html", "home.css", "CNAME", "favicon.ico")
 TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".xml", ".txt"}
 
@@ -163,8 +163,10 @@ def write_discovery_files(records: list[dict], noindex: bool) -> None:
         return
     urls = [
         (domain + "/", ""), (domain + "/blog/", ""), (domain + "/projects/", ""),
-        (domain + "/tools/", ""), (domain + "/privacy/", ""),
+        (domain + "/tools/", ""), (domain + "/online-tools/", ""), (domain + "/privacy/", ""),
     ]
+    tools = json.loads((OUTPUT / "content" / "online-tools" / "index.json").read_text(encoding="utf-8"))["records"]
+    urls.extend((tool["publicUrl"], tool.get("dateModified") or tool.get("datePublished") or "") for tool in tools if tool.get("state") == "published" and tool.get("indexable", True))
     projects = json.loads((OUTPUT / "content" / "projects" / "index.json").read_text(encoding="utf-8"))["projects"]
     urls.extend((f"{domain}/projects/{project['slug']}/", "") for project in projects)
     urls.extend((record["publicUrl"], record.get("dateModified") or record.get("datePublished") or "") for record in records)
