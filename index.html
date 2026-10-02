@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles/atlas.css?v=61">
+  <link rel="stylesheet" href="/styles/atlas.css?v=62">
   <script src="/scripts/vfx-flipbooks.js?v=33" defer></script>
   <script src="/scripts/post-registry.js?v=2" defer></script>
   <script src="/scripts/home-content.js?v=7" defer></script>
@@ -68,10 +68,11 @@
         <li><a href="#environment"><span>04</span><b>Environments</b></a></li>
         <li><a href="#vfx"><span>05</span><b>VFX flipbooks</b></a></li>
         <li><a href="#tools"><span>06</span><b>Tools &amp; assets</b></a></li>
-        <li><a href="#blog"><span>07</span><b>Blog index</b></a></li>
-        <li><a href="#specialization"><span>08</span><b>Specialization</b></a></li>
-        <li><a href="#about"><span>09</span><b>About</b></a></li>
-        <li><a href="#contacts"><span>10</span><b>Contacts</b></a></li>
+        <li><a href="#online-tools"><span>07</span><b>Online Tools</b></a></li>
+        <li><a href="#blog"><span>08</span><b>Blog index</b></a></li>
+        <li><a href="#specialization"><span>09</span><b>Specialization</b></a></li>
+        <li><a href="#about"><span>10</span><b>About</b></a></li>
+        <li><a href="#contacts"><span>11</span><b>Contacts</b></a></li>
       </ol>
       <div class="rail-links">
         <a href="https://github.com/pavelzosim">[github]</a>
@@ -181,12 +182,32 @@
         <div class="highlight-strip" data-tools-highlights aria-label="Selected tools and assets"></div>
         <div class="section-split"><span>Latest · in progress</span></div>
         <div class="record-list" data-tools-recent role="list" aria-live="polite"></div>
-        <p><a href="/online-tools/">Online tools — run Sprite Sheet Assembly in your browser →</a></p>
         <p class="section-foot"><span>tools · scripts · 3D assets</span><a href="/tools/">browse tools and assets →</a></p>
       </section>
 
+      <section class="doc-section home-online-tools" id="online-tools" aria-labelledby="online-tools-title">
+        <header class="section-label"><span>§ 07</span><h2 id="online-tools-title">Online Tools</h2><em>RUN IN YOUR BROWSER</em></header>
+        <p class="section-intro">Production utilities, ready when you need them. Work with your files locally — no installation and no image uploads.</p>
+        <article class="browser-tool-feature">
+          <figure class="browser-tool-preview">
+            <div class="browser-tool-bar"><span>TOOL / 001</span><span>SPRITE SHEET ASSEMBLY</span></div>
+            <img src="/public/media/online-tools/sprite-burst-preview.svg" width="640" height="400" alt="Eight pixel-art burst frames arranged left-to-right in a four-column sprite sheet" loading="lazy">
+            <figcaption><span>8 frames → 4 × 2 grid</span><span>Transparent PNG</span></figcaption>
+          </figure>
+          <div class="browser-tool-copy">
+            <p class="browser-tool-state">● BROWSER TOOL / FREE</p>
+            <h3>Sprite Sheet<br>Assembly Tool</h3>
+            <p>From an image sequence to a game-ready texture. Arrange your frames, inspect the animation, and export a PNG sprite sheet.</p>
+            <ol class="browser-tool-steps"><li><b>01</b><span>Import PNG / JPG frames</span></li><li><b>02</b><span>Arrange &amp; preview motion</span></li><li><b>03</b><span>Choose a grid &amp; export PNG</span></li></ol>
+            <span class="section-action"><a href="/online-tools/sprite-sheet-assembly/"><span>open sprite sheet tool</span><span aria-hidden="true">→</span></a></span>
+          </div>
+        </article>
+        <div class="browser-tool-facts"><span>LOCAL PROCESSING</span><span>NO INSTALLATION</span><span>FREE TO USE</span></div>
+        <p class="section-foot"><span>Browser utilities by Pavel Zosim</span><a href="/online-tools/">browse online tools →</a></p>
+      </section>
+
       <section class="doc-section" id="blog">
-        <header class="section-label"><span>§ 07</span><h2>Blog — Breakdowns and lessons</h2><em>READING INDEX</em></header>
+        <header class="section-label"><span>§ 08</span><h2>Blog — Breakdowns and lessons</h2><em>READING INDEX</em></header>
         <div class="highlight-strip" aria-label="Selected blog posts">
           <a class="highlight-card" href="/post/technical-art-basics-coordinate-transformation-systems/"><img src="/public/media/posts/index/asset-9ca24a98c2ba2a35.png" alt="Technical Art Coordinate Transformation Systems article cover" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">FOUNDATIONS</span><strong>Coordinate Transformation Systems</strong><small>Spaces · transforms · math</small></span></a>
           <a class="highlight-card" href="/post/technical-art-compute-shaders-in-unity-introduction/"><img src="/public/media/posts/technical-art-compute-shaders-in-unity-introduction/asset-a9b5a1811db0a6af.jpg" alt="Compute Shaders in Unity introduction cover" loading="lazy"><span class="highlight-meta"><span class="highlight-kind">LESSON</span><strong>Compute Shaders in Unity</strong><small>Unity · compute · shaders</small></span></a>
@@ -199,7 +220,7 @@
       </section>
 
       <section class="doc-section" id="specialization">
-        <header class="section-label"><span>§ 08</span><h2>Technical specialization</h2><em>WORKING SET</em></header>
+        <header class="section-label"><span>§ 09</span><h2>Technical specialization</h2><em>WORKING SET</em></header>
         <div class="definition-grid">
           <article><h3>procedural.systems</h3><p>Houdini HDAs, VEX, Python, USD workflows, procedural modeling and simulation systems.</p><code><a href="/blog/?tag=houdini">houdini</a> / <a href="/blog/?tag=vex">vex</a> / <a href="/blog/?tag=python">python</a> / <a href="/blog/?tag=usd">usd</a> / <a href="/blog/?tag=procedural-environments">environments</a></code></article>
           <article><h3>realtime.graphics</h3><p>HLSL, compute shaders, Unreal materials, Niagara, Unity VFX Graph, GPU profiling.</p><code><a href="/blog/?tag=hlsl">hlsl</a> / <a href="/blog/?tag=compute">compute</a> / <a href="/blog/?tag=ue">ue</a> / <a href="/blog/?tag=unity">unity</a></code></article>
@@ -209,7 +230,7 @@
       </section>
 
       <section class="doc-section" id="about">
-        <header class="section-label"><span>§ 09</span><h2>About this notebook</h2><em>AUTHOR RECORD</em></header>
+        <header class="section-label"><span>§ 10</span><h2>About this notebook</h2><em>AUTHOR RECORD</em></header>
         <div class="about-layout">
           <div class="prose">
             <p>The pattern repeats across every project regardless of studio size: find the production bottleneck, build the tool or system that removes it, then document it well enough to survive without me in the room. I treat pipelines as contracts — registries, naming conventions, data-driven inputs — because that is what keeps a system predictable as a team grows around it. This site is where that documentation lives: breakdowns, R&amp;D notes, and the reasoning behind each system, not just the finished result.</p>
@@ -220,7 +241,7 @@
       </section>
 
       <section class="doc-section" id="contacts">
-        <header class="section-label"><span>§ 10</span><h2>Contacts</h2><em>OPEN CHANNELS</em></header>
+        <header class="section-label"><span>§ 11</span><h2>Contacts</h2><em>OPEN CHANNELS</em></header>
         <div class="contact-layout">
           <div><p class="contact-lead">Open to collaboration on technical art, procedural systems, real-time VFX, engine-facing workflows, and production tools.</p><p>This is a working notebook first. If the systems documented here overlap with a problem your team is solving, write to me directly.</p></div>
           <dl><div><dt>email</dt><dd><a href="mailto:pavel.zosim@protonmail.com">pavel.zosim@protonmail.com</a></dd></div><div><dt>linkedin</dt><dd><a href="https://www.linkedin.com/in/pavelzosim/">/in/pavelzosim</a></dd></div><div><dt>github</dt><dd><a href="https://github.com/pavelzosim">@pavelzosim</a></dd></div><div><dt>youtube</dt><dd><a href="https://www.youtube.com/@pavel_zosim">@pavel_zosim</a></dd></div><div><dt>cv</dt><dd><a href="/public/documents/pavel-zosim-technical-artist-cv-2026.pdf" download>Pavel Zosim · PDF</a></dd></div><div><dt>location</dt><dd>Chișinău · UTC+3</dd></div></dl>

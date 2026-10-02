@@ -85,15 +85,15 @@
 .online-tools-page .tool-support__eyebrow{margin:0 0 8px;font-size:var(--fs-status);letter-spacing:.12em;color:var(--atlas-ink-muted)}
 .online-tools-page .tool-support h2{margin:0 0 8px;font-size:var(--fs-h4)}
 .online-tools-page .tool-support__content>p:last-child{margin:0;line-height:1.65}
-.online-tools-page .support-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;min-height:44px;padding:8px 16px;border:1px solid var(--atlas-accent-hi);border-radius:0;background:var(--atlas-bg-raised);color:var(--atlas-accent-hi);font:700 var(--fs-meta)/1.4 var(--atlas-font-mono);letter-spacing:.02em;text-decoration:none;transition:background-color .18s,color .18s}
-.online-tools-page .support-button:hover{background:var(--atlas-accent-hi);color:var(--atlas-bg-raised)}
-.online-tools-page .support-button:active{background:var(--atlas-accent);color:var(--atlas-bg-raised)}
-.online-tools-page .support-button__icon{font-size:var(--fs-h4);line-height:1}
-@media(max-width:1000px){.online-tools-page .tool-support{flex-direction:column;align-items:stretch}.online-tools-page .support-button{align-self:flex-start}}
-@media(max-width:720px){.online-tools-page .support-button{width:100%}}
-@media(prefers-reduced-motion:reduce){.online-tools-page .support-button{transition:none}}
 .online-tools-page .tool-record{grid-template-columns:1fr}
 .online-tools-page .tool-record img{width:100%;max-width:100%;height:auto}
 @media(max-width:1000px){.online-tools-page .frame-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:760px){.online-tools-page .content-index-head{padding:22px 18px 0}.online-tools-page .tool-heading{grid-template-columns:minmax(0,1fr) 96px;gap:12px}.online-tools-page .tool-diagram{width:96px}.online-tools-page .tool-heading h1{font-size:var(--fs-h2)}.online-tools-page .tool-titlebar .tool-local{margin-left:0}.online-tools-page .tool-workflow{margin-inline:-18px}.online-tools-page .tool-workflow a{padding:12px 8px;flex-direction:column;align-items:flex-start}.online-tools-page .frame-list{grid-template-columns:repeat(2,minmax(0,1fr))}.online-tools-page .tool-dropzone{padding:16px}.online-tools-page .checker{min-height:180px}.online-tools-page .tool-workflow a{font-size:var(--fs-status)}}
 @media(max-width:380px){.online-tools-page .tool-heading{grid-template-columns:1fr}.online-tools-page .tool-diagram{display:none}}
+
+.online-tools-page .coffee-button{flex-shrink:0}
+.online-tools-page .coffee-fallback{font-size:var(--fs-meta)}
+.online-tools-page .tool-support:has(.bmc-btn) .coffee-fallback{display:none}
+@media(max-width:1000px){.online-tools-page .tool-support{flex-direction:column;align-items:flex-start}}
+@media(max-width:380px){.online-tools-page .coffee-button .bmc-btn{min-width:0;padding-inline:12px;font-size:22px}.online-tools-page .coffee-button .bmc-btn-text{width:auto;flex-shrink:1}}
+
