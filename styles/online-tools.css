@@ -9,6 +9,8 @@
 .online-tools-page .atlas-btn{min-height:36px;white-space:normal}
 .online-tools-page .atlas-btn:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
 .online-tools-page button:disabled{opacity:.5;cursor:default}
+.online-tools-page .atlas-btn:disabled{opacity:1;background:var(--atlas-bg-raised);color:var(--atlas-ink-muted);border:1px solid var(--atlas-border);transform:none}
+.online-tools-page .atlas-btn-shadow:has(>.atlas-btn:disabled)::before{display:none}
 .online-tools-page input,.online-tools-page select{min-width:0;width:100%;padding:8px;border:1px solid var(--atlas-border-strong);background:var(--atlas-bg-raised);color:var(--atlas-ink);font:inherit;border-radius:0}
 .online-tools-page :is(input,select,button,a):focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
 .online-tools-page .tool-dropzone{border:1px dashed var(--atlas-border-strong);padding:16px;background:var(--atlas-bg-alt)}

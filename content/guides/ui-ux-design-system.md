@@ -33,9 +33,10 @@ The global navigation order is consistent on every page:
 1. Projects
 2. Notes
 3. Tools
-4. Blog
-5. About
-6. Contacts
+4. Online Tools — browser applications
+5. Blog
+6. About
+7. Contacts
 
 The primary item is always `Projects`, never `Active Projects`.
 

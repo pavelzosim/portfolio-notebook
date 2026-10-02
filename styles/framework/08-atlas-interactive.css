@@ -58,6 +58,9 @@
   inset: 4px -4px -4px 4px;
   background: var(--atlas-dither);
   background-size: 4px 4px;
+  /* Paint only the exposed bottom/right strips, never behind the text area.
+     This also stays safe when a disabled face has reduced opacity. */
+  clip-path: polygon(calc(100% - 4px) 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 4px), calc(100% - 4px) calc(100% - 4px));
   pointer-events: none;
 }
 .atlas-container .atlas-btn-shadow > .atlas-btn {

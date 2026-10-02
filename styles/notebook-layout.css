@@ -11,6 +11,14 @@
   --notebook-record-inset: 28px;
 }
 
+/* Seven public destinations remain visible instead of overflowing small screens. */
+@media(max-width:1000px){
+  .shellbar .shell-status,.article-shellbar .article-shellbar__status{display:none}
+}
+@media(max-width:760px){
+  .shellbar nav,.article-shellbar nav{flex-wrap:wrap;row-gap:4px}
+}
+
 .workspace,
 .article-workspace {
   width: min(var(--notebook-shell-width), calc(100vw - var(--notebook-page-edge)));
