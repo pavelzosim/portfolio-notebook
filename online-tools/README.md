@@ -9,7 +9,7 @@ Static, browser-only tools using Atlas CSS and the shared notebook layout.
 - `scripts/sprite-sheet-core.js` contains grid calculations and Canvas rendering, ported from Pavel Zosim's MIT-licensed desktop tool.
 - `scripts/sprite-sheet-tool.js` owns file decoding, frame ordering, animation, and PNG downloads.
 
-No image-processing dependencies, file uploads, backend endpoints, or persistent file storage are used. Image data lives in memory. Files are decoded sequentially and validated against count, file-size, decoded-pixel, and canvas limits. Source files are not included in analytics events. The existing consent-controlled site analytics and the user-provided Buy Me a Coffee script remain separate page integrations.
+No image-processing dependencies, file uploads, backend endpoints, or persistent file storage are used. Image data lives in memory. Files are decoded sequentially and validated against count, file-size, decoded-pixel, and canvas limits. Source files are not included in analytics events. The existing consent-controlled site analytics and the plain Buy Me a Coffee support link remain separate page integrations.
 
 ## Local checks
 
@@ -17,6 +17,6 @@ Serve the repository root using the existing README instructions, then open `/on
 
 Run `node --test scripts/sprite-sheet-core.test.cjs` for grid, mixed-size, power-of-two, limit, and filename regression checks. Run the existing `scripts/build_github_pages.py` and `scripts/audit_site.py` to check generated routes, canonical URLs, sitemap, metadata, and links. Preview builds retain the existing `--noindex` behavior.
 
-Browser verification during implementation covered exported PNG pixels and alpha, nearest-square reserved rows, POT behavior, real file imports, invalid files, natural sorting, move/remove controls, playback, downloads, and widths 1440/1024/768/390. External service availability is independent of local image processing; a direct coffee link remains available if its script cannot load.
+Browser verification during implementation covered exported PNG pixels and alpha, nearest-square reserved rows, POT behavior, real file imports, invalid files, natural sorting, move/remove controls, playback, downloads, and widths 1440/1024/768/390. The support action is an ordinary external link and loads no payment script or widget.
 
-The supplied donation button uses `pavel.zosim`, `#FFDD00`, Cookie, and the 🍵 emoji.
+The Atlas-styled Support Development link opens `https://www.buymeacoffee.com/pavel.zosim` in a new tab with `noopener noreferrer`. Payment happens on Buy Me a Coffee.
