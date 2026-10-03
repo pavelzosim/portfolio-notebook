@@ -92,6 +92,8 @@
 @media(max-width:380px){.online-tools-page .tool-heading{grid-template-columns:1fr}.online-tools-page .tool-diagram{display:none}}
 
 .online-tools-page .coffee-button{flex-shrink:0}
+.online-tools-page .coffee-button--compact .bmc-btn{height:44px;min-width:0;padding-inline:16px;font-size:22px;border-radius:8px;line-height:24px}
+.online-tools-page .coffee-button--compact .bmc-btn-text{width:auto;flex-shrink:1}
 .online-tools-page .coffee-fallback{font-size:var(--fs-meta)}
 .online-tools-page .tool-support:has(.bmc-btn) .coffee-fallback{display:none}
 @media(max-width:1000px){.online-tools-page .tool-support{flex-direction:column;align-items:flex-start}}
