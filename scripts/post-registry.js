@@ -2,6 +2,11 @@
   const cache = new Map();
 
   window.atlasFetchRegistry = (url) => {
+    const embedded = document.getElementById('site-post-registry');
+    if (embedded && url.endsWith('/content/posts/index.json')) {
+      if (!cache.has(url)) cache.set(url, Promise.resolve(JSON.parse(embedded.textContent)));
+      return cache.get(url);
+    }
     if (!cache.has(url)) {
       cache.set(
         url,

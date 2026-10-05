@@ -54,8 +54,12 @@
   const registryPath = view === 'projects' ? '/content/projects/index.json' : '/content/posts/index.json';
 
   Promise.all([
-    fetch(`${withBase('/content/templates/content-index.html')}?v=4`, { cache: 'no-store' }),
-    fetch(withBase(registryPath), { cache: 'no-store' })
+    document.getElementById('site-index-registry')
+      ? Promise.resolve({ ok: true, text: async () => '' })
+      : fetch(`${withBase('/content/templates/content-index.html')}?v=4`, { cache: 'no-store' }),
+    document.getElementById('site-index-registry')
+      ? Promise.resolve({ ok: true, json: async () => JSON.parse(document.getElementById('site-index-registry').textContent) })
+      : fetch(withBase(registryPath), { cache: 'no-store' })
   ])
     .then(async ([templateResponse, indexResponse]) => {
       if (!templateResponse.ok) throw new Error(`Index template: ${templateResponse.status}`);

@@ -310,10 +310,10 @@
       function go(hash) { const target = document.querySelector(hash); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
       function updateActiveNav() {
         let active = 'projects';
-        navLinks.forEach(link => { const section = document.querySelector(link.hash); if (section && section.getBoundingClientRect().top <= 100) active = section.id; });
+        navLinks.forEach(link => { const section = link.hash ? document.getElementById(link.hash.slice(1)) : null; if (section && section.getBoundingClientRect().top <= 100) active = section.id; });
         navLinks.forEach(link => link.classList.toggle('active', link.hash === `#${active}`));
         let activeRail = 'overview';
-        railLinks.forEach(link => { const section = document.querySelector(link.hash); if (section && section.getBoundingClientRect().top <= 100) activeRail = section.id; });
+        railLinks.forEach(link => { const section = link.hash ? document.getElementById(link.hash.slice(1)) : null; if (section && section.getBoundingClientRect().top <= 100) activeRail = section.id; });
         railLinks.forEach(link => link.classList.toggle('active', link.hash === `#${activeRail}`));
       }
       search.addEventListener('input', filterRecords);

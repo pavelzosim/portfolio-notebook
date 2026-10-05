@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import posixpath
 import json
 import re
 import shutil
@@ -199,6 +201,90 @@ def write_discovery_files(records: list[dict], noindex: bool) -> None:
     (OUTPUT / "robots.txt").write_text(f"User-agent: *\nDisallow:\n\nSitemap: {domain}/sitemap.xml\n", encoding="utf-8", newline="\n")
 
 
+def reuse_identical_media() -> None:
+    """Use one URL per identical asset while retaining existing public URLs."""
+    hashes: dict[str, str] = {}
+    aliases: dict[str, str] = {}
+    for asset in sorted((OUTPUT / "public").rglob("*")):
+        if not asset.is_file():
+            continue
+        digest = hashlib.sha256(asset.read_bytes()).hexdigest()
+        url = "/" + asset.relative_to(OUTPUT).as_posix()
+        if digest in hashes:
+            aliases[url] = hashes[digest]
+        else:
+            hashes[digest] = url
+    for page in OUTPUT.rglob("*"):
+        if page.is_file() and page.suffix.lower() in TEXT_SUFFIXES:
+            text = page.read_text(encoding="utf-8")
+            changed = text
+            for alias, canonical in aliases.items():
+                changed = changed.replace(alias, canonical)
+            if changed != text:
+                page.write_text(changed, encoding="utf-8", newline="\n")
+
+
+def prepare_static_loading(records: list[dict]) -> None:
+    """Embed catalogue inputs and flatten local CSS imports for a cold load."""
+    posts = json.dumps({"records": records}, ensure_ascii=False).replace("<", "\\u003c")
+    template = (OUTPUT / "content/templates/content-index.html").read_text(encoding="utf-8")
+    for page in OUTPUT.rglob("*.html"):
+        document = page.read_text(encoding="utf-8")
+        if "post-registry.js" in document:
+            document = document.replace("</head>", '<script type="application/json" id="site-post-registry">' + posts + '</script></head>', 1)
+            document = document.replace("post-registry.js?v=2", "post-registry.js?v=3")
+        view = re.search(r'data-content-index=["\']([^"\']+)', document)
+        if view:
+            data = posts if view.group(1) != "projects" else (OUTPUT / "content/projects/index.json").read_text(encoding="utf-8").replace("<", "\\u003c")
+            document = re.sub(r'(<body\b[^>]*>)', lambda match: match.group(1) + template + '<script type="application/json" id="site-index-registry">' + data + '</script>', document, count=1)
+            document = document.replace("content-index.js?v=8", "content-index.js?v=9")
+        # One request per local stylesheet entry instead of serial @import chains.
+        seen: set[Path] = set()
+        def flatten(css_path: Path) -> str:
+            css_path = css_path.resolve()
+            if not css_path.is_relative_to(OUTPUT.resolve()):
+                raise RuntimeError(f"CSS outside output: {css_path}")
+            if css_path in seen:
+                return ""
+            seen.add(css_path)
+            css = css_path.read_text(encoding="utf-8")
+            def imported(match):
+                url = match.group(1)
+                if url.startswith(("https:", "http:", "//")):
+                    return match.group(0)
+                target = OUTPUT / url.lstrip("/").split("?")[0] if url.startswith("/") else css_path.parent / url.split("?")[0]
+                return flatten(target)
+            # Rebase assets before expanding imports so imported assets retain their own base.
+            def asset(match):
+                url = match.group(2)
+                if url.startswith(("/", "data:", "https:", "http:", "#")):
+                    return match.group(0)
+                resolved = posixpath.normpath('/' + css_path.parent.relative_to(OUTPUT.resolve()).as_posix() + '/' + url)
+                return 'url("' + resolved + '")'
+            css = re.sub(r'url\((["\']?)([^)"\']+)\1\)', asset, css)
+            css = re.sub(r'@import\s+url\(["\']([^"\']+)["\']\)\s*;', imported, css)
+            return css
+        def stylesheet(match):
+            tag = match.group(0)
+            if not re.search(r'rel=["\']stylesheet["\']', tag):
+                return tag
+            href = re.search(r'href=["\']([^"\']+)["\']', tag)
+            if not href or href.group(1).startswith(("https:", "http:", "//")):
+                return tag
+            url = href.group(1)
+            target = OUTPUT / url.lstrip("/").split("?")[0] if url.startswith("/") else page.parent / url.split("?")[0]
+            css = flatten(target)
+            if not css.strip():
+                return ""
+            name = hashlib.sha256(css.encode()).hexdigest()[:16] + '.css'
+            bundle = OUTPUT / 'styles/bundles' / name
+            bundle.parent.mkdir(parents=True, exist_ok=True)
+            bundle.write_text(css, encoding='utf-8')
+            return tag.replace(url, '/styles/bundles/' + name)
+        document = re.sub(r'<link\b[^>]*>', stylesheet, document)
+        page.write_text(document, encoding="utf-8", newline="\n")
+
+
 def transform_site(base_path: str, noindex: bool) -> None:
     for path in OUTPUT.rglob("*"):
         if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
@@ -284,6 +370,8 @@ def main() -> None:
     base_path = normalized_base_path(args.base_path)
     copy_site()
     records = materialize_post_routes()
+    prepare_static_loading(records)
+    reuse_identical_media()
     transform_site(base_path, args.noindex)
     write_discovery_files(records, args.noindex)
     validate_site(base_path, args.noindex)
