@@ -16,7 +16,21 @@
   .shellbar .shell-status,.article-shellbar .article-shellbar__status{display:none}
 }
 @media(max-width:760px){
-  .shellbar nav,.article-shellbar nav{flex-wrap:wrap;row-gap:4px}
+  .shellbar,.article-shellbar{
+    height:auto;
+    grid-template-columns:minmax(0,1fr);
+    row-gap:6px;
+  }
+  .shellbar nav,.article-shellbar nav{
+    grid-column:1;
+    min-width:0;
+    width:100%;
+    height:auto;
+    flex-wrap:wrap;
+    row-gap:4px;
+    margin-top:0;
+    overflow:visible;
+  }
 }
 
 .workspace,
