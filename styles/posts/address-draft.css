@@ -1,0 +1,36 @@
+/* Media slots for the unpublished address article. */
+.address-article .atlas-schematic__label { font-size: 16px; }
+.address-article .atlas-schematic__label--detail { font-size: 13px; font-weight: 400; }
+.address-article #address-responsibilities .atlas-schematic__label { font-size: 21px; }
+.address-article #address-responsibilities .atlas-schematic__label--detail { font-size: 15px; font-weight: 400; }
+.address-article #street-numbering-policy .atlas-schematic__label { font-size: 23px; }
+.address-article #street-numbering-policy .atlas-schematic__label--detail { font-size: 13px; font-weight: 400; }
+.address-article #apartment-room-dependency .atlas-schematic__label { font-size: 14px; }
+.address-article #apartment-room-dependency .atlas-schematic__label--detail { font-size: 11px; font-weight: 400; }
+.draft-media__slot {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  min-height: 220px;
+  padding: clamp(20px, 4vw, 40px);
+  border: 1px dashed var(--atlas-ink);
+  background: var(--atlas-bg);
+  gap: 16px;
+}
+.draft-media__label {
+  font-size: 11px;
+  letter-spacing: .1em;
+  font-weight: 700;
+}
+.draft-media__slot p { margin: 0; max-width: 62ch; }
+.draft-media__slot code { font-size: 11px; overflow-wrap: anywhere; }
+.draft-media[data-media-kind="video"] .draft-media__slot { min-height: 280px; }
+.address-hero .atlas-slider__viewport { display: grid; background: #111; }
+.address-hero .atlas-slider__viewport img { grid-area: 1 / 1; width: 100%; height: auto; object-fit: contain; align-self: center; }
+.address-hero .atlas-slider__viewport img[hidden] { display: none; }
+.address-hero .atlas-slider__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border-top: 1px solid var(--atlas-ink); }
+.address-hero .atlas-slider__label { font-size: 11px; text-align: center; }
+@media (max-width: 600px) {
+  .address-hero .atlas-slider__bar { flex-wrap: wrap; }
+  .address-hero .atlas-slider__label { order: -1; width: 100%; }
+}

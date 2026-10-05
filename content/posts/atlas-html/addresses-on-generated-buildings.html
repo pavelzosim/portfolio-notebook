@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <title>Procedural Address Resolution — From Placement Identity to World Coordinates · Pavel Zosim</title>
+  <meta name="description" content="Deterministic building, entrance and apartment addresses from procedural placement identity, ordered relationships and preset JSON summaries in Houdini and Unreal Engine.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/addresses-on-generated-buildings/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Procedural Address Resolution — From Placement Identity to World Coordinates">
+  <meta property="og:description" content="Deterministic building, entrance and apartment addresses from procedural placement identity, ordered relationships and preset JSON summaries in Houdini and Unreal Engine.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/addresses-on-generated-buildings/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/addresses-on-generated-buildings/hero-addressed-generated-street.jpg">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/addresses-on-generated-buildings/hero-addressed-generated-street.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Procedural Address Resolution — From Placement Identity to World Coordinates">
+  <meta name="twitter:description" content="Deterministic building, entrance and apartment addresses from procedural placement identity, ordered relationships and preset JSON summaries in Houdini and Unreal Engine.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Procedural Address Resolution — From Placement Identity to World Coordinates","description":"Deterministic building, entrance and apartment addresses from procedural placement identity, ordered relationships and preset JSON summaries in Houdini and Unreal Engine.","url":"https://www.pavelzosim.com/post/addresses-on-generated-buildings/","mainEntityOfPage":"https://www.pavelzosim.com/post/addresses-on-generated-buildings/","image":"https://www.pavelzosim.com/public/media/posts/addresses-on-generated-buildings/hero-addressed-generated-street.jpg","datePublished":"2026-10-05","dateModified":"2026-10-05","inLanguage":"en","publisher":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"},"author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=62">
+  <link rel="stylesheet" href="/styles/posts.css?v=19">
+  <link rel="stylesheet" href="/styles/posts/address-draft.css?v=4">
+</head>
+<body id="top" class="address-article">
+  <h1 class="seo-heading">Procedural Address Resolution — From Placement Identity to World Coordinates</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/online-tools/">Online Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+<nav class="atlas-toc" aria-label="Article table of contents"><ul class="atlas-toc__list"><li class="atlas-toc__item atlas-toc__item--h2"><a href="#overview"><span class="atlas-toc__num">01</span><span class="atlas-toc__row"><span class="atlas-toc__title">Overview</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#real-addresses"><span class="atlas-toc__num">02</span><span class="atlas-toc__row"><span class="atlas-toc__title">Borrowing structure from real addresses</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#coordinate"><span class="atlas-toc__num">03</span><span class="atlas-toc__row"><span class="atlas-toc__title">One coordinate above the placement pipeline</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#buildings"><span class="atlas-toc__num">04</span><span class="atlas-toc__row"><span class="atlas-toc__title">Giving a generated building a number</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#entrances"><span class="atlas-toc__num">05</span><span class="atlas-toc__row"><span class="atlas-toc__title">Counting entrances inside their building</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#apartments"><span class="atlas-toc__num">06</span><span class="atlas-toc__row"><span class="atlas-toc__title">The second entrance cannot depend on the first visit</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#display"><span class="atlas-toc__num">07</span><span class="atlas-toc__row"><span class="atlas-toc__title">Making the resolved number visible</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#current-state"><span class="atlas-toc__num">08</span><span class="atlas-toc__row"><span class="atlas-toc__title">Where this stands right now</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#whats-next"><span class="atlas-toc__num">09</span><span class="atlas-toc__row"><span class="atlas-toc__title">What's next</span><span class="atlas-toc__dots"></span></span></a></li><li class="atlas-toc__item atlas-toc__item--h2"><a href="#result"><span class="atlas-toc__num">10</span><span class="atlas-toc__row"><span class="atlas-toc__title">Result</span><span class="atlas-toc__dots"></span></span></a></li></ul></nav>
+<h2 id="overview">01 Overview</h2>
+
+
+<p>This article continues the procedural environment series:</p>
+<ul>
+<li><a href="/post/controlled-procedurality/">Controlled Procedurality — How a Maze Generator Became a Level Design System</a> — the generator and its level-design abstractions.</li>
+<li><a href="/post/houdini-unreal-typed-placement-routing/">Houdini to Unreal — HISM and Blueprint Actor Routing</a> — routing generated placements to HISM instances or Blueprint Actors.</li>
+<li><a href="/post/lighting-generated-geometry/">The Light System — Randomized and Synchronized Lighting on Generated Geometry</a> — using placement identity for engine-side behaviour and per-instance data.</li>
+</ul>
+<p>After generating the environment, routing its placements into Unreal and attaching lighting to those placements, I needed the next layer: <strong>turning generated geometry into identifiable places</strong>. The current system resolves building, entrance and apartment addresses from the relationships already present in the generated data.</p>
+<p>Building 035 / Entrance 001 / Apartment 015 should identify the same place wherever it is used. The numbers should also follow an explicit spatial rule, as real-world addresses do, rather than being assigned independently to each facade.</p>
+<figure class="media-frame atlas-slider address-hero" data-slider>
+<div class="atlas-slider__viewport">
+<img data-slide data-caption="Building numbers — generated street" src="/public/media/posts/addresses-on-generated-buildings/hero-addressed-generated-street.jpg" alt="Generated residential buildings with resolved facade numbers 032 and 039 in Unreal Engine" width="2268" height="1437" loading="eager" fetchpriority="high">
+<img data-slide data-caption="Entrance number — 003" src="/public/media/posts/addresses-on-generated-buildings/hero-addressed-generated-street-entrance.jpg" alt="Entrance door in a generated building displaying the resolved entrance number 003" width="2143" height="1210" loading="eager" hidden>
+</div>
+<div class="atlas-slider__bar">
+<button type="button" class="atlas-btn" data-slider-prev aria-label="Previous address screenshot">‹ PREV</button>
+<span class="atlas-slider__label" data-slider-label aria-live="polite"></span>
+<button type="button" class="atlas-btn" data-slider-next aria-label="Next address screenshot">NEXT ›</button>
+</div>
+<figcaption class="media-caption">FIG 01 — Generated buildings with resolved building and entrance numbers. The geometry is procedural; the visible numbers are resolved on the Unreal side.</figcaption>
+</figure>
+
+<div class="atlas-section-break" data-index="// § 01 OVERVIEW"></div>
+
+<h2 id="real-addresses">02 Borrowing structure from real addresses</h2>
+
+<p>I have always enjoyed exploring game worlds as much as following their stories and atmosphere. One thing that breaks that sense of exploration for me is an object that clearly suggests interaction but exists only as scenery. A door is the simplest example. Of course, this depends entirely on the type of game: not every environment needs every building to be accessible. But in an exploration-driven space, where locations themselves can carry value, making more of the environment structurally accessible can significantly change how the world feels. For this R&amp;D project, I wanted to push that idea further. Buildings should not only exist as generated geometry; their entrances and apartments should also represent <strong>specific, identifiable places</strong>.</p>
+<p>Suppose the player lives in Building 35, Apartment 15. A decal that says <code class="atlas-code-inline">15</code> is not enough. The system must be able to determine which entrance contains that apartment, which generated door represents it, and which building all of those elements belong to. The visible labels should be consequences of that structure rather than independent values typed onto meshes.</p>
+<p>The trivial solutions are easy:</p>
+<ul>
+<li>type hundreds of numbers manually — technically possible, but not a system;</li>
+<li>assign a random number to every generated label;</li>
+<li>derive a number directly from an instance index.</li>
+</ul>
+<p>All three can produce something that <em>looks</em> like an address. None of them creates a reliable address structure.</p>
+<p>Real-world numbering gives a useful model. <a href="https://www.leeds.gov.uk/planning/street-naming-and-numbering/street-naming-and-numbering-policy" target="_blank" rel="noopener noreferrer">Leeds City Council's policy</a>, for example, assigns odd numbers to the left and even numbers to the right from the start of a street. This gives each side an ordered sequence. Local conventions differ; the diagram illustrates that policy, not a universal rule or a captured street.</p>
+<p>The current project resolves buildings from authored anchors, order and a numeric step. Automatically classifying street sides is a possible extension, not implemented behaviour in this slice. Two ordered sides with different starting values and a step of two illustrate how such a numbering policy could work.</p>
+<figure class="atlas-schematic" id="street-numbering-policy"><figcaption class="atlas-schematic__header">FIG 02 — STREET NUMBERING — AN ORDERED SEQUENCE ON EACH SIDE</figcaption><div class="atlas-schematic__canvas"><svg viewBox="0 0 620 360" role="img" aria-labelledby="street-title street-desc" xmlns="http://www.w3.org/2000/svg"><title id="street-title">Odd and even street numbering</title><desc id="street-desc">Illustrative top-down street, numbered upwards from its start. Left-side buildings receive 1, 3 and 5; right-side buildings receive 2, 4 and 6. The project currently supports anchor, order and step; automated side classification is conceptual.</desc><g class="atlas-schematic__primary" fill="none"><rect x="250" y="30" width="120" height="265"/><path d="M310 270 V55 M300 70 L310 55 L320 70"/></g><rect class="atlas-schematic__primary" fill="none" x="70" y="38" width="140" height="58"/><text class="atlas-schematic__label" text-anchor="middle" x="140" y="74" font-size="20">005</text><rect class="atlas-schematic__primary" fill="none" x="410" y="38" width="140" height="58"/><text class="atlas-schematic__label" text-anchor="middle" x="480" y="74" font-size="20">006</text><rect class="atlas-schematic__primary" fill="none" x="70" y="122" width="140" height="58"/><text class="atlas-schematic__label" text-anchor="middle" x="140" y="158" font-size="20">003</text><rect class="atlas-schematic__primary" fill="none" x="410" y="122" width="140" height="58"/><text class="atlas-schematic__label" text-anchor="middle" x="480" y="158" font-size="20">004</text><rect class="atlas-schematic__primary" fill="none" x="70" y="206" width="140" height="58"/><text class="atlas-schematic__label" text-anchor="middle" x="140" y="242" font-size="20">001</text><rect class="atlas-schematic__primary" fill="none" x="410" y="206" width="140" height="58"/><text class="atlas-schematic__label" text-anchor="middle" x="480" y="242" font-size="20">002</text><g class="atlas-schematic__label atlas-schematic__label--detail" text-anchor="middle" font-size="12"><text x="140" y="320">ODD · step +2</text><text x="480" y="320">EVEN · step +2</text><text x="310" y="342">START OF STREET</text></g></svg></div><div class="atlas-schematic__note"><b>POLICY EXAMPLE</b><span>Each building receives a number from its side and order along the street. Automatic side classification is a future resolver extension; this is not a screenshot of the current generator.</span></div></figure>
+<p>Randomness is useful for variation, but I do not want it to define the fundamental relationships of the generated environment. Even an invented addressing convention benefits from explicit rules. Once a few constants and relationships exist, the result becomes easier to reason about, query, debug and adapt to different level-design requirements.</p>
+<p>The hierarchy below places apartment 015 in entrance 001 of building 035: <code class="atlas-code-inline">035 / 001 / 015</code>.</p>
+<p>Floors are an obvious spatial subdivision, but they are <strong>not yet a canonical segment in the current implementation</strong>. They can be introduced later if level design needs them to participate in address identity rather than remain a derived navigation property.</p>
+<p>For example, with three apartments per floor:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>Entrance 001
+├── Floor 01 → Apartments 001–003
+├── Floor 02 → Apartments 004–006
+├── Floor 03 → Apartments 007–009
+├── Floor 04 → Apartments 010–012
+└── Floor 05 → Apartments 013–015</code></pre>
+<div class="atlas-callout atlas-callout--note"><p><strong>Procedural generation provides identity. The address layer assigns meaning.</strong></p></div>
+<figure class="atlas-schematic" id="apartment-room-dependency">
+        <figcaption class="atlas-schematic__header">FIG 03 — ADDRESS HIERARCHY — FROM BUILDING TO ROOM</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 640 490" role="img" aria-labelledby="room-chain-title room-chain-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="room-chain-title">Building, entrance, apartment and room relationships</title>
+          <desc id="room-chain-desc">Illustrative building 35 has three entrances with 15 apartments each: entrance 1 serves apartments 1 through 15, entrance 2 serves 16 through 30, and entrance 3 serves 31 through 45. Apartment 15 belongs to entrance 1. Dashed lines show a future extension from apartment 15 to rooms 1, 2 and 3, and a local character or script point inside room 3. Room numbers are local to the apartment, not derived from the apartment number.</desc>
+          <g class="atlas-schematic__primary" fill="none">
+            <rect x="220" y="12" width="200" height="54" stroke-width="2"/>
+            <path d="M320 66 V88 H110 V112 M320 88 V112 M320 88 H530 V112"/>
+            <rect x="20" y="112" width="180" height="70" stroke-width="2"/>
+            <rect x="230" y="112" width="180" height="70"/>
+            <rect x="440" y="112" width="180" height="70"/>
+            <path d="M110 182 V215 H320 V238"/>
+            <rect x="205" y="238" width="230" height="60" stroke-width="2"/>
+          </g>
+          <g class="atlas-schematic__label" text-anchor="middle" font-size="13">
+            <text x="320" y="44">BUILDING 035</text>
+            <text x="110" y="140">ENTRANCE 001</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="110" y="162" font-size="11">Apartments 001–015</text>
+            <text x="320" y="140">ENTRANCE 002</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="320" y="162" font-size="11">Apartments 016–030</text>
+            <text x="530" y="140">ENTRANCE 003</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="530" y="162" font-size="11">Apartments 031–045</text>
+            <text x="320" y="262">APARTMENT 015</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="320" y="284" font-size="11">035 / 001 / 015</text>
+          </g>
+          <g class="atlas-schematic__secondary" fill="none" stroke-dasharray="5 4">
+            <path d="M320 298 V322 H110 V346 M320 322 V346 M320 322 H530 V346"/>
+            <rect x="20" y="346" width="180" height="52"/>
+            <rect x="230" y="346" width="180" height="52"/>
+            <rect x="440" y="346" width="180" height="52"/>
+            <path d="M530 398 V430"/>
+            <rect x="370" y="430" width="250" height="46"/>
+          </g>
+          <g class="atlas-schematic__label" text-anchor="middle" font-size="12">
+            <text x="110" y="369">ROOM 001</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="110" y="388" font-size="10">local to apartment 015</text>
+            <text x="320" y="369">ROOM 002</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="320" y="388" font-size="10">local to apartment 015</text>
+            <text x="530" y="369">ROOM 003</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="530" y="388" font-size="10">local to apartment 015</text>
+            <text class="atlas-schematic__label atlas-schematic__label--detail" x="495" y="458" font-size="11">Local character / script point</text>
+          </g>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>EXAMPLE</b><span>Solid: apartment 015 belongs to entrance 001 of building 035. Dashed: future room extension. Room 003 is numbered within its apartment; its number is not calculated from 015. If global identity is needed, its coordinate becomes 035 / 001 / 015 / Room 003. Character and script points can remain local.</span></div>
+      </figure>
+
+<div class="atlas-section-break" data-index="// § 02 BORROWING STRUCTURE FROM REAL ADDRESSES"></div>
+
+<h2 id="coordinate">03 One coordinate above the placement pipeline</h2>
+
+<p>A number plate displays an address; it does not own it. Other systems use the same canonical coordinate to identify the location.</p>
+<p>The canonical value is <code class="atlas-code-inline">ST_WorldCoordinate</code>. It carries an ID, a seed and a list of typed address segments. Each <code class="atlas-code-inline">ST_AddressSegment</code> contains both:</p>
+<ul>
+<li>a code string, preserving formatting such as <code class="atlas-code-inline">&quot;031&quot;</code>;</li>
+<li>a numeric value, such as <code class="atlas-code-inline">31</code>, for ordering and logic.</li>
+</ul>
+
+<p>The distinction becomes especially important in a procedural environment. If a generated layout changes, I want to rebuild derived address state from the current placements rather than preserve stale labels or stale instance indices.</p>
+<p>The address book itself is authored. At runtime, the manager copies that data into a working list and resolves generated placements against it. The authored asset remains a source of canonical intent; the runtime nodes are derived state.</p>
+<p>This gives me two useful forms of control at the same time:</p>
+<ul>
+<li><strong>authored constants</strong>, where the designer needs a known address;</li>
+<li><strong>derived relationships</strong>, where neighbouring or child values can be resolved automatically.</li>
+</ul>
+
+
+<p>That coordinate sits above the existing placement pipeline. Houdini supplies identity and relationships; the Unreal address layer interprets them. This lets me add addressing without teaching the generator what a house number means.</p>
+
+<p>The HDA does <strong>not</strong> decide that <code class="atlas-code-inline">wall_island:7</code> is Building 031.</p>
+<p>It publishes a semantic group and placement metadata. The address layer decides that this group represents a building and resolves the number.</p>
+<p>Likewise, the scalar-data layer does not know what <code class="atlas-code-inline">Display.Number = 31</code> means. It moves a value to the correct HISM instance. The material does not know what an entrance is. It only turns the value into digits.</p>
+<figure class="atlas-schematic" id="address-responsibilities"><figcaption class="atlas-schematic__header">FIG 04 — IDENTITY → ADDRESS → CONSUMERS</figcaption><div class="atlas-schematic__canvas"><svg viewBox="0 0 620 425" role="img" aria-labelledby="address-responsibilities-title"><title id="address-responsibilities-title">Identity, address and consumers</title><rect class="atlas-schematic__primary" fill="none" x="35" y="15" width="550" height="78"/><text class="atlas-schematic__label" x="310" y="46" text-anchor="middle">Houdini / Consumer</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="310" y="72" text-anchor="middle">placement keys, groups, order</text><path class="atlas-schematic__primary" fill="none" d="M310 93 V118 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="35" y="118" width="550" height="78"/><text class="atlas-schematic__label" x="310" y="149" text-anchor="middle">Address Manager</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="310" y="175" text-anchor="middle">Building / Entrance / Apartment</text><path class="atlas-schematic__primary" fill="none" d="M310 196 V221 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="35" y="221" width="550" height="78"/><text class="atlas-schematic__label" x="310" y="252" text-anchor="middle">ST_WorldCoordinate</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="310" y="278" text-anchor="middle">one shared logical place</text><path class="atlas-schematic__primary" fill="none" d="M310 299 V324 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="35" y="324" width="550" height="78"/><text class="atlas-schematic__label" x="310" y="355" text-anchor="middle">Consumers</text><text class="atlas-schematic__label atlas-schematic__label--detail" x="310" y="381" text-anchor="middle">display / location lookup / runtime systems</text></svg></div><div class="atlas-schematic__note"><b>MODEL</b><span>Only the address layer assigns address meaning. Presentation and other consumers reuse the same coordinate.</span></div></figure>
+
+<div class="atlas-section-break" data-index="// § 03 ONE COORDINATE ABOVE THE PLACEMENT PIPELINE"></div>
+
+<h2 id="buildings">04 Giving a generated building a number</h2>
+
+<p>The generator already publishes wall placements with a semantic group key such as:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>wall_island:7</code></pre>
+<p>A group represents one ring of walls. The generic generator does not claim that this ring is a &quot;house.&quot; That interpretation belongs to the address layer.</p>
+<p>For the current project, a wall-island group becomes the unit of a building address.</p>
+<p>This is more important than assigning a number to a single plate. A building can have many placements:</p>
+<ul>
+<li>structural wall panels;</li>
+<li>windows;</li>
+<li>entrance modules;</li>
+<li>number plates;</li>
+<li>props attached to the same group.</li>
+</ul>
+<p>The address belongs to the <strong>group</strong>, not to one mesh.</p>
+<p>Conceptually:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>wall_island:7
+      │
+      ▼
+ST_BuildingNode
+      │
+      ├─ group identity
+      ├─ stable order
+      ├─ optional authored anchor
+      └─ resolved building number</code></pre>
+<p><strong>Authored anchors.</strong> Instead, the designer can bind a known address from the address book to one placement belonging to a building. That placement identifies the semantic group. The group then becomes an <strong>anchor</strong> for the resolver.</p>
+<p>From there, neighbouring buildings can be resolved from their order and a configurable numeric step.</p>
+<p>A simplified resolver looks like this:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>ResolvedNumber =
+    AnchorNumber
+    + (BuildingOrder - AnchorOrder) * BuildingNumberStep</code></pre>
+<p>The current implementation uses this ordered-anchor pattern. It is not intended to represent every municipal addressing convention; it is one deterministic policy built on top of a more general identity layer.</p>
+<p><strong>Why a stable placement key matters.</strong> The editor exposes an HISM instance index, but I do not treat that index as persistent identity.</p>
+<p>An instance index is valid for the current arrangement of the component. After a procedural rebuild, instances can be reordered. Index <code class="atlas-code-inline">17</code> may now refer to a different placement.</p>
+<p>The project instead carries an <code class="atlas-code-inline">FMazePlacementHandle</code> made from:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>SourceHismName + PlacementKey</code></pre>
+<p>That is the same stability problem I encountered while building the lighting system. Address bindings need to survive the same kinds of rebuilds, so they use the same placement identity instead of treating array position as identity.</p>
+<p><strong>Ordering is not the group-key string.</strong> A plain text sort produces:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>wall_island:1
+wall_island:10
+wall_island:2</code></pre>
+<p>The address layer therefore keeps a separate stable order for the building nodes rather than assuming that the semantic group key itself is a sortable address.</p>
+<figure class="media-frame atlas-slider address-hero" data-slider><div class="atlas-slider__viewport"><img src="/public/media/posts/addresses-on-generated-buildings/fig-05-a.png" alt="Colored procedural placement points in the Houdini generator" width="2030" height="1632" loading="lazy" data-slide data-caption="Placement points"><img src="/public/media/posts/addresses-on-generated-buildings/fig-05-b.png" alt="Assembled building geometry from the same Houdini layout" width="2030" height="1632" loading="lazy" data-slide data-caption="Assembled geometry" hidden></div><div class="atlas-slider__bar"><button type="button" class="atlas-btn" data-slider-prev aria-label="Previous screenshot">‹ PREV</button><span class="atlas-slider__label" data-slider-label aria-live="polite"></span><button type="button" class="atlas-btn" data-slider-next aria-label="Next screenshot">NEXT ›</button></div><figcaption class="media-caption">FIG 05 — Two authoring views of the same generated layout: placement points and assembled geometry. Colors are procedural debug data, not resolved address numbers.</figcaption></figure>
+<figure class="media-frame"><img src="/public/media/posts/addresses-on-generated-buildings/fig-06.png" alt="Level Address Manager Details showing the address book and authored binding with a source HISM and placement key" width="918" height="1951" loading="lazy"><figcaption class="media-caption">FIG 06 — An authored building-address anchor: the address book entry is bound to a source HISM and stable placement key. Unreal Editor Details panel.</figcaption></figure>
+
+
+<div class="atlas-section-break" data-index="// § 04 GIVING A GENERATED BUILDING A NUMBER"></div>
+
+<h2 id="entrances">05 Counting entrances inside their building</h2>
+
+<p>Its number is not resolved globally. It belongs to one building and receives an order <strong>inside that parent</strong>.</p>
+<p>Each <code class="atlas-code-inline">ST_EntranceNode</code> stores the source placement, parent building group, procedural source order, resolved local order and final entrance number.</p>
+<p>The resolver can be summarized as:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>EntranceNumber =
+    count(entrances in the same building with lower source order)
+    + 1</code></pre>
+<p>Source orders 12, 27, 33 and 40 resolve to entrance numbers 001, 002, 003 and 004: gaps in the source values do not create gaps in the labels.</p>
+<p>Every building restarts from Entrance <code class="atlas-code-inline">001</code>, because the comparison is scoped to one parent group.</p>
+
+<p><strong>Why I do not use world position.</strong> Sorting by world position would force the address resolver to decide which axis or direction represents the intended sequence for every building. A rotated or irregular structure would make that policy increasingly fragile.</p>
+<p>The procedural source order already describes the intended order of the entrances. Using it keeps the numbering tied to generated identity rather than to one interpretation of world coordinates.</p>
+<p>There is still a boundary condition: equal source-order values are ambiguous. The current &quot;count lower values&quot; rule gives equal ranks to equal values, so duplicates require validation or an explicit tie-break policy.</p>
+<figure class="atlas-schematic" id="entrance-rank"><figcaption class="atlas-schematic__header">FIG 08 — SOURCE ORDER → LOCAL ENTRANCE NUMBER</figcaption><div class="atlas-schematic__canvas"><svg viewBox="0 0 620 255" role="img" aria-labelledby="entrance-rank-title"><title id="entrance-rank-title">SOURCE ORDER → LOCAL ENTRANCE NUMBER</title><rect class="atlas-schematic__primary" fill="none" x="40" y="10" width="540" height="55"/><text class="atlas-schematic__label" x="310" y="43" text-anchor="middle" font-size="13">HISM slots:          0          1          2          3</text><path class="atlas-schematic__primary" fill="none" d="M310 65 V90 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="40" y="90" width="540" height="55"/><text class="atlas-schematic__label" x="310" y="123" text-anchor="middle" font-size="13">Source order:       27         40         12         33</text><path class="atlas-schematic__primary" fill="none" d="M310 145 V170 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="40" y="170" width="540" height="55"/><text class="atlas-schematic__label" x="310" y="203" text-anchor="middle" font-size="13">Entrance number:   002        004        001        003</text></svg></div><div class="atlas-schematic__note"><b>MODEL</b><span>Each column is the same placement. Rank is counted within its parent building, independently of the current HISM slot.</span></div></figure>
+<figure class="media-frame atlas-slider address-hero" data-slider><div class="atlas-slider__viewport"><img src="/public/media/posts/addresses-on-generated-buildings/fig-09-a.png" alt="Generated entrance door displaying number 003" width="2261" height="1435" loading="lazy" data-slide data-caption="Entrance 003"><img src="/public/media/posts/addresses-on-generated-buildings/fig-09-b.png" alt="Generated entrance door displaying number 002" width="2261" height="1435" loading="lazy" data-slide data-caption="Entrance 002" hidden></div><div class="atlas-slider__bar"><button type="button" class="atlas-btn" data-slider-prev aria-label="Previous screenshot">‹ PREV</button><span class="atlas-slider__label" data-slider-label aria-live="polite"></span><button type="button" class="atlas-btn" data-slider-next aria-label="Next screenshot">NEXT ›</button></div><figcaption class="media-caption">FIG 09 — Resolved entrance numbers on generated doors: two views along the building facade.</figcaption></figure>
+
+<div class="atlas-section-break" data-index="// § 05 COUNTING ENTRANCES INSIDE THEIR BUILDING"></div>
+
+<h2 id="apartments">06 The second entrance cannot depend on the first visit</h2>
+
+<p>Apartment numbers continue across entrances in the same building.</p>
+<p>Suppose two entrances contain 26 apartments each:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>Entrance 001 → Apartments 001–026
+Entrance 002 → Apartments 027–052</code></pre>
+<p>The local order of the first apartment in Entrance 002 is still <code class="atlas-code-inline">0</code>. Its final number depends on something outside the currently loaded entrance:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>ApartmentBase =
+    sum(ApartmentCount of every preceding Entrance in the same Building)
+
+ApartmentNumber =
+    ApartmentBase + LocalApartmentOrder + 1</code></pre>
+<p><strong>What if Entrance 002 is visited first?.</strong> If each entrance interior is loaded on demand, Entrance 001 may never have been loaded. But Entrance 002 still needs to know that its first apartment is <code class="atlas-code-inline">027</code>.</p>
+<p>Loading every interior just to count apartment doors would defeat the purpose of loading those interiors on demand.</p>
+<p>Counting visible number labels would also be the wrong dependency. Presentation is not the source of truth for how many apartments exist.</p>
+<p>The count belongs to the generated apartment-door geometry.</p>
+<p>In the current entrance container:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>HISM_Door_Apartment_A</code></pre>
+<p>is the source used to obtain the local apartment count.</p>
+<p><strong>Stage 1 — Know the count before loading the entrance.</strong> Each generated entrance variant has a preset JSON summary. A native helper reads the saved HISM instance count from:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>generated_summary.instance_counts.HISM_Door_Apartment_A</code></pre>
+<p>The variant catalog associates that result with the entrance variant and level. At startup, the address layer converts the successful results into canonical entrance summaries and applies the counts to the corresponding <code class="atlas-code-inline">ST_EntranceNode</code>.</p>
+<p>The address manager can therefore establish:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>Entrance 001 count = 26
+Entrance 002 count = 26</code></pre>
+<p>without first visiting either interior.</p>
+<p><strong>Stage 2 — Validate against the loaded geometry.</strong> When an entrance is actually loaded, its <code class="atlas-code-inline">BP_Building</code> reads the live HISM instance count and reports it through <code class="atlas-code-inline">BP_LocationRoot</code>.</p>
+<p>For a loaded space, the runtime count is treated as authoritative.</p>
+<p>If it differs from the preset summary, the system can warn, replace the stored count and refresh the affected numbering.</p>
+<p>This lets the preset summary solve the preloading problem without treating cached generation data as permanently authoritative.</p>
+<p><strong>Unknown is not zero.</strong> This also forced me to distinguish two states that are easy to collapse accidentally:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>Known count = 0
+Unknown count</code></pre>
+<p>A confirmed empty entrance is valid data.</p>
+<p>A missing JSON file, an invalid key or an unresolved earlier entrance is not the same thing.</p>
+<p><code class="atlas-code-inline">HasApartmentCount</code> exists specifically to preserve that distinction.</p>
+<p>If the base number depends on an earlier entrance whose count is unknown, the resolver returns <code class="atlas-code-inline">Found = false</code>, clears unresolved numbers and waits for valid data rather than silently treating the missing count as zero.</p>
+<p>That distinction is small in code, but important in practice: otherwise a missing count can produce plausible-looking but incorrect addresses.</p>
+<figure class="atlas-schematic" id="unloaded-counts"><figcaption class="atlas-schematic__header">FIG 10 — ENTRANCE 002 FIRST — WITHOUT PRELOADING 001</figcaption><div class="atlas-schematic__canvas"><svg viewBox="0 0 620 335" role="img" aria-labelledby="unloaded-counts-title"><title id="unloaded-counts-title">ENTRANCE 002 FIRST — WITHOUT PRELOADING 001</title><rect class="atlas-schematic__primary" fill="none" x="40" y="10" width="540" height="55"/><text class="atlas-schematic__label" x="310" y="43" text-anchor="middle" font-size="13">Preset JSON · Entrance 001 has 26 apartment doors</text><path class="atlas-schematic__primary" fill="none" d="M310 65 V90 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="40" y="90" width="540" height="55"/><text class="atlas-schematic__label" x="310" y="123" text-anchor="middle" font-size="13">Address summary · count known while interior is unloaded</text><path class="atlas-schematic__primary" fill="none" d="M310 145 V170 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="40" y="170" width="540" height="55"/><text class="atlas-schematic__label" x="310" y="203" text-anchor="middle" font-size="13">Entrance 002 · local apartment order 0 + base 26 + 1</text><path class="atlas-schematic__primary" fill="none" d="M310 225 V250 m-5 -7 l5 7 l5 -7"/><rect class="atlas-schematic__primary" fill="none" x="40" y="250" width="540" height="55"/><text class="atlas-schematic__label" x="310" y="283" text-anchor="middle" font-size="13">Resolved first apartment: 027 · range 027–052</text></svg></div><div class="atlas-schematic__note"><b>MODEL</b><span>Counts from all earlier entrances must be known. A missing summary remains unknown, not zero.</span></div></figure>
+<figure class="media-frame"><img src="/public/media/posts/addresses-on-generated-buildings/fig-11.png" alt="Preset JSON files and the generated summary of HISM instance counts for the street preset" width="1269" height="816" loading="lazy"><figcaption class="media-caption">FIG 11 — Preset files and a generated instance-count summary. This capture shows the street preset; apartment numbering reads the corresponding apartment-door count from an entrance preset.</figcaption></figure>
+<figure class="media-frame"><img src="/public/media/posts/addresses-on-generated-buildings/fig-12.png" alt="Unreal viewport showing entrance 001 above an output log of applied entrance numbers and placement keys" width="1641" height="1594" loading="lazy"><figcaption class="media-caption">FIG 12 — Runtime entrance-number application: a rendered 001 label and log entries linking placement keys to resolved numbers. This capture demonstrates entrance binding, not apartment-count validation.</figcaption></figure>
+<figure class="media-frame"><iframe src="https://www.youtube.com/embed/aI6uBkj2GkY" title="Apartment Numbering Independent of Visit Order" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><figcaption class="media-caption">FIG 13 — Apartment numbering independent of visit order: preset summaries establish the ranges before entrance interiors are loaded. <a href="https://www.youtube.com/watch?v=aI6uBkj2GkY" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>.</figcaption></figure>
+
+<p>A variant describes how an interior is generated; a coordinate identifies the place represented by that use of the variant.</p>
+<p>Two addresses can use the same interior variant and the same preset data while remaining different logical locations.</p>
+<p>For example:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>Building 035 / Entrance 001 → Variant A
+Building 035 / Entrance 002 → Variant A</code></pre>
+<p>This is important for procedural content reuse. Asset identity, generation preset and world identity should not collapse into one field simply because they sometimes point to the same data.</p>
+<p>The seed follows the coordinate as part of the runtime address context, while the summary helper only reads the existing generation result. It does not start another generation pass merely to discover a count.</p>
+
+<div class="atlas-section-break" data-index="// § 06 THE SECOND ENTRANCE CANNOT DEPEND ON THE FIRST VISIT"></div>
+
+<h2 id="display">07 Making the resolved number visible</h2>
+
+<p>The address manager writes a generic scalar value:</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>Display.Number</code></pre>
+<p>to the resolved placement handle.</p>
+<p><code class="atlas-code-inline">MazePlacementExtras</code> maps the named scalar to a custom-data channel on the correct HISM instance:</p>
+<p>The material reads the channel and turns the value into digit tiles.</p>
+<pre class="atlas-code-block" data-language="CONCEPT"><code>Canonical relationship
+        ↓
+Resolved address number
+        ↓
+Display.Number
+        ↓
+MazePlacementExtras scalar override
+        ↓
+HISM PerInstanceCustomData
+        ↓
+Address material
+        ↓
+&quot;031&quot;</code></pre>
+<p>The address layer interprets the number; Extras transports it, and the material renders it.</p>
+<p>That is the same separation of responsibility used in the lighting work: one placement identity can drive a completely different type of engine-side data without changing the generator.</p>
+<p><strong>The digit material.</strong> The current material accepts a number from <code class="atlas-code-inline">0</code> to <code class="atlas-code-inline">999</code> and uses a horizontal ten-digit texture atlas.</p>
+<p>It supports two input paths:</p>
+<ul>
+<li><code class="atlas-code-inline">PerInstanceCustomData</code> for HISM labels;</li>
+<li>custom primitive data for a standalone Actor label.</li>
+</ul>
+<p>Both routes feed the same digit-selection logic.</p>
+<p>A three-digit display is a presentation limit, not an address-model limit. Supporting larger values would require a wider material implementation, not a different canonical coordinate system.</p>
+<figure class="media-frame"><img src="/public/media/posts/addresses-on-generated-buildings/fig-14.png" alt="Maze Placement Extras binding maps Display.Number to custom data index zero on the building label HISM" width="1745" height="932" loading="lazy"><iframe src="https://www.youtube.com/embed/O7WkHevW3vA" title="Display.Number binding and HISM custom data" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><figcaption class="media-caption">FIG 14 — Display.Number mapped to custom data index 0 on the building-label HISM. The material reads the same channel. <a href="https://www.youtube.com/watch?v=O7WkHevW3vA" target="_blank" rel="noopener noreferrer">Watch the demonstration on YouTube</a>.</figcaption></figure>
+
+<figure class="media-frame"><iframe src="https://www.youtube.com/embed/BHFD8H7G4xk" title="Address Digits on HISM Instances" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><figcaption class="media-caption">FIG 15 — Address digits rendered from per-instance data. <a href="https://www.youtube.com/watch?v=BHFD8H7G4xk" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>.</figcaption></figure>
+<p><strong>When a plate shows <code class="atlas-code-inline">000</code>.</strong> One useful diagnostic case is a label displaying <code class="atlas-code-inline">000</code>.</p>
+<p>That does <strong>not</strong> prove that the resolved address is zero. In the current material setup it usually means that the expected instance value did not reach the material.</p>
+<p>The diagnostic path is therefore explicit:</p>
+<ul>
+<li>Does the expected placement exist?</li>
+<li>Which Extras component owns that placement?</li>
+<li>Does its <code class="atlas-code-inline">SourceHismName + PlacementKey</code> resolve to exactly one current instance?</li>
+<li>Does the resolved scalar contain <code class="atlas-code-inline">Display.Number</code>?</li>
+<li>Is that key bound to the custom-data channel read by the material?</li>
+</ul>
+<figure class="media-frame">
+        <img src="/public/media/posts/addresses-on-generated-buildings/material-address-digits-graph.jpg" alt="M_AddressDigits_3 in the Unreal Material Editor: a per-instance custom data input and a custom primitive data input selected by a static switch, feeding a custom AddressDigitUV node that drives a digit atlas texture into emissive color and opacity mask" loading="lazy">
+        <figcaption class="media-caption">FIG 16 — <code class="atlas-code-inline">M_AddressDigits_3</code>: the number enters on the left, the custom node turns it into atlas UVs, the atlas sample leaves as emissive color and opacity mask. Debug view: yes — Unreal Material Editor, not a rendered result.</figcaption>
+      </figure>
+
+<div class="atlas-section-break" data-index="// § 07 MAKING THE RESOLVED NUMBER VISIBLE"></div>
+
+<h2 id="current-state">08 Where this stands right now</h2>
+<p>The current slice resolves building numbers from authored anchors, entrance numbers from their order inside a building, and apartment ranges from generated door counts. Preset summaries make those counts available before an interior is visited; loaded geometry checks and corrects them.</p>
+<p>The documented first-visit checks cover both entrances in the current 26 + 26 case: visiting 002 first still yields apartments 027–052. The same coordinate now also supports travel into addressed interiors, but the loading and return lifecycle belongs to the next article.</p>
+
+<p><strong>A semantic wall group is not universally a building.</strong> The current implementation interprets one wall-island ring as a building. An outer block and an inner courtyard ring may therefore appear as separate groups even if level design wants them to share one address.</p>
+<p>That requires a merge rule or a different grouping abstraction. The address layer should not pretend the generator gave it semantic information that it did not.</p>
+<p><strong>An authored anchor is still authored.</strong> The system derives numbers around anchors. It does not decide which canonical address a level should start from.</p>
+<p><strong>Runtime display values are not persistence.</strong> The scalar overrides used for display are recomputed at runtime. They are not a save-game system.</p>
+<p>Persistent world-state changes would need their own persistence layer.</p>
+<p><strong>Source order must be unambiguous.</strong> The entrance resolver assumes that source order establishes a rank. Duplicate values need validation or an explicit tie-break rule.</p>
+<p><strong>Apartment ranges require valid earlier counts.</strong> A later entrance cannot have a trustworthy cumulative base if the count of a preceding entrance is unknown.</p>
+<p>The preset-summary system solves that dependency for the currently generated variants, but invalid or missing summaries correctly leave the range unresolved.</p>
+<p><strong>Floors are not yet part of the canonical coordinate.</strong> They are a likely extension, not a shipped address segment in this slice.</p>
+
+<div class="atlas-section-break" data-index="// § 08 WHERE THIS STANDS RIGHT NOW"></div>
+
+<h2 id="whats-next">09 What's next</h2>
+<p>The next spatial subdivision I want to explore is floors. They can begin as a navigation property; whether they become an address segment depends on what level design needs to identify. Rooms can follow the same principle when a character or script needs a specific destination inside an apartment.</p>
+<p>I also want to develop a library of several hundred entrance, apartment and room presets. That is a later iteration, not the current catalog size. A preset controls the representation of a location; its coordinate preserves which place that representation belongs to.</p>
+<p>The numbering policy can evolve as well: odd/even street sides, district offsets or floor-aware rules are possible extensions. They are not implemented in this slice. Authored anchors and procedural relationships would still provide the control underneath them.</p>
+<div class="atlas-section-break" data-index="// § 09 WHAT'S NEXT"></div>
+
+<h2 id="result">10 Result</h2>
+
+<p>Generated groups and placements now resolve to a shared <code class="atlas-code-inline">ST_WorldCoordinate</code>. Authored anchors control building numbers, local order controls entrance numbers, and cumulative door counts control apartment ranges—even when earlier entrances have not been visited.</p>
+<p>The HISM label displays one segment of that coordinate. Other systems can use the full address without defining the location again.</p>
+<div class="atlas-table-frame atlas-table-frame--solid"><div class="atlas-table-header-solid">PROJECT MAP // RELATED WRITE-UPS</div><ul class="atlas-ref-list"><li class="atlas-ref-item"><span class="atlas-ref-num">[01]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">CURRENT</span><span class="atlas-ref-title">Procedural Address Resolution — From Placement Identity to World Coordinates</span></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[02]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">LIVE</span><span class="atlas-ref-title">Controlled Procedurality — How a Maze Generator Became a Level Design System</span> — the generator and its level-design abstractions.<br><a class="atlas-ref-link" href="/post/controlled-procedurality/">pavelzosim.com/post/controlled-procedurality</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[03]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">LIVE</span><span class="atlas-ref-title">Houdini to Unreal — Typed Placement Routing for HISM and Blueprint Actors</span> — the placement identity and routing pipeline reused by the address layer.<br><a class="atlas-ref-link" href="/post/houdini-unreal-typed-placement-routing/">pavelzosim.com/post/houdini-unreal-typed-placement-routing</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[04]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">LIVE</span><span class="atlas-ref-title">The Light System — Randomized and Synchronized Lighting on Generated Geometry</span> — the Extras scalar-data path and stable placement identity reused for labels.<br><a class="atlas-ref-link" href="/post/lighting-generated-geometry/">pavelzosim.com/post/lighting-generated-geometry</a></span></li><li class="atlas-ref-item"><span class="atlas-ref-num">[05]</span><span class="atlas-ref-body"><span class="atlas-ref-tag">DRAFT</span><span class="atlas-ref-title">Procedural Travel Resolution — From World Coordinates to Loaded Interiors</span> — the next article: loading an addressed space and resolving its arrival and return points.<br><span class="atlas-ref-link" aria-disabled="true">Coming soon</span></span></li></ul></div>
+
+<div class="atlas-section-break" data-index="// § 10 RESULT"></div>
+<div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // EOF</span><span class="atlas-eof-divider__line"></span></div>
+</div></div><script src="/scripts/article-page.js?v=17"></script><script src="/scripts/address-article-media.js?v=2"></script></body></html>

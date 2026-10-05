@@ -1095,6 +1095,56 @@
         "recentKind": "PYTHON",
         "recentBlurb": "DirectX cubemaps · DDS & PNG export"
       }
+    },
+    {
+      "id": "NOTE-020",
+      "title": "Procedural Address Resolution — From Placement Identity to World Coordinates",
+      "kind": "article",
+      "group": "procedural",
+      "summary": "Deterministic building, entrance and apartment addresses from procedural placement identity, ordered relationships and preset JSON summaries in Houdini and Unreal Engine.",
+      "tags": [
+        "procedural",
+        "procedural-environments",
+        "unreal",
+        "houdini",
+        "shaders",
+        "technical-art"
+      ],
+      "image": "/public/media/posts/addresses-on-generated-buildings/hero-addressed-generated-street.jpg",
+      "imageAlt": "Generated residential buildings displaying resolved facade numbers 032 and 039",
+      "localPath": "/content/posts/atlas-html/addresses-on-generated-buildings.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/addresses-on-generated-buildings/",
+      "publicUrl": "https://www.pavelzosim.com/post/addresses-on-generated-buildings/",
+      "slug": "addresses-on-generated-buildings",
+      "datePublished": "2026-10-05",
+      "dateModified": "2026-10-05",
+      "state": "published",
+      "indexable": true
+    },
+    {
+      "id": "NOTE-021",
+      "title": "Procedural Travel Resolution — From World Coordinates to Loaded Interiors",
+      "kind": "article",
+      "group": "procedural",
+      "summary": "From canonical addresses to loaded interiors: procedural portals, arrival anchors and return destinations in Unreal Engine.",
+      "tags": [
+        "procedural",
+        "procedural-environments",
+        "unreal",
+        "houdini",
+        "shaders",
+        "technical-art"
+      ],
+      "image": "/public/media/posts/addresses-on-generated-buildings/material-address-digits-graph.jpg",
+      "imageAlt": "A street of generated panel buildings in Unreal Editor, each with a building number plate and numbered entrance labels",
+      "localPath": "/content/posts/atlas-html/procedural-travel-resolution.html",
+      "sourceUrl": "https://www.pavelzosim.com/post/procedural-travel-resolution/",
+      "publicUrl": "https://www.pavelzosim.com/post/procedural-travel-resolution/",
+      "slug": "procedural-travel-resolution",
+      "datePublished": "2026-09-26",
+      "dateModified": "2026-10-05",
+      "state": "draft",
+      "indexable": false
     }
   ]
 }

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Procedural Travel Resolution — From World Coordinates to Loaded Interiors · Pavel Zosim</title>
+  <meta name="description" content="Address-bound procedural portals and arrival anchors connect world coordinates to loaded entrance and apartment interiors in Unreal Engine.">
+  <link rel="canonical" href="https://www.pavelzosim.com/post/procedural-travel-resolution/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Procedural Travel Resolution — From World Coordinates to Loaded Interiors">
+  <meta property="og:description" content="Address-bound procedural portals and arrival anchors connect world coordinates to loaded entrance and apartment interiors in Unreal Engine.">
+  <meta property="og:url" content="https://www.pavelzosim.com/post/procedural-travel-resolution/">
+  <meta property="og:image" content="https://www.pavelzosim.com/public/media/posts/addresses-on-generated-buildings/material-address-digits-graph.jpg">
+  <meta name="twitter:image" content="https://www.pavelzosim.com/public/media/posts/addresses-on-generated-buildings/material-address-digits-graph.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Procedural Travel Resolution — From World Coordinates to Loaded Interiors">
+  <meta name="twitter:description" content="Address-bound procedural portals and arrival anchors connect world coordinates to loaded entrance and apartment interiors in Unreal Engine.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Procedural Travel Resolution — From World Coordinates to Loaded Interiors","description":"Address-bound procedural portals and arrival anchors connect world coordinates to loaded entrance and apartment interiors in Unreal Engine.","url":"https://www.pavelzosim.com/post/procedural-travel-resolution/","mainEntityOfPage":"https://www.pavelzosim.com/post/procedural-travel-resolution/","image":"https://www.pavelzosim.com/public/media/posts/addresses-on-generated-buildings/material-address-digits-graph.jpg","dateModified":"2026-10-05","author":{"@type":"Person","name":"Pavel Zosim","url":"https://www.pavelzosim.com/"}}</script>
+  <link rel="stylesheet" href="/styles/atlas.css?v=62">
+  <link rel="stylesheet" href="/styles/posts.css?v=19">
+  <link rel="stylesheet" href="/styles/posts/address-draft.css?v=1">
+</head>
+<body id="top">
+  <h1 class="seo-heading">Procedural Travel Resolution — From World Coordinates to Loaded Interiors</h1>
+  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/online-tools/">Online Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+
+  <div class="atlas-container">
+    <div id="site-passport"></div>
+    <div class="content-block">
+<div class="atlas-callout atlas-callout--note"><p><b>Editorial draft · media pending.</b> Article text and capture briefs for review.</p></div>
+<h2 id="01-from-an-address-to-a-destination">01 — From an address to a destination</h2>
+<p>The previous article, <a href="/content/posts/atlas-html/addresses-on-generated-buildings.html">Procedural Address Resolution</a>, established what place a generated door represents. This article follows the next step: using that world coordinate to load an interior and reach the correct arrival point. The current project supports travel from the street into an entrance and into a specific apartment. Apartment travel was completed after the 4 October architecture audit and confirmed by the project author. This draft describes the architecture slice; media will provide the route demonstrations.</p>
+<h2 id="02-address-identity-and-physical-arrival">02 — Address identity and physical arrival</h2>
+<p>An address identifies a logical place. An anchor provides a physical arrival transform. World position is not the address: moving a generated door should update its associated arrival point rather than change the meaning of the coordinate. The same interior asset can represent different addressed locations. Reusing a layout does not make those apartments or entrances the same place.</p>
+<h2 id="03-the-blueprint-boundary">03 — The Blueprint boundary</h2>
+<p>Procedural placements supply identity and metadata. MazePlacementExtras creates Portal and Anchor actors through placement rules. The address layer binds canonical context to those actors. BP_TravelManager resolves the request, makes the destination available, sets its BP_LocationRoot context and matches the arrival anchor. The travel manager does not need to interpret Houdini groups or draw address digits.</p>
+<figure class="atlas-schematic" id="blueprint-project-slice">
+        <figcaption class="atlas-schematic__header">BLUEPRINT ARCHITECTURE — ADDRESS AND TRAVEL SLICE</figcaption>
+        <div class="atlas-schematic__canvas"><svg viewBox="0 0 620 530" role="img" aria-labelledby="bp-slice-title bp-slice-desc" xmlns="http://www.w3.org/2000/svg">
+          <title id="bp-slice-title">Blueprint responsibilities for addresses and travel</title><desc id="bp-slice-desc">Procedural placements reach MazePlacementExtras, which creates portals and anchors. JSON preset summaries and runtime counts from the entrance geometry through LocationRoot supply the Address Manager. The manager supplies display numbers and address context for portals and anchors. The Travel Manager loads a destination, sets its LocationRoot context and resolves its arrival anchor.</desc>
+          <g class="atlas-schematic__primary" fill="none">
+            <rect x="20" y="15" width="580" height="50"/>
+            <rect x="20" y="105" width="275" height="65"/><rect x="325" y="105" width="275" height="65"/>
+            <path d="M310 65 V85 H155 V105 M310 85 H462 V105"/>
+            <rect x="20" y="210" width="275" height="65"/><rect x="325" y="210" width="275" height="65"/>
+            <path d="M155 170 V210 M462 170 V210"/>
+            <rect x="20" y="315" width="275" height="65"/><rect x="325" y="315" width="275" height="65"/>
+            <path d="M155 275 V315 M295 242 H310 V347 H325 M462 275 V315"/>
+            <rect x="145" y="425" width="330" height="75"/>
+            <path d="M462 380 V405 H310 V425"/>
+          </g>
+          <g class="atlas-schematic__label" text-anchor="middle" font-size="12">
+            <text x="310" y="45">Procedural placements / preset JSON summaries</text>
+            <text x="157" y="132">BP_LevelAddressManager</text><text x="157" y="153" font-size="10">Addresses + known entrance counts</text>
+            <text x="462" y="132">MazePlacementExtras</text><text x="462" y="153" font-size="10">Create actors from placement rules</text>
+            <text x="157" y="237">Canonical address context</text><text x="157" y="258" font-size="10">Building / Entrance / Apartment</text>
+            <text x="462" y="237">BP_TravelPortal / BP_TravelAnchor</text><text x="462" y="258" font-size="10">Source door + destination / arrival point</text>
+            <text x="157" y="343">Display.Number → HISM material</text><text x="157" y="365" font-size="10">Visible number for a specific placement</text>
+            <text x="462" y="343">BP_TravelManager</text><text x="462" y="365" font-size="10">Load location / match anchor / move player</text>
+            <text x="310" y="451">BP_LocationRoot + entrance geometry</text><text x="310" y="474" font-size="10">Runtime context + actual apartment-door count</text><text x="310" y="491" font-size="10">Report count back to the address layer</text>
+          </g>
+        </svg></div>
+        <div class="atlas-schematic__note"><b>SLICE</b><span>Preset summaries establish counts before a visit. Loaded geometry reports the actual count back. Address identity is shared by presentation and travel; the material does not control the destination.</span></div>
+      </figure>
+<h2 id="04-entering-and-returning">04 — Entering and returning</h2>
+<p>A street door carries a building and entrance identity. Its portal requests the entrance destination. After the destination is available, the travel manager passes the coordinate to its LocationRoot and moves the player to the matching anchor. The return path resolves an outside anchor associated with that specific entrance. A generic street destination would lose the relationship to the original door. Apartment travel extends the same relationship to a full building / entrance / apartment coordinate. A neighbouring apartment remains a distinct destination even when both use the same interior asset.</p>
+<figure class="media-frame draft-media" data-media-kind="video"><div class="draft-media__slot"><span class="draft-media__label">VIDEO PLACEHOLDER</span><p>Show Street → Entrance → Apartment 017 → return, then Apartment 018 → return. Display the context at each transition and the exact return door.<br>Suggested filename: addressed-interior-round-trip.mp4</p></div><figcaption class="media-caption">Media brief — capture to add before publication.</figcaption></figure>
+<h2 id="05-what-went-wrong-along-the-way">05 — What went wrong along the way</h2>
+<p>An anchor created in a street level was initially assigned the street identity even when its purpose was arrival in an entrance. Logical destination must follow the role of the anchor, not the level in which its source actor happened to appear. A mismatched apartment-door HISM selector also prevented rules from creating travel actors. Correcting the source binding produced portals and return anchors for the generated doors. Rebuilding must not accumulate duplicate actors. Creation order is another boundary: procedural actors may register before addresses are ready. Pending registration and a reconciliation pass avoid making successful configuration depend on which actor appeared first. The separate <a href="/content/posts/atlas-html/addresses-on-generated-buildings.html">address article</a> explains the JSON summary solution for apartment counts. Travel consumes the resulting coordinate rather than computing a fresh numbering policy.</p>
+<h2 id="06-evidence-to-add-before-publishing">06 — Evidence to add before publishing</h2>
+<ul>
+<li>Record two different entrance destinations and their street-side return points.</li>
+<li>Record two neighbouring apartment destinations and their exact return doors.</li>
+<li>Repeat visits in a different order and inspect updated LocationRoot context.</li>
+<li>Rebuild procedural extras and confirm no duplicate portals or anchors.</li>
+<li>Inspect failed requests for cleared pending state and no stale arrival anchor.</li>
+</ul>
+<p>These are recording and review cases. Website preview checks do not test the Unreal travel implementation.</p>
+<h2 id="07-next-iterations">07 — Next iterations</h2>
+<p>Floors are the next planned spatial subdivision. A larger library of entrance, apartment and room variants should make exploration less repetitive. The aim is several hundred procedural presets in a later iteration, not a claim about the current catalog. Logical address and selected representation remain separate: a variation describes how a space looks, while its coordinate describes which place it is.</p>
+<h2 id="08-result">08 — Result</h2>
+<p>Address resolution answers “what place is this?” Travel resolution answers “how do I load and reach it?” Keeping those questions separate lets generated locations share reusable assets while retaining a specific identity and a specific return destination.</p>
+<div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // EOF</span><span class="atlas-eof-divider__line"></span></div>
+</div></div><script src="/scripts/article-page.js?v=17"></script></body></html>
