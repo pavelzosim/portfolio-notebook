@@ -147,6 +147,22 @@ def materialize_post_routes() -> list[dict]:
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
         record["localPath"] = f"/post/{slug}/"
+    # Article chrome must not wait for a second request on a cold cache.
+    # Embed only public records, with their final routes already resolved.
+    embedded = json.dumps({"records": records}, ensure_ascii=False).replace("<", "\\u003c")
+    for record in records:
+        destination = OUTPUT / "post" / record["slug"] / "index.html"
+        document = destination.read_text(encoding="utf-8")
+        if "article-page.js" in document:
+            document = re.sub(
+                r'(<script\b[^>]*src=["\']/scripts/article-page\.js[^"\']*["\'][^>]*>)',
+                lambda match: '<script type="application/json" id="article-registry">'
+                + embedded + '</script>' + match.group(1),
+                document,
+                count=1,
+            )
+            document = document.replace("article-page.js?v=17", "article-page.js?v=18")
+            destination.write_text(document, encoding="utf-8", newline="\n")
     source_documents = OUTPUT / "content" / "posts" / "atlas-html"
     if source_documents.exists():
         shutil.rmtree(source_documents)

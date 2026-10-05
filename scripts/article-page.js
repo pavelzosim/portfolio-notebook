@@ -118,8 +118,12 @@
 
     let registry = { records: [] };
     try {
-      const response = await fetch(siteHref('/content/posts/index.json'), { cache: 'no-store' });
-      if (response.ok) registry = await response.json();
+      const embedded = document.getElementById('article-registry');
+      if (embedded) registry = JSON.parse(embedded.textContent);
+      else {
+        const response = await fetch(siteHref('/content/posts/index.json'), { cache: 'no-store' });
+        if (response.ok) registry = await response.json();
+      }
     } catch (_) { /* The article stays readable if the registry is unavailable. */ }
 
     const records = Array.isArray(registry.records) ? registry.records : [];
