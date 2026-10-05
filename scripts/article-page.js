@@ -202,7 +202,7 @@
     const globalTitle = make('p', 'article-rail-title', 'INDEX.md');
     const globalNav = make('ol', 'article-global-nav');
     [
-      ['00', 'Home / Overview', '/#overview'],
+      ['00', 'Home / Overview', '/'],
       ['01', 'Projects', '/projects/'],
       ['02', 'Tools and assets', '/tools/'],
       ['03', 'Blog — Breakdowns and lessons', '/blog/']

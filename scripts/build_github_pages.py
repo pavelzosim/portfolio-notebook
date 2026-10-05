@@ -163,7 +163,7 @@ def materialize_post_routes() -> list[dict]:
                 document,
                 count=1,
             )
-            document = document.replace("article-page.js?v=17", "article-page.js?v=18")
+            document = document.replace("article-page.js?v=17", "article-page.js?v=19")
             destination.write_text(document, encoding="utf-8", newline="\n")
     source_documents = OUTPUT / "content" / "posts" / "atlas-html"
     if source_documents.exists():

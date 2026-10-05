@@ -11,6 +11,12 @@
   --notebook-record-inset: 28px;
 }
 
+/* Keep section headings below the sticky navigation on direct fragment visits. */
+html { scroll-padding-top: 48px; }
+@media(max-width:760px){
+  html { scroll-padding-top: 104px; }
+}
+
 /* Seven public destinations remain visible instead of overflowing small screens. */
 @media(max-width:1000px){
   .shellbar .shell-status,.article-shellbar .article-shellbar__status{display:none}
