@@ -19,6 +19,26 @@
       "dateModified": "2026-10-02",
       "state": "published",
       "indexable": true
+    },
+    {
+      "id": "TOOL-002",
+      "title": "Image Compressor for Technical Artists",
+      "slug": "image-compressor",
+      "kind": "tool",
+      "summary": "Compress up to ten images locally with channel previews, alpha controls, texture resizing and batch ZIP export.",
+      "localPath": "/online-tools/image-compressor/index.html",
+      "publicUrl": "https://www.pavelzosim.com/online-tools/image-compressor/",
+      "tags": [
+        "image-compression",
+        "textures",
+        "technical-art"
+      ],
+      "dateModified": "2026-10-06",
+      "state": "published",
+      "indexable": true,
+      "image": "/public/media/online-tools/image-compressor.png",
+      "imageAlt": "Image Compressor interface diagram showing source and encoded texture panels with local processing and channel inspection",
+      "datePublished": "2026-10-06"
     }
   ]
 }

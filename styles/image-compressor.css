@@ -1,0 +1,32 @@
+.compressor-page .compress-settings{grid-template-columns:repeat(3,minmax(0,1fr))}
+.compressor-page .compress-settings input,.compressor-page .compress-settings select{width:100%;min-width:0}
+.compressor-page .compress-check{display:flex;align-items:center;gap:8px}
+.compressor-page .compress-check input{width:18px;min-height:18px;margin:0}
+.compressor-page .compress-images{list-style:none;padding:0;display:grid;gap:8px;max-height:330px;overflow:auto}
+.compressor-page .compress-images li{display:flex;gap:8px;min-width:0}
+.compressor-page .compress-images button{border:1px solid var(--atlas-border);background:var(--atlas-bg-raised);color:var(--atlas-ink);font:inherit;cursor:pointer;min-height:44px}
+.compressor-page .compress-pick{display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:left;padding:8px}
+.compressor-page .compress-pick[aria-pressed=true]{border-color:var(--atlas-accent);background:var(--atlas-accent-soft)}
+.compressor-page .compress-pick img{width:48px;height:48px;object-fit:contain}
+.compressor-page .compress-pick span{overflow-wrap:anywhere;font-size:11px}
+.compressor-page .compress-images li>button:last-child{width:44px;flex-shrink:0}
+.compressor-page .compress-compare{grid-template-columns:repeat(2,minmax(0,1fr))}
+.compressor-page .checker{background-color:#eee;background-image:conic-gradient(#ccc 25%,transparent 0 50%,#ccc 0 75%,transparent 0);background-size:20px 20px}
+.compressor-page .checker canvas{image-rendering:auto}
+.compressor-page [data-view=black] .checker{background:#000}
+.compressor-page [data-view=white] .checker{background:#fff}
+.compressor-page [data-view=pixel] canvas{image-rendering:pixelated}
+.compressor-page .compress-view{display:block;margin-bottom:16px;font-size:11px}
+.compressor-page .compress-view select{display:block;margin-top:4px;min-height:40px}
+.compressor-page button:disabled{cursor:default;opacity:.5}
+@media(max-width:760px){.compressor-page .compress-settings,.compressor-page .compress-compare{grid-template-columns:1fr}}
+.compressor-page .compress-compare .checker{position:relative}
+.compressor-page .compress-compare>.checker,.compressor-page #before,.compressor-page #after{cursor:crosshair}
+.compressor-page .compress-loupe{position:absolute;right:8px;top:8px;width:162px;border:1px solid var(--atlas-accent);background-color:#eee;background-image:conic-gradient(#ccc 25%,transparent 0 50%,#ccc 0 75%,transparent 0);background-size:20px 20px;pointer-events:none;z-index:2;box-shadow:3px 3px 0 var(--atlas-border)}
+.compressor-page .compress-loupe[hidden]{display:none}
+.compressor-page .compress-loupe canvas{display:block;width:160px!important;height:160px!important;max-width:none;max-height:none;image-rendering:pixelated}
+.compressor-page .compress-loupe-label{display:block;padding:4px 6px;background:var(--atlas-ink);color:var(--atlas-bg);font-size:10px;line-height:1.4}
+.compressor-page [data-view=black] .compress-loupe{background:#000}
+.compressor-page [data-view=white] .compress-loupe{background:#fff}
+.compressor-page #before:focus-visible,.compressor-page #after:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:-2px}
+.compressor-page .compress-loupe::after{content:"";position:absolute;left:76px;top:76px;width:7px;height:7px;border:1px solid #fff;outline:1px solid #000}

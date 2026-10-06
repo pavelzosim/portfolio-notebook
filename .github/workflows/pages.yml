@@ -35,6 +35,9 @@ jobs:
       - name: Check sprite-sheet assembly algorithms
         run: node --test scripts/sprite-sheet-core.test.cjs
 
+      - name: Check image-compressor export algorithms
+        run: node --test scripts/image-compressor-core.test.cjs
+
       - name: Audit production SEO and internal links
         run: python scripts/audit_site.py
 

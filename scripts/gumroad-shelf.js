@@ -1,11 +1,10 @@
 (() => {
-  const shelf = document.querySelector('[data-gumroad-shelf]');
-  if (!shelf) return;
+  document.querySelectorAll('[data-gumroad-shelf], [data-online-tools-shelf]').forEach(shelf => {
 
   const slides = [...shelf.querySelectorAll('.gumroad-shelf__slide')];
-  const prevButton = shelf.querySelector('[data-gumroad-prev]');
-  const nextButton = shelf.querySelector('[data-gumroad-next]');
-  const count = shelf.querySelector('[data-gumroad-count]');
+  const prevButton = shelf.querySelector('[data-gumroad-prev], [data-online-prev]');
+  const nextButton = shelf.querySelector('[data-gumroad-next], [data-online-next]');
+  const count = shelf.querySelector('[data-gumroad-count], [data-online-count]');
   if (!slides.length || !prevButton || !nextButton || !count) return;
 
   let index = 0;
@@ -26,4 +25,5 @@
   });
 
   render();
+  });
 })();
