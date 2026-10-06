@@ -138,4 +138,5 @@ main .about-layout dd { text-align: left; }
 .browser-tools-nav button:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
 .browser-tools-nav output{font-size:var(--fs-status);color:var(--atlas-ink-soft)}
 
-.highlight-award{display:block;margin-top:5px;padding-top:5px;border-top:1px solid var(--atlas-border);font-size:9px;line-height:1.5;color:var(--atlas-ink);font-weight:600}
+.highlight-card .highlight-award{display:block;margin-top:5px;padding-top:5px;border-top:1px solid var(--atlas-border);font-size:9px;line-height:1.5;color:var(--atlas-ink);font-weight:600}
+.project-records .highlight-award{display:block;margin-top:8px;padding:7px 8px;border:1px solid var(--atlas-border-strong);border-left:3px solid var(--atlas-accent);background:var(--atlas-bg-raised);font-size:11px;line-height:1.45;color:var(--atlas-ink);font-weight:700}

@@ -73,6 +73,7 @@
         kind: 'project',
         group: 'projects',
         summary: project.summary,
+        awards: project.awards || [],
         tags: [...project.type.split('/'), ...project.tools.slice(0, 3)].map((tag) => tag.trim().toLowerCase()),
         image: project.image,
         localPath: `/projects/${project.slug}/`,
@@ -133,6 +134,11 @@
         const meta = node('div', 'content-record-meta');
         meta.append(node('span', 'record-id', record.id), node('span', 'record-kind', record.kind.toUpperCase()));
         body.append(meta, node('strong', '', record.title), node('p', '', record.summary));
+        if (record.awards?.length) {
+          const awards = node('div', 'content-project-awards');
+          record.awards.forEach(award => awards.append(node('span', '', award.label)));
+          body.append(awards);
+        }
         const tags = node('div', 'content-tags');
         record.tags.forEach((tag) => tags.append(node('span', '', `#${tag}`)));
         body.append(tags);

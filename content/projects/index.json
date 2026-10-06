@@ -218,7 +218,15 @@
           "category": "Integrated Mobile Experience",
           "url": "https://www.nasa.gov/reference/nasa-webby-award-winners/"
         }
-      ]
+      ],
+      "externalVideo": {
+        "title": "Frank Rubio explores First Woman aboard the ISS",
+        "caption": "NASA astronaut Frank Rubio shows the First Woman graphic novel and answers students’ questions from the International Space Station. Spanish-language NASA video, 3:27. Credit: NASA; archived by Wikimedia Commons.",
+        "sourceUrl": "https://plus.nasa.gov/video/el-astronauta-frank-rubio-explora-la-novela-grafica-la-primera-mujer-en-el-espacio-2/",
+        "sourceLabel": "Official video on NASA+",
+        "src": "/public/media/projects/nasa-first-woman/frank-rubio-first-woman-iss-es.webm",
+        "poster": "/public/media/projects/nasa-first-woman/frank-rubio-first-woman-iss-poster.jpg"
+      }
     },
     {
       "id": "PRJ-002",

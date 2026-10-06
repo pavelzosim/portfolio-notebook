@@ -3,3 +3,6 @@
 @import url("./records.css?v=17");
 @import url("./projects/detail.css?v=4");
 @import url("./notebook-layout.css?v=3");
+
+[data-external-video] video{display:block;width:100%;aspect-ratio:16/9;border:1px solid var(--atlas-border-strong)}
+[data-project-awards] li{padding:12px;border:1px solid var(--atlas-border-strong);border-left:3px solid var(--atlas-accent);background:var(--atlas-bg-raised);font-weight:700}

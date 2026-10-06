@@ -148,6 +148,20 @@
         heroVideoRecord.hidden = true;
       }
 
+      const externalVideo = project.externalVideo;
+      const externalFigure = document.querySelector('[data-external-video]');
+      if (externalFigure && externalVideo?.src) {
+        externalFigure.hidden = false;
+        text('[data-external-video-title]', externalVideo.title);
+        text('[data-external-video-caption]', externalVideo.caption);
+        const player = externalFigure.querySelector('video');
+        player.src = externalVideo.src;
+        if (externalVideo.poster) player.poster = externalVideo.poster;
+        player.setAttribute('aria-label', externalVideo.title);
+        const source = externalFigure.querySelector('a');
+        source.href = externalVideo.sourceUrl;
+        source.textContent = externalVideo.sourceLabel;
+      }
       const carousel = document.querySelector('[data-project-carousel]');
       const mediaTrack = document.querySelector('[data-media-track]');
       const mediaValues = Array.isArray(project.media) ? project.media : [];
