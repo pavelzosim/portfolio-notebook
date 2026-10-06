@@ -94,6 +94,19 @@
       const hasRole = list('[data-list="roleDetails"]', project.roleDetails);
       const hasSolutions = list('[data-list="solutions"]', project.solutions);
       list('[data-list="results"]', project.results);
+      const awardList = document.querySelector('[data-project-awards]');
+      const awards = Array.isArray(project.awards) ? project.awards : [];
+      if (awardList) {
+        awardList.hidden = awards.length === 0;
+        awardList.replaceChildren(...awards.map(award => {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = award.url;
+          link.textContent = `${award.label} — ${award.category}`;
+          item.append(link);
+          return item;
+        }));
+      }
 
       const tools = document.querySelector('[data-tools]');
       const toolValues = Array.isArray(project.tools) ? project.tools : [];

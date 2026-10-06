@@ -65,7 +65,7 @@
         "325K+ app-store downloads",
         "350K+ graphic-novel copies distributed worldwide",
         "Content read aboard the ISS by astronaut Frank Rubio, 205 miles above Earth",
-        "American Advertising Awards recognition",
+        "2022 Webby and People’s Voice Awards — Integrated Mobile Experience",
         "Long-term reuse across application, web, video, and print releases"
       ],
       "video": {
@@ -211,7 +211,14 @@
         }
       ],
       "outcome": "The platform shipped publicly across multiple media formats and developed into a long-running educational initiative. The production record combines technical-art systems with art direction and practical delivery across real-time, web, video, and print.",
-      "sourceUrl": "https://www.pavelzosim.com/projects/nasa-first-woman"
+      "sourceUrl": "https://www.pavelzosim.com/projects/nasa-first-woman",
+      "awards": [
+        {
+          "label": "2022 Webby Awards — Webby Winner & People’s Voice Winner",
+          "category": "Integrated Mobile Experience",
+          "url": "https://www.nasa.gov/reference/nasa-webby-award-winners/"
+        }
+      ]
     },
     {
       "id": "PRJ-002",
@@ -231,7 +238,7 @@
       "reach": {
         "premiere": "Meta Connect",
         "release": "Quest Store",
-        "recognition": "Emmy-nominated"
+        "recognition": "Emmy nominee · 2026"
       },
       "summary": "XR cinematic experience combining streamed 4K content, spatial audio, and synchronized real-time VFX on standalone Meta Quest hardware.",
       "overview": "The experience reimagined Blumhouse films including M3GAN and The Black Phone as immersive XR cinema. Real-time environmental effects extended beyond the streamed screen while spatial audio increased presence. It premiered at Meta Connect and was later released publicly on the Meta Quest Store.",
@@ -274,7 +281,7 @@
         "Public release on the Meta Quest Store",
         "Strong audience response during horror sequences",
         "Positive feedback from Meta and Blumhouse teams",
-        "Emmy-nominated immersive production",
+        "2026 Emmy nomination — Outstanding Emerging Media Program",
         "Reusable techniques for future VR cinema experiences"
       ],
       "outcome": "The project demonstrated that streamed cinematic content, spatial audio, and synchronized real-time effects can form a convincing XR cinema experience within strict standalone-headset constraints.",
@@ -307,7 +314,14 @@
         "poster": "/public/media/projects/meta-blumhouse-xr-experience/Blumhouse-Enhanced-Cinema-1.webp",
         "caption": "Meta × Blumhouse Enhanced Cinema — selected XR production footage.",
         "featured": true
-      }
+      },
+      "awards": [
+        {
+          "label": "2026 Emmy Award nominee",
+          "category": "Outstanding Emerging Media Program",
+          "url": "https://www.televisionacademy.com/shows/blumhouse-enhanced-cinema"
+        }
+      ]
     },
     {
       "id": "PRJ-003",
@@ -744,7 +758,7 @@
       "reach": {
         "engagement": "5×",
         "conversations": "3×",
-        "recognition": "ADDY Gold / Silver"
+        "recognition": "Silver ADDY · District 2 · 2024"
       },
       "summary": "Gesture-driven 100-yard digital dash for live Seahawks game days, combining real-time gameplay, branded VFX, and live leaderboard feedback.",
       "overview": "The Speed Zone was a public real-time installation at Lumen Field. Fans ran in place while AI-driven webcam gesture recognition propelled a virtual player through a recreated stadium environment, with large-screen feedback and a live leaderboard.",
@@ -786,7 +800,7 @@
         "Five times higher engagement than previous activations",
         "Three times more product-related conversations",
         "Strong positive client feedback",
-        "2024 ADDY Gold and Silver awards"
+        "2024 Silver ADDY — AAF District 2, Out-of-Home — Large Venue — Single"
       ],
       "outcome": "The installation proved that responsive gesture input and gameplay-driven VFX could sustain strong engagement in a demanding stadium environment while supporting measurable campaign outcomes.",
       "sourceUrl": "https://www.pavelzosim.com/projects/quantum-fiber-speed-zone",
@@ -818,7 +832,14 @@
         "poster": "/public/media/projects/quantum-fiber-speed-zone/asset-5525b19ee3974f58.png",
         "caption": "Quantum Fiber Speed Zone — selected live installation footage.",
         "featured": true
-      }
+      },
+      "awards": [
+        {
+          "label": "2024 American Advertising Awards — Silver ADDY, AAF District 2",
+          "category": "Out-of-Home — Large Venue — Single",
+          "url": "https://aafdistrict2.org/wp-content/uploads/2024/11/2023-2024-D2-Winners-_Book_-1-1.pdf#page=8"
+        }
+      ]
     }
   ]
 }
