@@ -98,3 +98,6 @@
 .online-tools-page .tool-support:has(.bmc-btn) .coffee-fallback{display:none}
 @media(max-width:1000px){.online-tools-page .tool-support{flex-direction:column;align-items:flex-start}}
 @media(max-width:380px){.online-tools-page .coffee-button .bmc-btn{min-width:0;padding-inline:12px;font-size:22px}.online-tools-page .coffee-button .bmc-btn-text{width:auto;flex-shrink:1}}
+/* Separate catalogue entries with document rhythm and a visible rule. */
+.online-tools-page .tool-record+.tool-record{margin-top:40px;padding-top:32px;border-top:1px solid var(--atlas-border-strong)}
+@media(max-width:760px){.online-tools-page .tool-record+.tool-record{margin-top:32px;padding-top:24px}}

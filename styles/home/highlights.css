@@ -128,3 +128,8 @@ main .about-layout dd { text-align: left; }
   .highlight-strip { grid-template-columns: 1fr 1fr; gap: 6px; }
   .highlight-strip.cols-3 { grid-template-columns: 1fr; }
 }
+.home-online-tools .browser-tool-feature[hidden]{display:none}
+.browser-tools-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--atlas-border-strong);border-top:0;font-size:var(--fs-meta)}
+.browser-tools-nav button{min-height:40px;padding:8px 12px;border:1px solid var(--atlas-border);background:var(--atlas-bg-raised);color:var(--atlas-ink);font:inherit;cursor:pointer}
+.browser-tools-nav button:hover{background:var(--atlas-accent-soft);color:var(--atlas-accent)}
+.browser-tools-nav button:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:2px}
