@@ -174,7 +174,7 @@ ST_BuildingNode
       ├─ stable order
       ├─ optional authored anchor
       └─ resolved building number</code></pre>
-<p><strong>Authored anchors.</strong> Instead, the designer can bind a known address from the address book to one placement belonging to a building. That placement identifies the semantic group. The group then becomes an <strong>anchor</strong> for the resolver.</p>
+<p><strong>Authored anchors.</strong> The designer can bind a known address from the address book to one placement belonging to a building. That placement identifies the semantic group. The group then becomes an <strong>anchor</strong> for the resolver.</p>
 <p>From there, neighbouring buildings can be resolved from their order and a configurable numeric step.</p>
 <p>A simplified resolver looks like this:</p>
 <pre class="atlas-code-block" data-language="CONCEPT"><code>ResolvedNumber =
@@ -228,7 +228,7 @@ Entrance 002 → Apartments 027–052</code></pre>
 
 ApartmentNumber =
     ApartmentBase + LocalApartmentOrder + 1</code></pre>
-<p><strong>What if Entrance 002 is visited first?.</strong> If each entrance interior is loaded on demand, Entrance 001 may never have been loaded. But Entrance 002 still needs to know that its first apartment is <code class="atlas-code-inline">027</code>.</p>
+<p><strong>What if Entrance 002 is visited first?</strong> If each entrance interior is loaded on demand, Entrance 001 may never have been loaded. But Entrance 002 still needs to know that its first apartment is <code class="atlas-code-inline">027</code>.</p>
 <p>Loading every interior just to count apartment doors would defeat the purpose of loading those interiors on demand.</p>
 <p>Counting visible number labels would also be the wrong dependency. Presentation is not the source of truth for how many apartments exist.</p>
 <p>The count belongs to the generated apartment-door geometry.</p>
