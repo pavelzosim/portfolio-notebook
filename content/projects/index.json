@@ -503,7 +503,7 @@
       "reach": {
         "visitors": "thousands",
         "leads": "500+",
-        "recognition": "ADDY"
+        "recognition": "Best in Show · ADDY Baltimore · 2020"
       },
       "summary": "AR-based digital-twin and multiplayer racing experience translating complex IoT concepts into a multi-zone public installation.",
       "overview": "The Virtual Factory was designed as an interactive sales-enablement and experiential-learning platform. It combined physical space, synchronized mobile devices, real-time visuals, and a story-driven representation of IoT concepts. The project evolved through several releases and culminated in Virtual Factory 3.0.",
@@ -550,7 +550,7 @@
         "Stable real-time performance during public use",
         "Strong visitor and client feedback",
         "Project success led to a larger expanded version",
-        "American Advertising Awards recognition",
+        "2020 American Advertising Awards Baltimore — Best in Show",
         "Internal tools and Houdini setups reused on later productions"
       ],
       "outcome": "The installation made complex digital-twin and IoT concepts approachable through a stable, public-facing AR experience and established reusable UI and procedural workflows for later productions.",
@@ -738,7 +738,14 @@
         "poster": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
         "caption": "Deloitte Virtual Factory — selected AR digital-twin footage.",
         "featured": true
-      }
+      },
+      "awards": [
+        {
+          "label": "2020 American Advertising Awards Baltimore — Best in Show",
+          "category": "Deloitte Digital’s Virtual Factory",
+          "url": "https://i95business.com/articles/content/baltimores-46th-annual-advertising-awards-show-celebrates-100-years-of-creativity-curiosity-and-love-of-the-unexpected-1430"
+        }
+      ]
     },
     {
       "id": "PRJ-005",
