@@ -128,4 +128,12 @@ main .about-layout dd { text-align: left; }
   .highlight-strip { grid-template-columns: 1fr 1fr; gap: 6px; }
   .highlight-strip.cols-3 { grid-template-columns: 1fr; }
 }
-.home-online-tools .browser-tool-feature[hidden]{display:none}
+/* Both cards reserve the same grid cell; the tallest sets a stable height. */
+.browser-tools-viewport{display:grid}
+.home-online-tools .browser-tools-viewport .browser-tool-feature{grid-area:1/1}
+.home-online-tools .browser-tools-viewport .browser-tool-feature[hidden]{display:grid;visibility:hidden;pointer-events:none}
+.browser-tools-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.browser-tools-nav button{padding:8px 12px;border:1px solid var(--atlas-border-strong);background:var(--atlas-bg-raised);color:var(--atlas-ink);font:inherit;font-size:var(--fs-status);cursor:pointer}
+.browser-tools-nav button:hover{background:var(--atlas-accent-hi);color:var(--atlas-bg-raised)}
+.browser-tools-nav button:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
+.browser-tools-nav output{font-size:var(--fs-status);color:var(--atlas-ink-soft)}

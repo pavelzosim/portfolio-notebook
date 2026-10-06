@@ -32,21 +32,27 @@
   if (!cards.length) return;
   let current = 0;
   let timer = null;
-  const show = () => cards.forEach((card, i) => {
+  const count = carousel.querySelector("[data-home-tools-count]");
+  const show = () => { cards.forEach((card, i) => {
     card.hidden = i !== current;
     card.inert = i !== current;
   });
+    if (count) count.textContent = `${String(current + 1).padStart(2, "0")} / ${String(cards.length).padStart(2, "0")}`;
+  };
   const stop = () => { if (timer !== null) clearInterval(timer); timer = null; };
   const start = () => {
     stop();
     if (document.hidden || cards.length < 2) return;
     timer = setInterval(() => {
       // Keep a keyboard-focused link available until the visitor leaves it.
-      if (carousel.contains(document.activeElement)) return;
+      if (cards[current].contains(document.activeElement)) return;
       current = (current + 1) % cards.length;
       show();
     }, 5000);
   };
+  const move = direction => { current = (current + direction + cards.length) % cards.length; show(); start(); };
+  carousel.querySelector('[data-home-tools-prev]')?.addEventListener('click', () => move(-1));
+  carousel.querySelector('[data-home-tools-next]')?.addEventListener('click', () => move(1));
   show();
   start();
   document.addEventListener('visibilitychange', start);
