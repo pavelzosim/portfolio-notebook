@@ -205,7 +205,21 @@
       initializeCarousel(document.querySelector('[data-project-carousel]'), mediaValues);
       document.querySelector('[data-location-gallery]').hidden = locationMedia.length === 0;
       initializeCarousel(document.querySelector('[data-location-carousel]'), locationMedia);
-      const hasMedia = Boolean(project.video?.src || project.externalVideo?.src || mediaValues.length || locationMedia.length);
+      const galleries = Array.isArray(project.mediaGalleries) ? project.mediaGalleries : [];
+      const galleryTemplate = document.querySelector('[data-location-gallery]');
+      galleries.forEach((gallery) => {
+        if (!Array.isArray(gallery.media) || !gallery.media.length) return;
+        const section = galleryTemplate.cloneNode(true);
+        section.removeAttribute('data-location-gallery');
+        section.hidden = false;
+        section.querySelector('h3').textContent = gallery.title;
+        const carousel = section.querySelector('[data-location-carousel]');
+        carousel.removeAttribute('data-location-carousel');
+        carousel.setAttribute('aria-label', `${gallery.title} carousel`);
+        initializeCarousel(carousel, gallery.media);
+        galleryTemplate.parentNode.append(section);
+      });
+      const hasMedia = Boolean(project.video?.src || project.externalVideo?.src || mediaValues.length || locationMedia.length || galleries.some(gallery => gallery.media?.length));
       optional('media', hasMedia);
       const outcomeIndex = 4 + [hasRole, hasTechnical, hasMedia].filter(Boolean).length;
       text('[data-outcome-nav]', String(outcomeIndex).padStart(2, '0'));

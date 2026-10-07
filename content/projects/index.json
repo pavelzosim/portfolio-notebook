@@ -621,183 +621,7 @@
       "outcome": "The installation made complex digital-twin and IoT concepts approachable through a stable, public-facing AR experience and established reusable UI and procedural workflows for later productions.",
       "sourceUrl": "https://www.pavelzosim.com/projects/deloitte-virtual-factory",
       "image": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
-      "media": [
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo1",
-          "caption": "Promo / DF promo1"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_01.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 01",
-          "caption": "Environments / DF 01"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_02.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 02",
-          "caption": "Environments / DF 02"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_03.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 03",
-          "caption": "Environments / DF 03"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_04.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 04",
-          "caption": "Environments / DF 04"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_05.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 05",
-          "caption": "Environments / DF 05"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_06.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 06",
-          "caption": "Environments / DF 06"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_07.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 07",
-          "caption": "Environments / DF 07"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/fvx/duckinstorm.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / duckinstorm",
-          "caption": "VFX / duckinstorm"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/fvx/image_044_0000.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / image 044 0000",
-          "caption": "VFX / image 044 0000"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/fvx/modeling.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / modeling",
-          "caption": "VFX / modeling"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/posters/A3_Poster_Print_BubbleDuck.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / A3 Poster Print BubbleDuck",
-          "caption": "Posters / A3 Poster Print BubbleDuck"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/posters/A3_Poster_Print_DuckKola.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / A3 Poster Print DuckKola",
-          "caption": "Posters / A3 Poster Print DuckKola"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/posters/Poster_RoboDuck_A3_v1.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / Poster RoboDuck A3 v1",
-          "caption": "Posters / Poster RoboDuck A3 v1"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo2.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo2",
-          "caption": "Promo / DF promo2"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo3.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo3",
-          "caption": "Promo / DF promo3"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo4.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo4",
-          "caption": "Promo / DF promo4"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/Bubblmaker2000.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / Bubblmaker2000",
-          "caption": "World-space UI / Bubblmaker2000"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/CC_Display_03.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / CC Display 03",
-          "caption": "World-space UI / CC Display 03"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/CC_Display_06.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / CC Display 06",
-          "caption": "World-space UI / CC Display 06"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DF_02.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DF 02",
-          "caption": "World-space UI / DF 02"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DigitalProductRealization_Display01.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DigitalProductRealization Display01",
-          "caption": "World-space UI / DigitalProductRealization Display01"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DynamicCrewPlanning_Display_01.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DynamicCrewPlanning Display 01",
-          "caption": "World-space UI / DynamicCrewPlanning Display 01"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_008_0000.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 008 0000",
-          "caption": "World-space UI / image 008 0000"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_010_0000.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 010 0000",
-          "caption": "World-space UI / image 010 0000"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_034_0030.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 034 0030",
-          "caption": "World-space UI / image 034 0030"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_035_0030.jpg",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 035 0030",
-          "caption": "World-space UI / image 035 0030"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/Scanner_approval.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / Scanner approval",
-          "caption": "World-space UI / Scanner approval"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/seq_display0266.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / seq display0266",
-          "caption": "World-space UI / seq display0266"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/StoreSubmission_AppStore_2208x1242_09.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / StoreSubmission AppStore 2208x1242 09",
-          "caption": "World-space UI / StoreSubmission AppStore 2208x1242 09"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/StoreSubmission_AppStore_2208x1242_10.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / StoreSubmission AppStore 2208x1242 10",
-          "caption": "World-space UI / StoreSubmission AppStore 2208x1242 10"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_display_Configuration.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T display Configuration",
-          "caption": "World-space UI / T display Configuration"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_display_DesignerTable_02.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T display DesignerTable 02",
-          "caption": "World-space UI / T display DesignerTable 02"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_ui_DisScrGraph_DesignPhase_Display01.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T ui DisScrGraph DesignPhase Display01",
-          "caption": "World-space UI / T ui DisScrGraph DesignPhase Display01"
-        },
-        {
-          "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_ui_DisScrGraph_DesignPhase_Display02_phase01.png",
-          "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T ui DisScrGraph DesignPhase Display02 phase01",
-          "caption": "World-space UI / T ui DisScrGraph DesignPhase Display02 phase01"
-        }
-      ],
+      "media": [],
       "video": {
         "src": "/public/media/projects/deloitte-virtual-factory/Environments/01%20-%20image_023_[0030-0090].mp4",
         "poster": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
@@ -809,6 +633,208 @@
           "label": "2020 American Advertising Awards Baltimore — Best in Show",
           "category": "Deloitte Digital’s Virtual Factory",
           "url": "https://i95business.com/articles/content/baltimores-46th-annual-advertising-awards-show-celebrates-100-years-of-creativity-curiosity-and-love-of-the-unexpected-1430"
+        }
+      ],
+      "mediaGalleries": [
+        {
+          "title": "Environments",
+          "media": [
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_01.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 01",
+              "caption": "Environments / DF 01"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_02.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 02",
+              "caption": "Environments / DF 02"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_03.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 03",
+              "caption": "Environments / DF 03"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_04.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 04",
+              "caption": "Environments / DF 04"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_05.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 05",
+              "caption": "Environments / DF 05"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_06.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 06",
+              "caption": "Environments / DF 06"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/Environments/DF_07.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Environments / DF 07",
+              "caption": "Environments / DF 07"
+            }
+          ]
+        },
+        {
+          "title": "World-space UI",
+          "media": [
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/Bubblmaker2000.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / Bubblmaker2000",
+              "caption": "World-space UI / Bubblmaker2000"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/CC_Display_03.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / CC Display 03",
+              "caption": "World-space UI / CC Display 03"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/CC_Display_06.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / CC Display 06",
+              "caption": "World-space UI / CC Display 06"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DF_02.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DF 02",
+              "caption": "World-space UI / DF 02"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DigitalProductRealization_Display01.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DigitalProductRealization Display01",
+              "caption": "World-space UI / DigitalProductRealization Display01"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/DynamicCrewPlanning_Display_01.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / DynamicCrewPlanning Display 01",
+              "caption": "World-space UI / DynamicCrewPlanning Display 01"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_008_0000.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 008 0000",
+              "caption": "World-space UI / image 008 0000"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_010_0000.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 010 0000",
+              "caption": "World-space UI / image 010 0000"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_034_0030.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 034 0030",
+              "caption": "World-space UI / image 034 0030"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/image_035_0030.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / image 035 0030",
+              "caption": "World-space UI / image 035 0030"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/Scanner_approval.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / Scanner approval",
+              "caption": "World-space UI / Scanner approval"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/seq_display0266.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / seq display0266",
+              "caption": "World-space UI / seq display0266"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/StoreSubmission_AppStore_2208x1242_09.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / StoreSubmission AppStore 2208x1242 09",
+              "caption": "World-space UI / StoreSubmission AppStore 2208x1242 09"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/StoreSubmission_AppStore_2208x1242_10.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / StoreSubmission AppStore 2208x1242 10",
+              "caption": "World-space UI / StoreSubmission AppStore 2208x1242 10"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_display_Configuration.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T display Configuration",
+              "caption": "World-space UI / T display Configuration"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_display_DesignerTable_02.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T display DesignerTable 02",
+              "caption": "World-space UI / T display DesignerTable 02"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_ui_DisScrGraph_DesignPhase_Display01.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T ui DisScrGraph DesignPhase Display01",
+              "caption": "World-space UI / T ui DisScrGraph DesignPhase Display01"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/world%20space%20ui%20Screens/T_ui_DisScrGraph_DesignPhase_Display02_phase01.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — World-space UI / T ui DisScrGraph DesignPhase Display02 phase01",
+              "caption": "World-space UI / T ui DisScrGraph DesignPhase Display02 phase01"
+            }
+          ]
+        },
+        {
+          "title": "VFX",
+          "media": [
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/fvx/duckinstorm.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / duckinstorm",
+              "caption": "VFX / duckinstorm"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/fvx/image_044_0000.jpg",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / image 044 0000",
+              "caption": "VFX / image 044 0000"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/fvx/modeling.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — VFX / modeling",
+              "caption": "VFX / modeling"
+            }
+          ]
+        },
+        {
+          "title": "Posters / Print",
+          "media": [
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/posters/A3_Poster_Print_BubbleDuck.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / A3 Poster Print BubbleDuck",
+              "caption": "Posters / A3 Poster Print BubbleDuck"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/posters/A3_Poster_Print_DuckKola.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / A3 Poster Print DuckKola",
+              "caption": "Posters / A3 Poster Print DuckKola"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/posters/Poster_RoboDuck_A3_v1.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Posters / Poster RoboDuck A3 v1",
+              "caption": "Posters / Poster RoboDuck A3 v1"
+            }
+          ]
+        },
+        {
+          "title": "Promo",
+          "media": [
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo1",
+              "caption": "Promo / DF promo1"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo2.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo2",
+              "caption": "Promo / DF promo2"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo3.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo3",
+              "caption": "Promo / DF promo3"
+            },
+            {
+              "src": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo4.png",
+              "alt": "Deloitte Virtual Factory — AR Digital Twin — Promo / DF promo4",
+              "caption": "Promo / DF promo4"
+            }
+          ]
         }
       ]
     },
