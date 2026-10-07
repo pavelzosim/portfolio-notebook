@@ -456,99 +456,120 @@
       "outcome": "The resulting system functioned as both a stable continuous presentation and a proof of concept for larger aviation-focused interactive visualization tools.",
       "sourceUrl": "https://www.pavelzosim.com/projects/airport-interaction-screen",
       "image": "/public/media/projects/airport-interaction-screen/FAA_3DAirport_D_arnold.png",
-      "media": [
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_3DAirport_D_arnold.png",
-          "alt": "Airport Operations Interaction Screen — FAA 3DAirport D arnold",
-          "caption": "FAA 3DAirport D arnold"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/asset-1f799418e32a7664.png",
-          "alt": "Airport Operations Interaction Screen — asset 1f799418e32a7664",
-          "caption": "asset 1f799418e32a7664"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_airport.png",
-          "alt": "Airport Operations Interaction Screen — FAA airport",
-          "caption": "FAA airport"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_markings.png",
-          "alt": "Airport Operations Interaction Screen — FAA markings",
-          "caption": "FAA markings"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_R21Arnold.png",
-          "alt": "Airport Operations Interaction Screen — FAA R21Arnold",
-          "caption": "FAA R21Arnold"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb1.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb1",
-          "caption": "FAA sb1"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb2.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb2",
-          "caption": "FAA sb2"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb3.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb3",
-          "caption": "FAA sb3"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb4.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb4",
-          "caption": "FAA sb4"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb5.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb5",
-          "caption": "FAA sb5"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb6.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb6",
-          "caption": "FAA sb6"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb7.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb7",
-          "caption": "FAA sb7"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_sb8.png",
-          "alt": "Airport Operations Interaction Screen — FAA sb8",
-          "caption": "FAA sb8"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_scheme.png",
-          "alt": "Airport Operations Interaction Screen — FAA scheme",
-          "caption": "FAA scheme"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/FAA_ui.png",
-          "alt": "Airport Operations Interaction Screen — FAA ui",
-          "caption": "FAA ui"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/Screenshot%202024-06-18%20120155.png",
-          "alt": "Airport Operations Interaction Screen — Screenshot 2024 06 18 120155",
-          "caption": "Screenshot 2024 06 18 120155"
-        },
-        {
-          "src": "/public/media/projects/airport-interaction-screen/Screenshot%202025-11-24%20125049.png",
-          "alt": "Airport Operations Interaction Screen — Screenshot 2025 11 24 125049",
-          "caption": "Screenshot 2025 11 24 125049"
-        }
-      ],
+      "media": [],
       "video": {
         "src": "/public/media/projects/airport-interaction-screen/17%20-%20wix_faa.mp4",
         "poster": "/public/media/projects/airport-interaction-screen/FAA_3DAirport_D_arnold.png",
         "caption": "Airport Operations Interaction Screen — selected installation footage.",
         "featured": true
-      }
+      },
+      "mediaGalleries": [
+        {
+          "title": "Final renders",
+          "media": [
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_3DAirport_D_arnold.png",
+              "alt": "Airport Operations Interaction Screen — Aircraft — takeoff render",
+              "caption": "Aircraft — takeoff render"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_R21Arnold.png",
+              "alt": "Airport Operations Interaction Screen — Aircraft — front view on the taxiway",
+              "caption": "Aircraft — front view on the taxiway"
+            }
+          ]
+        },
+        {
+          "title": "Storyboard / Camera views",
+          "media": [
+            {
+              "src": "/public/media/projects/airport-interaction-screen/asset-1f799418e32a7664.png",
+              "alt": "Airport Operations Interaction Screen — Airport — terminal and apron overview",
+              "caption": "Airport — terminal and apron overview"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb1.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 01",
+              "caption": "Storyboard — camera view 01"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb2.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 02",
+              "caption": "Storyboard — camera view 02"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb3.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 03",
+              "caption": "Storyboard — camera view 03"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb4.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 04",
+              "caption": "Storyboard — camera view 04"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb5.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 05",
+              "caption": "Storyboard — camera view 05"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb6.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 06",
+              "caption": "Storyboard — camera view 06"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb7.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 07",
+              "caption": "Storyboard — camera view 07"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_sb8.png",
+              "alt": "Airport Operations Interaction Screen — Storyboard — camera view 08",
+              "caption": "Storyboard — camera view 08"
+            }
+          ]
+        },
+        {
+          "title": "UI / Airport layout",
+          "media": [
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_airport.png",
+              "alt": "Airport Operations Interaction Screen — Airport layout — isometric view",
+              "caption": "Airport layout — isometric view"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_markings.png",
+              "alt": "Airport Operations Interaction Screen — Airport markings and visual elements",
+              "caption": "Airport markings and visual elements"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_scheme.png",
+              "alt": "Airport Operations Interaction Screen — Airport layout — top view",
+              "caption": "Airport layout — top view"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/FAA_ui.png",
+              "alt": "Airport Operations Interaction Screen — Aircraft selection interface",
+              "caption": "Aircraft selection interface"
+            }
+          ]
+        },
+        {
+          "title": "Production / Work in progress",
+          "media": [
+            {
+              "src": "/public/media/projects/airport-interaction-screen/Screenshot%202024-06-18%20120155.png",
+              "alt": "Airport Operations Interaction Screen — Terrain setup in the editor",
+              "caption": "Terrain setup in the editor"
+            },
+            {
+              "src": "/public/media/projects/airport-interaction-screen/Screenshot%202025-11-24%20125049.png",
+              "alt": "Airport Operations Interaction Screen — Vegetation asset preview",
+              "caption": "Vegetation asset preview"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "PRJ-004",
