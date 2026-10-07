@@ -85,6 +85,21 @@ def main() -> int:
 
     registry = json.loads((SITE / "content" / "posts" / "index.json").read_text(encoding="utf-8"))
     records = [record for record in registry["records"] if record.get("state") == "published" and record.get("indexable", True)]
+    projects = json.loads((SITE / "content/projects/index.json").read_text(encoding="utf-8"))["projects"]
+    for view, expected in (
+        ("blog", [record["localPath"] for record in records]),
+        ("tools", [record["localPath"] for record in records if record.get("resource")]),
+        ("projects", [f"/projects/{project['slug']}/" for project in projects]),
+    ):
+        document = (SITE / view / "index.html").read_text(encoding="utf-8")
+        parser = DocumentParser()
+        parser.feed(document)
+        links = {value for attribute, value in parser.references if attribute == "href"}
+        for href in expected:
+            if href not in links:
+                errors.append(f"Missing static catalogue link in {view}/: {href}")
+        if len(re.findall(r"<h1(?:\s|>)", document, re.I)) != 1:
+            errors.append(f"Catalogue must have one static h1: {view}/")
     for record in records:
         route = SITE / "post" / record["slug"] / "index.html"
         text = route.read_text(encoding="utf-8")

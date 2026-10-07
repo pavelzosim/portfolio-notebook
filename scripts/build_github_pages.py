@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from html import escape, unescape
 import hashlib
 import posixpath
 import json
@@ -224,6 +225,45 @@ def reuse_identical_media() -> None:
                 page.write_text(changed, encoding="utf-8", newline="\n")
 
 
+def render_index_template(template: str, view: str, records: list[dict], document: str) -> str:
+    """Keep catalogue links and content available before JavaScript executes."""
+    if view == "tools":
+        records = [record for record in records if record.get("resource")]
+    records = sorted(records, key=lambda record: record.get("siteDate") or record.get("datePublished") or "", reverse=True)
+    cards = []
+    for record in records:
+        project = view == "projects"
+        href = f"/projects/{record['slug']}/" if project else record["localPath"]
+        kind = "project" if project else record["kind"]
+        state = record.get("status", "published") if project else record["state"]
+        tags = ([tag.strip().lower() for tag in record["type"].split("/") + record["tools"][:3]]
+                if project else record.get("tags", []))
+        image = ('<img src="' + escape(record["image"], quote=True) + '" alt="'
+                 + escape(record.get("imageAlt") or record["title"] + " preview", quote=True)
+                 + '" loading="lazy">') if record.get("image") else '<span>NO PREVIEW</span>'
+        awards = record.get("awards", [])
+        awards_html = ('<div class="content-project-awards">' + ''.join('<span>' + escape(award["label"]) + '</span>' for award in awards) + '</div>') if awards else ''
+        cards.append(
+            '<a class="content-record" role="listitem" href="' + escape(href, quote=True) + '">'
+            '<div class="content-preview">' + image + '</div><div class="content-record-body">'
+            '<div class="content-record-meta"><span class="record-id">' + escape(record["id"]) + '</span>'
+            '<span class="record-kind">' + escape(kind.upper()) + '</span></div><strong>'
+            + escape(record["title"]) + '</strong><p>' + escape(record["summary"]) + '</p>' + awards_html
+            + '<div class="content-tags">' + ''.join('<span>#' + escape(tag) + '</span>' for tag in tags)
+            + '</div></div><div class="content-state ' + escape(state.lower(), quote=True) + '"><span>'
+            + escape(state) + '</span><b>OPEN →</b></div></a>'
+        )
+    template = template.replace('<div class="content-log" data-records role="list"></div>',
+                                '<div class="content-log" data-records role="list">' + ''.join(cards) + '</div>')
+    title = unescape(re.search(r'<title>(.*?)</title>', document, re.S).group(1)).removesuffix(' / Pavel Zosim')
+    description = unescape(re.search(r'<meta name="description" content="([^"]*)"', document).group(1))
+    for marker, value in (("data-index-title", title), ("data-index-dek", description),
+                          ("data-list-title", title), ("data-list-count", f"{len(records):02} RECORDS"),
+                          ("data-search-output", f"{len(records):02} records"), ("data-meta-count", f"{len(records):02}")):
+        template = re.sub(r'(<[^>]+\b' + marker + r'[^>]*>)[^<]*', lambda match: match.group(1) + escape(value), template)
+    return template
+
+
 def prepare_static_loading(records: list[dict]) -> None:
     """Embed catalogue inputs and flatten local CSS imports for a cold load."""
     posts = json.dumps({"records": records}, ensure_ascii=False).replace("<", "\\u003c")
@@ -236,7 +276,9 @@ def prepare_static_loading(records: list[dict]) -> None:
         view = re.search(r'data-content-index=["\']([^"\']+)', document)
         if view:
             data = posts if view.group(1) != "projects" else (OUTPUT / "content/projects/index.json").read_text(encoding="utf-8").replace("<", "\\u003c")
-            document = re.sub(r'(<body\b[^>]*>)', lambda match: match.group(1) + template + '<script type="application/json" id="site-index-registry">' + data + '</script>', document, count=1)
+            index_records = records if view.group(1) != "projects" else json.loads(data)["projects"]
+            rendered = render_index_template(template, view.group(1), index_records, document)
+            document = re.sub(r'(<body\b[^>]*>)', lambda match: match.group(1) + rendered + '<script type="application/json" id="site-index-registry">' + data + '</script>', document, count=1)
             document = document.replace("content-index.js?v=8", "content-index.js?v=9")
         # One request per local stylesheet entry instead of serial @import chains.
         seen: set[Path] = set()

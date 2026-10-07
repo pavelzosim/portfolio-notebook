@@ -194,6 +194,9 @@
     })
     .catch((error) => {
       document.body.dataset.error = error.message;
-      document.body.textContent = 'Content index unavailable.';
+      // Retain the built catalogue if enhancement fails; its links still work.
+      if (!document.querySelector('[data-records] a[href]')) {
+        document.body.textContent = 'Content index unavailable.';
+      }
     });
 })();
