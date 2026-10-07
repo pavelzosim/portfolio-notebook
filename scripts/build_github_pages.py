@@ -173,6 +173,31 @@ def materialize_post_routes() -> list[dict]:
     return records
 
 
+def materialize_legacy_redirects() -> None:
+    """GitHub Pages fallback: instant HTML refresh, never an HTTP 301 claim."""
+    redirects = json.loads((ROOT / "content/redirects.json").read_text(encoding="utf-8"))
+    for source, target in redirects.items():
+        if any(not re.fullmatch(r"/(?:[a-z0-9-]+/)+", route) for route in (source, target)):
+            raise RuntimeError(f"Invalid redirect route: {source} -> {target}")
+        destination = OUTPUT / source.lstrip("/") / "index.html"
+        target_page = OUTPUT / target.lstrip("/") / "index.html"
+        if destination.exists() or target in redirects or not target_page.is_file():
+            raise RuntimeError(f"Redirect collision, chain, or missing target: {source} -> {target}")
+        canonical = "https://www.pavelzosim.com" + target
+        if f'href="{canonical}"' not in target_page.read_text(encoding="utf-8"):
+            raise RuntimeError(f"Redirect target is not canonical: {target}")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(
+            '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width,initial-scale=1">'
+            '<title>Page moved / Pavel Zosim — ' + escape(source.strip("/")) + '</title>'
+            '<meta http-equiv="refresh" content="0;url=' + canonical + '">'
+            '<link rel="canonical" href="' + canonical + '"></head>'
+            '<body data-atlas-redirect><h1>Page moved</h1><p>'
+            '<a href="' + target + '">Continue to the current page</a>.</p></body></html>\n',
+            encoding="utf-8", newline="\n")
+
+
 def write_discovery_files(records: list[dict], noindex: bool) -> None:
     domain = "https://www.pavelzosim.com"
     if noindex:
@@ -335,7 +360,8 @@ def transform_site(base_path: str, noindex: bool) -> None:
         if path.suffix.lower() == ".html":
             text = add_favicon(text)
             text = add_clock(text)
-            text = add_analytics(text)
+            if 'data-atlas-redirect' not in text:
+                text = add_analytics(text)
             relative = path.relative_to(OUTPUT).as_posix()
             if noindex or relative.startswith("content/templates/") or relative in {"404.html", "blog/style-guide/index.html"}:
                 text = add_noindex(text)
@@ -373,7 +399,7 @@ def validate_site(base_path: str, noindex: bool) -> None:
         text = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html" and re.search(r"<head(?:\s|>)", text, re.IGNORECASE):
             html_documents += 1
-            if 'data-atlas-analytics' not in text:
+            if 'data-atlas-analytics' not in text and 'data-atlas-redirect' not in text:
                 raise RuntimeError(f"Missing analytics loader in {path.relative_to(OUTPUT)}")
             if noindex and 'name="robots" content="noindex, nofollow"' not in text:
                 raise RuntimeError(f"Missing noindex in {path.relative_to(OUTPUT)}")
@@ -413,6 +439,7 @@ def main() -> None:
     copy_site()
     records = materialize_post_routes()
     prepare_static_loading(records)
+    materialize_legacy_redirects()
     reuse_identical_media()
     transform_site(base_path, args.noindex)
     write_discovery_files(records, args.noindex)

@@ -71,7 +71,7 @@ def main() -> int:
             if target is not None and not target.exists():
                 errors.append(f"Broken internal reference in {relative}: {value}")
         canonical = re.search(r'<link\b[^>]*rel=["\']canonical["\'][^>]*href=["\']([^"\']+)', text, re.I)
-        if canonical:
+        if canonical and 'data-atlas-redirect' not in text:
             url = canonical.group(1)
             if url in canonicals:
                 errors.append(f"Duplicate canonical {url}: {canonicals[url]} and {relative}")
@@ -130,7 +130,16 @@ def main() -> int:
                 errors.append(f"Invalid online tool JSON-LD: {record['slug']}")
         if not (SITE / record["image"].lstrip("/")).is_file():
             errors.append(f"Missing online tool social image: {record['slug']}")
-    sitemap_count = len(re.findall(r"<url>", (SITE / "sitemap.xml").read_text(encoding="utf-8")))
+    sitemap = (SITE / "sitemap.xml").read_text(encoding="utf-8")
+    redirects = json.loads((SITE / "content/redirects.json").read_text(encoding="utf-8"))
+    for source, target in redirects.items():
+        document = (SITE / source.lstrip("/") / "index.html").read_text(encoding="utf-8")
+        canonical = "https://www.pavelzosim.com" + target
+        if f'content="0;url={canonical}"' not in document or f'rel="canonical" href="{canonical}"' not in document:
+            errors.append(f"Invalid legacy redirect: {source}")
+        if f'<loc>https://www.pavelzosim.com{source}</loc>' in sitemap or 'data-atlas-analytics' in document:
+            errors.append(f"Redirect must not enter sitemap or collect analytics: {source}")
+    sitemap_count = len(re.findall(r"<url>", sitemap))
     try:
         validate_discovery()
     except (RuntimeError, OSError) as error:

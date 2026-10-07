@@ -42,7 +42,7 @@ The current GitHub Pages workflow publishes production at `https://www.pavelzosi
 - Pick one trailing-slash convention and use it in canonical tags, internal links, structured data, and the sitemap.
 - Remove tracking and preview parameters such as `?rev=`, `?v=`, and `utm_*` from canonical URLs.
 - All internal links must point to the canonical URL, never a preview or duplicate path.
-- If a URL changes, provide a real server-side redirect before publishing the replacement. A meta refresh or JavaScript redirect is not the canonical migration mechanism.
+- If a URL changes, prefer a real server-side permanent redirect. On the current GitHub Pages hosting, where custom HTTP redirects are unavailable, the owner-approved fallback is an instant HTML meta refresh with a canonical tag and a visible link to the replacement. This is not an HTTP 301. Keep these legacy mappings in `content/redirects.json`, omit the old URLs from the sitemap, and do not collect analytics on redirect pages. Use server-side 301/308 redirects if a suitable hosting layer becomes available.
 
 The final build must generate actual files at the canonical routes. A canonical tag pointing to `/post/example` is insufficient when the deployed page exists only at `/content/posts/atlas-html/example.html`.
 
