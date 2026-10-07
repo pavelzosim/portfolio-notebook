@@ -162,9 +162,8 @@
         source.href = externalVideo.sourceUrl;
         source.textContent = externalVideo.sourceLabel;
       }
-      const carousel = document.querySelector('[data-project-carousel]');
-      const mediaTrack = document.querySelector('[data-media-track]');
-      const mediaValues = Array.isArray(project.media) ? project.media : [];
+      const initializeCarousel = (carousel, mediaValues) => {
+      const mediaTrack = carousel.querySelector('[data-media-track]');
       mediaTrack.replaceChildren(...mediaValues.map((record, mediaIndex) => {
         const figure = document.createElement('figure');
         const image = document.createElement('img');
@@ -200,7 +199,13 @@
         });
         showMedia(0);
       }
-      const hasMedia = Boolean(project.video?.src || mediaValues.length);
+      };
+      const mediaValues = Array.isArray(project.media) ? project.media : [];
+      const locationMedia = Array.isArray(project.locationMedia) ? project.locationMedia : [];
+      initializeCarousel(document.querySelector('[data-project-carousel]'), mediaValues);
+      document.querySelector('[data-location-gallery]').hidden = locationMedia.length === 0;
+      initializeCarousel(document.querySelector('[data-location-carousel]'), locationMedia);
+      const hasMedia = Boolean(project.video?.src || project.externalVideo?.src || mediaValues.length || locationMedia.length);
       optional('media', hasMedia);
       const outcomeIndex = 4 + [hasRole, hasTechnical, hasMedia].filter(Boolean).length;
       text('[data-outcome-nav]', String(outcomeIndex).padStart(2, '0'));

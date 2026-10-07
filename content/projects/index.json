@@ -226,7 +226,64 @@
         "sourceLabel": "Spanish edition on NASA+",
         "src": "/public/media/projects/nasa-first-woman/frank-rubio-first-woman-iss-en.mp4",
         "poster": "/public/media/projects/nasa-first-woman/frank-rubio-first-woman-iss-poster.jpg"
-      }
+      },
+      "locationMedia": [
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-12.webp",
+          "alt": "NASA First Woman — Lunar base — rover, habitat and robot assistant",
+          "caption": "Lunar base — rover, habitat and robot assistant"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-07.webp",
+          "alt": "NASA First Woman — Lunar habitat exterior and exploration vehicles",
+          "caption": "Lunar habitat exterior and exploration vehicles"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-06.webp",
+          "alt": "NASA First Woman — Lunar surface — advanced power systems",
+          "caption": "Lunar surface — advanced power systems"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-13.webp",
+          "alt": "NASA First Woman — Lunar exploration — rover and resource-utilization equipment",
+          "caption": "Lunar exploration — rover and resource-utilization equipment"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-14.webp",
+          "alt": "NASA First Woman — Astronaut and lunar drilling equipment",
+          "caption": "Astronaut and lunar drilling equipment"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-12b.webp",
+          "alt": "NASA First Woman — Robot assistant at the lunar base",
+          "caption": "Robot assistant at the lunar base"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-02.webp",
+          "alt": "NASA First Woman — Interior — vegetation laboratory and crew facilities",
+          "caption": "Interior — vegetation laboratory and crew facilities"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-03.webp",
+          "alt": "NASA First Woman — Interior — floating astronaut illustrations",
+          "caption": "Interior — floating astronaut illustrations"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-01.webp",
+          "alt": "NASA First Woman — Robot assistant and interior control panels",
+          "caption": "Robot assistant and interior control panels"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-16.webp",
+          "alt": "NASA First Woman — Interior — overhead hatch and display panels",
+          "caption": "Interior — overhead hatch and display panels"
+        },
+        {
+          "src": "/public/media/projects/nasa-first-woman/locations/nasa-first-woman-location-15.webp",
+          "alt": "NASA First Woman — Crew seats and communications area",
+          "caption": "Crew seats and communications area"
+        }
+      ]
     },
     {
       "id": "PRJ-002",

@@ -230,3 +230,6 @@
   .project-carousel-bar button:last-child { justify-self: end; }
   .project-site .function-bar { grid-template-columns: repeat(6, minmax(42px, 1fr)); }
 }
+
+.project-location-gallery { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line2); }
+.project-location-gallery h3 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
