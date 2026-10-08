@@ -2,9 +2,12 @@
 
 /* Stable slogan geometry; symbols crossfade every five seconds. */
 .shell-slogan { display: inline-flex; align-items: center; gap: .45em; white-space: nowrap; }
-.shell-slogan .slogan-symbol { display: inline-grid; width: 1.2em; height: 1.6em; place-items: center; color: var(--red); }
+.shell-slogan .slogan-symbol { display: inline-grid; width: 1.2em; height: 1.6em; place-items: center; color: var(--ink); }
 .shell-slogan .slogan-symbol > span { grid-area: 1 / 1; color: inherit; animation: slogan-symbol-first 10s ease-in-out infinite; }
 .shell-slogan .slogan-symbol > span + span { animation-name: slogan-symbol-second; }
 @keyframes slogan-symbol-first { 0%, 44%, 100% { opacity: 1; transform: translateY(0); } 50%, 94% { opacity: 0; transform: translateY(-.25em); } }
 @keyframes slogan-symbol-second { 0%, 44%, 100% { opacity: 0; transform: translateY(.25em); } 50%, 94% { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .shell-slogan .slogan-symbol > span { animation: none; } .shell-slogan .slogan-symbol > span + span { display: none; } }
+
+.shell-id.shell-slogan b { color: var(--ink); font-weight: 400; }
+.shell-id.shell-slogan b:first-child { color: var(--muted); }
