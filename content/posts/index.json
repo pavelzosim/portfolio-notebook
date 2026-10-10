@@ -1126,25 +1126,24 @@
       "title": "Procedural Travel Resolution — From World Coordinates to Loaded Interiors",
       "kind": "article",
       "group": "procedural",
-      "summary": "From canonical addresses to loaded interiors: procedural portals, arrival anchors and return destinations in Unreal Engine.",
+      "summary": "Procedural portals in Houdini and Unreal Engine: address-aware travel, seeded interior variants, streamed levels, arrival anchors and reliable return routes.",
       "tags": [
         "procedural",
         "procedural-environments",
         "unreal",
         "houdini",
-        "shaders",
         "technical-art"
       ],
-      "image": "/public/media/posts/addresses-on-generated-buildings/material-address-digits-graph.jpg",
-      "imageAlt": "A street of generated panel buildings in Unreal Editor, each with a building number plate and numbered entrance labels",
+      "image": "/public/media/posts/procedural-travel-resolution/fig-03-portal-anchor-rules.png",
+      "imageAlt": "Generated entrance interior with procedural Portal and Anchor actors in Unreal Engine",
       "localPath": "/content/posts/atlas-html/procedural-travel-resolution.html",
       "sourceUrl": "https://www.pavelzosim.com/post/procedural-travel-resolution/",
       "publicUrl": "https://www.pavelzosim.com/post/procedural-travel-resolution/",
       "slug": "procedural-travel-resolution",
-      "datePublished": "2026-09-26",
-      "dateModified": "2026-10-05",
-      "state": "draft",
-      "indexable": false
+      "datePublished": "2026-10-10",
+      "dateModified": "2026-10-10",
+      "state": "published",
+      "indexable": true
     }
   ]
 }
