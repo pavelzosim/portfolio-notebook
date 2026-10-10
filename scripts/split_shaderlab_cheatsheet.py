@@ -166,11 +166,11 @@ def render_page(part: dict[str, str | None], fragment: str, toc: list[tuple[str,
   <script type="application/ld+json">{json.dumps(structured, ensure_ascii=False, separators=(",", ":"))}</script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
   <link rel="stylesheet" href="/styles/atlas.css?v=55">
-  <link rel="stylesheet" href="/styles/posts.css?v=18">
+  <link rel="stylesheet" href="/styles/posts.css?v=20">
 </head>
 <body id="top">
   <h1 class="seo-heading">{html.escape(title)}</h1>
-  <header class="article-shellbar"><a class="article-shellbar__id" href="/"><b>pavelzosim:</b><span>~/atlas_</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
+  <header class="article-shellbar"><a class="article-shellbar__id article-shell-slogan" href="/" aria-label="pavel-zosim: code × art → automate — Home"><span class="slogan-word" style="font-weight:400">pavel-zosim:</span> <span class="slogan-word" style="font-weight:400">code</span> <span class="slogan-symbol" aria-hidden="true"><span>×</span><span>+</span></span> <span class="slogan-word" style="font-weight:400">art</span> <span class="slogan-symbol" aria-hidden="true"><span>→</span><span>⇒</span></span> <span class="slogan-word" style="font-weight:400">automate</span></a><nav aria-label="Primary"><a href="/projects/">Projects</a><span class="article-shellbar__divider">/</span><a href="/#notes">Notes</a><span class="article-shellbar__divider">/</span><a href="/tools/">Tools</a><span class="article-shellbar__divider">/</span><a href="/blog/" aria-current="page">Blog</a><span class="article-shellbar__divider">/</span><a href="/#about">About</a><span class="article-shellbar__divider">/</span><a href="/#contacts">Contacts</a></nav><a class="article-shellbar__status" href="/#contacts"><span>●</span>SYS.ONLINE / UTC+3</a></header>
 
   <div class="atlas-container">
     <div id="site-passport"></div>
