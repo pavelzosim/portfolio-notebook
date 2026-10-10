@@ -90,6 +90,7 @@
 
       document.title = `${config.title} / Pavel Zosim`;
       document.querySelectorAll(`[data-nav="${view}"], [data-rail="${view}"]`).forEach((link) => link.classList.add('active'));
+      document.querySelectorAll('.rail > ol:first-of-type a').forEach(link => link.classList.toggle('active', link.getAttribute('href') === `/${view}/`));
       text('[data-index-file]', config.file);
       text('[data-index-title]', config.title);
       text('[data-list-title]', config.listTitle);

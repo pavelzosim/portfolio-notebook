@@ -1,5 +1,5 @@
 (() => {
-  const routes = { F10: '/projects/', F3: '#overview', F4: '#role', F5: '#media', F6: '#outcome', F8: '/#contacts' };
+  const routes = { F2: '/', F3: '/projects/', F4: '/#notes', F5: '/tools/', F9: '/online-tools/', F6: '/blog/', F7: '/#about', F8: '/#contacts', F10: '#content' };
   document.addEventListener('keydown', (event) => {
     if (routes[event.key]) {
       event.preventDefault();

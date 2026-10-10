@@ -181,6 +181,7 @@ html { scroll-padding-top: 48px; }
 
 /* Context changes the commands, never the footer-command visual system. */
 body > .function-bar {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   position: fixed;
   z-index: 30;
   right: 0;

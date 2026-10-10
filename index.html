@@ -39,7 +39,7 @@
   <script src="/scripts/gumroad-shelf.js?v=5" defer></script>
   <script src="/scripts/wireframe-shape.js?v=2" defer></script>
 </head>
-<body>
+<body class="home-page">
   <a class="skip" href="#content">Skip to content</a>
   <header class="shellbar">
     <a class="shell-id shell-slogan" href="#top" aria-label="pavel-zosim: code × art → automate — back to top"><b>pavel-zosim:</b> <b>code</b> <span class="slogan-symbol" aria-hidden="true"><span>×</span><span>+</span></span> <b>art</b> <span class="slogan-symbol" aria-hidden="true"><span>→</span><span>⇒</span></span> <b>automate</b></a>
@@ -282,6 +282,7 @@
     <a class="vc-button" href="#projects"><kbd>F3</kbd><span>Projects</span></a>
     <a class="vc-button" href="#notes"><kbd>F4</kbd><span>Notes</span></a>
     <a class="vc-button" href="#tools"><kbd>F5</kbd><span>Tools</span></a>
+    <a class="vc-button" href="#online-tools"><kbd>F9</kbd><span>Online Tools</span></a>
     <a class="vc-button" href="#blog"><kbd>F6</kbd><span>Blog</span></a>
     <a class="vc-button" href="#about"><kbd>F7</kbd><span>About</span></a>
     <a class="vc-button" href="#contacts"><kbd>F8</kbd><span>Contacts</span></a>
@@ -290,7 +291,7 @@
 
   <dialog id="helpDialog" aria-labelledby="helpTitle">
     <div class="dialog-title"><strong id="helpTitle">ATLAS COMMANDER / HELP</strong><button type="button" data-close-help aria-label="Close help">×</button></div>
-    <dl><div><dt>F1</dt><dd>Open this command reference</dd></div><div><dt>F3</dt><dd>Open Projects index</dd></div><div><dt>F4</dt><dd>Open Recent notes</dd></div><div><dt>F5</dt><dd>Open Tools and assets</dd></div><div><dt>F6</dt><dd>Open Blog index</dd></div><div><dt>F7</dt><dd>Open About record</dd></div><div><dt>F8</dt><dd>Open Contacts</dd></div><div><dt>F10</dt><dd>Return to document top</dd></div><div><dt>/</dt><dd>Focus live search</dd></div><div><dt>ESC</dt><dd>Clear search or close help</dd></div></dl>
+    <dl><div><dt>F1</dt><dd>Open this command reference</dd></div><div><dt>F3</dt><dd>Open Projects index</dd></div><div><dt>F4</dt><dd>Open Recent notes</dd></div><div><dt>F5</dt><dd>Open Tools and assets</dd></div><div><dt>F6</dt><dd>Open Blog index</dd></div><div><dt>F7</dt><dd>Open About record</dd></div><div><dt>F8</dt><dd>Open Contacts</dd></div><div><dt>F9</dt><dd>Open Online Tools</dd></div><div><dt>F10</dt><dd>Return to document top</dd></div><div><dt>/</dt><dd>Focus live search</dd></div><div><dt>ESC</dt><dd>Clear search or close help</dd></div></dl>
     <button class="dialog-ok vc-button" type="button" data-close-help><kbd>Enter</kbd> OK</button>
   </dialog>
 
@@ -300,7 +301,7 @@
       const result = document.querySelector('#searchResult');
       let records = [...document.querySelectorAll('.record-list > a, .project-index > a, .highlight-card')];
       const help = document.querySelector('#helpDialog');
-      const targets = { F3: '#projects', F4: '#notes', F5: '#tools', F6: '#blog', F7: '#about', F8: '#contacts', F10: '#top' };
+      const targets = { F3: '#projects', F4: '#notes', F5: '#tools', F6: '#blog', F7: '#about', F8: '#contacts', F9: '#online-tools', F10: '#top' };
       const navLinks = [...document.querySelectorAll('.shellbar nav a')];
       const railLinks = [...document.querySelectorAll('.rail ol a')];
       function filterRecords() {

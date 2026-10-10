@@ -6,7 +6,8 @@
     F5: '/tools/',
     F6: '/blog/',
     F7: '/#about',
-    F8: '/#contacts'
+    F8: '/#contacts',
+    F9: '/online-tools/'
   };
 
   document.addEventListener('keydown', (event) => {

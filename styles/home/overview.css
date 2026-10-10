@@ -155,3 +155,21 @@
   .profile-facts div:nth-last-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .profile-facts div:last-child { border-bottom: 0; }
 }
+
+/* A single quiet introduction; content stays visible without animation support. */
+@media (prefers-reduced-motion: no-preference) {
+  .home-page .hero-text .title-name,
+  .home-page .hero-text .title-role,
+  .home-page .hero-text .tagline-mark,
+  .home-page .hero-text .abstract {
+    animation: home-intro-arrive 650ms cubic-bezier(.2,.7,.2,1) backwards;
+  }
+  .home-page .hero-text .title-role { animation-delay: 70ms; }
+  .home-page .hero-text .tagline-mark { animation-delay: 140ms; }
+  .home-page .hero-text .abstract { animation-delay: 210ms; }
+}
+@keyframes home-intro-arrive {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.home-page > .function-bar { grid-template-columns: repeat(9, minmax(0, 1fr)); }

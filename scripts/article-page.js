@@ -134,8 +134,8 @@
       ['tools', 'assets', 'python-tools'].includes(String(record.group || '').toLowerCase())
     );
     const currentSection = isToolRecord
-      ? { number: '02', href: '/tools/', label: 'tools index', documentPath: '~/tools/assets' }
-      : { number: '03', href: '/blog/', label: 'blog index', documentPath: '~/blog/technical-notes' };
+      ? { number: '03', href: '/tools/', label: 'tools index', documentPath: '~/tools/assets' }
+      : { number: '05', href: '/blog/', label: 'blog index', documentPath: '~/blog/technical-notes' };
 
     // The Wix endpoint that used to hydrate Atlas passports is unavailable on the
     // static site. Fill the shared article header from the local registry instead.
@@ -204,8 +204,12 @@
     [
       ['00', 'Home / Overview', '/'],
       ['01', 'Projects', '/projects/'],
-      ['02', 'Tools and assets', '/tools/'],
-      ['03', 'Blog — Breakdowns and lessons', '/blog/']
+      ['02', 'Notes', '/#notes'],
+      ['03', 'Tools and assets', '/tools/'],
+      ['04', 'Online Tools', '/online-tools/'],
+      ['05', 'Blog', '/blog/'],
+      ['06', 'About', '/#about'],
+      ['07', 'Contacts', '/#contacts'],
     ].forEach(([number, label, href]) => {
       const item = make('li');
       const link = makeLink(href);
@@ -406,6 +410,7 @@
         ['F3', 'Projects', '/projects/'],
         ['F4', 'Notes', '/#notes'],
         ['F5', 'Tools', '/tools/'],
+        ['F9', 'Online Tools', '/online-tools/'],
         ['F6', 'Blog', '/blog/'],
         ['F7', 'About', '/#about'],
         ['F8', 'Contacts', '/#contacts'],
