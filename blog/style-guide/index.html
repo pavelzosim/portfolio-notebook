@@ -6,7 +6,7 @@
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles/atlas.css?v=61">
+  <link rel="stylesheet" href="/styles/atlas.css?v=82">
   <link rel="stylesheet" href="/styles/records.css?v=17">
   <link rel="stylesheet" href="/styles/style-guide.css?v=8">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
@@ -37,7 +37,7 @@
     <main id="content">
       <header class="guide-head">
         <p class="breadcrumb">/home/pavel/atlas/blog/style-guide.md</p>
-        <div class="guide-flags"><span>STATUS: CANONICAL</span><span>REV: 2026.08</span><span>LANG: EN</span></div>
+        <div class="guide-flags"><span>STATUS: CANONICAL</span><span>REV: 2026.10</span><span>LANG: EN</span></div>
         <h1>Atlas article style guide</h1>
         <p>This page is the visual source of truth for technical articles. Every example below uses the production classes loaded by the blog rather than a disconnected mock component.</p>
         <div class="guide-command"><span>$</span> compose_article --system atlas --content technical_rnd <b>_</b></div>
@@ -82,7 +82,7 @@
 
           <section class="guide-section" id="typography">
             <h2>03 Typography</h2>
-            <p>JetBrains Mono is used for interface, metadata, headings, code, and body copy. Editorial serif is reserved for homepage prose and does not enter technical article records.</p>
+            <p>JetBrains Mono is the default for interface, metadata, headings, code, and notebook body copy. Editorial serif is optional only for an explicitly editorial long-form passage; it must never appear accidentally through font fallback.</p>
             <div class="type-scale">
               <div><span class="type-label">H1 shell</span><span class="type-h1">Document title</span></div>
               <div><span class="type-label">H2</span><span class="type-h2">Content section heading</span></div>
@@ -204,6 +204,7 @@ float3 ApplyExposure(float3 color, float exposure)
           <section class="guide-section" id="actions">
             <h2>09 Actions and references</h2>
             <p>Use filled blue only for the primary action. The quiet white dither action is the default for index navigation and supporting links: visible as part of the interface, but subordinate to the article. Bracket buttons are compact secondary commands.</p>
+            <p class="guide-component-rule"><b>Canonical button component</b> — every dithered action uses <code>.atlas-btn-shadow &gt; .atlas-btn</code> from the shared framework. Page CSS may position the component, but must not redraw its face, hover state, or shadow. A section has at most one filled blue primary action.</p>
             <div class="atlas-btn-group guide-actions"><span class="atlas-btn-shadow"><a class="atlas-btn" href="#contract">Primary action</a></span><button class="atlas-btn atlas-btn--active" type="button">Active</button><button class="atlas-btn atlas-btn--ok" type="button">Validated</button><button class="atlas-btn atlas-btn--danger" type="button">Reset</button></div>
             <p><span class="atlas-btn-shadow"><a class="atlas-btn atlas-btn--quiet" href="/blog/">open blog index →</a></span></p>
             <p><a class="atlas-btn atlas-btn--ghost atlas-btn--sm" href="/blog/">Ghost link</a> <a class="atlas-btn atlas-btn--bracket atlas-btn--sm" href="/content/guides/article-authoring.md">LLM source</a></p>

@@ -9,6 +9,7 @@
     let field = { x: 0, y: 0, w: 0, h: 0 };
 
     const COLS = 13, ROWS = 6;
+    const BALL_SPEED = 8.5;
     let bricks = [];
     let brickW = 48, brickH = 22, gap = 8;
     let bricksLeft = 0;
@@ -98,7 +99,7 @@
       ball.x = paddle.x + paddle.w / 2;
       ball.y = paddle.y - ball.r - 2;
       const angle = -Math.PI / 2 + (Math.random() * 0.6 - 0.3);
-      const speed = 6.4;
+      const speed = BALL_SPEED;
       ball.vx = Math.cos(angle) * speed;
       ball.vy = Math.sin(angle) * speed;
       if (ball.vy > 0) ball.vy = -Math.abs(ball.vy);
@@ -125,15 +126,16 @@
     }
 
     function launch() {
+      if (state === 'gameover' || state === 'win') fullReset();
       if (state === 'ready' || ball.stuck) {
         ball.stuck = false;
         state = 'play';
-        if (ball.vy >= 0) ball.vy = -Math.abs(ball.vy || 6.4);
+        if (ball.vy >= 0) ball.vy = -Math.abs(ball.vy || BALL_SPEED);
       }
-      if (state === 'gameover' || state === 'win') fullReset();
     }
 
     function burst(x, y) {
+      if (reduced) return;
       for (let i = 0; i < 6; i++) {
         particles.push({
           x, y,
@@ -145,8 +147,6 @@
     }
 
     function update() {
-      if (reduced) return;
-
       const speed = 5.2;
       if (keys.left) paddle.x -= speed;
       if (keys.right) paddle.x += speed;
@@ -171,14 +171,19 @@
       if (hitsPanel(ball.x, ball.y, ball.r)) {
         const p = panelRect();
         const cx = p.x + p.w / 2, cy = p.y + p.h / 2;
-        // push out by dominant axis
         const dx = ball.x - cx, dy = ball.y - cy;
-        if (Math.abs(dx) / p.w > Math.abs(dy) / p.h) {
+        const overlapX = p.w / 2 + ball.r - Math.abs(dx);
+        const overlapY = p.h / 2 + ball.r - Math.abs(dy);
+        // Resolve the complete overlap before reversing velocity. A fixed
+        // nudge can leave a fast ball inside the panel and flip it forever.
+        if (overlapX < overlapY) {
+          const side = dx < 0 ? -1 : 1;
+          ball.x = cx + side * (p.w / 2 + ball.r + 0.5);
           ball.vx *= -1;
-          ball.x += Math.sign(dx) * 3;
         } else {
+          const side = dy < 0 ? -1 : 1;
+          ball.y = cy + side * (p.h / 2 + ball.r + 0.5);
           ball.vy *= -1;
-          ball.y += Math.sign(dy) * 3;
         }
       }
 
@@ -332,7 +337,7 @@
       ctx.fill();
       ctx.stroke();
       // motion ticks when moving
-      if (!ball.stuck && state === 'play') {
+      if (!reduced && !ball.stuck && state === 'play') {
         ctx.strokeStyle = 'rgba(42,42,42,0.25)';
         ctx.beginPath();
         ctx.moveTo(ball.x - ball.vx * 2, ball.y - ball.vy * 2);

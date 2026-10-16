@@ -2,7 +2,7 @@
 
 Status: canonical
 
-Revision: 2026.08
+Revision: 2026.10
 
 Visual reference: `/blog/style-guide/`
 
@@ -115,6 +115,14 @@ The dotted background remains visible around the document. Content surfaces may 
 - Demo reel video uses a deliberate wide frame rather than an incidental square thumbnail.
 - VFX flipbooks are square loop studies with controlled playback, posters, captions, and stable grid sizing.
 - Tables are for exact comparable values; diagrams are for topology, ownership, process, and spatial relationships.
+
+### Homepage profile components
+
+- `Technical specialization` uses one compact two-column definition grid. Each cell contains a system name, one concise capability sentence, and quiet tag controls.
+- Specialization tags use the shared border, paper, ink-muted, and accent tokens; they are filters or destinations, not primary actions.
+- The professional record is a single compact strip for role, experience, and location. It must not repeat facts already shown in Contacts.
+- The CV download is the only filled blue primary action in that profile context and must use `.atlas-btn-shadow > .atlas-btn` from the shared framework.
+- Contacts use one bordered panel: a brief invitation followed by email, Telegram, and LinkedIn. Do not repeat location, GitHub, YouTube, CV, or biography there when those already appear elsewhere.
 
 ## Motion and interaction
 
