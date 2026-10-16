@@ -3,6 +3,7 @@
   const recentTarget = document.querySelector('[data-home-recent]');
   const blogRecentTarget = document.querySelector('[data-blog-recent]');
   const envTarget = document.querySelector('[data-env-highlights]');
+  const vfxRecentTarget = document.querySelector('[data-vfx-recent]');
   if (!highlightTarget || !recentTarget) return;
 
   const make = (tag, className, text) => {
@@ -41,6 +42,12 @@
       if (envTarget) {
         const environment = data.records.filter(post => post.environmentHome && post.environmentHome.highlight);
         renderHighlights(envTarget, environmentSorted(environment));
+      }
+      if (vfxRecentTarget) {
+        window.atlasRenderRecentList(vfxRecentTarget, data.records, {
+          limit: 5,
+          filter: post => post.vfxHome && post.vfxHome.recent
+        });
       }
       window.atlasRenderRecentList(recentTarget, data.records, { limit: 5 });
       window.atlasRenderRecentList(blogRecentTarget, data.records, { limit: 5, filter: post => !post.resource });

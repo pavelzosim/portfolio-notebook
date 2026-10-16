@@ -138,6 +138,9 @@
         "rank": 30,
         "date": "2026.07"
       },
+  "vfxHome": {
+    "recent": true
+  },
       "publicUrl": "https://www.pavelzosim.com/post/procedural-sun-ue5-hlsl-compute-shaders/",
       "slug": "procedural-sun-ue5-hlsl-compute-shaders",
       "imageAlt": "Procedural Sun Surface — UE5 HLSL Compute Shader",
@@ -167,6 +170,9 @@
         "rank": 20,
         "date": "2026.08"
       },
+  "vfxHome": {
+    "recent": true
+  },
       "publicUrl": "https://www.pavelzosim.com/post/houdini-procedural-explosion-vfx/",
       "slug": "houdini-procedural-explosion-vfx",
       "imageAlt": "Houdini Procedural Explosion VFX",
@@ -889,7 +895,10 @@
       "datePublished": "2024-10-09",
       "dateModified": "2026-02-04",
       "state": "published",
-      "indexable": true
+  "indexable": true,
+  "vfxHome": {
+    "recent": true
+  }
     },
     {
       "id": "NOTE-013",
@@ -970,6 +979,9 @@
       "homepage": {
         "highlight": false,
         "rank": 40
+  },
+  "vfxHome": {
+    "recent": true
       }
     },
     {
