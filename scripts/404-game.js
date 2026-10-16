@@ -9,7 +9,8 @@
     let field = { x: 0, y: 0, w: 0, h: 0 };
 
     const COLS = 13, ROWS = 6;
-    const BALL_SPEED = 8.5;
+    const BASE_BALL_SPEED = 8.5;
+    let speedScale = 1;
     let bricks = [];
     let brickW = 48, brickH = 22, gap = 8;
     let bricksLeft = 0;
@@ -99,7 +100,7 @@
       ball.x = paddle.x + paddle.w / 2;
       ball.y = paddle.y - ball.r - 2;
       const angle = -Math.PI / 2 + (Math.random() * 0.6 - 0.3);
-      const speed = BALL_SPEED;
+      const speed = BASE_BALL_SPEED * speedScale;
       ball.vx = Math.cos(angle) * speed;
       ball.vy = Math.sin(angle) * speed;
       if (ball.vy > 0) ball.vy = -Math.abs(ball.vy);
@@ -117,6 +118,7 @@
       document.getElementById('score').textContent = String(score).padStart(4, '0');
       document.getElementById('bricksLeft').textContent = String(bricksLeft).padStart(3, '0');
       document.getElementById('livesNum').textContent = String(lives);
+      document.getElementById('speedValue').textContent = Math.round(speedScale * 100) + '%';
       const el = document.getElementById('lives');
       if (el) {
         el.innerHTML = [0,1,2].map(i =>
@@ -130,12 +132,11 @@
       if (state === 'ready' || ball.stuck) {
         ball.stuck = false;
         state = 'play';
-        if (ball.vy >= 0) ball.vy = -Math.abs(ball.vy || BALL_SPEED);
+        if (ball.vy >= 0) ball.vy = -Math.abs(ball.vy || BASE_BALL_SPEED * speedScale);
       }
     }
 
     function burst(x, y) {
-      if (reduced) return;
       for (let i = 0; i < 6; i++) {
         particles.push({
           x, y,
@@ -194,7 +195,7 @@
         ball.y = paddle.y - ball.r;
         const hit = (ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
         const angle = -Math.PI / 2 + hit * 1.05;
-        const spd = Math.min(11, Math.hypot(ball.vx, ball.vy) * 1.02 + 0.1);
+        const spd = Math.min(BASE_BALL_SPEED * speedScale * 1.35, Math.hypot(ball.vx, ball.vy) * 1.02 + 0.1);
         ball.vx = Math.cos(angle) * spd;
         ball.vy = Math.sin(angle) * spd;
       }
@@ -396,6 +397,25 @@
       if (e.target.closest('.panel')) return;
       launch();
     });
+
+    function setSpeedScale(next) {
+      const previous = speedScale;
+      speedScale = Math.max(0.6, Math.min(1.8, Math.round(next * 10) / 10));
+      if (!ball.stuck && state === 'play') {
+        const magnitude = Math.hypot(ball.vx, ball.vy) || BASE_BALL_SPEED * previous;
+        const target = magnitude * (speedScale / previous);
+        ball.vx = ball.vx / magnitude * target;
+        ball.vy = ball.vy / magnitude * target;
+      } else {
+        resetBall(true);
+      }
+      updateHud();
+    }
+
+    addEventListener('wheel', e => {
+      e.preventDefault();
+      setSpeedScale(speedScale + (e.deltaY < 0 ? 0.1 : -0.1));
+    }, { passive: false });
 
     document.getElementById('btnPlay')?.addEventListener('click', () => {
       if (state === 'gameover' || state === 'win') fullReset();

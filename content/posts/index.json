@@ -5,6 +5,7 @@
       "title": "From File to Pixel · Part 01: The Machine",
       "kind": "article",
       "group": "foundations",
+      "series": { "slug": "from-file-to-pixel", "title": "From File to Pixel", "order": 1 },
       "summary": "CPU, GPU, memory, draw calls, and the hardware path behind a rendered frame.",
       "tags": [
         "gpu",
@@ -33,6 +34,7 @@
       "title": "From File to Pixel · Part 02: The Pipeline",
       "kind": "article",
       "group": "foundations",
+      "series": { "slug": "from-file-to-pixel", "title": "From File to Pixel", "order": 2 },
       "summary": "How authored data becomes commands, buffers, and work for the graphics pipeline.",
       "tags": [
         "gpu",
@@ -55,6 +57,7 @@
       "title": "From File to Pixel · Part 03: The Data",
       "kind": "article",
       "group": "foundations",
+      "series": { "slug": "from-file-to-pixel", "title": "From File to Pixel", "order": 3 },
       "summary": "Alignment, packing, CPU–GPU transfer, and the cost of data representation.",
       "tags": [
         "gpu",
@@ -77,6 +80,7 @@
       "title": "From File to Pixel · Part 04: The Shader",
       "kind": "article",
       "group": "foundations",
+      "series": { "slug": "from-file-to-pixel", "title": "From File to Pixel", "order": 4 },
       "summary": "Shader compilation, instancing, compute work, and runtime execution.",
       "tags": [
         "hlsl",
@@ -99,6 +103,7 @@
       "title": "From File to Pixel · Part 05: The Engine",
       "kind": "article",
       "group": "foundations",
+      "series": { "slug": "from-file-to-pixel", "title": "From File to Pixel", "order": 5 },
       "summary": "Forward and deferred rendering across Unity URP, HDRP, and Unreal Engine.",
       "tags": [
         "unity",
@@ -219,6 +224,7 @@
       "title": "Houdini to Unreal — HISM and Blueprint Actor Routing",
       "kind": "breakdown",
       "group": "pipeline",
+      "series": { "slug": "procedural-environment-system", "title": "Procedural Environment System", "order": 2 },
       "summary": "A typed layer over the Houdini Engine API that routes procedural placements to Blueprint Actors or named HISM components in a shared container.",
       "tags": [
         "houdini",
@@ -247,6 +253,7 @@
       "title": "Controlled Procedurality — How a Maze Generator Became a Level Design System",
       "kind": "article",
       "group": "procedural",
+      "series": { "slug": "procedural-environment-system", "title": "Procedural Environment System", "order": 1 },
       "summary": "Procedural environment generation and level design in Houdini and Unreal: modular structures, prop scatter, lighting, and gameplay placement driven by authored rules.",
       "tags": [
         "procedural",
@@ -275,6 +282,7 @@
       "title": "The Light System — Randomized and Synchronized Lighting on Generated Geometry",
       "kind": "article",
       "group": "procedural",
+      "series": { "slug": "procedural-environment-system", "title": "Procedural Environment System", "order": 3 },
       "summary": "How lights on windows and streetlights attach to procedurally placed instances in Unreal — sockets, stable selection, a material mask, and data that survives a rebuild.",
       "tags": [
         "procedural",
@@ -337,6 +345,7 @@
       "title": "Unity ShaderLab Cheatsheet — Fundamentals & Properties",
       "kind": "reference",
       "group": "shaders",
+      "series": { "slug": "unity-shaderlab-cheatsheet", "title": "Unity ShaderLab Cheatsheet", "order": 1 },
       "summary": "ShaderLab fundamentals: file anatomy, CG and HLSL execution, shader identity, Properties syntax, data types, and Inspector drawers.",
       "tags": [
         "unity",
@@ -359,6 +368,7 @@
       "title": "Unity ShaderLab Cheatsheet — Tags & Render States",
       "kind": "reference",
       "group": "shaders",
+      "series": { "slug": "unity-shaderlab-cheatsheet", "title": "Unity ShaderLab Cheatsheet", "order": 2 },
       "summary": "A practical ShaderLab reference for SubShader tags, render queues, blending, AlphaToMask, and ColorMask across Unity pipelines.",
       "tags": [
         "unity",
@@ -381,6 +391,7 @@
       "title": "Unity ShaderLab Cheatsheet — Depth, Stencil & Passes",
       "kind": "reference",
       "group": "shaders",
+      "series": { "slug": "unity-shaderlab-cheatsheet", "title": "Unity ShaderLab Cheatsheet", "order": 3 },
       "summary": "ShaderLab depth and visibility controls: Cull, ZWrite, ZTest, stencil masking, render order, and multi-pass rendering.",
       "tags": [
         "unity",
@@ -403,6 +414,7 @@
       "title": "Unity ShaderLab Cheatsheet — HLSL, Pipelines & Optimization",
       "kind": "reference",
       "group": "shaders",
+      "series": { "slug": "unity-shaderlab-cheatsheet", "title": "Unity ShaderLab Cheatsheet", "order": 4 },
       "summary": "Unity shader program architecture: HLSL stages, semantics, precision, intrinsic functions, render pipelines, optimization, and adaptation.",
       "tags": [
         "unity",
@@ -782,6 +794,7 @@
       "slug": "csharp-variables-lesson-1-part-1",
       "kind": "article",
       "group": "technical-art",
+      "series": { "slug": "csharp-variables", "title": "C# Variables · Lesson 01", "order": 1 },
       "summary": "C# variables lesson 1 part 1 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.",
       "tags": [
         "Game Development",
@@ -807,6 +820,7 @@
       "slug": "csharp-variables-lesson-1-part-2",
       "kind": "article",
       "group": "technical-art",
+      "series": { "slug": "csharp-variables", "title": "C# Variables · Lesson 01", "order": 2 },
       "summary": "C# variables lesson 1 part 2 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.",
       "tags": [
         "Technical Art",
@@ -830,6 +844,7 @@
       "slug": "csharp-variables-lesson-1-part-3",
       "kind": "article",
       "group": "technical-art",
+      "series": { "slug": "csharp-variables", "title": "C# Variables · Lesson 01", "order": 3 },
       "summary": "C# variables lesson 1 part 3 covering advanced variable usage and practical examples. Structured introduction for beginners and technical artists.",
       "tags": [
         "Technical Art",
@@ -990,6 +1005,7 @@
       "slug": "procedural-environment-creation-houdini-chapter-1",
       "kind": "article",
       "group": "houdini",
+      "series": { "slug": "procedural-environment-creation", "title": "Procedural Environment Creation in Houdini", "order": 1 },
       "summary": "Low-poly terrain and road in Houdini for Unity: road alignment, per-zone remeshing, splat map baking, two UV sets, and a wrapped tile atlas shader.",
       "tags": [
         "Game Development",
@@ -1113,6 +1129,7 @@
       "title": "Procedural Address Resolution — From Placement Identity to World Coordinates",
       "kind": "article",
       "group": "procedural",
+      "series": { "slug": "procedural-environment-system", "title": "Procedural Environment System", "order": 4 },
       "summary": "Deterministic building, entrance and apartment addresses from procedural placement identity, ordered relationships and preset JSON summaries in Houdini and Unreal Engine.",
       "tags": [
         "procedural",
@@ -1138,6 +1155,7 @@
       "title": "Procedural Travel Resolution — From World Coordinates to Loaded Interiors",
       "kind": "article",
       "group": "procedural",
+      "series": { "slug": "procedural-environment-system", "title": "Procedural Environment System", "order": 5 },
       "summary": "Procedural portals in Houdini and Unreal Engine: address-aware travel, seeded interior variants, streamed levels, arrival anchors and reliable return routes.",
       "tags": [
         "procedural",

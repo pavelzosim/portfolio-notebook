@@ -65,6 +65,7 @@ a { color: inherit; }
 .panel-body p {
   margin: 0 0 16px; font-size: 11px; color: var(--ink-muted); line-height: 1.5;
 }
+.game-note { display: inline-block; margin-top: 6px; font-size: 9px; color: var(--ink-faint); }
 .actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
 .btn-wrap {
   display: inline-block; position: relative;

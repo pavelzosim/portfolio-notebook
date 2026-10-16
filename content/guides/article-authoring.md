@@ -2,7 +2,7 @@
 
 Status: canonical
 
-Revision: 2026.08
+Revision: 2026.10
 
 Visual reference: `/blog/style-guide/`
 
@@ -35,10 +35,29 @@ Omit a section only when it genuinely does not apply. Do not invent missing info
 - Keep the article rail contextual: a stable `INDEX.md` block links to Projects, Tools and assets, and Blog; the current article outline remains directly below it under the record's `.md` label.
 - Do not copy the homepage's full `CONTENTS.md` into article rails.
 - Register the article in `/content/posts/index.json`.
+- When an article belongs to an ordered tutorial or research sequence, register an explicit `series` object; do not use the broader topical `group` as a substitute.
 - Load `/styles/atlas.css` and the appropriate article stylesheet.
 - Load `/scripts/article-page.js`; it builds article contents, metadata, tags, adjacent-article navigation, the article-end marker, Share and Related/Latest blocks, footer link groups, and the global command bar.
 - Use local repository paths for media and documents.
 - Keep slugs lowercase and hyphen-separated.
+
+### Series metadata
+
+Use this optional registry shape for ordered lessons, chapters, or connected R&D records:
+
+```json
+"series": {
+  "slug": "from-file-to-pixel",
+  "title": "From File to Pixel",
+  "order": 1
+}
+```
+
+- `slug` is the stable machine identifier shared by every entry in the series.
+- `title` is the reader-facing group heading on the Blog index.
+- `order` is the intended reading sequence, independent of publication date.
+- Keep `group` for broad subject classification such as `shaders`, `pipeline`, or `procedural`.
+- Omit `series` for standalone records; the index places them under `Independent records`.
 
 ## Typography
 

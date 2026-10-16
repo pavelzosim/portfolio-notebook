@@ -109,6 +109,19 @@
       const metaCount = document.querySelector('[data-meta-count]');
       const filterButtons = [...document.querySelectorAll('[data-filter]')];
       let activeFilter = 'all';
+      let seriesDirectoryList = null;
+
+      if (view === 'blog') {
+        const seriesDirectory = node('div', 'meta-block index-series-directory');
+        seriesDirectory.append(node('p', '', '[SERIES]'));
+        seriesDirectoryList = node('ol', 'index-series-list');
+        seriesDirectory.append(seriesDirectoryList);
+        const scopeBlock = scope.closest('.meta-block');
+        const metaRail = scopeBlock?.parentElement;
+        const documentBlock = metaRail?.querySelector('.meta-block:first-child');
+        if (documentBlock && documentBlock !== scopeBlock) documentBlock.replaceWith(seriesDirectory);
+        else if (scopeBlock) scopeBlock.before(seriesDirectory);
+      }
 
       const articleKinds = new Set(['article', 'breakdown', 'case study', 'guide', 'lesson', 'reference']);
       const matchesKind = (record) => activeFilter === 'all' ||
@@ -153,10 +166,74 @@
       const applyFilters = () => {
         const query = search.value.trim().toLowerCase();
         const visible = records.filter((record) => {
-          const haystack = [record.title, record.summary, record.kind, record.group, ...record.tags].join(' ').toLowerCase();
+          const haystack = [record.title, record.summary, record.kind, record.group, record.series?.title, ...record.tags].join(' ').toLowerCase();
           return matchesKind(record) && (!query || haystack.includes(query));
         });
-        container.replaceChildren(...visible.map(renderRecord));
+        if (view === 'blog') {
+          const series = new Map();
+          const independent = [];
+          visible.forEach((record) => {
+            if (!record.series?.slug) {
+              independent.push(record);
+              return;
+            }
+            if (!series.has(record.series.slug)) series.set(record.series.slug, []);
+            series.get(record.series.slug).push(record);
+          });
+
+          const renderGroup = (title, items, slug, numbered = true, groupIndex = 0) => {
+            const section = node('section', 'content-series');
+            section.dataset.series = slug;
+            section.id = `series-${slug}`;
+            const head = node('header', 'content-series-head');
+            const meta = node('div', 'content-series-meta');
+            meta.append(
+              node('span', '', numbered ? `SERIES ${String(groupIndex).padStart(2, '0')}` : 'STANDALONE'),
+              node('em', '', `${String(items.length).padStart(2, '0')} ${items.length === 1 ? 'record' : 'records'}`)
+            );
+            head.append(node('h3', '', title), meta);
+            const list = node('div', 'content-log');
+            list.setAttribute('role', 'list');
+            const ordered = numbered
+              ? items.slice().sort((a, b) => (a.series.order || 0) - (b.series.order || 0))
+              : items;
+            list.append(...ordered.map(renderRecord));
+            section.append(head, list);
+            return section;
+          };
+
+          const orderedSeries = [...series.entries()]
+            .sort(([, a], [, b]) => Math.max(...b.map(recordDate)) - Math.max(...a.map(recordDate)));
+          const seriesSections = orderedSeries
+            .map(([slug, items], index) => renderGroup(items[0].series.title, items, slug, true, index + 1));
+          if (independent.length) seriesSections.push(renderGroup('Independent records', independent, 'independent', false));
+          if (seriesDirectoryList) {
+            const directoryItems = orderedSeries.map(([slug, items], index) => {
+              const item = node('li');
+              const link = node('a');
+              link.href = `#series-${slug}`;
+              link.append(
+                node('span', '', String(index + 1).padStart(2, '0')),
+                node('b', '', items[0].series.title)
+              );
+              item.append(link);
+              return item;
+            });
+            if (independent.length) {
+              const item = node('li');
+              const link = node('a');
+              link.href = '#series-independent';
+              link.append(node('span', '', '—'), node('b', '', 'Standalone'));
+              item.append(link);
+              directoryItems.push(item);
+            }
+            seriesDirectoryList.replaceChildren(...directoryItems);
+          }
+          container.removeAttribute('role');
+          container.replaceChildren(...seriesSections);
+        } else {
+          container.replaceChildren(...visible.map(renderRecord));
+        }
         empty.hidden = visible.length !== 0;
         output.textContent = `${String(visible.length).padStart(2, '0')} records`;
         listCount.textContent = `${String(visible.length).padStart(2, '0')} RECORDS`;
