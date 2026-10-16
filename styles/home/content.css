@@ -31,8 +31,16 @@
 .contact-layout dt{color:var(--muted);font-size:8px}
 .contact-layout dd{margin:0;font-size:9px;text-align:right}
 .contact-layout a:hover{color:var(--red)}
+.contact-layout{gap:24px}
+.contact-layout dl div{padding:5px 0}
 .about-layout a:hover,.about-layout a:focus-visible,.contact-layout a:focus-visible{color:var(--red);outline:0}
 .about-layout dl{border-top:0}
+.specialization-tags{display:flex;flex-wrap:wrap;gap:4px}
+.specialization-tags a{padding:2px 5px;border:1px solid var(--line);background:var(--paper2);color:var(--muted);font-size:8px;line-height:1.15;text-decoration:none}
+.specialization-tags a:hover,.specialization-tags a:focus-visible{border-color:var(--vc);background:var(--vc);color:#fff;outline:0}
+.definition-grid article{min-height:0;padding:10px 12px 8px}
+.definition-grid h3{margin:0 0 6px}
+.definition-grid p{min-height:0;margin:0 0 8px;line-height:1.5}
 .function-bar{grid-template-columns:repeat(8,minmax(72px,1fr))}
 @media(max-width:760px){
   .shellbar nav{overflow-x:auto;white-space:nowrap}

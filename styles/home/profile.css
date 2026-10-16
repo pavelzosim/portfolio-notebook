@@ -20,18 +20,18 @@ h1 span{font-size:.58em;letter-spacing:.01em;color:var(--red);text-transform:upp
 .profile-facts dd{margin:0;font-size:9px}.profile-facts dd span{color:var(--green)}
 .about-layout{grid-template-columns:minmax(0,1fr) 245px}.about-layout .prose{max-width:none}.about-layout .prose p{margin:0 0 18px}
 .about-layout dl div{grid-template-columns:92px 1fr}
-.author-record-block{margin-top:24px;scroll-margin-top:58px}
-.author-record-block .section-split{margin-bottom:0}
-.author-record{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-left:1px solid var(--line2)}
-.author-record div{min-width:0;padding:8px 11px;display:block;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2)}
-.author-record dt{margin:0 0 5px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.04em}
-.author-record dd{margin:0;font-size:10px;line-height:1.5}
-.author-record a:hover,.author-record a:focus-visible{color:var(--red);outline:0}
+.author-record-block{margin-top:18px;scroll-margin-top:58px}
+.author-summary{display:flex;flex-wrap:wrap;align-items:stretch;border-top:1px solid var(--line2);border-left:1px solid var(--line2)}
+.author-summary>span,.author-summary>a{min-width:0;padding:7px 9px;display:flex;gap:6px;align-items:baseline;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);font-size:8px;text-decoration:none}
+.author-summary>span{flex:1 1 145px}
+.author-summary>a{flex:0 0 auto;background:var(--vc);color:#fff;font-weight:700}
+.author-summary b{color:var(--muted);font-size:7px;font-weight:400;text-transform:uppercase}
+.author-summary a:hover,.author-summary a:focus-visible{background:var(--vc-hi);color:#fff;outline:0}
 @media(max-width:760px){
   .shellbar nav{height:29px;padding:2px;overflow:visible}
   .shellbar nav a{padding:6px 8px;font-size:9px}
   .profile-facts{grid-template-columns:1fr}
-  .author-record{grid-template-columns:1fr}
+  .author-summary>span{flex-basis:100%}
   .rail-links a:nth-child(3):before{content:"[TG]"}
   .rail-links a:nth-child(4):before{content:"[@]"}
   h1 span{font-size:.5em}
