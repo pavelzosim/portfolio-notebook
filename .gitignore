@@ -7,4 +7,4 @@ _site/
 __pycache__/
 *.pyc
 .gh-auth-*.txt
-.claude/worktrees/
+.claude/

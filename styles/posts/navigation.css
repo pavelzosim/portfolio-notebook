@@ -23,13 +23,13 @@
 .article-shellbar nav a {
   padding: 4px 8px;
   border-bottom: 1px solid transparent;
-  color: rgba(0, 0, 0, .52);
+  color: var(--atlas-nav-ink);
   letter-spacing: .04em;
   text-transform: uppercase;
 }
 .article-shellbar nav a:hover,
-.article-shellbar nav a:focus-visible { border-bottom-color: #111; color: #111; outline: 0; }
-.article-shellbar nav a[aria-current="page"] { border-bottom-color: #8b0000; color: #8b0000; }
+.article-shellbar nav a:focus-visible { background: var(--atlas-nav-hover-bg); color: var(--atlas-nav-hover); text-decoration: none; }
+.article-shellbar nav a[aria-current="page"] { background: var(--atlas-nav-active-bg); color: var(--atlas-nav-active); }
 .article-shellbar__divider { color: rgba(0, 0, 0, .18); }
 .article-shellbar a.article-shellbar__status { justify-self: end; color: rgba(0, 0, 0, .48); white-space: nowrap; }
 .article-shellbar__status span { margin-right: 7px; color: #0f692f; }

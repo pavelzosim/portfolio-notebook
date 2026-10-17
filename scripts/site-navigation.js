@@ -11,13 +11,14 @@
   };
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'F10') {
-      event.preventDefault();
-      document.querySelector('#content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-    if (!routes[event.key]) return;
+    if (event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+    if (event.target?.closest('input, textarea, select, [contenteditable="true"], dialog[open]')) return;
+    // Follow the visible command, including any deployment base path.
+    const command = [...document.querySelectorAll('.function-bar a')]
+      .find((link) => link.querySelector('kbd')?.textContent.trim() === event.key);
+    const destination = command?.href || routes[event.key];
+    if (!destination) return;
     event.preventDefault();
-    location.assign(routes[event.key]);
+    location.assign(destination);
   });
 })();

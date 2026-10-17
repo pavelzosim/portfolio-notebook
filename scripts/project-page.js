@@ -1,9 +1,13 @@
 (() => {
   const routes = { F2: '/', F3: '/projects/', F4: '/#notes', F5: '/tools/', F9: '/online-tools/', F6: '/blog/', F7: '/#about', F8: '/#contacts', F10: '#content' };
   document.addEventListener('keydown', (event) => {
+    if (event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+    if (event.target?.closest('input, textarea, select, [contenteditable="true"], dialog[open]')) return;
     if (routes[event.key]) {
       event.preventDefault();
-      location.assign(routes[event.key]);
+      const command = [...document.querySelectorAll('.function-bar a')]
+        .find((link) => link.querySelector('kbd')?.textContent.trim() === event.key);
+      location.assign(command?.href || routes[event.key]);
     }
   });
   const slug = document.body.dataset.project;

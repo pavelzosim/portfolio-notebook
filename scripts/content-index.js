@@ -111,6 +111,15 @@
       const filterButtons = [...document.querySelectorAll('[data-filter]')];
       let activeFilter = 'all';
       let seriesDirectoryList = null;
+      const updateSeriesSelection = () => {
+        seriesDirectoryList?.querySelectorAll('a').forEach((link) => {
+          const active = link.hash === location.hash;
+          link.classList.toggle('active', active);
+          if (active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
+      };
+      window.addEventListener('hashchange', updateSeriesSelection);
       let sortMode = 'series';
       let viewMode = 'compact';
 
@@ -283,17 +292,6 @@
               directoryItems.push(item);
             }
             seriesDirectoryList.replaceChildren(...directoryItems);
-            const updateSeriesSelection = () => {
-              seriesDirectoryList.querySelectorAll('a').forEach((link) => {
-                const active = link.hash === location.hash;
-                link.classList.toggle('active', active);
-                if (active) link.setAttribute('aria-current', 'location');
-                else link.removeAttribute('aria-current');
-              });
-            };
-            seriesDirectoryList.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-              requestAnimationFrame(updateSeriesSelection);
-            }));
             updateSeriesSelection();
           }
           container.removeAttribute('role');

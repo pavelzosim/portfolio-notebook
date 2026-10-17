@@ -24,7 +24,7 @@
 .compressor-page .compress-compare>.checker,.compressor-page #before,.compressor-page #after{cursor:crosshair}
 .compressor-page .compress-loupe{position:absolute;right:8px;top:8px;width:162px;border:1px solid var(--atlas-accent);background-color:#eee;background-image:conic-gradient(#ccc 25%,transparent 0 50%,#ccc 0 75%,transparent 0);background-size:20px 20px;pointer-events:none;z-index:2;box-shadow:3px 3px 0 var(--atlas-border)}
 .compressor-page .compress-loupe[hidden]{display:none}
-.compressor-page .compress-loupe canvas{display:block;width:160px!important;height:160px!important;max-width:none;max-height:none;image-rendering:pixelated}
+.compressor-page .compress-compare .compress-loupe canvas{display:block;width:160px;height:160px;max-width:none;max-height:none;image-rendering:pixelated}
 .compressor-page .compress-loupe-label{display:block;padding:4px 6px;background:var(--atlas-ink);color:var(--atlas-bg);font-size:10px;line-height:1.4}
 .compressor-page [data-view=black] .compress-loupe{background:#000}
 .compressor-page [data-view=white] .compress-loupe{background:#fff}
