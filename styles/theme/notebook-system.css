@@ -14,6 +14,11 @@
   --atlas-accent-hi: #008181;
   --atlas-accent-soft: rgba(0, 0, 170, .08);
   --atlas-accent-border: #000066;
+  --atlas-nav-ink: var(--atlas-ink-muted);
+  --atlas-nav-hover: var(--atlas-accent-hi);
+  --atlas-nav-hover-bg: rgba(0, 129, 129, .06);
+  --atlas-nav-active: var(--atlas-accent);
+  --atlas-nav-active-bg: var(--atlas-accent-soft);
   --atlas-crit: #8b0000;
   --red: var(--atlas-accent);
   --atlas-warn: #8a5b14;
@@ -71,18 +76,23 @@ body { background-size: 14px 14px; }
   padding: 0 10px;
   border: 0;
   background: transparent;
-  color: var(--atlas-ink-soft);
+  color: var(--atlas-nav-ink);
   font-size: 9px;
   font-weight: 500;
   line-height: 1.4;
   outline: 0;
 }
 .shellbar nav a:hover,
-.shellbar nav a:focus-visible,
+.shellbar nav a:focus-visible {
+  border: 0;
+  background: var(--atlas-nav-hover-bg);
+  color: var(--atlas-nav-hover);
+  outline: 0;
+}
 .shellbar nav a.active {
   border: 0;
-  background: var(--atlas-accent-soft);
-  color: var(--atlas-accent);
+  background: var(--atlas-nav-active-bg);
+  color: var(--atlas-nav-active);
   outline: 0;
 }
 .shellbar .nav-divider { color: var(--atlas-ink-ghost); font-size: 9px; }

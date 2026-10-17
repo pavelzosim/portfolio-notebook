@@ -104,12 +104,50 @@
       const container = document.querySelector('[data-records]');
       const empty = document.querySelector('[data-empty]');
       const search = document.querySelector('#contentSearch');
+      const searchForm = search.closest('form');
       const output = document.querySelector('[data-search-output]');
       const listCount = document.querySelector('[data-list-count]');
       const metaCount = document.querySelector('[data-meta-count]');
       const filterButtons = [...document.querySelectorAll('[data-filter]')];
       let activeFilter = 'all';
       let seriesDirectoryList = null;
+      let sortMode = 'series';
+      let viewMode = 'compact';
+
+      if (view === 'blog') {
+        const params = new URLSearchParams(location.search);
+        try {
+          sortMode = params.get('sort') || localStorage.getItem('atlas-blog-sort') || 'series';
+          viewMode = params.get('view') || localStorage.getItem('atlas-blog-view') || 'compact';
+        } catch (_) {
+          sortMode = params.get('sort') || 'series';
+          viewMode = params.get('view') || 'compact';
+        }
+        if (!['series', 'newest', 'oldest', 'title'].includes(sortMode)) sortMode = 'series';
+        if (!['cards', 'compact'].includes(viewMode)) viewMode = 'compact';
+
+        const controls = node('div', 'index-control-options');
+        const sortGroup = node('div', 'index-control-group');
+        sortGroup.append(node('span', 'index-control-label', 'SORT'));
+        [['series', 'Series'], ['newest', 'Newest'], ['oldest', 'Oldest'], ['title', 'A–Z']].forEach(([value, label]) => {
+          const button = node('button', 'atlas-btn atlas-btn--bracket atlas-btn--sm', label);
+          button.type = 'button';
+          button.dataset.sort = value;
+          sortGroup.append(button);
+        });
+        const viewGroup = node('div', 'index-control-group');
+        viewGroup.append(node('span', 'index-control-label', 'VIEW'));
+        [['cards', 'Cards'], ['compact', 'Compact']].forEach(([value, label]) => {
+          const button = node('button', 'atlas-btn atlas-btn--bracket atlas-btn--sm', label);
+          button.type = 'button';
+          button.dataset.view = value;
+          viewGroup.append(button);
+        });
+        controls.append(sortGroup, viewGroup);
+        searchForm.append(controls);
+        searchForm.classList.add('index-search--sticky');
+        document.querySelector('.content-catalog')?.prepend(searchForm);
+      }
 
       if (view === 'blog') {
         const seriesDirectory = node('div', 'meta-block index-series-directory');
@@ -121,6 +159,7 @@
         const documentBlock = metaRail?.querySelector('.meta-block:first-child');
         if (documentBlock && documentBlock !== scopeBlock) documentBlock.replaceWith(seriesDirectory);
         else if (scopeBlock) scopeBlock.before(seriesDirectory);
+        scopeBlock?.remove();
       }
 
       const articleKinds = new Set(['article', 'breakdown', 'case study', 'guide', 'lesson', 'reference']);
@@ -146,7 +185,11 @@
 
         const body = node('div', 'content-record-body');
         const meta = node('div', 'content-record-meta');
-        meta.append(node('span', 'record-id', record.id), node('span', 'record-kind', record.kind.toUpperCase()));
+        meta.append(
+          node('span', 'record-id', record.id),
+          node('span', 'record-kind', record.kind.toUpperCase()),
+          node('span', 'record-date', record.siteDate || record.datePublished?.slice(0, 7) || '—')
+        );
         body.append(meta, node('strong', '', record.title), node('p', '', record.summary));
         if (record.awards?.length) {
           const awards = node('div', 'content-project-awards');
@@ -202,20 +245,30 @@
             return section;
           };
 
-          const orderedSeries = [...series.entries()]
-            .sort(([, a], [, b]) => Math.max(...b.map(recordDate)) - Math.max(...a.map(recordDate)));
+          const orderedSeries = [...series.entries()].sort(([slugA, a], [slugB, b]) => {
+            if (sortMode === 'oldest') return Math.min(...a.map(recordDate)) - Math.min(...b.map(recordDate));
+            if (sortMode === 'title') return a[0].series.title.localeCompare(b[0].series.title);
+            if (sortMode === 'series') return slugA.localeCompare(slugB);
+            return Math.max(...b.map(recordDate)) - Math.max(...a.map(recordDate));
+          });
           const seriesSections = orderedSeries
             .map(([slug, items], index) => renderGroup(items[0].series.title, items, slug, true, index + 1));
-          if (independent.length) seriesSections.push(renderGroup('Independent records', independent, 'independent', false));
+          if (independent.length) {
+            const orderedIndependent = independent.slice().sort((a, b) => {
+              if (sortMode === 'oldest') return recordDate(a) - recordDate(b);
+              if (sortMode === 'title') return a.title.localeCompare(b.title);
+              return byRecency(a, b);
+            });
+            seriesSections.push(renderGroup('Independent records', orderedIndependent, 'independent', false));
+          }
           if (seriesDirectoryList) {
             const directoryItems = orderedSeries.map(([slug, items], index) => {
               const item = node('li');
               const link = node('a');
               link.href = `#series-${slug}`;
-              link.append(
-                node('span', '', String(index + 1).padStart(2, '0')),
-                node('b', '', items[0].series.title)
-              );
+              const copy = node('span', 'index-series-copy');
+              copy.append(node('b', '', items[0].series.title));
+              link.append(node('span', 'index-series-num', String(index + 1).padStart(2, '0')), copy);
               item.append(link);
               return item;
             });
@@ -223,11 +276,25 @@
               const item = node('li');
               const link = node('a');
               link.href = '#series-independent';
-              link.append(node('span', '', '—'), node('b', '', 'Standalone'));
+              const copy = node('span', 'index-series-copy');
+              copy.append(node('b', '', 'Standalone records'));
+              link.append(node('span', 'index-series-num', '—'), copy);
               item.append(link);
               directoryItems.push(item);
             }
             seriesDirectoryList.replaceChildren(...directoryItems);
+            const updateSeriesSelection = () => {
+              seriesDirectoryList.querySelectorAll('a').forEach((link) => {
+                const active = link.hash === location.hash;
+                link.classList.toggle('active', active);
+                if (active) link.setAttribute('aria-current', 'location');
+                else link.removeAttribute('aria-current');
+              });
+            };
+            seriesDirectoryList.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+              requestAnimationFrame(updateSeriesSelection);
+            }));
+            updateSeriesSelection();
           }
           container.removeAttribute('role');
           container.replaceChildren(...seriesSections);
@@ -239,6 +306,45 @@
         listCount.textContent = `${String(visible.length).padStart(2, '0')} RECORDS`;
         metaCount.textContent = String(records.length).padStart(2, '0');
       };
+
+      const syncControls = () => {
+        document.body.classList.toggle('index-view-compact', view === 'blog' && viewMode === 'compact');
+        document.querySelectorAll('[data-sort]').forEach((button) => {
+          const active = button.dataset.sort === sortMode;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-pressed', String(active));
+        });
+        document.querySelectorAll('[data-view]').forEach((button) => {
+          const active = button.dataset.view === viewMode;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-pressed', String(active));
+        });
+      };
+
+      const persistControls = () => {
+        const params = new URLSearchParams(location.search);
+        params.set('sort', sortMode);
+        params.set('view', viewMode);
+        history.replaceState(null, '', `${location.pathname}?${params.toString()}${location.hash}`);
+        try {
+          localStorage.setItem('atlas-blog-sort', sortMode);
+          localStorage.setItem('atlas-blog-view', viewMode);
+        } catch (_) {}
+      };
+
+      document.querySelectorAll('[data-sort]').forEach((button) => button.addEventListener('click', () => {
+        sortMode = button.dataset.sort;
+        syncControls();
+        persistControls();
+        applyFilters();
+      }));
+      document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => {
+        viewMode = button.dataset.view;
+        syncControls();
+        persistControls();
+        applyFilters();
+      }));
+      searchForm.addEventListener('submit', (event) => event.preventDefault());
 
       filterButtons.forEach((button) => {
         const filter = button.dataset.filter;
@@ -268,6 +374,7 @@
           applyFilters();
         }
       });
+      syncControls();
       applyFilters();
     })
     .catch((error) => {

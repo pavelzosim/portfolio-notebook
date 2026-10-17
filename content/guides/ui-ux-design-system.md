@@ -98,6 +98,8 @@ The dotted background remains visible around the document. Content surfaces may 
 
 ## Links and actions
 
+- Every navigation surface uses the same state contract: normal is `--atlas-nav-ink`, hover/focus is teal `--atlas-nav-hover` on `--atlas-nav-hover-bg`, and the current destination is blue `--atlas-nav-active` on `--atlas-nav-active-bg`.
+- Do not merge hover and active into one color state. Hover communicates a temporary action; blue communicates the current location or selected mode.
 - Inline text links use an underline or another clear textual affordance.
 - Bracket links such as `[github]` do not also need an underline in their resting state.
 - Repeated destination actions use the quiet white button with black outline, lowercase label, dither shadow, and right-aligned arrow.

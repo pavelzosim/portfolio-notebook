@@ -59,7 +59,7 @@ html { scroll-padding-top: 48px; }
   max-height: calc(100vh - 72px);
   margin-top: 2px;
   overflow: auto;
-  color: var(--atlas-ink-muted);
+  color: var(--atlas-nav-ink);
   font: 10px/1.5 var(--atlas-font-mono);
 }
 
@@ -142,7 +142,7 @@ html { scroll-padding-top: 48px; }
   border-left: 2px solid transparent;
   background: transparent;
   box-shadow: none;
-  color: var(--atlas-ink-muted);
+  color: var(--atlas-nav-ink);
   line-height: 1.35;
 }
 
@@ -152,9 +152,9 @@ html { scroll-padding-top: 48px; }
 .article-global-nav a:focus-visible,
 .article-outline li a:hover,
 .article-outline li a:focus-visible {
-  border-left-color: var(--atlas-accent-hi);
-  background: rgba(0, 129, 129, .06);
-  color: var(--atlas-accent-hi);
+  border-left-color: var(--atlas-nav-hover);
+  background: var(--atlas-nav-hover-bg);
+  color: var(--atlas-nav-hover);
   box-shadow: none;
   outline: 0;
 }
@@ -162,9 +162,9 @@ html { scroll-padding-top: 48px; }
 .rail li a.active,
 .article-global-nav a.active,
 .article-outline li a.active {
-  border-left-color: var(--atlas-accent);
-  background: var(--atlas-accent-soft);
-  color: var(--atlas-accent);
+  border-left-color: var(--atlas-nav-active);
+  background: var(--atlas-nav-active-bg);
+  color: var(--atlas-nav-active);
   box-shadow: none;
 }
 
@@ -177,7 +177,7 @@ html { scroll-padding-top: 48px; }
 
 .rail li a.active span,
 .article-global-nav a.active span,
-.article-outline li a.active span { color: var(--atlas-accent); }
+.article-outline li a.active span { color: var(--atlas-nav-active); }
 
 /* Context changes the commands, never the footer-command visual system. */
 body > .function-bar {
