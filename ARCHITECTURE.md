@@ -17,6 +17,13 @@ Homepage modules consume the original `--atlas-*` tokens. They should not import
 
 `home.css` remains as a compatibility shim for existing Wix embeds and cached URLs.
 
+Navigation state colors have one source: `styles/theme/navigation-tokens.css`.
+The common `notebook-layout.css` imports it for all page types, including standalone
+legacy articles that do not load the homepage theme. Do not redefine these tokens
+in article CSS. `scripts/css-contract.test.cjs` checks this dependency for each
+stylesheet entry point, the absence of forced declarations, and the single shared
+visually-hidden heading definition in `styles/framework/accessibility.css`.
+
 ## Content
 
 Content is independent from templates and CSS:

@@ -176,10 +176,11 @@
         (activeFilter === 'article' && articleKinds.has(record.kind)) || record.kind === activeFilter;
 
       const renderRecord = (record) => {
-        const link = node('a', 'content-record');
-        link.href = record.localPath ? withBase(record.localPath) : record.sourceUrl;
+        const link = node('div', 'content-record');
+        const titleLink = node('a', 'content-record-link', record.title);
+        titleLink.href = record.localPath ? withBase(record.localPath) : record.sourceUrl;
         link.setAttribute('role', 'listitem');
-        if (!record.localPath) link.rel = 'external';
+        if (!record.localPath) titleLink.rel = 'external';
 
         const preview = node('div', 'content-preview');
         if (record.image) {
@@ -199,14 +200,21 @@
           node('span', 'record-kind', record.kind.toUpperCase()),
           node('span', 'record-date', record.siteDate || record.datePublished?.slice(0, 7) || '—')
         );
-        body.append(meta, node('strong', '', record.title), node('p', '', record.summary));
+        const title = node('strong');
+        title.append(titleLink);
+        body.append(meta, title, node('p', '', record.summary));
         if (record.awards?.length) {
           const awards = node('div', 'content-project-awards');
           record.awards.forEach(award => awards.append(node('span', '', award.label)));
           body.append(awards);
         }
         const tags = node('div', 'content-tags');
-        record.tags.forEach((tag) => tags.append(node('span', '', `#${tag}`)));
+        record.tags.forEach((tag) => {
+          const tagLink = node('a', '', `#${tag}`);
+          tagLink.href = withBase(`/${view}/?tag=${encodeURIComponent(tag)}`);
+          tagLink.setAttribute('aria-label', `Filter by ${tag}`);
+          tags.append(tagLink);
+        });
         body.append(tags);
 
         const state = node('div', `content-state ${record.state.toLowerCase()}`);

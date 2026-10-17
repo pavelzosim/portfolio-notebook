@@ -1,0 +1,9 @@
+/* Shared by every shell, including standalone legacy articles.
+   Keep navigation independent of article-specific accent overrides. */
+:root {
+  --atlas-nav-ink: rgba(10, 10, 10, .55);
+  --atlas-nav-hover: #008181;
+  --atlas-nav-hover-bg: rgba(0, 129, 129, .06);
+  --atlas-nav-active: #0000aa;
+  --atlas-nav-active-bg: rgba(0, 0, 170, .08);
+}

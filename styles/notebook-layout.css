@@ -1,5 +1,7 @@
 /* Canonical Atlas page geometry.
    Indexes, project records, and long-form articles share this one shell. */
+@import url("./theme/navigation-tokens.css?v=1");
+
 :root {
   --notebook-shell-width: 1360px;
   --notebook-page-edge: 36px;
@@ -215,7 +217,7 @@ body > .function-bar .vc-button::after { display: none; }
 body > .function-bar .vc-button:hover,
 body > .function-bar .vc-button:focus-visible {
   border: 0;
-  background: var(--atlas-accent);
+  background: var(--atlas-nav-hover);
   color: #fff;
   outline: 0;
 }

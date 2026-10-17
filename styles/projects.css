@@ -2,7 +2,7 @@
 @import url("./projects/shared.css?v=3");
 @import url("./records.css?v=17");
 @import url("./projects/detail.css?v=5");
-@import url("./notebook-layout.css?v=6");
+@import url("./notebook-layout.css?v=7");
 
 [data-external-video] video{display:block;width:100%;aspect-ratio:16/9;border:1px solid var(--atlas-border-strong)}
 [data-project-awards] li{padding:12px;border:0;background:rgba(0,0,0,.055);font-weight:600}

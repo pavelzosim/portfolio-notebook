@@ -30,7 +30,7 @@
 .contact-panel dt{margin:0 0 4px;color:var(--atlas-ink-muted);font-size:7px;letter-spacing:.05em;text-transform:uppercase}
 .contact-panel dd{margin:0;font-size:9px;line-height:1.4}
 .contact-panel a{text-decoration:none}
-.contact-panel a:hover,.contact-panel a:focus-visible{color:var(--atlas-crit);outline:0}
+.contact-panel a:hover,.contact-panel a:focus-visible{color:var(--atlas-nav-active)}
 .specialization-tags{display:flex;flex-wrap:wrap;gap:4px}
 .specialization-tags a{padding:4px 8px;border:1px solid var(--atlas-border);background:var(--atlas-bg-raised);color:var(--atlas-ink-muted);font-size:8px;line-height:1;text-decoration:none}
 .specialization-tags a:hover,.specialization-tags a:focus-visible{border-color:var(--atlas-accent);background:var(--atlas-accent);color:#fff;outline:0}

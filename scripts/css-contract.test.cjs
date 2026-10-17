@@ -19,3 +19,21 @@ test('visually-hidden heading has one canonical definition', () => {
   const definitions = files(root).filter(file => /\.seo-heading\s*\{/.test(fs.readFileSync(file, 'utf8')));
   assert.deepEqual(definitions, [path.join(root, 'framework', 'accessibility.css')]);
 });
+test('all page entry points load the canonical navigation tokens', () => {
+  function imports(file, seen = new Set()) {
+    if (seen.has(file)) return seen;
+    seen.add(file);
+    const css = fs.readFileSync(file, 'utf8');
+    for (const match of css.matchAll(/@import\s+url\(["']([^"']+)["']\)/g)) {
+      if (/^https?:/.test(match[1])) continue;
+      imports(path.resolve(path.dirname(file), match[1].split('?')[0]), seen);
+    }
+    return seen;
+  }
+  const tokens = path.join(root, 'theme', 'navigation-tokens.css');
+  for (const entry of ['atlas.css', 'indexes.css', 'projects.css', 'posts.css', 'legacy-posts.css']) {
+    assert.ok(imports(path.join(root, entry)).has(tokens), entry);
+  }
+  const definitions = files(root).filter(file => /--atlas-nav-hover\s*:/.test(fs.readFileSync(file, 'utf8')));
+  assert.deepEqual(definitions, [tokens]);
+});
