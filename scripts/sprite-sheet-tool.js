@@ -16,7 +16,7 @@
     $('animation-caption').textContent=`Frame ${animationIndex+1} / ${frames.length}: ${f.name}`;
   }
   function lock(){
-    ['files','folder','demo','sort','clear','columns','mode','delay'].forEach(id=>$(id).disabled=busy||exporting);
+    ['files','folder','sort','clear','columns','mode','delay'].forEach(id=>$(id).disabled=busy||exporting);
     ['sort','clear'].forEach(id=>$(id).disabled=busy||exporting||!frames.length);
     $('play').disabled=busy||exporting||!current;
     $('download').disabled=busy||exporting||!current;
@@ -107,18 +107,6 @@
     $('play').textContent='pause animation';timer=setInterval(()=>{animationIndex=(animationIndex+1)%frames.length;paintAnimation();},delay);
   });
   $('delay').addEventListener('input',stop);document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-  $('demo').addEventListener('click',()=>{
-    frames.forEach(release);frames=[];
-    for(let i=0;i<8;i++){
-      const c=document.createElement('canvas');c.width=c.height=64;const ctx=c.getContext('2d');
-      // A pixel-art burst makes the example useful for inspecting animation and alpha.
-      const radius=4+i*3, size=Math.max(2,8-i);ctx.fillStyle='#0000aa';ctx.globalAlpha=1-i/10;
-      for(let ray=0;ray<8;ray++){const angle=ray*Math.PI/4;const x=Math.round(32+Math.cos(angle)*radius-size/2),y=Math.round(32+Math.sin(angle)*radius-size/2);ctx.fillRect(x,y,size,size);}
-      ctx.globalAlpha=1;ctx.fillStyle='#008181';const center=Math.max(0,12-i*2);ctx.fillRect(32-center/2,32-center/2,center,center);
-      frames.push({id:String(++nextId),name:`demo_${String(i+1).padStart(2,'0')}.png`,width:64,height:64,image:canvasImage(c),empty:false,bytes:0});
-    }
-    $('columns').value=3;reservedRows=3;update();status('Demo loaded. Replace it by clearing frames, then add your own sequence.');
-  });
   $('download').addEventListener('click',()=>{
     if(!current||busy||exporting)return;exporting=true;stop();lock();const name=core.filename(frames.length,current,$('mode').value);
     try{$('sheet').toBlob(blob=>{

@@ -5,30 +5,51 @@
   const items = [...section.querySelectorAll('.vfx-loop')];
   const button = section.querySelector('[data-vfx-more]');
   const count = section.querySelector('[data-vfx-count]');
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const visibleVideos = new Set();
+  const manuallyPaused = new WeakSet();
   const initialCount = 8;
   let visibleCount = initialCount;
 
   const activate = video => {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.playsInline = true;
     if (!video.src) video.src = video.dataset.src;
-    if (!reduceMotion) video.play().catch(() => {});
+    if (!document.hidden && !manuallyPaused.has(video)) {
+      video.play().catch(() => { video.controls = true; });
+    }
   };
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       const video = entry.target;
-      if (entry.isIntersecting) activate(video);
-      else video.pause();
+      if (entry.isIntersecting) {
+        visibleVideos.add(video);
+        activate(video);
+      } else {
+        visibleVideos.delete(video);
+        video.pause();
+      }
     });
-  }, { rootMargin: '160px 0px', threshold: .15 });
+  }, { threshold: .15 });
+
+  document.addEventListener('visibilitychange', () => {
+    visibleVideos.forEach(video => document.hidden ? video.pause() : activate(video));
+  });
 
   items.forEach(item => {
     const video = item.querySelector('video');
+    if (!video) return;
     observer.observe(video);
     const toggle = () => {
-      if (!video.src) activate(video);
-      else if (video.paused) video.play().catch(() => {});
-      else video.pause();
+      if (video.paused) {
+        manuallyPaused.delete(video);
+        activate(video);
+      } else {
+        manuallyPaused.add(video);
+        video.pause();
+      }
     };
     video.addEventListener('click', toggle);
     video.addEventListener('keydown', event => {

@@ -69,7 +69,18 @@
   transform: translate(-4px, -4px);
   transition: transform .05s linear, background .12s ease;
 }
-.section-action { display: inline-block; position: relative; margin: 4px 4px 0 0; background: var(--dither); background-size: 4px 4px; }
+.section-action { display: inline-block; position: relative; isolation: isolate; margin: 4px 4px 4px 0; background: transparent; }
+.section-action::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 4px -4px -4px 4px;
+  background: var(--dither);
+  background-size: 4px 4px;
+  clip-path: polygon(calc(100% - 4px) 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 4px), calc(100% - 4px) calc(100% - 4px));
+  pointer-events: none;
+}
+.section-action > a { position: relative; z-index: 1; transform: none; }
 .section-split a:hover,
 .section-split a:focus-visible,
 .section-foot a:hover,
