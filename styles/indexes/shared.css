@@ -55,7 +55,7 @@ body{padding-bottom:42px}
 .index-view-compact .content-state span{display:none}
 .content-series:target .content-series-head{box-shadow:inset 3px 0 0 var(--atlas-accent)}
 .content-record{min-height:110px;padding:9px 8px;display:grid;grid-template-columns:138px minmax(0,1fr) 65px;gap:12px;align-items:start;border-bottom:1px solid var(--line);text-decoration:none}
-.content-record{position:relative}
+.content-record{position:relative;scroll-margin-top:64px}
 .content-record:hover,.content-record:focus-within{background:var(--atlas-accent-soft);color:var(--ink)}
 .content-record-link{color:inherit;text-decoration:none}
 .content-record-link::after{content:"";position:absolute;inset:0}

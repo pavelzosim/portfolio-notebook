@@ -15,8 +15,7 @@
       listTitle: 'Projects',
       dek: 'A working index of commercial real-time projects. Each record documents the production context, technical-art scope, and constraints that shaped the implementation.',
       breadcrumb: '/home/pavel/technical-art/projects/index.md',
-      footer: 'pavelzosim / project index',
-      scope: ['XR systems', 'Real-time VFX', 'Interaction', 'Digital twins']
+      footer: 'pavelzosim / project index'
     },
     blog: {
       file: 'BLOG_INDEX.md',
@@ -24,8 +23,7 @@
       listTitle: 'Breakdowns, lessons, and R&D',
       dek: 'Long-form technical notes about rendering, procedural systems, shaders, production tooling, and the decisions behind real-time work.',
       breadcrumb: '/home/pavel/atlas/blog/index.md',
-      footer: 'pavelzosim / technical notes index',
-      scope: ['Rendering systems', 'Houdini / procedural', 'Shaders / GPU', 'Production lessons']
+      footer: 'pavelzosim / technical notes index'
     },
     tools: {
       file: 'TOOLS_INDEX.md',
@@ -33,8 +31,7 @@
       listTitle: 'Reusable production resources',
       dek: 'Utilities, procedural systems, scripts, and real-time assets. Each record includes implementation context instead of functioning as a download wall.',
       breadcrumb: '/home/pavel/atlas/tools/index.md',
-      footer: 'pavelzosim / tools and assets index',
-      scope: ['Houdini tools', 'Python utilities', 'Pipeline helpers', 'Real-time assets']
+      footer: 'pavelzosim / tools and assets index'
     }
   };
 
@@ -98,16 +95,12 @@
       text('[data-breadcrumb]', config.breadcrumb);
       text('[data-footer-label]', config.footer);
 
-      const scope = document.querySelector('[data-scope-list]');
-      scope.replaceChildren(...config.scope.map((item) => node('li', '', item)));
-
       const container = document.querySelector('[data-records]');
       const empty = document.querySelector('[data-empty]');
       const search = document.querySelector('#contentSearch');
       const searchForm = search.closest('form');
       const output = document.querySelector('[data-search-output]');
       const listCount = document.querySelector('[data-list-count]');
-      const metaCount = document.querySelector('[data-meta-count]');
       const filterButtons = [...document.querySelectorAll('[data-filter]')];
       let activeFilter = 'all';
       let seriesDirectoryList = null;
@@ -158,17 +151,14 @@
         document.querySelector('.content-catalog')?.prepend(searchForm);
       }
 
-      if (view === 'blog') {
+      {
         const seriesDirectory = node('div', 'meta-block index-series-directory');
-        seriesDirectory.append(node('p', '', '[SERIES]'));
+        seriesDirectory.append(node('p', '', view === 'blog' ? '[SERIES]' : '[ON THIS PAGE]'));
         seriesDirectoryList = node('ol', 'index-series-list');
         seriesDirectory.append(seriesDirectoryList);
-        const scopeBlock = scope.closest('.meta-block');
-        const metaRail = scopeBlock?.parentElement;
-        const documentBlock = metaRail?.querySelector('.meta-block:first-child');
-        if (documentBlock && documentBlock !== scopeBlock) documentBlock.replaceWith(seriesDirectory);
-        else if (scopeBlock) scopeBlock.before(seriesDirectory);
-        scopeBlock?.remove();
+        const metaRail = document.querySelector('.meta-rail');
+        metaRail.setAttribute('aria-label', 'On this page');
+        metaRail.replaceChildren(seriesDirectory);
       }
 
       const articleKinds = new Set(['article', 'breakdown', 'case study', 'guide', 'lesson', 'reference']);
@@ -177,6 +167,7 @@
 
       const renderRecord = (record) => {
         const link = node('div', 'content-record');
+        link.id = `record-${record.id.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
         const titleLink = node('a', 'content-record-link', record.title);
         titleLink.href = record.localPath ? withBase(record.localPath) : record.sourceUrl;
         link.setAttribute('role', 'listitem');
@@ -306,11 +297,22 @@
           container.replaceChildren(...seriesSections);
         } else {
           container.replaceChildren(...visible.map(renderRecord));
+          seriesDirectoryList.replaceChildren(...visible.map((record, index) => {
+            const item = node('li');
+            const link = node('a');
+            link.href = `#record-${record.id.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
+            const copy = node('span', 'index-series-copy');
+            copy.append(node('b', '', record.title));
+            link.append(node('span', 'index-series-num', String(index + 1).padStart(2, '0')), copy);
+            item.append(link);
+            return item;
+          }));
+          updateSeriesSelection();
         }
+        seriesDirectoryList.closest('.meta-block').hidden = visible.length === 0;
         empty.hidden = visible.length !== 0;
         output.textContent = `${String(visible.length).padStart(2, '0')} records`;
         listCount.textContent = `${String(visible.length).padStart(2, '0')} RECORDS`;
-        metaCount.textContent = String(records.length).padStart(2, '0');
       };
 
       const syncControls = () => {

@@ -81,7 +81,7 @@ The dotted background remains visible around the document. Content surfaces may 
 
 - Paper and ink are the dominant colors.
 - `--atlas-accent` (`#0000AA`) identifies selected navigation, focus, and primary interaction.
-- `#008181` is the approved hover accent where the component specification uses the teal interaction state.
+- Navigation follows the approved Grok interaction prototype: ink `#0A0A0A`, blue `#0000AA`, hover surface blue at 6%, selected surface blue at 8%. Teal is not the navigation hover color.
 - `--atlas-crit` (`#8B0000`) is limited to errors, risks, and critical warnings.
 - Green indicates confirmed success; amber indicates caution.
 - No gradients.
@@ -98,8 +98,10 @@ The dotted background remains visible around the document. Content surfaces may 
 
 ## Links and actions
 
-- Every navigation surface uses the same state contract: normal is `--atlas-nav-ink`, hover/focus is teal `--atlas-nav-hover` on `--atlas-nav-hover-bg`, and the current destination is blue `--atlas-nav-active` on `--atlas-nav-active-bg`.
-- Do not merge hover and active into one color state. Hover communicates a temporary action; blue communicates the current location or selected mode.
+- Every light navigation surface uses `--atlas-nav-ink` at rest and blue `--atlas-nav-hover` on `--atlas-nav-hover-bg` for hover/focus. Selected destinations use `--atlas-nav-active-bg`, a persistent marker, and `aria-current` where applicable. Do not underline block navigation.
+- The dark Commander footer is a deliberate variant: `#161616` resting face, `#2A2A2A` hover, `#1A1A1A` pressed, white text and `#7DD3FC` key/scan-line accent. Its 1px underline expands to 70% in 180ms; it is not a text underline or dither shadow.
+- Primary actions use `#0000AA`, `#0000CC` hover and `#000088` pressed. Quiet actions keep a light face, blue text and 6% blue hover tint. Preserve the existing dither wrapper; never paint a pattern over the face.
+- Navigation color transitions take 150ms; Commander colors take 120ms and press movement 80ms. Respect reduced motion without forced declarations. Keep keyboard focus visible. Geometry remains square.
 - Inline text links use an underline or another clear textual affordance.
 - Bracket links such as `[github]` do not also need an underline in their resting state.
 - Repeated destination actions use the quiet white button with black outline, lowercase label, dither shadow, and right-aligned arrow.

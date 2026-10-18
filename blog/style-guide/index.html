@@ -6,7 +6,7 @@
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles/atlas.css?v=83">
+  <link rel="stylesheet" href="/styles/atlas.css?v=85">
   <link rel="stylesheet" href="/styles/records.css?v=17">
   <link rel="stylesheet" href="/styles/style-guide.css?v=8">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
@@ -203,6 +203,7 @@ float3 ApplyExposure(float3 color, float exposure)
 
           <section class="guide-section" id="actions">
             <h2>09 Actions and references</h2>
+            <p class="guide-component-rule"><b>Canonical interaction palette — Grok reference</b>: light navigation uses ink #0A0A0A, blue #0000AA with a 6% blue hover surface and 8% selected surface. The dark Commander footer uses #2A2A2A hover and #7DD3FC key/scan-line accents. Primary actions brighten to #0000CC; quiet actions retain their light surface and dither shadow. Hover never adds a text underline to block navigation. Keyboard focus remains visible; reduced motion disables transitions.</p>
             <p>Use filled blue only for the primary action. The quiet white dither action is the default for index navigation and supporting links: visible as part of the interface, but subordinate to the article. Bracket buttons are compact secondary commands.</p>
             <p class="guide-component-rule"><b>Canonical button component</b> — every dithered action uses <code>.atlas-btn-shadow &gt; .atlas-btn</code> from the shared framework. Page CSS may position the component, but must not redraw its face, hover state, or shadow. A section has at most one filled blue primary action.</p>
             <div class="atlas-btn-group guide-actions"><span class="atlas-btn-shadow"><a class="atlas-btn" href="#contract">Primary action</a></span><button class="atlas-btn atlas-btn--active" type="button">Active</button><button class="atlas-btn atlas-btn--ok" type="button">Validated</button><button class="atlas-btn atlas-btn--danger" type="button">Reset</button></div>

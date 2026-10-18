@@ -1,9 +1,12 @@
 /* Shared by every shell, including standalone legacy articles.
    Keep navigation independent of article-specific accent overrides. */
 :root {
-  --atlas-nav-ink: rgba(10, 10, 10, .55);
-  --atlas-nav-hover: #008181;
-  --atlas-nav-hover-bg: rgba(0, 129, 129, .06);
+  --atlas-nav-ink: #0a0a0a;
+  --atlas-nav-hover: #0000aa;
+  --atlas-nav-hover-bg: rgba(0, 0, 170, .06);
   --atlas-nav-active: #0000aa;
   --atlas-nav-active-bg: rgba(0, 0, 170, .08);
+  --atlas-command-hover: #2a2a2a;
+  --atlas-command-pressed: #1a1a1a;
+  --atlas-command-signal: #7dd3fc;
 }

@@ -37,10 +37,10 @@
   vertical-align: middle;
 }
 
-.atlas-btn:hover { background-color: var(--atlas-accent-hi); }
+.atlas-btn:hover { background-color: #0000cc; }
 
 .atlas-btn:active {
-  background-color: var(--atlas-accent-border);
+  background-color: #000088;
   transform: translateY(1px);
 }
 
@@ -81,10 +81,10 @@
 }
 .atlas-btn--quiet:hover,
 .atlas-btn--quiet:focus-visible {
-  background: #008181;
-  color: #fff;
-  outline: 1px solid var(--atlas-ink);
-  outline-offset: -3px;
+  background: var(--atlas-nav-hover-bg);
+  color: var(--atlas-nav-hover);
+  border-color: rgba(0,0,170,.35);
+  box-shadow: 0 0 0 1px rgba(0,0,170,.12);
 }
 
 /* ── СЕКЦИЯ B: КНОПКИ — Семантические модификаторы ──────────────────────── */

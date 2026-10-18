@@ -1,6 +1,6 @@
 /* Canonical Atlas page geometry.
    Indexes, project records, and long-form articles share this one shell. */
-@import url("./theme/navigation-tokens.css?v=1");
+@import url("./theme/navigation-tokens.css?v=2");
 
 :root {
   --notebook-shell-width: 1360px;
@@ -213,13 +213,16 @@ body > .function-bar .vc-button {
   cursor: pointer;
 }
 
-body > .function-bar .vc-button::after { display: none; }
+body > .function-bar .vc-button { position:relative;transition:background-color .12s ease,color .12s ease,box-shadow .12s ease,transform .08s ease; }
+body > .function-bar .vc-button::after { content:"";display:block;position:absolute;z-index:0;top:auto;bottom:0;left:50%;width:0;height:1px;background:var(--atlas-command-signal);opacity:.75;pointer-events:none;transition:width .18s ease,left .18s ease; }
+body > .function-bar .vc-button:hover::after,
+body > .function-bar .vc-button:focus-visible::after { width:70%;left:15%; }
 body > .function-bar .vc-button:hover,
 body > .function-bar .vc-button:focus-visible {
   border: 0;
-  background: var(--atlas-nav-hover);
+  background: var(--atlas-command-hover);
   color: #fff;
-  outline: 0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
 }
 
 body > .function-bar kbd {
@@ -228,9 +231,18 @@ body > .function-bar kbd {
   font: inherit;
   font-weight: 700;
 }
+body > .function-bar .vc-button:active { background:var(--atlas-command-pressed);transform:translateY(1px); }
 
 body > .function-bar .vc-button:hover kbd,
-body > .function-bar .vc-button:focus-visible kbd { color: #ffff55; }
+body > .function-bar .vc-button:focus-visible kbd { color: var(--atlas-command-signal); }
+
+/* Grok interaction reference: quiet blue navigation, no layout movement. */
+:is(.shellbar nav,.article-shellbar nav,.rail,.article-rail,.index-series-list) a { transition:background-color .15s ease,color .15s ease,border-color .15s ease; }
+:is(.shellbar nav,.article-shellbar nav,.rail,.article-rail,.index-series-list,.function-bar) a:focus-visible { outline:1px solid rgba(0,0,170,.45);outline-offset:2px; }
+@media(prefers-reduced-motion:reduce) {
+  :is(.shellbar nav,.article-shellbar nav,.rail,.article-rail,.index-series-list) a,
+  body > .function-bar .vc-button,body > .function-bar .vc-button::after { transition:none; }
+}
 
 @media (max-width: 1100px) {
   .workspace,
