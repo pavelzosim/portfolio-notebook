@@ -1,0 +1,25 @@
+/* Canonical supporting controls from the Grok reference.
+   Page modules own geometry; this module owns interaction states. */
+:is(.tag-cloud a, .content-tags a, .browser-tools-nav button, .gumroad-shelf__nav button, .browser-tool-copy .section-action>a, .atlas-btn--quiet) {
+  color: var(--atlas-nav-active);
+  border-color: var(--atlas-border);
+  text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease, transform .08s ease;
+}
+:is(.tag-cloud a, .content-tags a, .browser-tools-nav button, .gumroad-shelf__nav button, .browser-tool-copy .section-action>a, .atlas-btn--quiet):is(:hover, :focus-visible) {
+  color: var(--atlas-nav-active);
+  background: var(--atlas-nav-hover-bg);
+  border-color: rgba(0,0,170,.35);
+  box-shadow: 0 0 0 1px rgba(0,0,170,.12);
+  text-decoration: none;
+}
+:is(.tag-cloud a, .content-tags a, .browser-tools-nav button, .gumroad-shelf__nav button, .browser-tool-copy .section-action>a, .atlas-btn--quiet):focus-visible {
+  outline: 1px solid rgba(0,0,170,.45);
+  outline-offset: 2px;
+}
+:is(.tag-cloud a, .content-tags a, .browser-tools-nav button, .gumroad-shelf__nav button, .browser-tool-copy .section-action>a, .atlas-btn--quiet):active {
+  background: rgba(0,0,170,.1);
+}
+@media(prefers-reduced-motion:reduce) {
+  :is(.tag-cloud a, .content-tags a, .browser-tools-nav button, .gumroad-shelf__nav button, .browser-tool-copy .section-action>a, .atlas-btn--quiet) { transition:none; }
+}

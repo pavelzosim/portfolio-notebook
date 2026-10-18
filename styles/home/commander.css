@@ -16,7 +16,6 @@ body{padding-bottom:38px}
 .command output{min-width:68px;text-align:right;color:var(--muted);font-size:9px}
 .meta-block li a{text-decoration:none}.meta-block li a:hover,.meta-block li a:focus-visible{color:var(--atlas-nav-active);background:var(--atlas-nav-active-bg);text-decoration:none}
 .tag-cloud a{padding:2px 4px;border:1px solid var(--line);text-decoration:none}
-.tag-cloud a:hover,.tag-cloud a:focus-visible{color:var(--atlas-nav-active);background:var(--atlas-nav-active-bg);border-color:var(--atlas-nav-active)}
 dialog{width:min(480px,calc(100vw - 32px));padding:0;border:1px solid #000;background:var(--paper2);color:var(--ink);box-shadow:8px 8px 0 transparent;font:11px/1.5 var(--mono)}
 dialog::backdrop{background-color:rgba(0,0,0,.42);background-image:var(--dither);background-size:4px 4px}
 .dialog-title{padding:7px 9px;display:flex;justify-content:space-between;background:var(--vc);color:#fff}

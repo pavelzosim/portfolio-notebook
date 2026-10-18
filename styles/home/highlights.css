@@ -22,8 +22,6 @@
 .browser-tool-steps b{color:var(--atlas-accent);font-size:var(--fs-status)}
 .browser-tool-copy .section-action{margin-top:auto}
 .browser-tool-copy .section-action>a{display:flex;gap:22px;padding:10px 12px;border:1px solid var(--atlas-ink);background:var(--atlas-bg-raised);color:var(--atlas-ink);font-size:var(--fs-meta);text-decoration:none}
-.browser-tool-copy .section-action>a:hover{background:var(--atlas-accent-hi);color:var(--atlas-bg-raised)}
-.browser-tool-copy .section-action>a:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
 .browser-tool-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:12px 0 16px;border:1px solid var(--atlas-border)}
 .browser-tool-facts span{padding:8px;text-align:center;font-size:var(--fs-status);color:var(--atlas-ink-soft)}
 .browser-tool-facts span+span{border-left:1px solid var(--atlas-border)}
@@ -134,8 +132,6 @@ main .about-layout dd { text-align: left; }
 .home-online-tools .browser-tools-viewport .browser-tool-feature[hidden]{display:grid;visibility:hidden;pointer-events:none}
 .browser-tools-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
 .browser-tools-nav button{padding:8px 12px;border:1px solid var(--atlas-border-strong);background:var(--atlas-bg-raised);color:var(--atlas-ink);font:inherit;font-size:var(--fs-status);cursor:pointer}
-.browser-tools-nav button:hover{background:var(--atlas-accent-hi);color:var(--atlas-bg-raised)}
-.browser-tools-nav button:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
 .browser-tools-nav output{font-size:var(--fs-status);color:var(--atlas-ink-soft)}
 
 .highlight-card .highlight-award{display:block;margin-top:5px;padding-top:5px;border-top:1px solid var(--atlas-border);font-size:9px;line-height:1.5;color:var(--atlas-ink);font-weight:600}

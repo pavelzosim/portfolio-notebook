@@ -1,6 +1,7 @@
 /* Canonical Atlas page geometry.
    Indexes, project records, and long-form articles share this one shell. */
 @import url("./theme/navigation-tokens.css?v=2");
+@import url("./framework/quiet-controls.css?v=1");
 
 :root {
   --notebook-shell-width: 1360px;

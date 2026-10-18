@@ -56,7 +56,7 @@ body{padding-bottom:42px}
 .content-series:target .content-series-head{box-shadow:inset 3px 0 0 var(--atlas-accent)}
 .content-record{min-height:110px;padding:9px 8px;display:grid;grid-template-columns:138px minmax(0,1fr) 65px;gap:12px;align-items:start;border-bottom:1px solid var(--line);text-decoration:none}
 .content-record{position:relative;scroll-margin-top:64px}
-.content-record:hover,.content-record:focus-within{background:var(--atlas-accent-soft);color:var(--ink)}
+.content-record:hover:not(:has(.content-tags a:hover)),.content-record:has(.content-record-link:focus-visible){background:var(--atlas-accent-soft);color:var(--ink)}
 .content-record-link{color:inherit;text-decoration:none}
 .content-record-link::after{content:"";position:absolute;inset:0}
 .content-record-link:focus-visible::after{outline:2px solid var(--atlas-nav-active);outline-offset:-2px}
@@ -71,7 +71,6 @@ body{padding-bottom:42px}
 .content-record-body p{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .content-tags{display:flex;flex-wrap:wrap;gap:4px}
 .content-tags a{position:relative;z-index:1;padding:2px 4px;border:1px solid var(--line);color:var(--muted);font-size:7px;text-decoration:none}
-.content-tags a:hover,.content-tags a:focus-visible{color:var(--atlas-nav-active);border-color:var(--atlas-nav-active);background:var(--atlas-nav-active-bg)}
 .content-state{align-self:stretch;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;color:var(--muted);font-size:8px}
 .content-state span{padding:2px 5px;border:1px solid var(--line)}
 .content-state.local span{color:var(--green)}

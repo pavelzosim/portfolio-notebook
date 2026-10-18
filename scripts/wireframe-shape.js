@@ -9,6 +9,11 @@
   const W = canvas.width, H = canvas.height;
   const cx = W / 2, cy = H / 2;
   const scale = 125;
+  const paperColor = getComputedStyle(document.documentElement).getPropertyValue('--atlas-bg').trim() || '#e6dcd2';
+  const gridSnapshot = document.createElement('canvas');
+  gridSnapshot.width = W;
+  gridSnapshot.height = H;
+  const gridSnapshotContext = gridSnapshot.getContext('2d');
 
   function normalize(v) {
     const len = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) || 1;
@@ -284,7 +289,7 @@
 
     ctx.beginPath();
     ctx.arc(cx, cy, 175, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillStyle = paperColor;
     ctx.fill();
 
     // Instrument graticule: quiet grey grid, central axes and scale ticks.
@@ -292,18 +297,28 @@
     ctx.beginPath();
     ctx.arc(cx, cy, 174, 0, Math.PI * 2);
     ctx.clip();
-    ctx.strokeStyle = 'rgba(10,10,10,0.12)';
+    ctx.strokeStyle = 'rgba(10,10,10,0.068)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     for (let i = -4; i <= 4; i++) {
       if (i === 0) continue;
-      ctx.moveTo(cx + i * 35, cy - 175);
-      ctx.lineTo(cx + i * 35, cy + 175);
-      ctx.moveTo(cx - 175, cy + i * 35);
-      ctx.lineTo(cx + 175, cy + i * 35);
+      // Gentle barrel distortion only in the peripheral lens zone.
+      for (const vertical of [true, false]) {
+        for (let step = 0; step <= 70; step++) {
+          const along = -175 + step * 5;
+          const x = vertical ? i * 35 : along;
+          const y = vertical ? along : i * 35;
+          const edge = Math.max(0, Math.min(1, (Math.hypot(x, y) - 125) / 50));
+          const smooth = edge * edge * (3 - 2 * edge);
+          const lens = 1 - 0.065 * smooth;
+          const px = cx + x * lens, py = cy + y * lens;
+          if (step === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+      }
     }
     ctx.stroke();
-    ctx.strokeStyle = 'rgba(10,10,10,0.28)';
+    ctx.strokeStyle = 'rgba(10,10,10,0.153)';
     ctx.beginPath();
     ctx.moveTo(cx - 175, cy); ctx.lineTo(cx + 175, cy);
     ctx.moveTo(cx, cy - 175); ctx.lineTo(cx, cy + 175);
@@ -316,13 +331,28 @@
     ctx.stroke();
     ctx.restore();
 
+    // Soften only the outer graticule, before drawing the crisp rim and model.
+    if (gridSnapshotContext) {
+      gridSnapshotContext.clearRect(0, 0, W, H);
+      gridSnapshotContext.drawImage(canvas, 0, 0);
+      for (const [inner, outer, blur] of [[135, 150, 0.7], [150, 163, 1.3], [163, 174, 1.9]]) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+        ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+        ctx.clip('evenodd');
+        ctx.clearRect(0, 0, W, H);
+        ctx.filter = `blur(${blur}px)`;
+        ctx.drawImage(gridSnapshot, 0, 0);
+        ctx.restore();
+      }
+    }
+
     ctx.beginPath();
     ctx.arc(cx, cy, 175, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(26,26,26,0.12)';
+    ctx.strokeStyle = 'rgba(10,10,10,0.28)';
     ctx.lineWidth = 1;
-    ctx.setLineDash([4, 5]);
     ctx.stroke();
-    ctx.setLineDash([]);
 
     if (!current) {
       requestAnimationFrame(draw);
@@ -348,7 +378,7 @@
       const alpha = 0.35 + (2.8 - p[2]) * 0.25;
       ctx.beginPath();
       ctx.arc(p[0], p[1], 2.6, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(26,26,26,${Math.min(0.9, alpha)})`;
+      ctx.fillStyle = `rgba(0,0,170,${Math.min(0.9, Math.max(0.3, alpha))})`;
       ctx.fill();
     });
 

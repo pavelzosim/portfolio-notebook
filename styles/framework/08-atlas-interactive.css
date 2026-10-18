@@ -79,13 +79,6 @@
   text-transform: none;
   letter-spacing: .02em;
 }
-.atlas-btn--quiet:hover,
-.atlas-btn--quiet:focus-visible {
-  background: var(--atlas-nav-hover-bg);
-  color: var(--atlas-nav-hover);
-  border-color: rgba(0,0,170,.35);
-  box-shadow: 0 0 0 1px rgba(0,0,170,.12);
-}
 
 /* ── СЕКЦИЯ B: КНОПКИ — Семантические модификаторы ──────────────────────── */
 
