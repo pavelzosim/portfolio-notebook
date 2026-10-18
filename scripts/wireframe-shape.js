@@ -5,6 +5,7 @@
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
+  if (!ctx) return;
   const W = canvas.width, H = canvas.height;
   const cx = W / 2, cy = H / 2;
   const scale = 125;
@@ -242,15 +243,18 @@
     reshuffleBtn.addEventListener('click', () => pickShape());
   }
 
-  canvas.addEventListener('mousemove', (e) => {
-    const r = canvas.getBoundingClientRect();
-    const mx = (e.clientX - r.left) / r.width - 0.5;
-    const my = (e.clientY - r.top) / r.height - 0.5;
-    targetRotY = mx * 2.0;
-    targetRotX = 0.35 + my * 1.4;
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'touch') return;
+    const mx = Math.max(-0.5, Math.min(0.5, e.clientX / window.innerWidth - 0.5));
+    const my = Math.max(-0.5, Math.min(0.5, e.clientY / window.innerHeight - 0.5));
+    // Take the nearest equivalent angle; never unwind several idle rotations.
+    const angle = 0.4 + mx * 2;
+    targetRotY = rotY + Math.atan2(Math.sin(angle - rotY), Math.cos(angle - rotY));
+    targetRotX = 0.35 + my * 1.2;
     mouseActive = true;
-  });
-  canvas.addEventListener('mouseleave', () => { mouseActive = false; });
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => { mouseActive = false; });
+  window.addEventListener('blur', () => { mouseActive = false; });
 
   function rotate(v, ax, ay) {
     const [x, y, z] = v;
@@ -267,10 +271,14 @@
     return [cx + v[0] * scale * f, cy + v[1] * scale * f, z];
   }
 
-  function draw() {
-    if (!mouseActive && !reducedMotion.matches) targetRotY += 0.007;
-    rotX += (targetRotX - rotX) * 0.09;
-    rotY += (targetRotY - rotY) * 0.09;
+  let previousTime = null;
+  function draw(time = 0) {
+    const dt = previousTime === null ? 1 / 60 : Math.min(0.05, (time - previousTime) / 1000);
+    previousTime = time;
+    if (!mouseActive && !reducedMotion.matches) targetRotY += 0.42 * dt;
+    const ease = reducedMotion.matches ? 1 : 1 - Math.exp(-5.7 * dt);
+    rotX += (targetRotX - rotX) * ease;
+    rotY += (targetRotY - rotY) * ease;
 
     ctx.clearRect(0, 0, W, H);
 
@@ -278,6 +286,35 @@
     ctx.arc(cx, cy, 175, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(255,255,255,0.4)';
     ctx.fill();
+
+    // Instrument graticule: quiet grey grid, central axes and scale ticks.
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 174, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.strokeStyle = 'rgba(10,10,10,0.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = -4; i <= 4; i++) {
+      if (i === 0) continue;
+      ctx.moveTo(cx + i * 35, cy - 175);
+      ctx.lineTo(cx + i * 35, cy + 175);
+      ctx.moveTo(cx - 175, cy + i * 35);
+      ctx.lineTo(cx + 175, cy + i * 35);
+    }
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(10,10,10,0.28)';
+    ctx.beginPath();
+    ctx.moveTo(cx - 175, cy); ctx.lineTo(cx + 175, cy);
+    ctx.moveTo(cx, cy - 175); ctx.lineTo(cx, cy + 175);
+    for (let i = -9; i <= 9; i++) {
+      if (i === 0) continue;
+      const tick = i % 2 === 0 ? 5 : 3;
+      ctx.moveTo(cx + i * 17.5, cy - tick); ctx.lineTo(cx + i * 17.5, cy + tick);
+      ctx.moveTo(cx - tick, cy + i * 17.5); ctx.lineTo(cx + tick, cy + i * 17.5);
+    }
+    ctx.stroke();
+    ctx.restore();
 
     ctx.beginPath();
     ctx.arc(cx, cy, 175, 0, Math.PI * 2);
