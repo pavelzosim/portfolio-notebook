@@ -20,8 +20,7 @@
 .browser-tool-steps{margin:0 0 22px;padding:0;list-style:none;width:100%}
 .browser-tool-steps li{display:flex;gap:12px;padding:7px 0;border-bottom:1px solid var(--atlas-border);font-size:var(--fs-meta)}
 .browser-tool-steps b{color:var(--atlas-accent);font-size:var(--fs-status)}
-.browser-tool-copy .section-action{margin-top:auto}
-.browser-tool-copy .section-action>a{display:flex;gap:22px;padding:10px 12px;border:1px solid var(--atlas-ink);background:var(--atlas-bg-raised);color:var(--atlas-ink);font-size:var(--fs-meta);text-decoration:none}
+.browser-tool-copy>.atlas-btn-shadow{margin-top:auto}
 .browser-tool-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:12px 0 16px;border:1px solid var(--atlas-border)}
 .browser-tool-facts span{padding:8px;text-align:center;font-size:var(--fs-status);color:var(--atlas-ink-soft)}
 .browser-tool-facts span+span{border-left:1px solid var(--atlas-border)}
@@ -57,8 +56,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 29px;
-  padding: 7px 11px;
+  min-height: 24px;
+  padding: 4px 10px;
   border: 1px solid var(--ink);
   background: var(--paper2);
   color: var(--ink);

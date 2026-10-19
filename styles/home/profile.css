@@ -27,15 +27,15 @@ h1 span{font-size:.58em;letter-spacing:.01em;color:var(--red);text-transform:upp
 .author-summary>span{min-width:0;padding:8px 12px;display:flex;gap:8px;align-items:baseline;border-right:1px solid var(--atlas-border-strong);border-bottom:1px solid var(--atlas-border-strong);font-size:8px}
 .author-summary>span{flex:1 1 145px}
 .author-summary b{color:var(--atlas-ink-muted);font-size:7px;font-weight:400;text-transform:uppercase}
-.author-record-line>.atlas-btn-shadow{flex:0 0 auto;align-self:stretch}
-.author-record-line>.atlas-btn-shadow>.atlas-btn{height:100%;display:flex;align-items:center}
+.author-record-line>.atlas-btn{flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+
 @media(max-width:760px){
   .shellbar nav{height:29px;padding:2px;overflow:visible}
   .shellbar nav a{padding:6px 8px;font-size:9px}
   .profile-facts{grid-template-columns:1fr}
   .author-record-line{display:block}
   .author-summary>span{flex-basis:100%}
-  .author-record-line>.atlas-btn-shadow{display:block;width:max-content;margin-top:8px}
+  .author-record-line>.atlas-btn{display:block;width:max-content;margin-top:8px}
   .rail-links a:nth-child(3):before{content:"[TG]"}
   .rail-links a:nth-child(4):before{content:"[@]"}
   h1 span{font-size:.5em}

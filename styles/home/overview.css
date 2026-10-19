@@ -80,20 +80,8 @@
 .doc-head .abstract { max-width: 58ch; margin: 0 0 10px; color: var(--atlas-ink-soft); font: 13px/1.5 var(--mono); }
 
 .hero-cta {
-  display: inline-block;
-  padding: 6px 14px;
-  border: 1px solid var(--atlas-border);
-  background: transparent;
-  color: var(--atlas-accent);
-  font: inherit;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  text-decoration: none;
+  flex-shrink: 0;
 }
-.hero-cta:hover, .hero-cta:focus-visible { background: var(--atlas-bg-alt); }
-.hero-cta:active { transform: translateY(1px); }
 
 .profile-row {
   display: flex;
@@ -102,7 +90,7 @@
   gap: 10px;
   margin: 0 0 14px;
 }
-.profile-row .hero-cta { flex: 0 0 auto; display: flex; align-items: center; }
+.profile-row .hero-cta { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
 
 .profile-facts {
   display: flex;

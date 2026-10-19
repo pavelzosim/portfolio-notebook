@@ -3,6 +3,14 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..', 'styles');
+test('supporting controls exclude disabled buttons from interactive states', () => {
+  const css = fs.readFileSync(path.join(root, 'framework', 'quiet-controls.css'), 'utf8');
+  for (const selector of css.matchAll(/([^{}]+)\{/g)) {
+    if (/:(hover|focus-visible|active)\b/.test(selector[1])) {
+      assert.match(selector[1], /:not\(:disabled\)/);
+    }
+  }
+});
 function files(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
     const file = path.join(directory, entry.name);

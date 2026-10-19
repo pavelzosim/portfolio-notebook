@@ -6,7 +6,8 @@
 .online-tools-page .tool-record{display:grid;grid-template-columns:180px minmax(0,1fr);gap:22px}
 .online-tools-page .tool-record img{width:100%;height:auto;object-fit:contain;border:1px solid var(--atlas-border)}
 .online-tools-page .tool-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:16px 0}
-.online-tools-page .atlas-btn{min-height:36px;white-space:normal}
+.online-tools-page .atlas-btn{display:inline-flex;align-items:center;justify-content:center;min-height:36px;white-space:normal}
+.online-tools-page .atlas-btn--quiet{min-height:24px}
 .online-tools-page .atlas-btn:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
 .online-tools-page button:disabled{opacity:.5;cursor:default}
 .online-tools-page .atlas-btn:disabled{opacity:1;background:var(--atlas-bg-raised);color:var(--atlas-ink-muted);border:1px solid var(--atlas-border);transform:none}
@@ -80,7 +81,7 @@
 .online-tools-page .animation-preview canvas{width:128px;max-width:100%}
 .online-tools-page .tool-export{border-left:3px solid var(--atlas-accent);background:var(--atlas-accent-soft)}
 .online-tools-page #filename{font-size:var(--fs-meta);padding:12px;border:1px solid var(--atlas-border);background:var(--atlas-bg-raised)}
-.online-tools-page .tool-support{display:flex;align-items:center;justify-content:space-between;gap:22px;background:var(--atlas-bg-alt)}
+.online-tools-page .tool-section.tool-support{display:flex;align-items:center;justify-content:space-between;gap:22px;background:var(--atlas-bg-alt)}
 .online-tools-page .tool-support__content{max-width:470px;min-width:0}
 .online-tools-page .tool-support__eyebrow{margin:0 0 8px;font-size:var(--fs-status);letter-spacing:.12em;color:var(--atlas-ink-muted)}
 .online-tools-page .tool-support h2{margin:0 0 8px;font-size:var(--fs-h4)}
@@ -96,6 +97,11 @@
 .online-tools-page .coffee-button--compact .bmc-btn-text{width:auto;flex-shrink:1}
 .online-tools-page .coffee-fallback{font-size:var(--fs-meta)}
 .online-tools-page .tool-support:has(.bmc-btn) .coffee-fallback{display:none}
+.online-tools-page .tool-support--rail{display:block;width:100%;min-width:0;padding:0;background:transparent}
+.online-tools-page .tool-support--rail .tool-support__content{width:100%;max-width:none}
+.online-tools-page .tool-support--rail h2{font-size:12px;line-height:1.5}
+.online-tools-page .tool-support--rail .coffee-button{margin-top:12px}
+.online-tools-page .tool-support--rail .bmc-btn{max-width:100%;padding-inline:8px;font-size:20px}
 @media(max-width:1000px){.online-tools-page .tool-support{flex-direction:column;align-items:flex-start}}
 @media(max-width:380px){.online-tools-page .coffee-button .bmc-btn{min-width:0;padding-inline:12px;font-size:22px}.online-tools-page .coffee-button .bmc-btn-text{width:auto;flex-shrink:1}}
 /* Separate catalogue entries with document rhythm and a visible rule. */
