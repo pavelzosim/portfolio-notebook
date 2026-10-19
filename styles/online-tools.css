@@ -107,3 +107,19 @@
 /* Separate catalogue entries with document rhythm and a visible rule. */
 .online-tools-page .tool-record+.tool-record{margin-top:40px;padding-top:32px;border-top:1px solid var(--atlas-border-strong)}
 @media(max-width:760px){.online-tools-page .tool-record+.tool-record{margin-top:32px;padding-top:24px}}
+.tool-catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.tool-catalog-card{display:flex;flex-direction:column;min-width:0;padding:18px;border:1px solid var(--atlas-border-strong);background:var(--atlas-bg-raised)}
+.online-tools-page .tool-catalog-id{margin:0 0 16px;font-size:var(--fs-status);color:var(--atlas-ink-muted)}
+.tool-catalog-diagram{display:block;width:180px;max-width:100%;height:40px;margin-bottom:16px;color:var(--atlas-accent)}
+.tool-catalog-diagram--compress{color:#087b80}
+.online-tools-page .tool-catalog-card h3{margin:0 0 8px;font-size:var(--fs-h4)}
+.online-tools-page .tool-catalog-description{margin:0 0 16px;color:var(--atlas-ink-soft);font-size:var(--fs-meta);line-height:1.6}
+.tool-catalog-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;font-size:var(--fs-meta);color:var(--atlas-ink-muted)}
+.tool-catalog-foot a,.tool-text-action{display:inline-block;padding:4px 6px;color:var(--atlas-accent);font-weight:700;text-decoration:none}
+.tool-catalog-foot a:is(:hover,:focus-visible),.tool-text-action:is(:hover,:focus-visible){background:var(--atlas-nav-hover-bg);text-decoration:none}
+.tool-catalog-foot a:focus-visible,.tool-text-action:focus-visible{outline:1px solid var(--atlas-accent);outline-offset:2px}
+@media(max-width:700px){.tool-catalog-grid{grid-template-columns:1fr}}
+.online-tools-page .rail a[aria-current="page"]{color:var(--atlas-nav-active);background:var(--atlas-nav-active-bg)}
+.online-tools-page .rail a[aria-current="page"] b{font-weight:700}
+body.online-tools-page>.function-bar .vc-button[aria-current="location"]{background:var(--atlas-command-hover);box-shadow:inset 0 -2px var(--atlas-command-signal)}
+.tool-support-note{margin:0 0 12px;line-height:1.6;color:var(--atlas-ink-soft)}
