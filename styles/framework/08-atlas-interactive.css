@@ -17,14 +17,19 @@
   appearance: none;
   border-radius: 0;
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
+  line-height: 1.4;
   font-family: var(--atlas-font-mono);
   font-size: var(--fs-code);        /* 12px */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 6px 16px;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   color: #ffffff;
   background-color: var(--atlas-accent);
@@ -37,9 +42,9 @@
   vertical-align: middle;
 }
 
-.atlas-btn:not(:disabled):hover { background-color: #0000cc; }
+.atlas-btn:where(:not(:disabled)):hover { background-color: #0000cc; }
 
-.atlas-btn:not(:disabled):active {
+.atlas-btn:where(:not(:disabled)):active {
   background-color: #000088;
   transform: translateY(1px);
 }
@@ -72,12 +77,12 @@
 
 /* Quiet navigation action: visible in the layout without competing with content. */
 .atlas-btn--quiet {
-  padding: 4px 10px;
+  padding: 6px 16px;
   line-height: 1.4;
   border: 1px solid var(--atlas-ink);
   background: var(--atlas-bg-raised);
   color: var(--atlas-ink);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-code);
   text-transform: none;
   letter-spacing: .02em;
 }
@@ -116,7 +121,7 @@
 .atlas-btn--ghost::after {
   display: none; /* Dithering не нужен для ghost */
 }
-.atlas-btn--ghost:hover {
+.atlas-btn--ghost:where(:not(:disabled)):hover {
   background: var(--atlas-bg-alt);
 }
 .atlas-btn--ghost:active {

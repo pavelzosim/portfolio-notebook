@@ -3,7 +3,7 @@
 .abstract{max-width:670px;font-size:13px;line-height:1.75;letter-spacing:-.01em}
 .prose{font-size:11px;line-height:1.75}
 .project-index small{font-size:10px;line-height:1.55}
-.shellbar nav a{padding-inline:7px;font-size:9px}
+.shellbar nav a{padding-inline:7px;font-size:10px}
 .log-table>a{min-height:106px;grid-template-columns:146px 54px 66px minmax(170px,1fr) 98px 15px}
 .log-table>a>img{width:136px;height:82px}
 .log-table>a:hover,.log-table>a:focus-visible{background:var(--paper2);color:var(--ink);outline:0;box-shadow:inset 3px 0 0 var(--red)}
@@ -12,27 +12,27 @@
 .media-record{margin:0 0 28px;display:grid;grid-template-columns:minmax(260px,1.1fr) minmax(190px,.9fr);border:1px solid var(--line2);background:rgba(17,17,17,.025)}
 .media-record video{display:block;width:100%;aspect-ratio:16/9;background:#111;object-fit:cover}
 .media-record figcaption{padding:13px 15px;display:flex;flex-direction:column;justify-content:center;gap:9px;border-left:1px solid var(--line2)}
-.media-record figcaption span{color:var(--red);font-size:8px;font-weight:700}
+.media-record figcaption span{color:var(--red);font-size:10px;font-weight:700}
 .media-record figcaption strong{font-size:10px;line-height:1.55}
-.media-record figcaption small{color:var(--muted);font-size:8px}
+.media-record figcaption small{color:var(--muted);font-size:10px}
 .section-intro{max-width:650px;margin:0 0 22px;color:var(--muted);font-size:10px;line-height:1.7}
 .resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line2);border-left:1px solid var(--line2)}
 .resource-grid>a{min-width:0;padding:10px;display:flex;flex-direction:column;gap:7px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);text-decoration:none}
 .resource-grid>a:hover,.resource-grid>a:focus-visible{background:rgba(17,17,17,.05);outline:0}
 .resource-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line)}
-.resource-grid span{margin-top:3px;color:var(--red);font-size:8px;font-weight:700}
+.resource-grid span{margin-top:3px;color:var(--red);font-size:10px;font-weight:700}
 .resource-grid strong{font-size:10px;line-height:1.45}
-.resource-grid small{color:var(--muted);font-size:9px;line-height:1.55}
+.resource-grid small{color:var(--muted);font-size:10px;line-height:1.55}
 .contact-panel{border-top:1px solid var(--atlas-border-strong);border-left:1px solid var(--atlas-border-strong)}
 .contact-panel .contact-lead{margin:0;padding:12px 16px;border-right:1px solid var(--atlas-border-strong);border-bottom:1px solid var(--atlas-border-strong);color:var(--atlas-ink);font-size:10px;line-height:1.55}
 .contact-panel dl{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 .contact-panel dl div{min-width:0;padding:8px 12px;border-right:1px solid var(--atlas-border-strong);border-bottom:1px solid var(--atlas-border-strong)}
-.contact-panel dt{margin:0 0 4px;color:var(--atlas-ink-muted);font-size:7px;letter-spacing:.05em;text-transform:uppercase}
-.contact-panel dd{margin:0;font-size:9px;line-height:1.4}
+.contact-panel dt{margin:0 0 4px;color:var(--atlas-ink-muted);font-size:10px;letter-spacing:.05em;text-transform:uppercase}
+.contact-panel dd{margin:0;font-size:10px;line-height:1.4}
 .contact-panel a{text-decoration:none}
 .contact-panel a:hover,.contact-panel a:focus-visible{color:var(--atlas-nav-active)}
 .specialization-tags{display:flex;flex-wrap:wrap;gap:4px}
-.specialization-tags a{padding:4px 8px;border:1px solid var(--atlas-border);background:var(--atlas-bg-raised);color:var(--atlas-ink-muted);font-size:8px;line-height:1;text-decoration:none}
+.specialization-tags a{padding:4px 8px;border:1px solid var(--atlas-border);background:var(--atlas-bg-raised);color:var(--atlas-ink-muted);font-size:10px;line-height:1;text-decoration:none}
 .specialization-tags a:hover,.specialization-tags a:focus-visible{border-color:var(--atlas-accent);background:var(--atlas-accent);color:#fff;outline:0}
 .function-bar{grid-template-columns:repeat(8,minmax(72px,1fr))}
 @media(max-width:760px){
@@ -43,7 +43,7 @@
   .log-table>a>img{width:92px;height:66px}
   .project-index>a{grid-template-columns:104px 50px minmax(0,1fr) 38px;min-height:108px}
   .project-index>a>img{width:96px;height:70px}
-  .project-index>a>small{font-size:9px}
+  .project-index>a>small{font-size:10px}
   .media-record{grid-template-columns:1fr}
   .media-record figcaption{border-left:0;border-top:1px solid var(--line2)}
   .resource-grid{grid-template-columns:1fr}

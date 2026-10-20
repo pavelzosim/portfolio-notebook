@@ -32,7 +32,7 @@ body:not(.migrated-post) > .atlas-container::before {
   border-bottom: 1px solid rgba(0, 0, 0, .4);
   background: rgba(0, 0, 0, .035);
   color: rgba(0, 0, 0, .58);
-  font: 700 9px/26px 'JetBrains Mono', 'Courier New', monospace;
+  font: 700 10px/26px 'JetBrains Mono', 'Courier New', monospace;
   letter-spacing: .05em;
   text-transform: uppercase;
 }

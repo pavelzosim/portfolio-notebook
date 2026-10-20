@@ -53,7 +53,7 @@ a { color: inherit; }
 .panel-head {
   display: flex; justify-content: space-between; align-items: center;
   padding: 7px 12px; border-bottom: 1px solid var(--line);
-  font-size: 9px; letter-spacing: 0.06em; color: var(--ink-muted);
+  font-size:10px; letter-spacing: 0.06em; color: var(--ink-muted);
 }
 .panel-head .code { color: var(--ink); font-weight: 600; }
 .panel-body { padding: 18px 16px 16px; text-align: center; }
@@ -65,7 +65,7 @@ a { color: inherit; }
 .panel-body p {
   margin: 0 0 16px; font-size: 11px; color: var(--ink-muted); line-height: 1.5;
 }
-.game-note { display: inline-block; margin-top: 6px; font-size: 9px; color: var(--ink-faint); }
+.game-note { display: inline-block; margin-top: 6px; font-size:10px; color: var(--ink-faint); }
 .actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
 .btn-wrap {
   display: inline-block; position: relative;

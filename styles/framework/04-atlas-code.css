@@ -21,6 +21,7 @@
 .atlas-container .content-block .atlas-math-block {
   border-style: dashed;
   overflow-x: auto;
+  contain: inline-size paint;
 }
 
 /* Тексты псевдо-шапок */
@@ -54,6 +55,9 @@
 
 .atlas-container .content-block .atlas-math-block mjx-container[display="true"] {
   margin-block: 12px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 /* ── СЕКЦИЯ C: SMART COUPLING — Бесшовное слияние math + code ────────────── */

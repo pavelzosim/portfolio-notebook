@@ -212,6 +212,9 @@
 }
 
 .atlas-container .atlas-sp-slider {
+  margin: 0;
+  padding: 0;
+  border: 0;
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
@@ -245,6 +248,8 @@
   cursor: ew-resize;
   transition: transform 0.1s;
 }
+.atlas-container .atlas-sp-slider::-webkit-slider-runnable-track{height:1px;background:transparent;border:0}
+.atlas-container .atlas-sp-slider::-moz-range-track{height:1px;background:transparent;border:0}
 .atlas-container .atlas-sp-slider::-webkit-slider-thumb:hover { transform: scaleY(1.25); }
 .atlas-container .atlas-sp-slider::-moz-range-thumb:hover     { transform: scaleY(1.25); }
 

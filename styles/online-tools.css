@@ -1,4 +1,12 @@
 /* Tool composition uses the existing Atlas controls and notebook geometry. */
+.online-tools-page:has(.tool-catalog-grid) .content-index-head{padding:38px 36px 32px}
+@media(max-width:760px){.online-tools-page:has(.tool-catalog-grid) .content-index-head{padding-inline:18px}}
+.online-tools-page .tool-instructions ol{margin:0;padding-left:20px;list-style:decimal}
+.online-tools-page .tool-instructions li{padding:0 0 9px;line-height:1.6}
+.online-tools-page .meta-rail .meta-block li::before,.online-tools-page .meta-rail .meta-block li:last-child::before{content:none}
+@media(max-width:1100px){.online-tools-page .meta-rail:has(.tool-instructions){display:block;position:static;grid-column:2;max-height:none;margin:16px 0;padding:18px;border:1px solid var(--atlas-border)}}
+.online-tools-page .meta-rail .tool-support-button{display:flex;gap:7px;margin-top:12px;color:#111;background:#ffdd00;text-decoration:none;padding:6px 10px;white-space:normal}
+.online-tools-page .meta-rail .tool-support-button:hover{background:#f2cf00;color:#111}
 .online-tools-page .tool-section{padding:22px 32px;border-bottom:1px solid var(--atlas-border)}
 .online-tools-page .tool-section h2{font-size:var(--fs-h4)}
 .online-tools-page .tool-section h3{font-size:var(--fs-h5)}
@@ -6,8 +14,7 @@
 .online-tools-page .tool-record{display:grid;grid-template-columns:180px minmax(0,1fr);gap:22px}
 .online-tools-page .tool-record img{width:100%;height:auto;object-fit:contain;border:1px solid var(--atlas-border)}
 .online-tools-page .tool-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:16px 0}
-.online-tools-page .atlas-btn{display:inline-flex;align-items:center;justify-content:center;min-height:36px;white-space:normal}
-.online-tools-page .atlas-btn--quiet{min-height:24px}
+.online-tools-page .atlas-btn{white-space:normal}
 .online-tools-page .atlas-btn:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:3px}
 .online-tools-page button:disabled{opacity:.5;cursor:default}
 .online-tools-page .atlas-btn:disabled{opacity:1;background:var(--atlas-bg-raised);color:var(--atlas-ink-muted);border:1px solid var(--atlas-border);transform:none}
@@ -123,3 +130,13 @@
 .online-tools-page .rail a[aria-current="page"] b{font-weight:700}
 body.online-tools-page>.function-bar .vc-button[aria-current="location"]{background:var(--atlas-command-hover);box-shadow:inset 0 -2px var(--atlas-command-signal)}
 .tool-support-note{margin:0 0 12px;line-height:1.6;color:var(--atlas-ink-soft)}
+.online-tools-page .tool-export-row{display:flex;align-items:center;gap:12px}
+.online-tools-page .tool-export-row #filename{flex:1;min-width:0;margin:0}
+.online-tools-page .tool-export-row .tool-actions{flex:none;margin:0}
+.online-tools-page .meta-rail .meta-block>p{color:var(--atlas-ink-muted)}
+.online-tools-page .tool-privacy-note{color:var(--atlas-ink-soft)}
+@media(max-width:640px){.online-tools-page .tool-export-row{align-items:stretch;flex-direction:column}}
+.tool-catalog-card{position:relative;text-decoration:none;color:var(--atlas-ink);cursor:pointer;transition:background-color .15s ease,border-color .15s ease}
+.tool-catalog-card:is(:hover,:focus-visible){background:var(--atlas-nav-hover-bg);border-color:var(--atlas-accent);text-decoration:none}
+.tool-catalog-card:focus-visible{outline:2px solid var(--atlas-accent);outline-offset:2px}
+.tool-catalog-open{padding:4px 6px;color:var(--atlas-accent);font-weight:700}

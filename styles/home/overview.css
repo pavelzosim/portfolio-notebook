@@ -35,7 +35,7 @@
 .wire-meta {
   display: flex;
   gap: 10px;
-  font-size: 9px;
+  font-size:10px;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--atlas-ink-faint);
@@ -75,7 +75,7 @@
   text-transform: none;
 }
 
-.scope-line { margin: 0 0 6px; color: var(--atlas-ink-muted); font-size: 9px; }
+.scope-line { margin: 0 0 6px; color: var(--atlas-ink-muted); font-size:10px; }
 .tagline-mark { margin: 0 0 10px; color: var(--red); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .doc-head .abstract { max-width: 58ch; margin: 0 0 10px; color: var(--atlas-ink-soft); font: 13px/1.5 var(--mono); }
 
@@ -113,7 +113,7 @@
 }
 .profile-facts div:nth-last-child(-n + 2) { border-bottom: 0; }
 .profile-facts div:nth-child(2n) { border-right: 0; }
-.profile-facts dt { margin: 0; color: var(--atlas-ink-faint); font-size: 9px; white-space: nowrap; }
+.profile-facts dt { margin: 0; color: var(--atlas-ink-faint); font-size:10px; white-space: nowrap; }
 .profile-facts dd { margin: 0; font-size: 10px; white-space: nowrap; }
 
 .hero-video {

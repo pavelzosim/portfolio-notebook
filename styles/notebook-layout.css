@@ -1,13 +1,16 @@
 /* Canonical Atlas page geometry.
    Indexes, project records, and long-form articles share this one shell. */
-@import url("./theme/navigation-tokens.css?v=2");
-@import url("./framework/quiet-controls.css?v=2");
+@import url("./theme/navigation-tokens.css?v=20261020-ux1");
+@import url("./framework/quiet-controls.css?v=20261020-ux1");
 
 :root {
-  --notebook-shell-width: 1360px;
+  --notebook-shell-width: 1440px;
   --notebook-page-edge: 36px;
-  --notebook-rail-width: 188px;
-  --notebook-meta-width: 176px;
+  --notebook-rail-width: 220px;
+  --notebook-meta-width: 200px;
+  --atlas-ui-size: 12px;
+  --atlas-label-size: 11px;
+  --atlas-meta-size: 10px;
   --notebook-column-gap: 28px;
   --notebook-shell-top: 18px;
   --notebook-shell-bottom: 48px;
@@ -16,6 +19,21 @@
 
 /* Keep section headings below the sticky navigation on direct fragment visits. */
 html { scroll-padding-top: 48px; }
+.shellbar,.article-shellbar{font-size:var(--atlas-ui-size)}
+.shellbar nav a,.article-shellbar nav a{font-size:var(--atlas-ui-size)}
+.shellbar nav a.active,.article-shellbar nav a[aria-current="page"]{font-size:var(--atlas-ui-size);line-height:1.4;padding:0 10px;align-self:center;background:var(--atlas-nav-active-bg);color:var(--atlas-nav-active);border:0;outline:0}
+.rail-title,.meta-block>p,.article-rail-title,.article-meta-block>p,.article-neighbours>p{color:var(--atlas-ink-muted);font-size:var(--atlas-label-size)}
+.article-outline li.article-outline--sub a{font-size:var(--atlas-ui-size)}
+.article-meta dl,.article-tags,.article-neighbours a,.meta-rail dl{font-size:var(--atlas-ui-size);line-height:1.6}
+.rail a b,.article-rail a b,.meta-rail dd,.article-meta dd{overflow-wrap:break-word;word-break:normal}
+.meta-rail dl,.article-meta dl{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}
+@media(max-width:1200px){
+ .shellbar,.article-shellbar{height:auto;min-height:48px;padding-block:8px;grid-template-columns:minmax(0,1fr) auto;row-gap:8px}
+ .shellbar nav,.article-shellbar nav{grid-column:1/-1;grid-row:2;justify-content:flex-start;flex-wrap:wrap}
+ .shellbar .shell-status,.article-shellbar__status{grid-column:2;grid-row:1}
+ .rail,.article-rail,.meta-rail,.article-meta{top:88px;max-height:calc(100vh - 138px)}
+ html{scroll-padding-top:100px}
+}
 @media(max-width:760px){
   html { scroll-padding-top: 104px; }
 }
@@ -63,7 +81,7 @@ html { scroll-padding-top: 48px; }
   margin-top: 2px;
   overflow: auto;
   color: var(--atlas-nav-ink);
-  font: 10px/1.5 var(--atlas-font-mono);
+  font: var(--atlas-ui-size)/1.6 var(--atlas-font-mono);
 }
 
 .rail ol,
@@ -120,7 +138,7 @@ html { scroll-padding-top: 48px; }
   margin-bottom: 8px;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--line2, rgba(10, 10, 10, .28));
-  font-size: 8px;
+  font-size: var(--atlas-label-size);
   letter-spacing: .06em;
   text-transform: uppercase;
 }
@@ -190,7 +208,7 @@ body > .function-bar {
   right: 0;
   bottom: 0;
   left: 0;
-  height: 32px;
+  height: 40px;
   padding: 3px 10px;
   display: grid;
   gap: 5px;
@@ -209,7 +227,7 @@ body > .function-bar .vc-button {
   border: 0;
   background: #161616;
   color: #ddd;
-  font: 9px/1.4 var(--atlas-font-mono);
+  font: var(--atlas-ui-size)/1.4 var(--atlas-font-mono);
   text-decoration: none;
   cursor: pointer;
 }
@@ -248,7 +266,7 @@ body > .function-bar .vc-button:focus-visible kbd { color: var(--atlas-command-s
 @media (max-width: 1100px) {
   .workspace,
   .article-workspace {
-    grid-template-columns: 168px minmax(0, 1fr);
+    grid-template-columns: 220px minmax(0, 1fr);
     gap: 18px;
   }
 

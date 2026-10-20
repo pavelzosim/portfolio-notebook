@@ -69,6 +69,7 @@
         title: project.title,
         kind: 'project',
         group: 'projects',
+        category: project.metaType || project.type.split('/')[0].trim(),
         summary: project.summary,
         awards: project.awards || [],
         tags: [...project.type.split('/'), ...project.tools.slice(0, 3)].map((tag) => tag.trim().toLowerCase()),
@@ -153,7 +154,7 @@
 
       {
         const seriesDirectory = node('div', 'meta-block index-series-directory');
-        seriesDirectory.append(node('p', '', view === 'blog' ? '[SERIES]' : '[ON THIS PAGE]'));
+        seriesDirectory.append(node('p', '', view === 'blog' ? '[SERIES]' : '[GROUPS]'));
         seriesDirectoryList = node('ol', 'index-series-list');
         seriesDirectory.append(seriesDirectoryList);
         const metaRail = document.querySelector('.meta-rail');
@@ -275,7 +276,7 @@
               const link = node('a');
               link.href = `#series-${slug}`;
               const copy = node('span', 'index-series-copy');
-              copy.append(node('b', '', items[0].series.title));
+              copy.append(node('b', '', items[0].series.title), node('small', 'index-group-count', `${items.length} records`));
               link.append(node('span', 'index-series-num', String(index + 1).padStart(2, '0')), copy);
               item.append(link);
               return item;
@@ -285,7 +286,7 @@
               const link = node('a');
               link.href = '#series-independent';
               const copy = node('span', 'index-series-copy');
-              copy.append(node('b', '', 'Standalone records'));
+              copy.append(node('b', '', 'Standalone records'), node('small', 'index-group-count', `${independent.length} records`));
               link.append(node('span', 'index-series-num', '—'), copy);
               item.append(link);
               directoryItems.push(item);
@@ -296,17 +297,25 @@
           container.removeAttribute('role');
           container.replaceChildren(...seriesSections);
         } else {
-          container.replaceChildren(...visible.map(renderRecord));
-          seriesDirectoryList.replaceChildren(...visible.map((record, index) => {
+          const groups = new Map();
+          visible.forEach(record => {const key = view === 'projects' ? record.category : record.kind;if(!groups.has(key))groups.set(key, []);groups.get(key).push(record);});
+          const sections = [], directory = [];
+          [...groups.entries()].forEach(([title, items], index) => {
+            const id = `group-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+            const section = node('section', 'content-series');section.id = id;
+            const head = node('header', 'content-series-head');head.append(node('h3', '', title), node('span', 'content-series-meta', `${items.length} records`));
+            const list = node('div', 'content-log');list.setAttribute('role','list');list.append(...items.map(renderRecord));section.append(head,list);sections.push(section);
             const item = node('li');
             const link = node('a');
-            link.href = `#record-${record.id.toLowerCase().replace(/[^a-z0-9-]/g, '-')}`;
+            link.href = `#${id}`;
             const copy = node('span', 'index-series-copy');
-            copy.append(node('b', '', record.title));
+            copy.append(node('b', '', title), node('small', 'index-group-count', `${items.length} records`));
             link.append(node('span', 'index-series-num', String(index + 1).padStart(2, '0')), copy);
             item.append(link);
-            return item;
-          }));
+            directory.push(item);
+          });
+          container.removeAttribute('role');container.replaceChildren(...sections);
+          seriesDirectoryList.replaceChildren(...directory);
           updateSeriesSelection();
         }
         seriesDirectoryList.closest('.meta-block').hidden = visible.length === 0;
