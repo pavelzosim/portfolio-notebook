@@ -18,10 +18,10 @@
 .tag-cloud{display:flex;flex-wrap:wrap;gap:6px}.tag-cloud a{border:1px solid var(--line);padding:2px 4px;font-size:var(--meta);text-decoration:none}
 .tag-cloud a:where(:hover,:focus-visible){color:var(--blue);background:var(--hover);border-color:#0000aa55}
 .card-grid,.tool-catalog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.card,.tool-catalog-card{position:relative;display:flex;flex-direction:column;gap:12px;border:1px solid var(--strong);padding:22px;min-width:0}
+.card,.tool-catalog-card{position:relative;display:flex;flex-direction:column;gap:12px;border:1px solid var(--strong);padding:22px;min-width:0;color:var(--ink);text-decoration:none}
 .card h3,.tool-catalog-card h3{margin:0}.card p,.tool-catalog-card p{margin:0}.card img{width:100%;aspect-ratio:16/10;object-fit:contain}
-.card a::after,.tool-catalog-card a::after{content:'';position:absolute;inset:0}.card a,.tool-catalog-card a{color:var(--ink);text-decoration:none}.card:has(a:hover),.tool-catalog-card:has(a:hover){border-color:var(--blue)}
-.card:has(a:focus-visible),.tool-catalog-card:has(a:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.card a::after,.tool-catalog-card a::after{content:'';position:absolute;inset:0}.card a,.tool-catalog-card a{color:var(--ink);text-decoration:none}.card:has(a:hover),.tool-catalog-card:has(a:hover),a.tool-catalog-card:hover{border-color:var(--blue)}
+.card:has(a:focus-visible),.tool-catalog-card:has(a:focus-visible),a.tool-catalog-card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .record-list{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}.record-list li{border-bottom:1px solid var(--line);margin:0}.record-list a{display:grid;grid-template-columns:74px 1fr;gap:12px;padding:12px 4px;color:var(--ink);text-decoration:none}.record-list a:hover{background:var(--hover)}
 .eyebrow,figcaption{font-size:var(--meta);color:var(--muted)}figcaption{margin-top:8px}
 input,select{min-height:36px;max-width:100%;padding:8px;border:1px solid var(--strong);background:var(--surface);color:var(--ink);font-size:var(--ui)}
