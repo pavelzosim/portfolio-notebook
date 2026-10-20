@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Atlas component fixtures</title></head><body>
+<template>
+ <header class="document-head"><p class="breadcrumb">Atlas / component review</p><h1>Components &amp; states</h1><p>Shared geometry, reading rhythm and actual keyboard interactions. Visual details remain under review.</p></header>
+ <section class="document-section" id="actions"><header class="section-label"><span>01</span><h2>Actions</h2></header>
+  <p>Primary and quiet controls share their face geometry. Long labels wrap without changing adjacent controls.</p>
+  <div class="action-row"><button class="button" type="button">Primary action</button><button class="button button--quiet" type="button">Quiet action</button><button class="button" type="button" disabled>Unavailable</button></div>
+  <div class="action-row"><a class="button button--quiet" href="?page=tool">Open Sprite Sheet Assembly →</a><a class="button tool-support-button" href="https://www.buymeacoffee.com/pavel.zosim">☕ Buy me a coffee</a></div>
+  <p class="eyebrow">Use Tab to inspect focus. Disabled controls are not interactive. Navigation remains a real link.</p>
+ </section>
+ <section class="document-section" id="fields"><header class="section-label"><span>02</span><h2>Fields &amp; engineering range</h2></header>
+  <form class="control-form">
+   <div class="field-grid"><label>Seed<input type="number" name="seed" value="1024" required min="0" max="2147483647"></label><label>Output resolution<select name="resolution"><option>512 × 512</option><option>1024 × 1024</option><option>4096 × 4096</option></select></label></div>
+   <label for="detail-range">Detail strength <output id="detail-value" for="detail-range">35</output><span class="range-scale"><input id="detail-range" type="range" name="detail" min="0" max="100" value="35"></span></label>
+   <label>Unavailable setting<input value="Requires input frames" disabled></label>
+   <div class="action-row"><button class="button" type="submit">Validate settings</button></div>
+   <p class="notice" id="demo-result" role="status">Ready. Change a value, then validate.</p>
+  </form>
+ </section>
+ <section class="document-section" id="states"><header class="section-label"><span>03</span><h2>Empty, warning &amp; error</h2></header>
+  <div class="empty-state"><h3>No outputs yet</h3><p>Add source images to begin. Original files stay on your device.</p></div>
+  <p class="notice notice--warning"><strong>Warning.</strong> The encoded file is larger than the source. Review dimensions and quality before exporting.</p>
+  <p class="notice notice--error"><strong>Could not decode this image.</strong> Choose a supported PNG or JPEG file. No other frames were removed.</p>
+ </section>
+ <section class="document-section" id="density"><header class="section-label"><span>04</span><h2>Long labels &amp; reading density</h2></header>
+  <div class="card-grid"><article class="card"><p class="eyebrow">TOOL / LONG TITLE</p><h3><a href="?page=tool">Sprite Sheet Assembly — arrange, preview and export a transparent texture atlas</a></h3><p>One full-area destination. The card is not a button face; the title remains its accessible link name.</p></article><article class="card"><p class="eyebrow">TOOL / SHORT TITLE</p><h3><a href="?page=index">Online Tools</a></h3><p>Short content uses the same padding, gap and focus treatment.</p></article></div>
+  <div class="prose-sample"><h3>Stable reading measure</h3><p>Long technical paragraphs need a bounded line length even when the document column is wide. Typography stays at 14 px with a 1.6 line-height; media and tables may use the full available width.</p><p>The next paragraph uses the same flow interval. Section spacing is independent from a paragraph’s default browser margin.</p></div>
+ </section>
+</template></body></html>
