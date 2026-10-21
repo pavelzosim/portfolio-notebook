@@ -79,3 +79,5 @@
 .projects-directory{grid-template-columns:repeat(2,minmax(0,1fr))}.projects-directory .highlight-meta{padding:var(--space-flow);gap:var(--space-sm)}.projects-directory h3{font-size:var(--body);margin:0}.projects-directory p{font-size:var(--ui);margin:0}.projects-directory .record-arrow{margin-top:auto;font-size:var(--meta)}.projects-directory .highlight-meta{flex:1}.projects-directory img{height:200px}
 @media(max-width:760px){.projects-directory{grid-template-columns:1fr}.projects-directory img{height:180px}}
 .projects-directory .project-achievement{font-size:var(--meta);font-weight:400;border-top:1px solid var(--line);padding-top:var(--space-sm);margin-top:var(--space-sm);color:var(--muted)}
+.blog-chapter+.blog-chapter{margin-top:var(--space-group)}.blog-chapter-heading{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-md);padding-block:var(--space-md)}.blog-chapter-heading h3{font-size:var(--ui);font-weight:400;margin:0}.blog-chapter-heading>span{font-size:var(--meta);color:var(--muted);white-space:nowrap}
+[data-template="blog"] .rail nav .blog-subnav{padding-left:22px;font-size:var(--meta);color:var(--muted)}

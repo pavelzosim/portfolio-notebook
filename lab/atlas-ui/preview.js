@@ -2,7 +2,8 @@
 import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-17';
 import {renderTools} from './tools.js?v=review-25';
-const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
+import {renderBlog} from './blog.js?v=review-33';
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
 const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -84,6 +85,12 @@ async function projects(){
  localToolLinks(right);
  right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.add('button--outline');a.textContent='Buy →';});shelves();
 }
+async function blog(){
+ const [registry,source]=await Promise.all([json('/content/posts/index.json'),doc('/')]);
+ right.replaceChildren(clean(source.querySelector('[data-gumroad-shelf]')),clean(source.querySelector('[data-online-tools-shelf]')));
+ right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.remove('atlas-btn--quiet');a.classList.add('button--outline');a.textContent='Buy →';});localToolLinks(right);shelves();
+ renderBlog({main,left,registry,escape,heading});
+}
 async function components(){
  const source=await doc('./components.html');main.replaceChildren(...source.querySelector('template').content.cloneNode(true).childNodes);
  outline('COMPONENTS.md',[['#actions','Actions'],['#fields','Fields'],['#states','States'],['#density','Reading density']]);
@@ -95,7 +102,7 @@ try{
  document.body.dataset.template=page;document.querySelector('#original').href=pages[page];
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,tools,projects,article,project,tool,components}[page])();
+ await({home,index,tools,projects,blog,article,project,tool,components}[page])();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
  const commandPage=page==='tool'?'index':page;
  document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});

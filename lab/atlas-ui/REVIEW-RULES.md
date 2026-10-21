@@ -39,7 +39,7 @@ Review route: `/lab/atlas-ui/?page=tools`. Original comparison: `/tools/`.
 
 The user approved Tools & Assets on 2026-10-21. No production migration yet.
 
-## Projects Index — CANDIDATE
+## Projects Index — APPROVED
 
 Review route: `/lab/atlas-ui/?page=projects`. Original comparison: `/projects/`.
 
@@ -49,4 +49,19 @@ Review route: `/lab/atlas-ui/?page=projects`. Original comparison: `/projects/`.
 - Achievements are quiet metadata below the role/environment, separated by a fine rule, without badges. Reuse approved Home wording and registry facts; the airport record shows validated 24/7 operation rather than an invented award.
 - NASA opens the isolated project fixture; other cards retain original detail routes until reviewed.
 
-Projects Index and remaining page types await individual approval. Migration remains deferred.
+The user approved Projects Index on 2026-10-21, including quiet achievement lines and both sidebar carousels.
+
+## Blog Index — CANDIDATE
+
+Review route: `/lab/atlas-ui/?page=blog`. Original: `/blog/`.
+
+- Complete published/indexable registry, newest first; one native link per record.
+- Approved Home record-row rhythm with date, kind, title, summary and tags. No nested controls.
+- Search combines with registry topic selection and Newest/Title sorting; URL preserves state. Empty results provide reset.
+- Left topic filters; right shared Tool Store and Online Tools. No redundant counts in the sidebar.
+- Records are grouped into stable numbered topic volumes using registry groups, with headings and per-volume counts. Left navigation links to visible volumes; search and topic filters hide empty volumes. Sorting is within each volume, not across the entire directory.
+- Within volumes, use quieter h3 subcategories for actual series and related workflows (From File to Pixel, ShaderLab Cheatsheet, C# Variables, etc.). Each record occurs exactly once; no empty chapters. Sorting applies within each chapter. This candidate taxonomy lives in the lab until approved.
+- Each main volume has a one-sentence content summary under its heading, using the shared muted section-intro style rather than another emphasis level.
+- Existing isolated article opens for Procedural Travel Resolution; other articles retain original routes pending detail review.
+
+Blog Index and remaining page types await approval. Production migration remains deferred.
