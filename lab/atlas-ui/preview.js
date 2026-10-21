@@ -3,6 +3,7 @@ import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-17';
 import {renderTools} from './tools.js?v=review-25';
 import {renderBlog} from './blog.js?v=review-33';
+import {renderProject} from './project.js?v=review-61';
 const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
 const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
@@ -146,9 +147,14 @@ async function components(){
 }
 try{
  document.body.dataset.template=page;document.querySelector('#original').href=pages[page];
+ if(page==='article'||page==='project')document.body.dataset.detail='';
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
  await({home,index,tools,projects,blog,article,project,tool,components}[page])();
+ if(page==='project'){
+  const [projectData,postData]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json')]);
+  renderProject({record:projectData.projects.find(r=>r.slug==='nasa-first-woman'),projects:projectData.projects,posts:postData.records,main,left,right,escape,heading,section,facts});
+ }
  if(page==='article')await restoreArticleElements();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
  const commandPage=page==='tool'?'index':page;

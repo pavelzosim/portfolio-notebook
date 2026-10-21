@@ -66,7 +66,7 @@ Review route: `/lab/atlas-ui/?page=blog`. Original: `/blog/`.
 
 Quick filters All/Houdini/Unreal/Unity/Foundation combine with search and topic selection. Nested outline links jump to subcategories with stable name-based IDs. The user approved Blog Index on 2026-10-21.
 
-## Article — CANDIDATE
+## Article — APPROVED
 
 Review route: `/lab/atlas-ui/?page=article`. Full Procedural Travel Resolution article, not abbreviated sample content.
 
@@ -90,7 +90,14 @@ Review route: `/lab/atlas-ui/?page=article`. Full Procedural Travel Resolution a
 - Preserve article diagrams, technical images, tables, code and captions. Diagrams and screenshots are never cropped; wide tables/code scroll locally.
 - Restore the original article passport composition (terminal status bar, title, project/module/version/ID, author/date, tags), adapting typography to new tokens. Keep an actual h1, 24–32 px responsive.
 - Restore the in-body numbered table of contents alongside the rail. Native links have hover/focus and keyboard anchor targeting. References, EOF marker, inline code, media captions and diagrams reuse the new spacing/type/color system; never load the legacy stylesheet wholesale.
-- Article detail awaits user review. Production migration remains deferred.
+- User approved the article detail as canonical on 2026-10-21. Production migration remains deferred.
 - User refinement after readability review: article body is 14 px / 1.65 across widths, not 16 px. Preserve the improved contrast, 12 px metadata, paragraph spacing and 28 px tag targets.
 - Section divider is an end marker for the preceding section, not a duplicate introduction: // § 06 closes section 06 before heading 07. Final // § 09 closes article text before Project Map. Spacing is tighter above the end marker and larger below it.
 - Article h3/h4 subheadings have a small muted > prefix, marked aria-hidden so accessible heading names remain unchanged.
+- Project detail candidate: `/lab/atlas-ui/?page=project`, NASA First Woman. Complete registry scope, constraints, role, solutions, media, locations, results, awards and ISS video. Preserve uncropped media; two-column galleries become one below 760 px. Full-size images open through native links; videos have controls and do not autoplay. This page awaits user approval.
+- Project gallery correction: preserve carousel UX rather than rendering dozens of images in a grid. One uncropped fixed-height image per topical slider; explicit Prev/Next, live counter, Arrow/Home/End keyboard navigation and full-size native links. No autoplay; hidden slides are inert. All original media retained.
+- Project information architecture follows the supplied legacy reference: numbered sections with quiet context labels; concise Overview, paired Scope/Constraints bordered lists, separate footage, full-width contribution/solution rows, tool chips above solutions and metrics beside results. Context columns stack below 760 px. Do not flatten useful legacy UX into plain text or an image wall.
+- Project detail now reuses the approved Article detail style owner via data-detail: same passport, TOC, typography, muted labels, panel surface and closing section rules. Preserve paired context lists and topical sliders. Right rail contains role/environment plus related projects (shared XR type or engine) and published non-resource notes matching production-tool tags. No invented project dates or duplicated tool list. Article remains approved; Project remains a candidate.
+- Project passports must not imply sole authorship of collaborative work: omit auth. Personal contribution belongs in My role. Article authorship is separate and unchanged.
+- Move project role/environment into the passport's right-aligned metadata group with client; remove the duplicate Record sidebar block. Long values wrap naturally, including on mobile. Sidebar starts with related projects and notes.
+- Project rhythm refinement: production stack is plain text with dot separators, never fake buttons. Keep context paired/bordered; contribution uses light two-column left-rule entries (one column on mobile); solutions use numbered open rows; results use metrics and lighter supporting facts. Shared Article passport/type/section markers remain unchanged; no content omitted.
