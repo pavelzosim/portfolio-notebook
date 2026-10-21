@@ -126,3 +126,5 @@
 [data-template="article"] #content .article-body{font-size:var(--article-reading-size);line-height:1.65}
 [data-template="article"] #content .passport-title-bar,[data-template="article"] #content .toc-title,[data-template="article"] #content .atlas-table-header-solid,[data-template="article"] #content .atlas-schematic__header,[data-template="article"] #content .media-frame::before,[data-template="article"] #content .article-share-header{color:var(--muted)}
 [data-template="article"] #content .passport-tags a{min-height:28px}
+[data-template="article"] .article-section-divider{margin-top:var(--space-group);margin-bottom:var(--space-section)}
+.article-subheading-mark{color:var(--muted);font-weight:400;margin-right:var(--space-xs)}

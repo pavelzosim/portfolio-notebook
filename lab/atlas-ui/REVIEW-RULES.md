@@ -92,3 +92,5 @@ Review route: `/lab/atlas-ui/?page=article`. Full Procedural Travel Resolution a
 - Restore the in-body numbered table of contents alongside the rail. Native links have hover/focus and keyboard anchor targeting. References, EOF marker, inline code, media captions and diagrams reuse the new spacing/type/color system; never load the legacy stylesheet wholesale.
 - Article detail awaits user review. Production migration remains deferred.
 - User refinement after readability review: article body is 14 px / 1.65 across widths, not 16 px. Preserve the improved contrast, 12 px metadata, paragraph spacing and 28 px tag targets.
+- Section divider is an end marker for the preceding section, not a duplicate introduction: // § 06 closes section 06 before heading 07. Final // § 09 closes article text before Project Map. Spacing is tighter above the end marker and larger below it.
+- Article h3/h4 subheadings have a small muted > prefix, marked aria-hidden so accessible heading names remain unchanged.

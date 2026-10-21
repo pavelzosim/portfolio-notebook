@@ -91,9 +91,15 @@ async function restoreArticleElements(){
  main.querySelectorAll('.article-body>h2').forEach((h,index)=>{
   if(index){
    const previous=h.previousElementSibling;if(previous?.classList.contains('atlas-section-break'))previous.remove();
-   const divider=document.createElement('div');divider.className='article-section-divider';divider.setAttribute('aria-hidden','true');divider.innerHTML=`<span>// § ${String(index+1).padStart(2,'0')}</span>`;h.before(divider);
+   const divider=document.createElement('div');divider.className='article-section-divider';divider.setAttribute('aria-hidden','true');divider.innerHTML=`<span>// § ${String(index).padStart(2,'0')}</span>`;h.before(divider);
   }
   const mark=document.createElement('span');mark.className='article-section-mark';mark.setAttribute('aria-hidden','true');mark.textContent='§ ';h.prepend(mark);
+ });
+ const lastDivider=document.createElement('div');lastDivider.className='article-section-divider';lastDivider.setAttribute('aria-hidden','true');lastDivider.innerHTML=`<span>// § ${String(main.querySelectorAll('.article-body>h2').length).padStart(2,'0')}</span>`;
+ const endOfText=main.querySelector('.article-body>.atlas-table-frame:has(.atlas-ref-list)')||main.querySelector('.article-body>.atlas-eof-divider');
+ if(endOfText)endOfText.before(lastDivider);
+ main.querySelectorAll('.article-body>h3,.article-body>h4').forEach(h=>{
+  const mark=document.createElement('span');mark.className='article-subheading-mark';mark.setAttribute('aria-hidden','true');mark.textContent='> ';h.prepend(mark);
  });
  main.querySelectorAll('.atlas-toc a').forEach(a=>a.addEventListener('click',e=>{
   if(e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
