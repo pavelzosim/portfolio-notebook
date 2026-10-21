@@ -1,11 +1,12 @@
 /* One behavior owner for the candidate shell. No production navigation hooks. */
 export function setupNavigation(page){
  const shell=document.querySelector('.shell');
- const outline=[...document.querySelectorAll('#outline nav a[href^="#"]')]
+ const readOutline=()=>[...document.querySelectorAll('#outline nav a[href^="#"]')]
   .map(link=>({link,target:document.getElementById(decodeURIComponent(link.hash.slice(1)))})).filter(item=>item.target);
+ let outline=readOutline();
  let frame=0;
  const select=()=>{
-  frame=0;if(!outline.length)return;
+  frame=0;outline=readOutline();if(!outline.length)return;
   const edge=shell.getBoundingClientRect().height+48;
   let active=outline[0];
   for(const item of outline)if(item.target.getBoundingClientRect().top<=edge)active=item;
@@ -24,7 +25,10 @@ export function setupNavigation(page){
  // Content/media can resize after initial parsing; selection must not assume fixed heights.
  new ResizeObserver(schedule).observe(document.querySelector('main'));
  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',measure,{passive:true});
- for(const {link,target}of outline)link.addEventListener('click',event=>{
+ document.addEventListener('atlas:content-updated',schedule);
+ document.querySelector('#outline nav')?.addEventListener('click',event=>{
+  const link=event.target.closest('a[href^="#"]');if(!link)return;
+  const target=document.getElementById(decodeURIComponent(link.hash.slice(1)));if(!target)return;
   if(event.defaultPrevented||event.button!==0||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
   event.preventDefault();history.pushState(null,'',link.hash);
   if(!target.hasAttribute('tabindex'))target.tabIndex=-1;

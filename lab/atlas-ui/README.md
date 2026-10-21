@@ -2,7 +2,7 @@
 
 Open `http://127.0.0.1:8766/lab/atlas-ui/` on the existing local source server.
 
-Review status and page-specific candidate rules: [REVIEW-RULES.md](REVIEW-RULES.md). Home is approved. Online Tools Index is the next full-page candidate at `?page=index`; remaining fixtures are not approved.
+Review status and page-specific candidate rules: [REVIEW-RULES.md](REVIEW-RULES.md). Home and Online Tools Index are approved. Tools & Assets is the next full-page candidate at `?page=tools`; remaining fixtures are not approved.
 
 Five fixtures use real repository content: Home, Online Tools index, Procedural Travel Resolution article, NASA First Woman project and the working Sprite Sheet tool. The header's review switcher stays in the lab; normal content links may open existing public/local pages. “Compare original” opens the corresponding existing implementation.
 

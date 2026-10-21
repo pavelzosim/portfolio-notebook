@@ -6,7 +6,7 @@ Production migration is deferred until the site's page types are reviewed and th
 
 The user confirmed the complete Home fixture as canonical on 2026-10-20. Preserve its accepted visual hierarchy, interactions and latest annotation fixes. Shared shell: 220 px left / flexible main / 200 px right, 12 px navigation, 11 px rail headings, 14 px body, shared spacing scale. Commander: teal rest, blue hover/focus, yellow key digits. Production migration has not occurred.
 
-## Online Tools Index — CANDIDATE / awaiting annotations
+## Online Tools Index — APPROVED
 
 Review route: `/lab/atlas-ui/?page=index`. Original comparison: `/online-tools/`.
 
@@ -20,4 +20,20 @@ Review route: `/lab/atlas-ui/?page=index`. Original comparison: `/online-tools/`
 - Below 1100 px, the store follows the document; below 760 px, the local directory wraps above it. Store navigation remains available on mobile.
 - Counts come from published/indexable registry entries. Validate against actual cards rather than silently showing stale counts.
 
-Candidate decisions remain open to user annotations. Home remains approved; no approval is implied for tools, other indexes, project/article fixtures or Components.
+The user confirmed this index after the sidebar was reduced to Tool Store. Preserve this approved composition. Production migration remains deferred.
+
+## Tools & Assets — CANDIDATE / awaiting annotations
+
+Review route: `/lab/atlas-ui/?page=tools`. Original comparison: `/tools/`.
+
+- Approved shell, typography, rails and Commander; F5 is the active command.
+- Complete published/indexable resource registry, grouped into Tools and Assets. No invented records or omitted entries.
+- One native full-area link per resource with thumbnail, stable ID, title, summary and tags. Opens its implementation/article page; no duplicate download/buy control inside a row.
+- Search by title, summary or tag, actual type filters All/Tools/Assets and sort Newest/Title. Counts reflect visible records. Empty results offer a reset.
+- Platform selection combines with the type/search filters: All, CLI and Houdini are enabled and use exact registry tags. Unreal and Unity are visible but natively disabled and labelled Planned; they must not imply existing releases. Platform state survives reload and Reset filters clears it.
+- Left: local sections and working type filters, not another global navigation bar.
+- Right: compact group counts plus the approved Tool Store component. This is a candidate choice, not inferred approval from Online Tools.
+- Search/filter/sort parameters survive reload. Group anchors remain valid after filtering. No native submit navigation or full-page body replacement.
+- Narrow screens stack the search controls and place metadata/store below the document. Images stay bounded; titles and summaries are not truncated.
+
+Home and Online Tools are approved. All other page types still await individual review. No production migration yet.

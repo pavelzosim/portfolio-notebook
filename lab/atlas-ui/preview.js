@@ -1,7 +1,8 @@
 /* Local comparison harness. Only source content is imported, never its CSS/scripts. */
-import {setupNavigation} from './navigation.js?v=review-17';
+import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-17';
-const pages={home:'/',index:'/online-tools/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
+import {renderTools} from './tools.js?v=review-25';
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
 const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -60,6 +61,12 @@ async function index(){
 async function article(){const source=await doc(pages.article);const title=source.querySelector('h1').textContent;main.innerHTML=heading(title,'blog / procedural systems',source.querySelector('meta[name=description]').content);const body=clean(source.querySelector('.content-block'));body.className='article-body';main.append(body);const entries=[...body.querySelectorAll('h2[id]')].map(h=>['#'+h.id,h.textContent]);outline('ARTICLE.md',entries);right.innerHTML=facts('[RECORD]',[['kind','Article'],['state','Published'],['topic','Procedural systems']])+'<div class="meta-block"><p>[READ NEXT]</p><a href="/blog/">Browse technical notes →</a></div>';}
 async function project(){const record=(await json('/content/projects/index.json')).projects.find(r=>r.slug==='nasa-first-woman');main.innerHTML=heading(record.title,`projects / ${record.id}`,record.summary)+section('overview','Overview',`<img class="project-cover" src="${escape(record.image)}" alt="${escape(record.title)}"><p>${escape(record.overview)}</p>`);const entries=[['#overview','Overview']];for(const [key,label]of [['scope','Scope'],['roleDetails','Role'],['solutions','Implementation'],['results','Results']]){main.insertAdjacentHTML('beforeend',section(key,label,`<ul>${record[key].map(v=>`<li>${escape(v)}</li>`).join('')}</ul>`));entries.push(['#'+key,label]);}outline('PROJECT.md',entries);right.innerHTML=facts('[RECORD]',[['id',record.id],['client',record.client],['status',record.status],['role',record.role]])+facts('[STACK]',Object.entries(record.stack));}
 async function tool(){const source=await doc(pages.tool);main.replaceChildren(...clean(source.querySelector('main')).childNodes);outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['/online-tools/image-compressor/','Image Compressor'],['/online-tools/noise-generator/','Noise Generator']]);sourceRail(source);await loadScript('/scripts/sprite-sheet-core.js?v=1');await loadScript('/scripts/sprite-sheet-tool.js?v=10');}
+async function tools(){
+ const [registry,source]=await Promise.all([json('/content/posts/index.json'),doc('/')]);
+ const store=source.querySelector('[data-gumroad-shelf]');right.replaceChildren(clean(store));
+ right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.remove('atlas-btn--quiet');a.classList.add('button--outline');a.textContent='Buy →';});shelves();
+ await renderTools({main,left,right,registry,escape,heading});
+}
 async function components(){
  const source=await doc('./components.html');main.replaceChildren(...source.querySelector('template').content.cloneNode(true).childNodes);
  outline('COMPONENTS.md',[['#actions','Actions'],['#fields','Fields'],['#states','States'],['#density','Reading density']]);
@@ -71,7 +78,7 @@ try{
  document.body.dataset.template=page;document.querySelector('#original').href=pages[page];
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,article,project,tool,components}[page])();
+ await({home,index,tools,article,project,tool,components}[page])();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
  const commandPage=page==='tool'?'index':page;
  document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});
