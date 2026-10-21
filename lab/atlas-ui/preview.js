@@ -2,7 +2,7 @@
 import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-17';
 import {renderTools} from './tools.js?v=review-25';
-const pages={home:'/',index:'/online-tools/',tools:'/tools/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
 const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -67,6 +67,23 @@ async function tools(){
  right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.remove('atlas-btn--quiet');a.classList.add('button--outline');a.textContent='Buy →';});shelves();
  await renderTools({main,left,right,registry,escape,heading});
 }
+async function projects(){
+ const [registry,source]=await Promise.all([json('/content/projects/index.json'),doc('/')]);
+ const records=registry.projects;
+ main.innerHTML=heading('Projects','projects / production records','Selected technical-art production records.')+section('project-directory','Selected projects',`<div class="highlight-strip projects-directory">${records.map(r=>`<a class="highlight-card" id="project-${escape(r.slug)}" href="${r.slug==='nasa-first-woman'?'?page=project':'/projects/'+escape(r.slug)+'/'}" aria-labelledby="title-${escape(r.id)}"><img src="${escape(r.image)}" alt="${escape(r.title)}" loading="lazy"><div class="highlight-meta"><span class="highlight-kind">${escape(r.id)} / ${escape(r.type)}</span><h3 id="title-${escape(r.id)}">${escape(r.title)}</h3><p>${escape(r.summary)}</p><small>${escape(r.role)}</small><small>${escape(r.environment)}</small><span class="record-arrow" aria-hidden="true">open →</span></div></a>`).join('')}</div>`);
+ // Reuse approved Home wording; the registry is the fallback for future records.
+ records.forEach(r=>{
+  const homeAward=source.querySelector(`.project-records a[href="/projects/${r.slug}/"] .highlight-award`);
+  const achievement=homeAward?.textContent||r.reach?.recognition||(r.awards||[]).map(a=>a.label).join(' · ')||(r.reach?.runtime?`${r.reach.runtime} operation · ${r.reach.state}`:'');
+  if(!achievement)return;
+  const line=document.createElement('span');line.className='highlight-award project-achievement';line.textContent=achievement;
+  main.querySelector(`#project-${r.slug} .record-arrow`).before(line);
+ });
+ outline('PROJECTS.md',[['#project-directory','Index'],...records.map(r=>['#project-'+r.slug,r.title])]);
+ right.replaceChildren(clean(source.querySelector('[data-gumroad-shelf]')),clean(source.querySelector('[data-online-tools-shelf]')));
+ localToolLinks(right);
+ right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.add('button--outline');a.textContent='Buy →';});shelves();
+}
 async function components(){
  const source=await doc('./components.html');main.replaceChildren(...source.querySelector('template').content.cloneNode(true).childNodes);
  outline('COMPONENTS.md',[['#actions','Actions'],['#fields','Fields'],['#states','States'],['#density','Reading density']]);
@@ -78,7 +95,7 @@ try{
  document.body.dataset.template=page;document.querySelector('#original').href=pages[page];
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,tools,article,project,tool,components}[page])();
+ await({home,index,tools,projects,article,project,tool,components}[page])();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
  const commandPage=page==='tool'?'index':page;
  document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});

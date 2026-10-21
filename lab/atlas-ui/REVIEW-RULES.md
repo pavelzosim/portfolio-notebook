@@ -22,7 +22,7 @@ Review route: `/lab/atlas-ui/?page=index`. Original comparison: `/online-tools/`
 
 The user confirmed this index after the sidebar was reduced to Tool Store. Preserve this approved composition. Production migration remains deferred.
 
-## Tools & Assets — CANDIDATE / awaiting annotations
+## Tools & Assets — APPROVED
 
 Review route: `/lab/atlas-ui/?page=tools`. Original comparison: `/tools/`.
 
@@ -32,8 +32,21 @@ Review route: `/lab/atlas-ui/?page=tools`. Original comparison: `/tools/`.
 - Search by title, summary or tag, actual type filters All/Tools/Assets and sort Newest/Title. Counts reflect visible records. Empty results offer a reset.
 - Platform selection combines with the type/search filters: All, CLI and Houdini are enabled and use exact registry tags. Unreal and Unity are visible but natively disabled and labelled Planned; they must not imply existing releases. Platform state survives reload and Reset filters clears it.
 - Left: local sections and working type filters, not another global navigation bar.
-- Right: compact group counts plus the approved Tool Store component. This is a candidate choice, not inferred approval from Online Tools.
+- Right: only the approved Tool Store component; no redundant Groups block.
+- Material Path Manager uses a frame from its own workflow demonstration as its thumbnail.
 - Search/filter/sort parameters survive reload. Group anchors remain valid after filtering. No native submit navigation or full-page body replacement.
 - Narrow screens stack the search controls and place metadata/store below the document. Images stay bounded; titles and summaries are not truncated.
 
-Home and Online Tools are approved. All other page types still await individual review. No production migration yet.
+The user approved Tools & Assets on 2026-10-21. No production migration yet.
+
+## Projects Index — CANDIDATE
+
+Review route: `/lab/atlas-ui/?page=projects`. Original comparison: `/projects/`.
+
+- Approved shell and Commander. All five registry projects, no invented claims.
+- Two-column image-led directory; one column below 760 px. One native link per card, with summary, role and environment.
+- Left: local project anchors. Right: shared Tool Store followed by the approved Home Online Tools carousel, with stable slide height and working navigation.
+- Achievements are quiet metadata below the role/environment, separated by a fine rule, without badges. Reuse approved Home wording and registry facts; the airport record shows validated 24/7 operation rather than an invented award.
+- NASA opens the isolated project fixture; other cards retain original detail routes until reviewed.
+
+Projects Index and remaining page types await individual approval. Migration remains deferred.
