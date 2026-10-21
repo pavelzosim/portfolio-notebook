@@ -1,5 +1,5 @@
 /* Single token owner for the candidate implementation. No legacy imports. */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 :root{--paper:#e6dcd2;--surface:#eee7df;--ink:#0a0a0a;--muted:#706b66;--line:#c5bdb4;--strong:#aaa39b;--blue:#0000aa;--hover:rgba(0,0,170,.06);--selected:rgba(0,0,170,.08);--green:#24552b;--yellow:#ffdd00;--command-rest:#008181;--command-hover:#0000aa;--font:'JetBrains Mono','Courier New',monospace;--body:14px;--ui:12px;--label:11px;--meta:10px;--shell-width:1440px;--left:220px;--right:200px;--gutter:28px;--inset:32px;--bar-height:48px;--space-xs:4px;--space-sm:8px;--space-md:12px;--space-flow:16px;--space-group:22px;--space-section:32px;--space-major:56px;--reading-measure:72ch}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-padding-top:var(--anchor-offset,112px)}

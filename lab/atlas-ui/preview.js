@@ -61,6 +61,46 @@ async function index(){
 }
 async function article(){const source=await doc(pages.article);const title=source.querySelector('h1').textContent;main.innerHTML=heading(title,'blog / procedural systems',source.querySelector('meta[name=description]').content);const body=clean(source.querySelector('.content-block'));body.className='article-body';main.append(body);const entries=[...body.querySelectorAll('h2[id]')].map(h=>['#'+h.id,h.textContent]);outline('ARTICLE.md',entries);right.innerHTML=facts('[RECORD]',[['kind','Article'],['state','Published'],['topic','Procedural systems']])+'<div class="meta-block"><p>[READ NEXT]</p><a href="/blog/">Browse technical notes →</a></div>';}
 async function project(){const record=(await json('/content/projects/index.json')).projects.find(r=>r.slug==='nasa-first-woman');main.innerHTML=heading(record.title,`projects / ${record.id}`,record.summary)+section('overview','Overview',`<img class="project-cover" src="${escape(record.image)}" alt="${escape(record.title)}"><p>${escape(record.overview)}</p>`);const entries=[['#overview','Overview']];for(const [key,label]of [['scope','Scope'],['roleDetails','Role'],['solutions','Implementation'],['results','Results']]){main.insertAdjacentHTML('beforeend',section(key,label,`<ul>${record[key].map(v=>`<li>${escape(v)}</li>`).join('')}</ul>`));entries.push(['#'+key,label]);}outline('PROJECT.md',entries);right.innerHTML=facts('[RECORD]',[['id',record.id],['client',record.client],['status',record.status],['role',record.role]])+facts('[STACK]',Object.entries(record.stack));}
+async function restoreArticleElements(){
+ const registry=await json('/content/posts/index.json');
+ const record=registry.records.find(r=>r.localPath===pages.article);
+ const related=registry.records.filter(r=>r.id!==record.id&&r.group===record.group&&r.state==='published'&&r.indexable!==false).sort((a,b)=>(Date.parse(b.siteDate||b.datePublished)||0)-(Date.parse(a.siteDate||a.datePublished)||0));
+ right.innerHTML=facts('[RECORD]',[['kind',record.kind],['topic',record.group]])+`<div class="meta-block article-related"><p>[RELATED / ${escape(record.group.toUpperCase())}]</p><ul>${related.map(r=>`<li><a href="${escape(r.localPath||r.publicUrl||r.sourceUrl)}">${escape(r.title)}</a></li>`).join('')}</ul></div>`;
+ const head=main.querySelector('.document-head');head.classList.add('article-passport');
+ head.innerHTML=`<div class="passport-title-bar"><span>pavelzosim : ~ # cat ${escape(record.slug)}.log</span><span>[ SYS_STATUS: ${escape(record.state.toUpperCase())} ]</span></div><h1>${escape(record.title)}</h1><div class="passport-grid"><dl><div><dt>project</dt><dd>${escape(record.group)}</dd></div><div><dt>module</dt><dd>${escape(record.kind)}</dd></div></dl><dl><div><dt>version</dt><dd>WEB</dd></div><div><dt>log_id</dt><dd>${escape(record.id)}</dd></div></dl></div><div class="passport-meta"><span>auth: Pavel Zosim</span><span>created: ${escape(record.datePublished.replaceAll('-','.'))}</span></div><div class="passport-tags">${record.tags.map(t=>`<a href="?page=blog&amp;q=${encodeURIComponent(t)}">#${escape(t)}</a>`).join('')}</div><p class="passport-summary">${escape(record.summary)}</p>`;
+ const metadata=[['log_id',record.id],['project',record.group],['auth','Pavel Zosim'],['created',record.datePublished.replaceAll('-','.')],['revision',record.version||record.dateModified.replaceAll('-','.')]];
+ const field=([key,value])=>`<span class="passport-header-field"><span class="passport-header-key">${escape(key)}:</span> ${escape(value)}</span>`;
+ head.querySelector('.passport-title-bar').innerHTML=`<div class="passport-header-left">${metadata.slice(0,2).map(field).join('')}</div><div class="passport-header-right">${metadata.slice(2).map(field).join('')}</div>`;
+ head.querySelector('.passport-grid').remove();head.querySelector('.passport-meta').remove();
+ head.querySelector('.passport-summary').prepend('Summary: ');
+ const shareUrl=encodeURIComponent(record.publicUrl||record.sourceUrl),shareTitle=encodeURIComponent(record.title);
+ const share=document.createElement('section');share.className='article-share';share.setAttribute('aria-label','Share this record');
+ share.innerHTML=`<div class="article-share-header">[SHARE]</div><div class="article-share-body"><p>Share this record</p><nav aria-label="Share links"><a href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" rel="noopener noreferrer">linkedin</a><a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" rel="noopener noreferrer">facebook</a><a href="https://twitter.com/intent/tweet?url=${shareUrl}&amp;text=${shareTitle}" target="_blank" rel="noopener noreferrer">twitter</a></nav></div>`;
+ main.querySelector('.article-body').append(share);
+ const shareLabel=share.querySelector('.article-share-body p');share.querySelector('.article-share-header').append(shareLabel);
+ share.querySelectorAll('a').forEach(a=>{a.textContent=`[${a.textContent}]`;});
+ share.querySelector('.article-share-header p').remove();
+ main.querySelectorAll('.atlas-ref-item').forEach(row=>{
+  const link=row.querySelector('.atlas-ref-link');if(!link)return;
+  const title=link.textContent,body=row.querySelector('.atlas-ref-body');
+  const text=document.createElement('span');text.textContent=title;link.replaceWith(text);
+  link.classList.add('atlas-ref-row-link');link.replaceChildren(...row.childNodes);row.append(link);
+ });
+ const toc=main.querySelector('.atlas-toc');toc?.insertAdjacentHTML('afterbegin','<p class="toc-title">[ TABLE_OF_CONTENTS // NAVIGATION ]</p>');
+ main.querySelectorAll('.media-caption a').forEach(a=>{if(a.textContent.trim()==='Watch on YouTube'){const after=a.nextSibling;if(after?.nodeType===Node.TEXT_NODE&&after.textContent.trim()==='.')after.remove();a.remove();}});
+ main.querySelectorAll('.article-body>h2').forEach((h,index)=>{
+  if(index){
+   const previous=h.previousElementSibling;if(previous?.classList.contains('atlas-section-break'))previous.remove();
+   const divider=document.createElement('div');divider.className='article-section-divider';divider.setAttribute('aria-hidden','true');divider.innerHTML=`<span>// § ${String(index+1).padStart(2,'0')}</span>`;h.before(divider);
+  }
+  const mark=document.createElement('span');mark.className='article-section-mark';mark.setAttribute('aria-hidden','true');mark.textContent='§ ';h.prepend(mark);
+ });
+ main.querySelectorAll('.atlas-toc a').forEach(a=>a.addEventListener('click',e=>{
+  if(e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
+  const target=document.getElementById(a.hash.slice(1));if(!target)return;
+  e.preventDefault();history.pushState(null,'',a.hash);target.tabIndex=-1;target.focus({preventScroll:true});target.scrollIntoView({block:'start'});
+ }));
+}
 async function tool(){const source=await doc(pages.tool);main.replaceChildren(...clean(source.querySelector('main')).childNodes);outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['/online-tools/image-compressor/','Image Compressor'],['/online-tools/noise-generator/','Noise Generator']]);sourceRail(source);await loadScript('/scripts/sprite-sheet-core.js?v=1');await loadScript('/scripts/sprite-sheet-tool.js?v=10');}
 async function tools(){
  const [registry,source]=await Promise.all([json('/content/posts/index.json'),doc('/')]);
@@ -103,6 +143,7 @@ try{
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
  await({home,index,tools,projects,blog,article,project,tool,components}[page])();
+ if(page==='article')await restoreArticleElements();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
  const commandPage=page==='tool'?'index':page;
  document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});
