@@ -139,5 +139,11 @@ User confirmed as canonical on 2026-10-23. Preserve compact equal-height setting
 
 ## Noise Generator — CANDIDATE
 
+## Style Guide — APPROVED (2026-10-23)
+
+User confirmed `/lab/atlas-ui/?page=components` as the single source of truth for styles and components. This decision supersedes earlier conflicting visual notes in this chronological log. Apply approved components to subsequent page work. Before article authoring, inspect the catalogue and follow the authoring contract. New unique elements require user review before registration in the Style Guide and shared implementation, then reuse. Do not create local overrides or parallel style sources. Public migration, commits and pushes remain separately authorized actions. The implementation still contains legacy candidate rules to consolidate during application; approval does not mean that consolidation is already complete.
+
+## Noise Generator — CANDIDATE (continued)
+
 Route `/lab/atlas-ui/?page=noise`. Uses actual worker generation, material preview and map exports with isolated canonical styling. Shared version/support/share/related cards. Await user review.
 - Noise settings reuse shared control groups: Surface, Noise & fractal, Detail & direction, Normals. Both Noise/Compressor use the same native disclosure factory and Collapse/Expand labels. Noise actions remain outside the disclosure; map-specific controls are a nested disclosure. Preserve all input nodes and worker bindings.

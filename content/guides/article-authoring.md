@@ -6,6 +6,8 @@ Revision: 2026.10
 
 Visual reference: `/blog/style-guide/`
 
+Approved design authority (2026-10-23): `/lab/atlas-ui/?page=components` until explicitly migrated to the public Style Guide. Inspect it before writing or editing an article. Reuse its components and shared styles; do not create article-local variants. Missing elements require user review first, then registration in the Style Guide and shared implementation before use. Legacy public examples do not override the approved catalogue.
+
 Rules index: `/content/guides/README.md`
 
 UI and UX contract: `/content/guides/ui-ux-design-system.md`
