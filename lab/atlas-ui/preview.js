@@ -1,10 +1,11 @@
 /* Local comparison harness. Only source content is imported, never its CSS/scripts. */
 import {setupNavigation} from './navigation.js?v=review-22';
-import {setupHomeInteractions} from './home.js?v=review-17';
+import {setupHomeInteractions} from './home.js?v=review-66';
 import {renderTools} from './tools.js?v=review-25';
 import {renderBlog} from './blog.js?v=review-33';
-import {renderProject} from './project.js?v=review-61';
-const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',components:'/blog/style-guide/'};
+import {renderProject} from './project.js?v=review-66';
+import {setupCompressorPanel} from './compressor-panel.js?v=review-82';
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',components:'/blog/style-guide/'};
 const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -109,6 +110,29 @@ async function restoreArticleElements(){
  }));
 }
 async function tool(){const source=await doc(pages.tool);main.replaceChildren(...clean(source.querySelector('main')).childNodes);outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['/online-tools/image-compressor/','Image Compressor'],['/online-tools/noise-generator/','Noise Generator']]);sourceRail(source);await loadScript('/scripts/sprite-sheet-core.js?v=1');await loadScript('/scripts/sprite-sheet-tool.js?v=10');}
+async function compressor(){
+ const source=await doc(pages.compressor);main.replaceChildren(...clean(source.querySelector('main')).childNodes);
+ setupCompressorPanel(main);
+ outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['?page=compressor','Image Compressor'],['/online-tools/noise-generator/','Noise Generator']]);sourceRail(source);
+ const help=document.createElement('div');help.className='meta-block tool-instructions';help.innerHTML='<p>[HOW TO USE]</p><ol><li>Add up to 10 images.</li><li>Choose a preset or set format, quality and dimensions.</li><li>Process the batch.</li><li>Compare source and output; inspect channels and alpha.</li><li>Download the selected image or batch ZIP.</li></ol>';right.append(help);
+ main.querySelector('.tool-workflow')?.remove();main.querySelector('.tool-support')?.remove();
+ await loadScript('/scripts/image-compressor-core.js?v=1');await loadScript('/scripts/image-compressor-tool.js?v=3');
+}
+async function toolAfterword(){
+ renderToolSupport();
+ const records=(await json('/content/online-tools/index.json')).records.filter(r=>r.state==='published'&&r.indexable!==false),current=records.find(r=>r.slug===(page==='compressor'?'image-compressor':'sprite-sheet-assembly'));
+ const url=encodeURIComponent(current.publicUrl),title=encodeURIComponent(current.title);
+ main.insertAdjacentHTML('beforeend',section('share','Share',`<div class="article-share tool-share"><div class="article-share-header">[SHARE]</div><div class="article-share-body"><nav aria-label="Share tool"><a href="https://www.linkedin.com/sharing/share-offsite/?url=${url}" target="_blank" rel="noopener noreferrer">[linkedin]</a><a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" rel="noopener noreferrer">[facebook]</a><a href="https://twitter.com/intent/tweet?url=${url}&amp;text=${title}" target="_blank" rel="noopener noreferrer">[twitter]</a></nav></div></div>`));
+ main.querySelector('#share>.section-label').remove();
+ const others=records.filter(r=>r.id!==current.id);
+ main.insertAdjacentHTML('beforeend',section('other-tools','Other online tools',`<div class="tool-related-grid">${others.map(r=>`<a class="tool-related-card" href="${escape(r.localPath)}" aria-labelledby="related-${escape(r.id)}"><img src="${escape(r.image)}" alt="${escape(r.imageAlt||r.title)}" loading="lazy"><div><span class="eyebrow">${escape(r.id)}</span><h3 id="related-${escape(r.id)}">${escape(r.title)}</h3><p>${escape(r.summary)}</p><span class="record-arrow" aria-hidden="true">open →</span></div></a>`).join('')}</div>`));
+}
+function renderToolSupport(){
+ right.querySelectorAll('.meta-block').forEach(block=>{if(block.querySelector('p')?.textContent.trim()==='[SUPPORT]')block.remove();});
+ const support=document.createElement('div');support.className='meta-block tool-support-block';
+ support.innerHTML='<p>[SUPPORT]</p><div class="tool-support-note">Free local tool. Support development if it saves you time.</div><a class="button tool-support-button" href="https://www.buymeacoffee.com/pavel.zosim" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">☕</span> Buy me a coffee</a>';
+ right.append(support);
+}
 async function tools(){
  const [registry,source]=await Promise.all([json('/content/posts/index.json'),doc('/')]);
  const store=source.querySelector('[data-gumroad-shelf]');right.replaceChildren(clean(store));
@@ -150,14 +174,20 @@ try{
  if(page==='article'||page==='project')document.body.dataset.detail='';
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,tools,projects,blog,article,project,tool,components}[page])();
+ await({home,index,tools,projects,blog,article,project,tool,compressor,components}[page])();
+ if(page==='tool'||page==='compressor')await toolAfterword();
  if(page==='project'){
-  const [projectData,postData]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json')]);
-  renderProject({record:projectData.projects.find(r=>r.slug==='nasa-first-woman'),projects:projectData.projects,posts:postData.records,main,left,right,escape,heading,section,facts});
+  const [projectData,postData,layouts]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json'),json('./project-layouts.json')]);
+  renderProject({record:projectData.projects.find(r=>r.slug==='nasa-first-woman'),layout:layouts['nasa-first-woman'],projects:projectData.projects,posts:postData.records,main,left,right,escape,heading,section,facts});
  }
  if(page==='article')await restoreArticleElements();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
- const commandPage=page==='tool'?'index':page;
+ const commandPage=['tool','compressor'].includes(page)?'index':page;
+ const release=await json('./tool-release.json');
+ if(['tool','compressor'].includes(page)){
+  const version=document.createElement('span');version.className='tool-version';version.textContent=`v${release.version}`;main.querySelector('.tool-titlebar')?.append(version);
+ }
+ main.querySelectorAll('.tool-related-card .eyebrow,.tool-catalog-card>p:first-child').forEach(label=>label.append(` · v${release.version}`));
  document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});
  main.setAttribute('aria-busy','false');document.title=`Atlas ${page} — isolated review`;
  setupNavigation(page);

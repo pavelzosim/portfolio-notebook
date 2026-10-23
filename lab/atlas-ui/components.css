@@ -14,6 +14,7 @@
 .atlas-btn--quiet:hover,.button--quiet:hover{background:var(--hover)}
 .atlas-btn:disabled,button:disabled{background:var(--surface);color:var(--muted);border-color:var(--line);cursor:default}
 .tool-support-button{background:var(--yellow);color:var(--ink)}.tool-support-button:hover{background:#f2cf00}
+.tool-support-note{margin-bottom:var(--space-flow)}
 .atlas-btn-shadow{display:inline-flex}.atlas-btn-shadow::after{content:none}
 .tag-cloud{display:flex;flex-wrap:wrap;gap:6px}.tag-cloud a{border:1px solid var(--line);padding:2px 4px;font-size:var(--meta);text-decoration:none}
 .tag-cloud a:where(:hover,:focus-visible){color:var(--blue);background:var(--hover);border-color:#0000aa55}
@@ -65,3 +66,14 @@ input:disabled{color:var(--muted);background:#00000004;cursor:default}
 .gumroad-shelf__nav button{cursor:pointer}
 .gumroad-shelf__nav button:where(:not(:disabled)):where(:hover,:focus-visible){color:var(--blue);background:var(--hover);border-color:#0000aa55}
 .gumroad-shelf__nav button:where(:not(:disabled)):active{background:var(--selected)}
+.checker canvas,.checker:has(canvas[width="1"])::before{grid-area:1/1}
+.control-panel{display:grid;gap:var(--space-flow)}.control-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:var(--space-md);margin:0;padding:var(--space-flow);border:1px solid var(--line);min-width:0}.control-group legend{padding:0 var(--space-sm);color:var(--muted);font-size:var(--ui)}.control-group label{min-width:0}.control-group input:not([type=checkbox]),.control-group select{width:100%;min-width:0}.control-hint{display:block;margin:var(--space-xs) 0 0;color:var(--muted);font-size:var(--ui);line-height:1.5}.control-group .compress-check{grid-column:1/-1;flex-wrap:wrap}.control-group .compress-check .control-hint{flex-basis:100%}.control-action{display:flex;align-items:center;justify-content:space-between;gap:var(--space-flow);flex-wrap:wrap}.control-action>.control-hint{flex:1;min-width:180px;margin:0}
+@media(max-width:760px){.control-group{grid-template-columns:1fr}}
+.control-panel--columns{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-md);align-items:start}.control-group--stack{grid-template-columns:1fr;padding:var(--space-md);gap:var(--space-sm)}.control-group .control-check{display:grid;grid-template-columns:18px minmax(0,1fr);align-items:start;gap:var(--space-xs) var(--space-sm);text-align:left}.control-check input{grid-column:1;grid-row:1;margin-top:2px}.control-check .control-hint{grid-column:2;margin-top:0}.control-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-md);align-items:end}.control-toolbar label{display:grid;gap:var(--space-xs);min-width:0;margin:0}.control-toolbar select{width:100%;min-width:0}
+@media(max-width:1250px){.control-panel--columns{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.control-panel--columns,.control-toolbar{grid-template-columns:1fr}}
+.control-panel--columns{align-items:stretch}.control-group--stack{align-content:start}
+/* Existing Style Guide callout contract, adapted to canonical tokens. */
+.atlas-callout{position:relative;width:100%;border:1px solid var(--line);background:var(--surface);padding:40px var(--space-flow) var(--space-flow)}.atlas-callout::before{content:'[ INFO // DOCUMENTATION ]';position:absolute;top:0;left:0;right:0;padding:var(--space-xs) var(--space-md);border-bottom:1px solid var(--line);background:var(--paper);color:var(--muted);font-size:var(--meta);font-weight:400;line-height:1.6;letter-spacing:.04em}.atlas-callout--note::before{content:'[ SYSTEM_NOTE ]'}.atlas-callout>p{font-size:var(--ui);line-height:1.6;margin:0}.atlas-callout>p+p{margin-top:var(--space-sm)}
+.control-disclosure>summary{cursor:pointer;font-size:var(--ui);padding:var(--space-sm) 0;color:var(--blue)}.control-disclosure[open]>summary{margin-bottom:var(--space-sm)}.control-disclosure>.atlas-callout{margin-top:var(--space-md)}.control-status-row>#status{flex:1;min-width:0;margin:0}.control-status-row>.atlas-btn-shadow{flex-shrink:0}
+.control-disclosure>summary>.control-disclosure-action{float:right;font-weight:600}

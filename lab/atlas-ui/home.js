@@ -12,18 +12,15 @@ export function setupHomeInteractions(main,records){
   loops.forEach((loop,index)=>{loop.hidden=index>=8;});
   const render=()=>{count.textContent=`${loops.filter(el=>!el.hidden).length} / ${loops.length} loops visible`;};
   button.classList.add('button','button--quiet');button.addEventListener('click',()=>{loops.forEach(el=>el.hidden=false);button.hidden=true;render();});
-  const visible=new Set();let groupPaused=false;
-  const pauseButton=document.createElement('button');pauseButton.type='button';pauseButton.className='button button--quiet';pauseButton.textContent='pause loops';pauseButton.dataset.vfxPause='';pauseButton.setAttribute('aria-pressed','false');vfx.querySelector('.vfx-action').append(pauseButton);
+  const visible=new Set();
   const play=video=>{if(!video.getAttribute('src'))video.src=video.dataset.src;video.play().catch(()=>{});};
-  const sync=()=>{for(const loop of loops){const video=loop.querySelector('video');if(visible.has(video)&&!loop.hidden&&!document.hidden&&!groupPaused)play(video);else video.pause();}};
-  pauseButton.addEventListener('click',()=>{groupPaused=!groupPaused;pauseButton.textContent=groupPaused?'resume loops':'pause loops';pauseButton.setAttribute('aria-pressed',String(groupPaused));sync();});
+  const sync=()=>{for(const loop of loops){const video=loop.querySelector('video');if(visible.has(video)&&!loop.hidden&&!document.hidden)play(video);else video.pause();}};
   const observer=new IntersectionObserver(entries=>{for(const {target,isIntersecting} of entries){if(isIntersecting)visible.add(target);else visible.delete(target);}sync();},{threshold:.15});
   loops.forEach(loop=>{
    for(const small of loop.querySelectorAll('figcaption small')){small.textContent=small.textContent.split('·').map(part=>part.trim()).filter(part=>!/(?:\b\d{1,2}:\d{2}\b|\.(?:mp4|mov|avi|webm)\b)/i.test(part)).join(' · ');if(!small.textContent)small.remove();}
    const video=loop.querySelector('video');video.controls=false;video.muted=true;video.defaultMuted=true;video.loop=true;video.playsInline=true;video.autoplay=true;video.preload='none';video.removeAttribute('role');video.removeAttribute('aria-pressed');video.removeAttribute('tabindex');
-   // These are automatic previews, not click-to-toggle buttons. Keep playback
-   // policy and the accessible pause action at the section level.
-   video.addEventListener('play',()=>{if(groupPaused||document.hidden||!visible.has(video)||loop.hidden)video.pause();});observer.observe(video);
+   // Automatic previews pause offscreen and when the document is hidden.
+   video.addEventListener('play',()=>{if(document.hidden||!visible.has(video)||loop.hidden)video.pause();});observer.observe(video);
   });
   document.addEventListener('visibilitychange',sync);render();
  }
