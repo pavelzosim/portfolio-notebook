@@ -3,9 +3,13 @@ import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-66';
 import {renderTools} from './tools.js?v=review-25';
 import {renderBlog} from './blog.js?v=review-33';
-import {renderProject} from './project.js?v=review-66';
-import {setupCompressorPanel} from './compressor-panel.js?v=review-82';
-const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',components:'/blog/style-guide/'};
+import {renderProject} from './project.js?v=review-95';
+import {setupCompressorPanel} from './compressor-panel.js?v=review-84';
+import {setupNoisePanel,setupNoisePresets} from './noise-panel.js?v=review-85';
+import {createControlDisclosure} from './control-disclosure.js?v=review-84';
+import {renderArticlePassport} from './article-passport.js?v=review-91';
+import {completeStyleGuide} from './style-guide.js?v=review-95';
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',components:'/blog/style-guide/'};
 const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -75,6 +79,7 @@ async function restoreArticleElements(){
  head.querySelector('.passport-title-bar').innerHTML=`<div class="passport-header-left">${metadata.slice(0,2).map(field).join('')}</div><div class="passport-header-right">${metadata.slice(2).map(field).join('')}</div>`;
  head.querySelector('.passport-grid').remove();head.querySelector('.passport-meta').remove();
  head.querySelector('.passport-summary').prepend('Summary: ');
+ renderArticlePassport(head,record);
  const shareUrl=encodeURIComponent(record.publicUrl||record.sourceUrl),shareTitle=encodeURIComponent(record.title);
  const share=document.createElement('section');share.className='article-share';share.setAttribute('aria-label','Share this record');
  share.innerHTML=`<div class="article-share-header">[SHARE]</div><div class="article-share-body"><p>Share this record</p><nav aria-label="Share links"><a href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" rel="noopener noreferrer">linkedin</a><a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" rel="noopener noreferrer">facebook</a><a href="https://twitter.com/intent/tweet?url=${shareUrl}&amp;text=${shareTitle}" target="_blank" rel="noopener noreferrer">twitter</a></nav></div>`;
@@ -118,9 +123,16 @@ async function compressor(){
  main.querySelector('.tool-workflow')?.remove();main.querySelector('.tool-support')?.remove();
  await loadScript('/scripts/image-compressor-core.js?v=1');await loadScript('/scripts/image-compressor-tool.js?v=3');
 }
+async function noise(){
+ const source=await doc(pages.noise);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);
+ setupNoisePanel(main);
+ outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['?page=compressor','Image Compressor'],['?page=noise','Noise Generator']]);
+ main.querySelectorAll('.noise-note').forEach(p=>{const note=document.createElement('aside');note.className='atlas-callout atlas-callout--note';p.before(note);note.append(p);});
+ await loadScript('/scripts/noise-generator-core.js?v=2');setupNoisePresets(window.NoiseGeneratorCore,main);await loadScript('/scripts/image-compressor-core.js?v=1');await loadScript('/scripts/noise-material-preview.js?v=2');await loadScript('/scripts/noise-generator-tool.js?v=3');
+}
 async function toolAfterword(){
  renderToolSupport();
- const records=(await json('/content/online-tools/index.json')).records.filter(r=>r.state==='published'&&r.indexable!==false),current=records.find(r=>r.slug===(page==='compressor'?'image-compressor':'sprite-sheet-assembly'));
+ const records=(await json('/content/online-tools/index.json')).records.filter(r=>r.state==='published'&&r.indexable!==false),current=records.find(r=>r.slug===({compressor:'image-compressor',noise:'noise-generator',tool:'sprite-sheet-assembly'}[page]));
  const url=encodeURIComponent(current.publicUrl),title=encodeURIComponent(current.title);
  main.insertAdjacentHTML('beforeend',section('share','Share',`<div class="article-share tool-share"><div class="article-share-header">[SHARE]</div><div class="article-share-body"><nav aria-label="Share tool"><a href="https://www.linkedin.com/sharing/share-offsite/?url=${url}" target="_blank" rel="noopener noreferrer">[linkedin]</a><a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" rel="noopener noreferrer">[facebook]</a><a href="https://twitter.com/intent/tweet?url=${url}&amp;text=${title}" target="_blank" rel="noopener noreferrer">[twitter]</a></nav></div></div>`));
  main.querySelector('#share>.section-label').remove();
@@ -164,31 +176,39 @@ async function blog(){
 }
 async function components(){
  const source=await doc('./components.html');main.replaceChildren(...source.querySelector('template').content.cloneNode(true).childNodes);
- outline('COMPONENTS.md',[['#actions','Actions'],['#fields','Fields'],['#states','States'],['#density','Reading density']]);
+ outline('STYLE_GUIDE.md',[['#contract','Contract'],['#tokens','Tokens'],['#actions','Actions'],['#fields','Fields'],['#states','States'],['#density','Reading density'],['#panels','Settings panels'],['#extension','Extension & article patterns']]);
+ const styles=getComputedStyle(document.documentElement),register=main.querySelector('#token-register');
+ for(const name of ['paper','surface','ink','muted','blue','yellow','line','body','ui','meta','space-xs','space-sm','space-md','space-flow','space-group','space-section','left','right']){const term=document.createElement('dt'),value=document.createElement('dd');term.textContent=`--${name}`;value.textContent=styles.getPropertyValue(`--${name}`).trim();register.append(term,value);}
+ const disclosure=createControlDisclosure('Settings');const sample=document.createElement('p');sample.textContent='Shared disclosure: keyboard accessible, with an explicit Collapse / Expand label.';disclosure.append(sample);main.querySelector('#disclosure-example').append(disclosure);
+ main.querySelector('#article-patterns').innerHTML='<aside class="atlas-callout atlas-callout--note"><p>Article patterns are being migrated individually from the <a href="/blog/style-guide/">existing Style Guide</a>. Legacy markup is not imported into this catalogue.</p></aside>';
  right.innerHTML=facts('[REVIEW]',[['state','Candidate'],['buttons','32 px min'],['UI','12 px'],['body','14 px / 1.6'],['flow','16 / 22 / 32 px']]);
  const range=main.querySelector('#detail-range'),value=main.querySelector('#detail-value');range.addEventListener('input',()=>{value.value=range.value;});
  const form=main.querySelector('form');form.addEventListener('submit',event=>{event.preventDefault();main.querySelector('#demo-result').textContent='Ready. Settings validated locally; this is a component example, not a generator.';});
+ outline('STYLE_GUIDE.md',await completeStyleGuide(main),1);
 }
 try{
  document.body.dataset.template=page;document.querySelector('#original').href=pages[page];
- if(page==='article'||page==='project')document.body.dataset.detail='';
+ if(page==='article'||page==='project'||page==='components')document.body.dataset.detail='';
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,tools,projects,blog,article,project,tool,compressor,components}[page])();
- if(page==='tool'||page==='compressor')await toolAfterword();
+ await({home,index,tools,projects,blog,article,project,tool,compressor,noise,components}[page])();
+ if(['tool','compressor','noise'].includes(page))await toolAfterword();
  if(page==='project'){
   const [projectData,postData,layouts]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json'),json('./project-layouts.json')]);
   renderProject({record:projectData.projects.find(r=>r.slug==='nasa-first-woman'),layout:layouts['nasa-first-woman'],projects:projectData.projects,posts:postData.records,main,left,right,escape,heading,section,facts});
  }
  if(page==='article')await restoreArticleElements();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
- const commandPage=['tool','compressor'].includes(page)?'index':page;
+ const commandPage=['tool','compressor','noise'].includes(page)?'index':page;
  const release=await json('./tool-release.json');
- if(['tool','compressor'].includes(page)){
+ if(['tool','compressor','noise'].includes(page)){
   const version=document.createElement('span');version.className='tool-version';version.textContent=`v${release.version}`;main.querySelector('.tool-titlebar')?.append(version);
  }
  main.querySelectorAll('.tool-related-card .eyebrow,.tool-catalog-card>p:first-child').forEach(label=>label.append(` · v${release.version}`));
  document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});
+ main.querySelectorAll('[role="status"],#status,#noise-status').forEach(el=>el.classList.add('notice'));
+ main.querySelectorAll('.browser-tools-nav button').forEach(el=>el.classList.add('button','button--quiet'));
+ main.querySelectorAll('video').forEach(video=>{video.defaultMuted=true;video.muted=true;video.setAttribute('muted','');});
  main.setAttribute('aria-busy','false');document.title=`Atlas ${page} — isolated review`;
  setupNavigation(page);
  if(location.hash)document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();

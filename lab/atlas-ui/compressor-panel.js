@@ -1,4 +1,5 @@
 /* Layout adapter only: retain original controls, IDs and processing handlers. */
+import {createControlDisclosure} from './control-disclosure.js?v=review-84';
 export function setupCompressorPanel(main){
  const settings=main.querySelector('#settings'),original=settings.querySelector('.compress-settings');
  const panel=document.createElement('div');panel.className='control-panel control-panel--columns';
@@ -23,10 +24,8 @@ export function setupCompressorPanel(main){
  const action=settings.querySelector('.tool-actions');action.classList.add('control-action');
  main.querySelector('#process').textContent='Process batch';
  const status=main.querySelector('#status');action.prepend(status);action.classList.add('control-status-row');
- const details=document.createElement('details');details.className='control-disclosure';details.open=true;const summary=document.createElement('summary');
- const summaryLabel=document.createElement('span');summaryLabel.textContent='Texture settings';const toggleLabel=document.createElement('span');toggleLabel.className='control-disclosure-action';summary.append(summaryLabel,toggleLabel);
- const updateDisclosure=()=>{toggleLabel.textContent=details.open?'[Collapse]':'[Expand]';};details.addEventListener('toggle',updateDisclosure);updateDisclosure();
- const heading=settings.querySelector('.section-label h2');heading.textContent='Texture settings';summary.setAttribute('aria-label','Expand or collapse texture settings');details.append(summary);panel.before(details);details.append(panel);const note=settings.querySelector(':scope>.atlas-callout');if(note)details.append(note);
+ const details=createControlDisclosure('Texture settings');
+ const heading=settings.querySelector('.section-label h2');heading.textContent='Texture settings';panel.before(details);details.append(panel);const note=settings.querySelector(':scope>.atlas-callout');if(note)details.append(note);
  const presetLabels={visual:'Colour / albedo — WebP',data:'Data maps — PNG, original size',pixel:'Pixel art — PNG, nearest',custom:'Custom texture settings'};
  for(const option of main.querySelector('#preset').options)option.textContent=presetLabels[option.value]||option.textContent;
  const filterLabels={high:'Smooth — colour textures',low:'Smooth — fast preview',nearest:'Nearest — pixel art / hard edges'};

@@ -1,4 +1,5 @@
 /* Complete project candidate, sourced exclusively from the local registry. */
+import {setupMediaSliders} from './media-slider.js?v=review-95';
 export function renderProject({record,layout={},projects=[],posts=[],main,left,right,escape,heading,section,facts}){
  const entries=[];
  const add=(id,title,body,label='')=>{main.insertAdjacentHTML('beforeend',section(id,title,body));const header=main.lastElementChild.querySelector('.section-label');header.querySelector('span').textContent=`§ ${String(entries.length+1).padStart(2,'0')}`;if(label)header.insertAdjacentHTML('beforeend',`<em>${escape(label)}</em>`);entries.push([id,title]);};
@@ -39,14 +40,7 @@ export function renderProject({record,layout={},projects=[],posts=[],main,left,r
  });
  body.insertAdjacentHTML('beforeend','<div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // EOF</span><span class="atlas-eof-divider__line"></span></div>');main.append(body);
  left.innerHTML='<p class="rail-title">PROJECT.md</p><nav aria-label="Project sections"><a href="?page=projects">← Projects index</a>'+entries.map(([id,title],i)=>`<a href="#${id}">${String(i+1).padStart(2,'0')} ${escape(title)}</a>`).join('')+'</nav>';
- main.querySelectorAll('.project-slider').forEach(slider=>{
-  const slides=[...slider.querySelectorAll('.project-media')];let active=0;
-  slider.setAttribute('aria-label',slider.closest('section').querySelector('h2').textContent+' — image gallery');
-  const show=index=>{active=(index+slides.length)%slides.length;slides.forEach((slide,i)=>{slide.hidden=i!==active;slide.inert=i!==active;});slider.querySelector('output').textContent=`${active+1} / ${slides.length}`;};
-  slider.querySelector('[data-prev]').addEventListener('click',()=>show(active-1));slider.querySelector('[data-next]').addEventListener('click',()=>show(active+1));
-  slider.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();show(active+(e.key==='ArrowLeft'?-1:1));}else if(e.key==='Home'||e.key==='End'){e.preventDefault();show(e.key==='Home'?0:slides.length-1);}});
-  show(0);
- });
+ setupMediaSliders(main);
  const relatedProjects=projects.filter(p=>p.id!==record.id&&(p.metaType===record.metaType||p.stack.engine===record.stack.engine)).slice(0,3);
  const topics=record.tools.map(t=>t.toLowerCase());
  const relatedPosts=posts.filter(p=>p.state==='published'&&p.indexable!==false&&!p.resource&&p.tags?.some(t=>topics.includes(t.toLowerCase()))).sort((a,b)=>(Date.parse(b.siteDate||b.datePublished)||0)-(Date.parse(a.siteDate||a.datePublished)||0)).slice(0,3);

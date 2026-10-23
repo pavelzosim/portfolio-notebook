@@ -3,6 +3,23 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const read=name=>fs.readFileSync(path.join(__dirname,name),'utf8');
+test('Style Guide documents the shared implementation rather than a second stylesheet',()=>{
+ const guide=read('components.html'),preview=read('preview.js'),fixtures=read('fixtures.css');
+ for(const id of ['contract','tokens','actions','fields','states','panels','extension'])assert(guide.includes(`id="${id}"`),id);
+ assert.match(preview,/getComputedStyle\(document.documentElement\)/);
+ assert.match(preview,/createControlDisclosure\('Settings'\)/);
+ const catalogue=read('style-guide.js');
+ assert.match(catalogue,/const order=\['actions','fields','panels'/);
+ assert.match(catalogue,/register.replaceWith\(palette\)/);
+ for(const id of ['comparison','math','tables','diagram','article-header','article-footer','share','discovery'])assert(catalogue.includes(`add('${id}'`),id);
+ assert.match(catalogue,/language-c/);
+ assert.match(catalogue,/datePublished/);
+ assert.match(read('components.css'),/accent-color:var\(--blue\)/);
+ assert(!preview.includes("patterns=article.querySelector('.guide-document')"),'do not embed an unadapted legacy page');
+ assert(!/\[data-template="noise"\] #noise-status\{/.test(fixtures));
+ assert(!/\.browser-tools-nav button\{/.test(fixtures));
+ assert.equal((read('components.css').match(/\.control-panel--columns\{/g)||[]).length,2,'one base definition and one standalone responsive definition; mobile selector is grouped');
+});
 test('preview is noindex, outside deployment allowlist, and loads only candidate CSS',()=>{
  const html=read('index.html');
  assert.match(html,/<meta name="robots" content="noindex,nofollow">/);

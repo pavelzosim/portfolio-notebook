@@ -133,3 +133,11 @@ Route `/lab/atlas-ui/?page=compressor`. Real source controls and compression scr
 - Tool release baseline is 0.1, owned once in lab/tool-release.json and used by candidate tool titlebars and online-tool cards. Preserve this source for future tool fixtures; no hardcoded independent version labels. Preview help paragraphs also use shared System Note, retaining loupe-help ID and accessible descriptions.
 - Compressor settings are an initially open native disclosure; status and Process batch remain visible outside it. Remove duplicate action hint. Preview toolbar follows images; loupe instructions are visually hidden but retain aria-describedby target. Export guidance uses System Note. Preset labels describe colour/albedo, data maps and pixel art without claiming GPU texture compression or changing existing encoder algorithms.
 - Settings native summary includes visible Collapse/Expand action text, synced to open state. Technical boundaries ends with a mailto suggestion invitation using the existing public contact pavel.zosim@protonmail.com.
+## Image Compressor — APPROVED
+
+User confirmed as canonical on 2026-10-23. Preserve compact equal-height settings, disclosure, status/action row, System Notes, preview toolbar placement, shared support/share/related cards and v0.1. No production migration.
+
+## Noise Generator — CANDIDATE
+
+Route `/lab/atlas-ui/?page=noise`. Uses actual worker generation, material preview and map exports with isolated canonical styling. Shared version/support/share/related cards. Await user review.
+- Noise settings reuse shared control groups: Surface, Noise & fractal, Detail & direction, Normals. Both Noise/Compressor use the same native disclosure factory and Collapse/Expand labels. Noise actions remain outside the disclosure; map-specific controls are a nested disclosure. Preserve all input nodes and worker bindings.
