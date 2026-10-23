@@ -1,4 +1,5 @@
 /* Homepage behavior only; the candidate shell owns navigation and keyboard routing. */
+import {setupIntroSearch} from './intro-profile.js?v=review-100';
 export function setupHomeInteractions(main,records){
  const lead=main.querySelector('.contact-lead');if(lead){lead.textContent=lead.textContent.replace(/\s*If this overlaps with a problem your team is solving, write directly\./,'').trim();}
  const slider=main.querySelector('[data-home-tools-slider]');
@@ -24,8 +25,5 @@ export function setupHomeInteractions(main,records){
   });
   document.addEventListener('visibilitychange',sync);render();
  }
- const form=main.querySelector('#searchForm'),input=main.querySelector('#siteSearch'),output=main.querySelector('#searchResult');
- if(form){const candidates=[...main.querySelectorAll('.highlight-card,.home-records>a')];const update=()=>{const query=input.value.trim().toLocaleLowerCase();let visible=0;for(const card of candidates){card.hidden=!!query&&!card.textContent.toLocaleLowerCase().includes(query);if(!card.hidden)visible++;}output.textContent=`${visible} records`;};form.addEventListener('submit',event=>{event.preventDefault();const query=input.value.trim();location.assign('/blog/'+(query?'?q='+encodeURIComponent(query):''));});input.addEventListener('input',update);input.setAttribute('aria-label','Filter homepage records');output.setAttribute('aria-live','polite');update();
-  // Registry stays the source of truth; the demo filters only rendered Home records.
-  output.title=`${records.length} records in the complete catalog`;}
+ setupIntroSearch(main,{records});
 }

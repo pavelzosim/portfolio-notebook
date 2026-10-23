@@ -141,6 +141,8 @@ User confirmed as canonical on 2026-10-23. Preserve compact equal-height setting
 
 ## Style Guide — APPROVED (2026-10-23)
 
+Home rail motion approved on 2026-10-23: Tool Store cycles every 3 seconds, Online Tools every 5 seconds, smooth 450 ms horizontal transitions, no Play/Pause buttons. Pause temporarily for hover/focus/hidden document. Wireframe retains pointer interaction and click-to-change with slow axial drift (0.12 radians/second); reduced motion suppresses the drift. These behaviours are shared catalogue contracts, not page-specific alternatives. Next review candidates: compact record previews and record rows.
+
 User confirmed `/lab/atlas-ui/?page=components` as the single source of truth for styles and components. This decision supersedes earlier conflicting visual notes in this chronological log. Apply approved components to subsequent page work. Before article authoring, inspect the catalogue and follow the authoring contract. New unique elements require user review before registration in the Style Guide and shared implementation, then reuse. Do not create local overrides or parallel style sources. Public migration, commits and pushes remain separately authorized actions. The implementation still contains legacy candidate rules to consolidate during application; approval does not mean that consolidation is already complete.
 
 ## Noise Generator — CANDIDATE (continued)

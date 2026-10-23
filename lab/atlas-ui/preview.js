@@ -1,14 +1,16 @@
 /* Local comparison harness. Only source content is imported, never its CSS/scripts. */
 import {setupNavigation} from './navigation.js?v=review-22';
-import {setupHomeInteractions} from './home.js?v=review-66';
+import {setupHomeInteractions} from './home.js?v=review-100';
 import {renderTools} from './tools.js?v=review-25';
 import {renderBlog} from './blog.js?v=review-33';
 import {renderProject} from './project.js?v=review-95';
 import {setupCompressorPanel} from './compressor-panel.js?v=review-84';
 import {setupNoisePanel,setupNoisePresets} from './noise-panel.js?v=review-85';
 import {createControlDisclosure} from './control-disclosure.js?v=review-84';
+import {setupShelfCarousels} from './shelf-carousel.js?v=review-104';
+import {renderRecordPreviews} from './record-preview.js?v=review-105';
 import {renderArticlePassport} from './article-passport.js?v=review-91';
-import {completeStyleGuide} from './style-guide.js?v=review-95';
+import {completeStyleGuide} from './style-guide.js?v=review-105';
 const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',components:'/blog/style-guide/'};
 const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
@@ -24,10 +26,11 @@ const loadScript=src=>new Promise((resolve,reject)=>{const el=document.createEle
 function clean(element){element.querySelectorAll('script,style,link').forEach(e=>e.remove());element.querySelectorAll('[style]').forEach(e=>e.removeAttribute('style'));return element;}
 function sourceRail(source){const rail=source.querySelector('.meta-rail');if(rail)right.replaceChildren(...clean(rail).childNodes);right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.remove('atlas-btn--quiet');a.classList.add('button--outline');a.textContent='Buy →';});}
 function localToolLinks(root){root.querySelectorAll('a[href="/online-tools/sprite-sheet-assembly/"]').forEach(a=>a.href='?page=tool');}
-function shelves(){document.querySelectorAll('[data-gumroad-shelf],[data-online-tools-shelf]').forEach(shelf=>{const slides=[...shelf.querySelectorAll('.gumroad-shelf__slide')];let index=0;const render=()=>{slides.forEach((s,i)=>{s.hidden=i!==index;s.inert=i!==index;});const count=shelf.querySelector('output');if(count){count.textContent=`${index+1} / ${slides.length}`;count.setAttribute('aria-live','polite');}};shelf.querySelectorAll('button').forEach((button,i)=>button.addEventListener('click',()=>{index=(index+(i?1:-1)+slides.length)%slides.length;render();}));render();});}
+function shelves(){setupShelfCarousels(document);}
 async function home(){
  const source=await doc('/');
  main.replaceChildren(...clean(source.querySelector('main')).childNodes);
+ main.querySelector('#overview')?.classList.add('intro-profile');
  main.querySelectorAll('.doc-section,.doc-head').forEach(el=>{el.classList.remove('doc-section','doc-head');el.classList.add('document-section');});
  main.querySelectorAll('div.record-list').forEach(el=>{el.classList.remove('record-list');el.classList.add('home-records');});
  main.querySelectorAll('.home-store-row>a').forEach(a=>{a.classList.remove('atlas-btn--ghost');a.classList.add('button--outline');});
@@ -44,7 +47,8 @@ async function home(){
  await loadScript('/scripts/tools-content.js?v=7');
  const registry=await window.atlasFetchRegistry('/content/posts/index.json');
  await rendered;
- await loadScript('/scripts/wireframe-shape.js?v=6');
+ renderRecordPreviews(main.querySelector('[data-home-highlights]'),registry.records.filter(r=>r.homepage?.highlight).sort((a,b)=>(a.homepage.rank??0)-(b.homepage.rank??0)));
+ await loadScript('./wireframe-shape.js?v=review-104');
  setupHomeInteractions(main,registry.records);
 }
 async function index(){
@@ -175,6 +179,7 @@ async function blog(){
  renderBlog({main,left,registry,escape,heading});
 }
 async function components(){
+ await loadScript('/scripts/post-registry.js?v=2');
  const source=await doc('./components.html');main.replaceChildren(...source.querySelector('template').content.cloneNode(true).childNodes);
  outline('STYLE_GUIDE.md',[['#contract','Contract'],['#tokens','Tokens'],['#actions','Actions'],['#fields','Fields'],['#states','States'],['#density','Reading density'],['#panels','Settings panels'],['#extension','Extension & article patterns']]);
  const styles=getComputedStyle(document.documentElement),register=main.querySelector('#token-register');
