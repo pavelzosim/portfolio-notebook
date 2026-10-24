@@ -3,7 +3,7 @@ import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-107';
 import {renderTools} from './tools.js?v=review-137';
 import {renderBlog} from './blog.js?v=review-118';
-import {renderProject} from './project.js?v=review-148';
+import {renderProject} from './project.js?v=review-151';
 import {setupCompressorPanel} from './compressor-panel.js?v=review-126';
 import {setupNoisePanel,setupNoisePresets} from './noise-panel.js?v=review-131';
 import {createControlDisclosure} from './control-disclosure.js?v=review-84';
@@ -19,7 +19,7 @@ import {setupSpritePanel} from './sprite-panel.js?v=review-122';
 import {renderArticlePassport} from './article-passport.js?v=review-91';
 import {completeStyleGuide} from './style-guide.js?v=review-148';
 import {createSiteRoutes} from './site-routes.js?v=review-141';
-import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-149';
+import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-150';
 import {renderSiteReview} from './site-review.js?v=review-145';
 let site;
 async function review(){renderSiteReview({main,left,right,site,heading,section,escape});}

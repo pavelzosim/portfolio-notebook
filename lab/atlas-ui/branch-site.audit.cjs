@@ -16,9 +16,14 @@ const {chromium}=require('C:/Users/pavel/.cache/codex-runtimes/codex-primary-run
    const missingFrames=[...original.querySelectorAll('iframe')].filter(frame=>!frames.some(rendered=>rendered.getAttribute('src')===frame.getAttribute('src'))).length;
    const smallFrames=frames.filter(frame=>frame.closest('.atlas-interactive-frame')&&frame.clientHeight<300).length;
    const diagramNodes=[...original.querySelectorAll('.atlas-uml-diag__node-title')].filter(node=>!body.textContent.includes(node.textContent.trim())).length;
-   return {headings:original.querySelectorAll('h2').length!==body.querySelectorAll('h2').length,images:[...original.querySelectorAll('img')].map(e=>e.getAttribute('src')).filter(src=>!media.has(src)),code:[...original.querySelectorAll('pre')].map(e=>e.textContent.trim()).filter(text=>!codes.includes(text)).length,diagrams,missingFrames,smallFrames,diagramNodes};
+   const selector='[data-slider],[data-image-slider],.gallery-grid';
+   const expectedGalleries=[...original.querySelectorAll(selector)].filter(host=>host.querySelector('img')&&!host.parentElement.closest(selector)).length;
+   const sliders=[...body.querySelectorAll('.project-slider')];
+   const galleries=body.querySelectorAll(selector).length>0||sliders.length!==expectedGalleries;
+   const brokenSliders=sliders.filter(slider=>{const count=slider.querySelectorAll('.project-media').length;slider.querySelector('[data-next]').click();const next=slider.querySelector('output').textContent;slider.querySelector('[data-prev]').click();return next!==`${count>1?2:1} / ${count}`||slider.querySelectorAll('.project-media[aria-hidden=false]').length!==1;}).length;
+   return {headings:original.querySelectorAll('h2').length!==body.querySelectorAll('h2').length,images:[...original.querySelectorAll('img')].map(e=>e.getAttribute('src')).filter(src=>!media.has(src)),code:[...original.querySelectorAll('pre')].map(e=>e.textContent.trim()).filter(text=>!codes.includes(text)).length,diagrams,missingFrames,smallFrames,diagramNodes,galleries,brokenSliders};
   },record.localPath);
-  if(missing.headings||missing.images.length||missing.code||missing.diagrams||missing.missingFrames||missing.smallFrames||missing.diagramNodes)data.errors.push('Content integrity: '+JSON.stringify(missing));
+  if(missing.headings||missing.images.length||missing.code||missing.diagrams||missing.missingFrames||missing.smallFrames||missing.diagramNodes||missing.galleries||missing.brokenSliders)data.errors.push('Content integrity: '+JSON.stringify(missing));
  }
  if(route.startsWith('?page=project&')){
   const record=inventory.projects.find(r=>route.endsWith(encodeURIComponent(r.slug)));

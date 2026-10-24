@@ -222,3 +222,27 @@ select option{background:var(--surface);color:var(--ink)}select option:checked{b
 .atlas-table td>ul{margin:0;padding-inline-start:18px}
 /* Interactive applications need room for their own controls, not video geometry. */
 [data-detail] .article-body .atlas-interactive-frame>iframe{height:500px;aspect-ratio:auto}
+/* Article media rhythm; nested slide figures keep zero margins. */
+.article-body>.project-slider,.article-body>.media-frame{margin-block:var(--space-group)}
+.article-body>.project-slider+.media-caption{margin:0 0 var(--space-group);font-size:var(--meta);color:var(--muted)}
+/* Project record composition shares Article rhythm; no widget-card hierarchy. */
+.project-body>.document-section{display:flow-root;margin:0;padding:0;border:0}
+.project-body>.document-section>h2{font-size:18px;line-height:1.4;margin:0 0 var(--space-flow);padding:0 0 var(--space-sm);border:0;border-bottom:var(--border-width) solid var(--border-color)}
+.project-body>.document-section>:last-child{margin-bottom:0}
+[data-detail] .project-body>.article-section-divider{margin:var(--space-group) 0 var(--space-section)}
+.project-body .project-overview{max-width:none;margin-bottom:var(--space-group)}
+.project-opening .project-metrics{margin:0;border-top:0}.project-opening .project-media{border-bottom:0}
+.project-context{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-section)}
+.project-context>div{min-width:0}.project-body .project-context h3,.project-body .project-contribution-groups h3,.project-body .project-solutions h3{font-size:14px;font-weight:600;margin:0 0 var(--space-md)}
+.project-context ul,.project-contribution-groups ul{margin:0;padding-left:18px}
+.project-contribution-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-group)}
+.project-contribution-groups li+li,.project-context li+li{margin-top:var(--space-sm)}
+.project-record-list{padding-left:18px;margin:0}
+.project-solutions{counter-reset:solution;list-style:none;padding:0;margin:0}
+.project-solutions>li{counter-increment:solution;display:grid;grid-template-columns:28px minmax(0,1fr);gap:var(--space-md);padding:var(--space-flow) 0;border-top:var(--border-width) solid var(--border-color)}
+.project-solutions>li::before{content:counter(solution,decimal-leading-zero);font-size:var(--meta);color:var(--muted)}
+.project-solutions p{margin:0;line-height:1.65}.project-stack-line{font-size:var(--ui);color:var(--muted)}
+.project-body .project-media::before{content:none}
+[data-template="project"] .passport-header-right{flex:1;min-width:0}
+[data-template="project"] .passport-header-field{white-space:normal;overflow-wrap:anywhere}
+@media(max-width:760px){.project-context,.project-contribution-groups{grid-template-columns:1fr}}

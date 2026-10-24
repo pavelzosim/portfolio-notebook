@@ -15,9 +15,13 @@ export function extractArticleBody(source){
  return body;
 }
 export function adaptArticle(body,escape){
- body.querySelectorAll('[data-slider],[data-image-slider]').forEach(host=>{
-  const images=[...host.querySelectorAll('img[data-slide]')];if(!images.length)return;
-  const wrapper=document.createElement('div');wrapper.innerHTML=mediaSlider(images.map(img=>({src:img.getAttribute('src'),alt:img.alt,caption:img.dataset.caption||img.alt})),escape);host.replaceWith(wrapper.firstElementChild);
+ body.querySelectorAll('[data-slider],[data-image-slider],.gallery-grid').forEach(host=>{
+  if(!body.contains(host)||host.closest('.project-slider'))return;
+  const images=[...host.querySelectorAll('img')];if(!images.length)return;
+  const caption=host.querySelector('figcaption,.media-caption');
+  const wrapper=document.createElement('div');wrapper.innerHTML=mediaSlider(images.map(img=>({src:img.getAttribute('src'),alt:img.alt,caption:img.dataset.caption||img.closest('figure')?.querySelector('figcaption')?.textContent||img.alt})),escape);
+  const slider=wrapper.firstElementChild;if(host.id)slider.id=host.id;host.replaceWith(slider);
+  if(caption){const description=document.createElement('p');description.className='media-caption';description.append(...caption.childNodes);slider.after(description);}
  });
  body.querySelectorAll('.atlas-download-btn').forEach(link=>{link.classList.remove('atlas-download-btn');link.classList.add('button');});
  body.querySelectorAll('pre').forEach(pre=>pre.classList.add('atlas-code-block'));

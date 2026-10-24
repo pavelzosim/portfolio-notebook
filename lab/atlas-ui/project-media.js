@@ -6,5 +6,5 @@ export function projectMediaThemes(record){
  if(classified.length)themes.push(['more-media','Production media',classified]);
  for(const [index,group]of (record.mediaGalleries||[]).entries())if(group.media?.length)themes.push(['media-group-'+(index+1),group.title,group.media]);
  if(!themes.length&&record.image)themes.push(['project-image','Project image',[{src:record.image,alt:record.title,caption:record.title}]]);
- return themes;
+ return themes.map(([id,title,items])=>[id,title,items.map(item=>({...item,caption:(item.caption||item.alt||title).replace(/\s*(?:[\/|·—-]\s*)?(?:ace175[_-])?[a-f0-9]{16,}[^\s]*/gi,'').replace(/\s*\([^)]*\.(?:jpe?g|png|webp|gif)\)/gi,'').trim()||title}))]);
 }
