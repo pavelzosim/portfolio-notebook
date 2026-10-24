@@ -1,37 +1,40 @@
 /* Complete project candidate, sourced exclusively from the local registry. */
-import {setupMediaSliders} from './media-slider.js?v=review-95';
+import {setupMediaSliders} from './media-slider.js?v=review-148';
+import {projectMetrics} from './project-metrics.js?v=review-142';
+import {setupArticleNavigation} from './article-navigation.js?v=review-120';
+import {setupMediaTabs} from './media-tabs.js?v=review-133';
+import {artworkGallery} from './artwork-gallery.js?v=review-148';
+import {projectMediaThemes} from './project-media.js?v=review-147';
 export function renderProject({record,layout={},projects=[],posts=[],main,left,right,escape,heading,section,facts}){
  const entries=[];
  const add=(id,title,body,label='')=>{main.insertAdjacentHTML('beforeend',section(id,title,body));const header=main.lastElementChild.querySelector('.section-label');header.querySelector('span').textContent=`§ ${String(entries.length+1).padStart(2,'0')}`;if(label)header.insertAdjacentHTML('beforeend',`<em>${escape(label)}</em>`);entries.push([id,title]);};
  const list=values=>`<ul class="project-record-list">${values.map(v=>`<li>${escape(v)}</li>`).join('')}</ul>`;
  const video=v=>`<figure class="project-media"><video controls playsinline preload="none" poster="${escape(v.poster||record.image)}" src="${escape(v.src)}"></video><figcaption>${escape(v.caption||v.title||'')}</figcaption></figure>`;
- const gallery=items=>`<div class="project-slider" role="region" aria-roledescription="carousel" aria-label="Project images" tabindex="0"><div class="project-slider-viewport">${items.map((m,i)=>`<figure class="project-media" ${i?'hidden':''} role="group" aria-roledescription="slide" aria-label="${i+1} / ${items.length}"><a href="${escape(m.src)}" target="_blank" rel="noopener noreferrer" aria-label="${escape(m.alt||'Project image '+(i+1))} — open full size"><img src="${escape(m.src)}" alt="${escape(m.alt||record.title)}" loading="lazy"></a><figcaption>${escape((m.caption||'').split(' / ')[0])} · ${String(i+1).padStart(2,'0')}</figcaption></figure>`).join('')}</div><div class="project-slider-nav"><button type="button" class="button button--quiet" data-prev aria-label="Previous image">← Prev</button><output aria-live="polite" aria-atomic="true">1 / ${items.length}</output><button type="button" class="button button--quiet" data-next aria-label="Next image">Next →</button></div></div>`;
- const evidence=items=>`<div class="project-gallery">${items.map((m,i)=>`<figure class="project-media"><a href="${escape(m.src)}" target="_blank" rel="noopener noreferrer"><img src="${escape(m.src)}" alt="${escape(m.alt||record.title)}" loading="lazy"></a><figcaption>${escape((m.caption||'').split(' / ')[0])} · ${String(i+1).padStart(2,'0')}</figcaption></figure>`).join('')}</div>`;
  const field=(key,value)=>`<span class="passport-header-field"><span class="passport-header-key">${escape(key)}:</span> ${escape(value)}</span>`;
  main.innerHTML=`<header class="document-head article-passport"><div class="passport-title-bar"><div class="passport-header-left">${field('log_id',record.id)}</div><div class="passport-header-right">${field('client',record.client)}${field('status',record.status)}</div></div><h1>${escape(record.title)}</h1><p class="passport-summary">Summary: ${escape(record.summary)}</p></header>`;
  add('overview','Overview',`<p class="project-overview">${escape(record.overview)}</p>`,'PROJECT RECORD');
- add('context','Scope & constraints',`<div class="project-context"><div><h3>Scope</h3>${list(record.scope||[])}</div><div><h3>Constraints</h3>${list(record.constraints||[])}</div></div>`,'CONTEXT');
+ add('context','Scope & constraints',`<div class="comparison-matrix"><div class="comp-col"><h3 class="comp-label">Scope</h3><div class="comp-body"><ul>${(record.scope||[]).map(v=>`<li>${escape(v)}</li>`).join('')}</ul></div></div><div class="comp-col"><h3 class="comp-label">Constraints</h3><div class="comp-body"><ul>${(record.constraints||[]).map(v=>`<li>${escape(v)}</li>`).join('')}</ul></div></div></div>`,'CONTEXT');
  if(record.video)add('footage','Project footage',video(record.video),'REALTIME / XR');
  if(record.roleDetails?.length)add('roleDetails','My role',list(record.roleDetails),'CONTRIBUTION');
  if(record.solutions?.length)add('solutions','Technical solution',`<p class="project-stack-line"><span>Stack</span> ${record.tools.map(escape).join(' · ')}</p><ol class="project-solutions">${record.solutions.map(v=>`<li>${escape(v)}</li>`).join('')}</ol>`,'SYSTEMS');
- const media=record.media||[];
- for(const [key,title,items]of [['interface','Interface & screen systems',media.filter(m=>m.src.includes('/ui/'))],['badges','Badges & motion',media.filter(m=>m.src.includes('/bages/'))],['robot','Robot expressions',media.filter(m=>m.src.includes('/robot-emotions/'))],['locations','Locations & environments',record.locationMedia||[]]])if(items.length)add(key,title,gallery(items));
- const classified=media.filter(m=>!['/ui/','/bages/','/robot-emotions/'].some(key=>m.src.includes(key)));
- if(classified.length)add('more-media','Production media',gallery(classified));
- add('results','Results',`<dl class="project-metrics">${(record.metrics||[]).map(m=>`<div><dt>${escape(m.value)}</dt><dd>${escape(m.label)}</dd></div>`).join('')}</dl>`+list(record.results||[])+`<p>${escape(record.outcome||'')}</p>`,'OUTCOME');
- if(record.awards?.length)add('recognition','Recognition',`<ul>${record.awards.map(a=>`<li><a href="${escape(a.url)}" target="_blank" rel="noopener noreferrer">${escape(a.label)}</a><p>${escape(a.category||'')}</p></li>`).join('')}</ul>`);
- if(record.externalVideo)add('iss','First Woman aboard the ISS',video(record.externalVideo));
+ const themes=projectMediaThemes(record);
+ if(themes.length)add('artwork','Artwork & environments',artworkGallery(themes,escape));
+ // Metrics, award evidence and the ISS appearance form one concise record.
+ const recognitionFacts=record.slug==='nasa-first-woman'?(record.results||[]).filter(text=>!/1\.5 million|325K|350K|Frank Rubio|Webby|People.s Voice/i.test(text)):[...(record.results||[]),...(record.outcome?[record.outcome]:[])];
+ const awards=(record.awards||[]).map(a=>`<tr><th scope="row">Award</th><td><a href="${escape(a.url)}" target="_blank" rel="noopener noreferrer">${escape(a.label)}</a>${a.category?`<br>${escape(a.category)}`:''}</td></tr>`).join('');
+ const recognitionRows=awards+(recognitionFacts.length?`<tr><th scope="row">Use & longevity</th><td><ul>${recognitionFacts.map(text=>`<li>${escape(text)}</li>`).join('')}</ul></td></tr>`:'');
+ const recognitionTable=recognitionRows?`<div class="atlas-table-frame atlas-table-frame--solid"><div class="atlas-table-header-solid">[ RECOGNITION // PRODUCTION RECORD ]</div><table class="atlas-table" aria-label="Project recognition and use"><tbody>${recognitionRows}</tbody></table></div>`:'';
+ add('recognition','Recognition',projectMetrics(record.metrics||[],escape)+recognitionTable+(record.externalVideo?video(record.externalVideo):''));
  const roleList=main.querySelector('#roleDetails .project-record-list');
  if(roleList&&layout.roleGroups?.length){
   const items=[...roleList.children],used=new Set();
-  const grouped=document.createElement('div');grouped.className='project-contribution-groups';
-  layout.roleGroups.forEach(({title,items:values})=>{const matches=items.filter(item=>values.includes(item.textContent)&&!used.has(item));if(!matches.length)return;matches.forEach(item=>used.add(item));const group=document.createElement('div');group.innerHTML=`<h3>${escape(title)}</h3><ul></ul>`;group.querySelector('ul').append(...matches);grouped.append(group);});const rest=items.filter(item=>!used.has(item));if(rest.length){const remaining=document.createElement('ul');remaining.append(...rest);grouped.append(remaining);}roleList.replaceWith(grouped);
+  const grouped=document.createElement('div');grouped.className='project-contribution-groups card-grid';
+  layout.roleGroups.forEach(({title,items:values})=>{const matches=items.filter(item=>values.includes(item.textContent)&&!used.has(item));if(!matches.length)return;matches.forEach(item=>used.add(item));const group=document.createElement('article');group.className='card';group.innerHTML=`<h3 class="eyebrow">${escape(title)}</h3><ul></ul>`;group.querySelector('ul').append(...matches);grouped.append(group);});const rest=items.filter(item=>!used.has(item));if(rest.length){const remaining=document.createElement('ul');remaining.append(...rest);grouped.append(remaining);}roleList.replaceWith(grouped);
  }
  main.querySelectorAll('.project-solutions>li').forEach(li=>{const text=li.textContent,title=layout.solutionHeadings?.[text];li.innerHTML=`${title?`<h3>${escape(title)}</h3>`:''}<p>${escape(text)}</p>`;});
  const sections=[...main.querySelectorAll('.document-section')];
  const body=document.createElement('div');body.className='article-body project-body';
  const toc=document.createElement('nav');toc.className='atlas-toc';toc.setAttribute('aria-label','Project table of contents');toc.innerHTML='<p class="toc-title">[ TABLE_OF_CONTENTS // NAVIGATION ]</p><ul class="atlas-toc__list">'+entries.map(([id,title],i)=>`<li class="atlas-toc__item"><a href="#${id}"><span class="atlas-toc__num">${String(i+1).padStart(2,'0')}</span><span class="atlas-toc__row"><span class="atlas-toc__title">${escape(title)}</span><span class="atlas-toc__dots"></span></span></a></li>`).join('')+'</ul>';body.append(toc);
- toc.addEventListener('click',e=>{const a=e.target.closest('a');if(!a||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;const target=document.getElementById(a.hash.slice(1));if(!target)return;e.preventDefault();history.pushState(null,'',a.hash);target.tabIndex=-1;target.focus({preventScroll:true});target.scrollIntoView({block:'start'});});
  sections.forEach((s,i)=>{
   const header=s.querySelector('.section-label'),title=header.querySelector('h2');title.prepend(`§ ${String(i+1).padStart(2,'0')} `);header.replaceWith(title);
   s.querySelectorAll('h3').forEach(h=>{const mark=document.createElement('span');mark.className='article-subheading-mark';mark.setAttribute('aria-hidden','true');mark.textContent='> ';h.prepend(mark);});
@@ -40,7 +43,7 @@ export function renderProject({record,layout={},projects=[],posts=[],main,left,r
  });
  body.insertAdjacentHTML('beforeend','<div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // EOF</span><span class="atlas-eof-divider__line"></span></div>');main.append(body);
  left.innerHTML='<p class="rail-title">PROJECT.md</p><nav aria-label="Project sections"><a href="?page=projects">← Projects index</a>'+entries.map(([id,title],i)=>`<a href="#${id}">${String(i+1).padStart(2,'0')} ${escape(title)}</a>`).join('')+'</nav>';
- setupMediaSliders(main);
+ setupMediaSliders(main);setupMediaTabs(main);setupArticleNavigation(main);
  const relatedProjects=projects.filter(p=>p.id!==record.id&&(p.metaType===record.metaType||p.stack.engine===record.stack.engine)).slice(0,3);
  const topics=record.tools.map(t=>t.toLowerCase());
  const relatedPosts=posts.filter(p=>p.state==='published'&&p.indexable!==false&&!p.resource&&p.tags?.some(t=>topics.includes(t.toLowerCase()))).sort((a,b)=>(Date.parse(b.siteDate||b.datePublished)||0)-(Date.parse(a.siteDate||a.datePublished)||0)).slice(0,3);

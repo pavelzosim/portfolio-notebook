@@ -4,6 +4,7 @@ The user approved the Atlas Style Guide on 2026-10-23 as the single source of tr
 
 - Before UI work or article authoring, read `lab/atlas-ui/REVIEW-RULES.md` and inspect `/lab/atlas-ui/?page=components`.
 - Reuse approved components and shared implementations. Do not create page-specific visual variants or duplicate style definitions.
+- The Style Guide is a compact visual register, not a duplicate website: use one example per unique component, or two to demonstrate spacing and variation. Keep meaningful interactive states, but never copy entire content lists. Limit only catalogue fixture data, not real page data.
 - A new visual element must first be reviewed by the user. After approval, add its example and rules to the Style Guide and its implementation to the shared owner, then use it on pages.
 - Articles must follow `content/guides/article-authoring.md` and the approved catalogue. Do not invent article-local CSS.
 - Shared owners: `lab/atlas-ui/tokens.css` for tokens, `shell.css` for shell, `components.css` for component faces, shared JS modules for behaviour. Existing rules in `fixtures.css` must be consolidated, not extended with override layers.

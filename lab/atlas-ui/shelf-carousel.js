@@ -1,4 +1,34 @@
-export function setupShelfCarousels(root){
+import {withResourceMedia} from './resource-media.js?v=review-137';
+// Published tool registry + each tool's own purchase link are the source of truth.
+let productsPromise;
+export function loadStoreTools(){
+ return productsPromise??=(async()=>{
+  const response=await fetch('/content/posts/index.json');if(!response.ok)throw Error('Tool registry unavailable');
+  const {records}=await response.json();
+  const products=await Promise.all(records.filter(r=>r.kind==='tool'&&r.resource&&r.state==='published'&&r.indexable!==false).map(async record=>{
+   const response=await fetch(record.localPath);if(!response.ok)throw Error('Tool page unavailable: '+record.id);
+   const source=new DOMParser().parseFromString(await response.text(),'text/html');
+   const link=[...source.querySelectorAll('.atlas-download-btn[href]')].find(a=>{try{const url=new URL(a.getAttribute('href'),location.origin);return url.hostname==='pavelzosim.gumroad.com'&&url.pathname.startsWith('/l/');}catch{return false;}});
+   return link?{...withResourceMedia(record),purchaseUrl:link.href}:null;
+  }));return products.filter(Boolean);
+ })();
+}
+async function populateStore(root){
+ const shelves=[...root.querySelectorAll('[data-gumroad-shelf]')];if(!shelves.length)return;
+ const products=await loadStoreTools();
+ for(const shelf of shelves){if(shelf.dataset.storePopulated)continue;shelf.dataset.storePopulated='true';
+  const viewport=shelf.querySelector('.gumroad-shelf__viewport');viewport.replaceChildren();
+  const limit=Number(shelf.dataset.catalogueLimit)||products.length;
+  for(const product of products.slice(0,limit)){
+   const slide=document.createElement('article');slide.className='gumroad-shelf__slide';slide.dataset.toolId=product.id;
+   const image=document.createElement('img');image.src=product.image;image.alt=product.imageAlt||product.title;image.loading='lazy';
+   const title=document.createElement('strong');title.textContent=product.title;const summary=document.createElement('span');summary.textContent=product.summary;
+   const buy=document.createElement('a');buy.className='gumroad-shelf__action button button--outline';buy.href=product.purchaseUrl;buy.target='_blank';buy.rel='noopener noreferrer';buy.textContent='Buy →';slide.append(image,title,summary,buy);viewport.append(slide);
+  }
+ }
+}
+export async function setupShelfCarousels(root){
+ try{await populateStore(root);}catch(error){root.querySelectorAll('[data-gumroad-shelf]').forEach(shelf=>{shelf.hidden=true;});console.error(error);}
  root.querySelectorAll('[data-gumroad-shelf],[data-online-tools-shelf]').forEach(shelf=>{
   if(shelf.dataset.carouselReady)return;shelf.dataset.carouselReady='true';
   const slides=[...shelf.querySelectorAll('.gumroad-shelf__slide')];if(!slides.length)return;

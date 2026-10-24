@@ -1,8 +1,52 @@
 # Page-by-page canonical review
 
+## Full branch-site application — authorized 2026-10-24
+
+Solar R&D article correction: stripping inline styles also removed SVG token paints, authored diagram structure and interactive iframe dimensions. article-structures.js translates the legacy scope/node architecture into the existing canonical SVG diagram face, preserving all node text and stage order. Concentric-layer evidence uses the existing schematic/caption/System Note faces with mapped SVG paint tokens. Interactive shader frames reuse the existing media frame; legacy CSS/scripts are not imported. Branch audit now checks SVG coverage, diagram labels, iframe source retention and usable interactive-frame height, in addition to headings/images/code. This is technical verification, not blanket article visual approval.
+
+2026-10-24 requested slider restoration: reuse main-branch black contained-image stage, 240 ms horizontal track transition and integrated caption/counter footer. Keep canonical quiet button faces and hover unchanged. Shared artwork-gallery.js/media-slider.js/components.css own the implementation for projects, adapted articles and catalogue; reduced motion disables the transition. Scope labels have zero top margin within comparison columns. Recognition groups repeated Use & longevity facts in one table row with a list, rather than repeating the row header.
+
+Project migration correction: the original renderer reads media, locationMedia AND mediaGalleries. Shared project-media.js now preserves every group in thematic tabs: Airport 17 images/four groups, Deloitte 35 images/five groups. The browser audit and project-media.test.cjs check source-media coverage for every project, not just article media. All 52 Airport/Deloitte image URLs returned HTTP 200. Canonical table row headers use normal word wrapping and a 12ch minimum width to avoid orphaned final letters; no page-local wrapping patch.
+
+Final automated branch pass: 60 routes passed desktop/mobile loading, H1 and document-overflow checks; all 43 articles passed source H2/image/code preservation checks. Canonical catalogue controls/anchors/mobile checks passed. Combined component, resource-filter, Sprite Sheet, Compressor and Noise core suite: 28 passed. No commit, merge, push, deployment or static public replacement performed. Human per-page visual acceptance remains the next gate.
+
+Follow-up completeness checks cover all sibling article content blocks, not just the first TOC block. Every source H2, code block and image is checked against the rendered article. Review route and isolated 404-game frame bring the navigation to 60 routes (59 content/reviewable pages plus the review index). Existing Prism/MathJax renderers are narrowly restored for original code/math; legacy page styles/scripts remain excluded from the parent document. Human per-page approval is still pending.
+
+The user authorized applying the canon to the complete site in the working branch, while retaining the currently published website until page-by-page review and a separate merge/deployment decision. This supersedes earlier restrictions to representative lab fixtures, but does not authorize commits, push, merge or deployment.
+
+The branch review entry is `/lab/atlas-ui/?page=review`. It is registry-backed: 43 published/indexable article/resource records, all five project records, existing index pages and three working Online Tools plus Privacy. Article/project routes select by slug, not hardcoded representative records. Shared routing rewrites internal links in Home, filters, directories, related records and article content to the corresponding canonical branch route. Original source pages remain available through Compare original.
+
+All 58 routes passed initial load/single-H1/1440-and-390-px overflow checks. This is not individual visual approval. Each record still requires human content/layout review; the review index deliberately does not mark records approved based on automated success. Existing authored image sliders are adapted to the same shared slider as project artwork, retaining their images. Full source registries and original public files remain unchanged during branch review.
+
+## Current catalogue contract — 2026-10-24
+
+This section is normative for catalogue authoring. The page-by-page notes below are historical decisions; newer explicit user decisions supersede conflicting older wording. The canonical visual entry point remains `/lab/atlas-ui/?page=components`, not the legacy public guide. Production migration is still a separately authorized task.
+
+- Register a component by visual structure, semantics and behaviour, not by its button text or the page where it appears. Primary action covers Validate, Process, Generate and Export; these labels do not justify separate specimens.
+- Each entry is an object plus one short usage rule. Show one specimen, or two only to explain spacing, variation or a genuine interaction. Composite entries demonstrate unique composition, not whole page content.
+- Retain meaningful variants (primary/quiet/support, disabled, focus/hover, semantic notice types), not duplicate implementations. Links navigate; buttons act. Shared implementations own behaviour and faces; tokens own values.
+- Status is dynamic process feedback; System Note is persistent explanation. Document each once. Related and Latest share one list face; their data selection differs.
+- Primitive fields belong to Fields. Group/disclosure examples explain composition. Do not repeat a primary action beside fields merely to make a demo form look complete.
+- Real page datasets are never limited to match catalogue specimens. No entire Home introduction, repeated record list under chapter headings, or extra standalone slider when the thematic gallery already demonstrates the slider.
+- Catalogue checks cover semantic headings, valid internal targets, unique IDs, keyboard interaction, narrow screens and fixture limits. A test pass is technical evidence, not automatic user visual approval.
+
+2026-10-24 catalogue cleanup: removed Validate settings duplicate, extra quiet navigation face, duplicate System Note, whole Home introduction, standalone slider, repeated Latest list and Blog chapter record rows. Moved checkbox to Fields, removed duplicate reading-density prose, shortened component usage descriptions and removed stale review-candidate titles from accepted catalogue entries. Shared page layouts and production files were not changed by this cleanup.
+
+## Cross-page verification — 2026-10-24
+
+Artwork owner consolidation: base project media, captions, slider navigation/focus and 760 px responsive rules now live in components.css, removed from fixtures.css along with the redundant project navigation override. Computed styles for gallery images/captions/navigation matched exactly before and after on project/catalogue at 1440 and 390 px. Article/project composition rules are still separate legacy debt; this is not a claim of complete fixture consolidation.
+
+Approved project tabs registered at catalogue #artwork-tabs: two themes, two images each. Shared artwork-gallery.js owns markup for both project and specimen; media-tabs.js and media-slider.js own behaviour. Actual project retains all four themes and 35 images. No catalogue-only style face or copied project content list. Verified tab/slider navigation and mobile overflow after extraction.
+
+Verified all 11 lab routes (components, home, online-tools index, tools, projects, blog, article, project, Sprite Sheet, Compressor, Noise) at 1440, 1000 and 390 px: one h1, successful content load, lab-only stylesheets and no document-level horizontal overflow. No page JavaScript errors during this pass. All actual store shelves contain four registry-backed paid tools; catalogue shelf alone contains two specimens. Eight contract/filter tests pass. This is technical verification, not blanket visual approval or proof that legacy fixture rules have all been consolidated. Pending: compact registration of approved project artwork tabs; continued owner consolidation without changing accepted layouts. Production migration remains separately authorized.
+
 Production migration is deferred until the site's page types are reviewed and their rules approved. Preparing a candidate or passing tests is not user approval. Do not replace production CSS during this phase.
 
 ## Home — APPROVED
+
+2026-10-24 latest store rule supersedes the two-URL filter: derive products from published/indexable resource records with kind=tool in content/posts/index.json, using each tool article's own atlas-download-btn Gumroad purchase link. No hardcoded product allowlist or fixed count. New qualifying registry entries automatically join the shelf on reload; Assets and tools without a purchase link do not. Current result: File Importer, Material Path Manager, After Effects Export and Skeleton Generator. Catalogue alone limits fixture output to two products. This is registry-driven inclusion, not live discovery of products added only to Gumroad.
+
+2026-10-24 requested refinements: the shared Tool Store shelf includes tool products only (Houdini to After Effects exporter and Procedural Skeleton Generator), excluding the three 3D model assets; filtering and counts belong to the shared shelf behaviour, including the compact catalogue specimen. This does not remove Assets from the actual Tools & Assets directory. Home award text uses the existing subdued note-warning fill with ink text. VFX preview titles use ink; IDs and descriptions remain muted. Recognition detail uses the existing canonical table for award/use rows beneath metrics, followed by the ISS video; no loose duplicated prose or additional visual variant. Changes remain lab-only.
 
 The user confirmed the complete Home fixture as canonical on 2026-10-20. Preserve its accepted visual hierarchy, interactions and latest annotation fixes. Shared shell: 220 px left / flexible main / 200 px right, 12 px navigation, 11 px rail headings, 14 px body, shared spacing scale. Commander: teal rest, blue hover/focus, yellow key digits. Production migration has not occurred.
 
@@ -108,6 +152,10 @@ Review route: `/lab/atlas-ui/?page=article`. Full Procedural Travel Resolution a
 - Latest user annotations restore the in-body Project TOC using Article styling and keyboard anchor behavior, and add END OF ARTICLE / EOF after the final section marker. Remove the Spanish NASA+ link, retaining ISS video/caption credit. Remove the Home pause-loops button at user request; offscreen/document-hidden pauses remain. This removal is not a claim of WCAG motion-control compliance.
 ## NASA First Woman / Project detail — APPROVED
 
+2026-10-24: User accepted the thematic artwork tab composition. Recognition replaces the separate Results, Recognition and ISS sections: metrics once, linked awards once, unique reuse fact once and ISS video/caption once. Remove the repeated metric/award/ISS bullet list and redundant outcome prose. TOC and rail expose one Recognition destination. Keep technical records compact and avoid repeating evidence in adjacent sections. Production source data remains unchanged.
+
+2026-10-24 follow-up review candidate requested by the user: group thematic artwork into one Artwork & environments section with four tabs (interface, badges, robot, locations). Each panel retains its own existing manual slider, all 35 images and full-size links. Tabs support arrows/Home/End, selected state, hidden/inert inactive panels, and original thematic hash destinations. TOC/rail list the single artwork section. New composition awaits visual approval before catalogue registration; no production migration.
+
 User approved the final project candidate on 2026-10-23. Preserve the latest annotations over earlier experiments: short passport, Record/Stack/Related rail, both outlines, topical sliders, Article-style closing rules and EOF, no Spanish NASA+ link, no sole-author claim. Data-driven role groups and solution headings remain lab-local until migration. Production is unchanged.
 
 ## Sprite Sheet Assembly / Tool detail — CANDIDATE
@@ -141,11 +189,41 @@ User confirmed as canonical on 2026-10-23. Preserve compact equal-height setting
 
 ## Style Guide — APPROVED (2026-10-23)
 
+2026-10-24 tool instruction rule: procedural How to use steps belong in the right sidebar, using the shared numbered tool-instructions block, not prose in the main column. Noise uses the same renderer as Compressor. Keep technical explanations (algorithms, colour spaces, output limitations) in the main document; remove only the duplicated workflow sentence. Apply this rule to subsequent tool work.
+
+2026-10-24: User explicitly approved the final shared Feedback and Support as canonical. Preserve the full-width filled mailto link without heading, suggestion/bug wording, 16 px spacing under Share, and sidebar [SUPPORT] with only Buy me a coffee. Apply across Sprite Sheet, Compressor and Noise through shared owners. Next review: Noise Generator. Production migration remains unauthorized.
+
+2026-10-24 latest copy: Feedback includes “or found a bug?”. Tool support contains only [SUPPORT] and the existing Buy me a coffee action; remove the explanatory support sentence. Shared across all three tool details and the Feedback catalogue specimen.
+
+2026-10-24 latest Feedback refinement supersedes the utility-panel version: one full-width mailto link with paper-token fill, no heading or nested link. Place it 16 px below Share controls inside the same section, not in another padded document section. Shared component owns padding, hover and keyboard focus across all three tools; text wraps on narrow screens. Catalogue retains one specimen.
+
+2026-10-24: Tool detail pages (Sprite Sheet, Compressor, Noise) share a separate Feedback block immediately after Share and before related tools. Use the approved utility-panel face and one shared renderer, with the existing suggestion/mailto text; remove the former Compressor-only paragraph from Technical boundaries. Sidebar support copy is “Find it useful? Support.” Preserve the existing support action. These refinements apply only to the lab; no production migration.
+
+2026-10-24: Sprite Sheet refinements accepted. Related-tool preview blocks must remain square while filling card height (aspect-ratio wrapper with contained image); cards have a 16 px gap. Layout/export guidance uses System Note. Status, count and actions share responsive rows; export stays right-aligned, wrapping rather than crushing text. Preserve input IDs, PNG export and clear behaviour. Compressor input/output preview pair is the next compact review candidate.
+
+2026-10-24: compact article contents and reference-list examples accepted by the user. Keep shared article-navigation behaviour across article, project and catalogue. Next: Sprite Sheet upload zone and transparency preview, one specimen each; no full embedded tool in the catalogue.
+
+Project catalogue card accepted by the user on review. Keep shared project-card renderer, registry metadata and two examples in the Style Guide. Resource count belongs inline with platform filters, not in a notice panel. Article Summary uses an 8 px top inset and 16 px bottom inset.
+
+Catalogue density rule: show one unique object, or two when demonstrating spacing/variation; do not duplicate complete page contents. Interactive examples use minimal fixture datasets with the real shared renderer and behaviour. Full source registries remain unchanged on actual pages. Current compact examples use two records/products/cards, and VFX reveals one additional preview rather than rendering all 22.
+
+Online Tools Index and its registered catalogue-card variant accepted at transition to Tools & Assets. Keep three registry-backed tools, shared release labels, full-card focus/link semantics and lab destinations for all three tools. Tools & Assets search/list composition is the next review candidate; it reuses the actual renderer without URL mutation inside the Style Guide.
+
+Home component review completed by the user, conditional on adding 16 px between the VFX grid and its controls (implemented in the shared component). Register intro profile, compact previews, record rows, VFX gallery, Online Tools feature card, product list, specialization/author and contact panel as approved existing Home patterns. Preserve shared renderers/behaviour and actual source content. Next page: Online Tools Index; do not infer approval for subsequent page changes.
+
 Home rail motion approved on 2026-10-23: Tool Store cycles every 3 seconds, Online Tools every 5 seconds, smooth 450 ms horizontal transitions, no Play/Pause buttons. Pause temporarily for hover/focus/hidden document. Wireframe retains pointer interaction and click-to-change with slow axial drift (0.12 radians/second); reduced motion suppresses the drift. These behaviours are shared catalogue contracts, not page-specific alternatives. Next review candidates: compact record previews and record rows.
 
 User confirmed `/lab/atlas-ui/?page=components` as the single source of truth for styles and components. This decision supersedes earlier conflicting visual notes in this chronological log. Apply approved components to subsequent page work. Before article authoring, inspect the catalogue and follow the authoring contract. New unique elements require user review before registration in the Style Guide and shared implementation, then reuse. Do not create local overrides or parallel style sources. Public migration, commits and pushes remain separately authorized actions. The implementation still contains legacy candidate rules to consolidate during application; approval does not mean that consolidation is already complete.
 
 ## Noise Generator — CANDIDATE (continued)
 
-Route `/lab/atlas-ui/?page=noise`. Uses actual worker generation, material preview and map exports with isolated canonical styling. Shared version/support/share/related cards. Await user review.
+## Noise Generator — APPROVED (2026-10-24)
+
+User approved the final lab Noise Generator, including canonical checkboxes/ranges, full-width Normals group, nested disclosure spacing, sidebar workflow steps and reduced prose with control tooltips. Preserve shared Feedback/Support and real generation/export behaviour. Next: compact registration of the texture/material preview pair in the catalogue, not an embedded duplicate tool. No production migration, commit or push authorized.
+
+- 2026-10-24 refinements: Normals spans the settings grid width, with shared two-column field layout (one on mobile). Nested disclosures have 16 px vertical separation. Remove How it works and standalone Macro/ZIP notes at user request. Each setting and preview/export control has a concise native hover tooltip plus an accessible description; ZIP contents and resolution cost belong on the relevant export controls, not another prose block. Preserve IDs and worker bindings.
+
+Route `/lab/atlas-ui/?page=noise`. Uses actual worker generation, material preview and map exports with isolated canonical styling. Shared version/support/share/related cards. Approved by the user on 2026-10-24.
+
+Catalogue registration: `#noise-preview` contains one fixed 256 px concrete texture/material pair (seed 42), using the existing noise core and material renderer, shared `.noise-views` face and the existing 760 px stacking breakpoint. No copied settings, source registry, worker loop or export controls. WebGL failure affects only the material specimen and is explained in its caption.
 - Noise settings reuse shared control groups: Surface, Noise & fractal, Detail & direction, Normals. Both Noise/Compressor use the same native disclosure factory and Collapse/Expand labels. Noise actions remain outside the disclosure; map-specific controls are a nested disclosure. Preserve all input nodes and worker bindings.

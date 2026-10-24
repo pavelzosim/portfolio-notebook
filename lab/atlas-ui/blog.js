@@ -1,4 +1,5 @@
 /* Candidate index: content stays in the published registry. */
+export function blogChapterHeading(name,count,escape){return `<header class="blog-chapter-heading"><h3>${escape(name)}</h3><span>${count} ${count===1?'record':'records'}</span></header>`;}
 export function blogSubcategory(record){
  const tags=(record.tags||[]).map(t=>t.toLowerCase());
  if(record.title.startsWith('From File to Pixel'))return 'From File to Pixel';
@@ -42,6 +43,7 @@ export function renderBlog({main,left,registry,escape,heading}){
  const platforms=document.createElement('div');platforms.className='resource-platform';platforms.setAttribute('role','group');platforms.setAttribute('aria-label','Filter by platform or foundations');
  platforms.innerHTML=['All','Houdini','Unreal','Unity','Foundation'].map(label=>`<button type="button" class="filter-chip" data-platform="${label.toLowerCase()}">${label}</button>`).join('');
  main.querySelector('form').insertBefore(platforms,main.querySelector('#blog-count'));
+ platforms.append(main.querySelector('#blog-count'));
  const render=()=>{
   const q=query.value.trim().toLocaleLowerCase();
   const matches=records.filter(r=>(group==='all'||r.group===group)&&(platform==='all'||(platform==='foundation'?r.group==='foundations':r.tags.some(t=>t.toLowerCase()===platform||(platform==='unreal'&&t.toLowerCase()==='unreal engine'))))&&[r.title,r.summary,...r.tags].join(' ').toLocaleLowerCase().includes(q));
@@ -61,7 +63,7 @@ export function renderBlog({main,left,registry,escape,heading}){
     subgroups.forEach((name,subindex)=>{
      const subset=items.filter(item=>blogSubcategory(item.record)===name);
      const chapter=document.createElement('div');chapter.className='blog-chapter';chapter.id=chapterId(g,name);
-     chapter.innerHTML=`<header class="blog-chapter-heading"><h3>${escape(name)}</h3><span>${subset.length} ${subset.length===1?'record':'records'}</span></header><div class="home-records"></div>`;
+     chapter.innerHTML=blogChapterHeading(name,subset.length,escape)+'<div class="home-records"></div>';
      chapter.querySelector('.home-records').append(...subset.map(item=>item.row));section.append(chapter);
     });return section;
    }).filter(Boolean);

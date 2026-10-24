@@ -36,6 +36,4 @@ export function setupCompressorPanel(main){
  };
  const observer=new MutationObserver(update);observer.observe(main.querySelector('#process'),{attributes:true,attributeFilter:['disabled']});observer.observe(main.querySelector('#matte'),{attributes:true,attributeFilter:['disabled']});
  settings.addEventListener('input',()=>queueMicrotask(update));settings.addEventListener('change',()=>queueMicrotask(update));update();
- const boundaries=[...main.querySelectorAll('.tool-section')].find(s=>s.querySelector('h2')?.textContent.trim()==='Technical boundaries');
- if(boundaries){const feedback=document.createElement('p');feedback.innerHTML='Have a suggestion for improving this tool? Write to <a href="mailto:pavel.zosim@protonmail.com">pavel.zosim@protonmail.com</a>.';boundaries.append(feedback);}
 }
