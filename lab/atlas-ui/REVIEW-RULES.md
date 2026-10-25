@@ -1,5 +1,7 @@
 # Page-by-page canonical review
 
+2026-10-25 purchase panel refinement supersedes centered-button-only layout: shared resource panel shows registry title/summary at left and canonical purchase action at right, stacking below 760 px. Keep 22 px padding, existing surface/border/button. No invented prices, lifetime updates or purchase terms. Catalogue Actions specimen documents this layout.
+
 2026-10-25 Gumroad purchase actions: article resource containers retain the canonical blue button and centered panel. Gumroad destinations use Buy on Gumroad, open in a new tab with noopener, and retain their original product URL. Do not invent prices. Actual non-store downloads retain their download wording.
 
 2026-10-25 resource refinements: inline code uses neutral surface #EEE7DF with its existing outline, owned by components.css. Shared atlas-download-wrap centers the existing button in a bordered surface with 22 px padding, preserving destinations and button interaction. Same rule at desktop/mobile; no page-specific variant. Actions catalogue registers one resource-download example.
