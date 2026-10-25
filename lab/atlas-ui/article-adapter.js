@@ -1,6 +1,8 @@
 import {mediaSlider} from './artwork-gallery.js?v=review-148';
 import {setupMediaSliders} from './media-slider.js?v=review-148';
-import {adaptArticleStructures} from './article-structures.js?v=review-149';
+import {adaptArticleStructures} from './article-structures.js?v=review-162';
+import {setupCodeFrames} from './code-frame.js?v=review-159';
+import {setupTableFrames} from './table-frame.js?v=review-166';
 // Adapt existing article structures to approved faces, retaining source content.
 export function extractArticleBody(source){
  const container=source.querySelector('.atlas-container');
@@ -14,7 +16,17 @@ export function extractArticleBody(source){
  body.querySelectorAll('.content-block').forEach(block=>block.replaceWith(...block.childNodes));
  return body;
 }
-export function adaptArticle(body,escape){
+export function adaptArticle(body,escape,{groupAdjacentImages=false,record=null}={}){
+ if(groupAdjacentImages){
+  const eligible=node=>node?.matches('.media-frame:not([id])')&&node.querySelectorAll('img').length===1&&!node.querySelector('video,iframe,svg,.project-slider');
+  for(const first of [...body.children]){
+   if(!eligible(first)||!body.contains(first))continue;
+   const frames=[first];let next=first.nextElementSibling;while(eligible(next)){frames.push(next);next=next.nextElementSibling;}
+   if(frames.length<2)continue;
+   const group=document.createElement('div');group.className='gallery-grid';first.before(group);
+   for(const frame of frames){const img=frame.querySelector('img'),caption=frame.querySelector('figcaption,.media-caption');if(caption)img.dataset.caption=caption.textContent.trim();group.append(img);frame.remove();}
+  }
+ }
  body.querySelectorAll('[data-slider],[data-image-slider],.gallery-grid').forEach(host=>{
   if(!body.contains(host)||host.closest('.project-slider'))return;
   const images=[...host.querySelectorAll('img')];if(!images.length)return;
@@ -24,9 +36,12 @@ export function adaptArticle(body,escape){
   if(caption){const description=document.createElement('p');description.className='media-caption';description.append(...caption.childNodes);slider.after(description);}
  });
  body.querySelectorAll('.atlas-download-btn').forEach(link=>{link.classList.remove('atlas-download-btn');link.classList.add('button');});
+ body.querySelectorAll('.atlas-download-wrap a[href]').forEach(link=>{const url=new URL(link.getAttribute('href'),location.href);if(url.hostname==='gumroad.com'||url.hostname.endsWith('.gumroad.com')){link.textContent='Buy on Gumroad';link.target='_blank';link.rel='noopener';if(record){const copy=document.createElement('div');copy.className='atlas-download-copy';const title=document.createElement('strong');title.textContent=record.title;copy.append(title);if(record.summary){const description=document.createElement('span');description.textContent=record.summary;copy.append(description);}link.before(copy);}}});
  body.querySelectorAll('pre').forEach(pre=>pre.classList.add('atlas-code-block'));
  body.querySelectorAll('table').forEach(table=>{table.classList.add('atlas-table');if(!table.closest('.atlas-table-frame')){const frame=document.createElement('div');frame.className='atlas-table-frame';table.before(frame);frame.append(table);}});
  setupMediaSliders(body);
+ setupTableFrames(body);
+ setupCodeFrames(body);
 }
 
 // Retain the article's existing code/math renderers, never its legacy CSS or shell.

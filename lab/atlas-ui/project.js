@@ -4,7 +4,8 @@ import {projectMetrics} from './project-metrics.js?v=review-142';
 import {setupArticleNavigation} from './article-navigation.js?v=review-120';
 import {setupMediaTabs} from './media-tabs.js?v=review-133';
 import {artworkGallery} from './artwork-gallery.js?v=review-148';
-import {projectMediaThemes} from './project-media.js?v=review-151';
+import {projectMediaThemes} from './project-media.js?v=review-152';
+import {relatedRecords,selectRelatedProjects} from './related-records.js?v=review-157';
 export function renderProject({record,layout={},projects=[],posts=[],main,left,right,escape,heading,section,facts}){
  const entries=[];
  const add=(id,title,body,label='')=>{main.insertAdjacentHTML('beforeend',section(id,title,body));const header=main.lastElementChild.querySelector('.section-label');header.querySelector('span').textContent=`§ ${String(entries.length+1).padStart(2,'0')}`;if(label)header.insertAdjacentHTML('beforeend',`<em>${escape(label)}</em>`);entries.push([id,title]);};
@@ -45,7 +46,8 @@ export function renderProject({record,layout={},projects=[],posts=[],main,left,r
  body.insertAdjacentHTML('beforeend','<div class="atlas-eof-divider"><span class="atlas-eof-divider__line"></span><span class="atlas-eof-divider__meta">// END OF ARTICLE // EOF</span><span class="atlas-eof-divider__line"></span></div>');main.append(body);
  left.innerHTML='<p class="rail-title">PROJECT.md</p><nav aria-label="Project sections"><a href="?page=projects">← Projects index</a>'+entries.map(([id,title],i)=>`<a href="#${id}">${String(i+1).padStart(2,'0')} ${escape(title)}</a>`).join('')+'</nav>';
  setupMediaSliders(main);setupMediaTabs(main);setupArticleNavigation(main);
- const relatedProjects=projects.filter(p=>p.id!==record.id&&(p.metaType===record.metaType||p.stack.engine===record.stack.engine)).slice(0,3);
+ const relatedProjects=selectRelatedProjects(record,projects);
+ if(relatedProjects.length)main.insertAdjacentHTML('beforeend',section('related-records','Related records',relatedRecords(relatedProjects.slice(0,2).map(project=>({...project,localPath:`?page=project&slug=${encodeURIComponent(project.slug)}`})),escape,{prefix:'project-related'})));
  const topics=record.tools.map(t=>t.toLowerCase());
  const relatedPosts=posts.filter(p=>p.state==='published'&&p.indexable!==false&&!p.resource&&p.tags?.some(t=>topics.includes(t.toLowerCase()))).sort((a,b)=>(Date.parse(b.siteDate||b.datePublished)||0)-(Date.parse(a.siteDate||a.datePublished)||0)).slice(0,3);
  const links=(label,items)=>`<div class="meta-block article-related"><p>${escape(label)}</p><ul>${items.map(([url,title])=>`<li><a href="${escape(url)}">${escape(title)}</a></li>`).join('')}</ul></div>`;

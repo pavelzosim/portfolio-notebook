@@ -1,5 +1,5 @@
 import {createControlDisclosure} from './control-disclosure.js?v=review-84';
-import {renderArticlePassport} from './article-passport.js?v=review-91';
+import {renderArticlePassport} from './article-passport.js?v=review-166';
 import {createShareSection} from './share-controls.js?v=review-119';
 import {createToolFeedback} from './tool-feedback.js?v=review-128';
 import {setupMediaSliders} from './media-slider.js?v=review-148';
@@ -17,6 +17,8 @@ import {setupOnlineToolCards} from './online-tool-card.js?v=review-107';
 import {renderNoisePreviewSpecimen} from './noise-preview-specimen.js?v=review-132';
 import {artworkGallery} from './artwork-gallery.js?v=review-148';
 import {setupMediaTabs} from './media-tabs.js?v=review-133';
+import {setupCodeFrames} from './code-frame.js?v=review-159';
+import {setupTableFrames} from './table-frame.js?v=review-166';
 
 // Examples use production candidate classes, never a parallel demo stylesheet.
 export async function completeStyleGuide(main){
@@ -28,6 +30,7 @@ export async function completeStyleGuide(main){
  add('media','Technical media',`<p>Use for technical screenshots and diagrams. Preserve the whole image; captions explain what to inspect.</p><div class="article-body"><figure class="media-frame"><img src="/public/media/projects/nasa-first-woman/ui/exploration_comicenv.jpg" alt="NASA First Woman environment interface showing interaction surfaces" loading="lazy"><figcaption class="media-caption">Environment interface record — inspect authored interaction surfaces and display placement.</figcaption></figure></div><p><a href="?page=project">Inspect the shared project slider →</a></p>`);
  const demo=main.querySelector('#disclosure-example');demo.replaceChildren();const disclosure=createControlDisclosure('Texture settings');disclosure.insertAdjacentHTML('beforeend',`<div class="control-panel control-panel--columns"><fieldset class="control-group control-group--stack"><legend>Encoding</legend><label>Output format<select><option>PNG / data textures</option><option>WebP / colour textures</option></select></label><label>Quality<input type="number" min="0" max="100" value="85"><small class="control-hint">Only used by lossy formats.</small></label></fieldset><fieldset class="control-group control-group--stack"><legend>Dimensions</legend><label>Maximum edge<input type="number" value="2048"></label><label class="control-check"><input type="checkbox"><span>Round down to POT</span></label></fieldset><fieldset class="control-group control-group--stack"><legend>Transparency</legend><label>Alpha policy<select><option>Preserve alpha</option><option>Flatten</option></select></label></fieldset></div>`);demo.append(disclosure);
  const actions=main.querySelector('#actions .action-row:last-of-type');const shadow=document.createElement('span');shadow.className='atlas-btn-shadow';shadow.innerHTML='<button class="button" type="button">Dither shadow</button>';actions.append(shadow);const submenu=document.createElement('nav');submenu.setAttribute('aria-label','Example submenu');submenu.innerHTML='<a class="submenu-link" href="#fields" aria-current="location">Fields / selected</a><a class="submenu-link" href="#panels">Settings panels</a>';main.querySelector('#actions').append(submenu);
+ const download=document.createElement('div');download.className='atlas-download-wrap';download.innerHTML='<a class="button" href="#contract">↓ Download resource</a>';main.querySelector('#actions').append(download);const downloadRule=document.createElement('p');downloadRule.textContent='Resource download: center the existing action inside a bordered surface with 22 px padding. Inline identifiers use a neutral surface and outline.';download.after(downloadRule);
  const code=main.querySelector('#data pre');code.className='atlas-code-block';code.dataset.language='C';code.innerHTML='<code class="language-c"><span class="token comment">// Frame budget in milliseconds</span>\n<span class="token keyword">float</span> <span class="token function">FrameBudget</span>(<span class="token keyword">float</span> targetFps)\n{\n    <span class="token keyword">return</span> <span class="token number">1000.0f</span> / targetFps;\n}</code>';
  const table=main.querySelector('#data .guide-table-wrap');add('tables','Data tables','<p>Exact comparisons: include units, semantic column headers and a caption. Narrow screens scroll the table locally.</p>').append(table);
  add('comparison','Comparison','<p>Use for two alternative approaches or before/after states. Use Data tables for exact measurements.</p><div class="comparison-matrix"><div class="comp-col"><span class="comp-label">STATIC TEXTURE</span><div class="comp-body">Fixed resolution and authored response. Storage cost depends on texture size and encoding.</div></div><div class="comp-col"><span class="comp-label">PROCEDURAL SYSTEM</span><div class="comp-body">Runtime controls and variable detail. Generation consumes compute time.</div></div></div>');
@@ -87,5 +90,7 @@ export async function completeStyleGuide(main){
  const order=['actions','fields','panels','states','callouts','typography','paragraphs','data','comparison','math','tables','diagram','media','video','article-header','article-footer','share','discovery','density','tokens','contract','extension'];
  for(const [i,id]of order.entries()){const section=main.querySelector('#'+id);main.append(section);section.querySelector('.section-label>span').textContent=String(i+1).padStart(2,'0');}
  for(const extra of [shelfSection,previewSection,rowsSection,vfxSection,onlineSection,productSection,specialtySection,contactSection,catalogSection,resourceSection,projectCardsSection,metricsSection,chapterSection,tocSection,refsSection,uploadSection,previewSectionTool,compareSection,noisePreviewSection,artworkSection]){order.push(extra.id);main.append(extra);extra.querySelector('.section-label>span').textContent=String(order.length).padStart(2,'0');}
+ const exampleCode=main.querySelector('#data pre');exampleCode.dataset.codeTitle='Deterministic texture seed';exampleCode.querySelector('code').classList.add('language-javascript');setupCodeFrames(main);
+ setupTableFrames(main);
  return order.map(id=>['#'+id,main.querySelector('#'+id+' h2').textContent]);
 }

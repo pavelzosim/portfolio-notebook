@@ -2,31 +2,34 @@
 // No source scripts or inline stylesheet is executed or imported.
 export function adaptArticleStructures(body){
  const doc=body.ownerDocument,ns='http://www.w3.org/2000/svg';
- const svgNode=(tag,attrs={})=>{const el=doc.createElementNS(ns,tag);for(const [key,value] of Object.entries(attrs))el.setAttribute(key,value);return el;};
+ body.querySelectorAll('.align-row').forEach(row=>{
+  const host=row.parentElement;host.classList.add('alignment-diagram');host.firstElementChild.classList.add('alignment-title');host.lastElementChild.classList.add('alignment-total');
+  row.querySelectorAll('.align-field').forEach(field=>{field.dataset.quarters=String(Math.round((parseFloat(field.style.width)||25)/25));field.parentElement.classList.add('alignment-track');});
+ });
+ body.querySelectorAll('.mem-bars .mb-track').forEach(track=>{
+  const fill=track.querySelector('.mb-fill');if(!fill)return;
+  const width=Math.min(100,Math.max(0,parseFloat(fill.style.width)||0));
+  const svg=doc.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 100 5');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
+  for(const [size,cls]of [[100,'memory-track'],[width,'memory-fill']]){const rect=doc.createElementNS(ns,'rect');rect.setAttribute('width',size);rect.setAttribute('height','5');rect.setAttribute('class',cls);svg.append(rect);}track.replaceChildren(svg);
+ });
  body.querySelectorAll('.atlas-uml-diag__widget').forEach(widget=>{
-  const scopes=[...widget.querySelectorAll('.atlas-uml-diag__scope')];if(!scopes.length)return;
-  const frame=doc.createElement('div');frame.className='atlas-uml-diag';
-  const header=doc.createElement('div');header.className='atlas-uml-diag__header';header.textContent='// DATA_FLOW // '+scopes.map(scope=>scope.firstElementChild.textContent.trim()).join(' → ');frame.append(header);
-  const svg=svgNode('svg',{viewBox:`0 0 720 ${scopes.length*340}`,role:'img','aria-label':widget.textContent.replace(/\s+/g,' ').trim()});
-  const text=(x,y,lines)=>{const label=svgNode('text',{x,y});lines.forEach((line,i)=>{const span=svgNode('tspan',{x,dy:i?20:0});span.textContent=line;label.append(span);});svg.append(label);};
-  scopes.forEach((scope,index)=>{
-   const top=index*340;svg.append(svgNode('rect',{x:16,y:top+12,width:688,height:310,class:'diagram-scope'}));
-   text(30,top+38,[scope.firstElementChild.textContent.trim()]);
-   const nodes=[...scope.querySelectorAll('.atlas-uml-diag__node')],wideFirst=nodes[0]?.style.gridColumn==='1 / -1'||nodes[0]?.getAttribute('style')?.includes('grid-column:1/-1');
-   nodes.forEach((node,i)=>{
-    const full=wideFirst?i===0:i===2,secondRow=wideFirst?i>0:i===2;
-    const x=full?30:30+(wideFirst?i-1:i)*340,y=top+(secondRow?194:56),width=full?660:320;
-    const group=svgNode('g',{class:'diagram-node'});group.append(svgNode('rect',{x,y,width,height:112}));svg.append(group);
-    const title=node.querySelector('.atlas-uml-diag__node-title').textContent.trim();
-    const clone=node.querySelector('.atlas-uml-diag__node-body').cloneNode(true);clone.querySelectorAll('br').forEach(br=>br.replaceWith('\n'));
-    text(x+12,y+22,[title,...clone.textContent.trim().split('\n').map(s=>s.trim()).filter(Boolean)]);
-   });
-   const flow=[...scope.querySelectorAll('div')].find(el=>el.children.length===0&&el.textContent.trim().startsWith('//'));
-   if(flow)text(30,top+185,[flow.textContent.trim()]);
-   if(index<scopes.length-1)text(350,top+337,['↓']);
-  });frame.append(svg);widget.replaceWith(frame);
+  widget.classList.add('diagram-widget');
+  widget.setAttribute('role','group');widget.setAttribute('aria-label','CPU ownership → GPU compute → HLSL material assembly');
+  for(const child of widget.children){
+   if(!child.classList.contains('atlas-uml-diag__scope')){child.classList.add('diagram-connector');continue;}
+   child.firstElementChild.classList.add('diagram-scope-title');
+   const grid=child.children[1];if(!grid)continue;grid.classList.add('diagram-node-grid');
+   for(const node of grid.children){
+    if(node.classList.contains('atlas-uml-diag__node')){
+     if(node.style.gridColumn.replaceAll(' ','')==='1/-1')node.classList.add('diagram-node-wide');
+    }else node.classList.add('diagram-flow-label');
+   }
+  }
  });
  body.querySelectorAll('svg').forEach(svg=>{
+  // SVG label sizes are diagram coordinates, not article typography. Preserve
+  // authored numeric sizes as presentation attributes before removing styles.
+  svg.querySelectorAll('[style]').forEach(node=>{const size=node.style.fontSize;if(/^\d+(?:\.\d+)?px$/.test(size))node.setAttribute('font-size',size);});
   // Semantic SVG paint attributes survive sanitization; translate their token names.
   const tokens={'--atlas-ink':'--ink','--atlas-bg':'--surface','--atlas-crit':'--ink','--atlas-border':'--border-color','--atlas-ink-muted':'--muted'};
   for(const el of [svg,...svg.querySelectorAll('*')])for(const attr of [...el.attributes])if(attr.value.includes('var(--atlas-'))el.setAttribute(attr.name,attr.value.replace(/--atlas-[\w-]+/g,name=>tokens[name]||'--ink'));

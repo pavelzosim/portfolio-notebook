@@ -3,7 +3,8 @@ import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-107';
 import {renderTools} from './tools.js?v=review-137';
 import {renderBlog} from './blog.js?v=review-118';
-import {renderProject} from './project.js?v=review-151';
+import {renderProject} from './project.js?v=review-157';
+import {relatedRecords,selectRelatedArticles} from './related-records.js?v=review-157';
 import {setupCompressorPanel} from './compressor-panel.js?v=review-126';
 import {setupNoisePanel,setupNoisePresets} from './noise-panel.js?v=review-131';
 import {createControlDisclosure} from './control-disclosure.js?v=review-84';
@@ -16,10 +17,10 @@ import {createShareSection} from './share-controls.js?v=review-119';
 import {createToolFeedback} from './tool-feedback.js?v=review-128';
 import {setupArticleNavigation} from './article-navigation.js?v=review-120';
 import {setupSpritePanel} from './sprite-panel.js?v=review-122';
-import {renderArticlePassport} from './article-passport.js?v=review-91';
-import {completeStyleGuide} from './style-guide.js?v=review-148';
+import {renderArticlePassport} from './article-passport.js?v=review-166';
+import {completeStyleGuide} from './style-guide.js?v=review-166';
 import {createSiteRoutes} from './site-routes.js?v=review-141';
-import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-150';
+import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-170';
 import {renderSiteReview} from './site-review.js?v=review-145';
 let site;
 async function review(){renderSiteReview({main,left,right,site,heading,section,escape});}
@@ -80,16 +81,28 @@ async function index(){
  shelves();
  main.querySelector('.section-label em').textContent=`${String(records.length).padStart(2,'0')} LIVE TOOLS`;
 }
-async function article(){const source=await doc(pages.article),record=site.records.find(r=>r.localPath===pages.article);main.innerHTML=heading(record.title,'blog / '+record.group,record.summary);const body=extractArticleBody(source);adaptArticle(body,escape);main.append(body);const used=new Set();body.querySelectorAll('h2,h3,h4').forEach((h,i)=>{let id=h.id||'section-'+(i+1);while(used.has(id))id+='-'+(i+1);h.id=id;used.add(id);});const entries=[...body.querySelectorAll('h2[id]')].map(h=>['#'+h.id,h.textContent]);outline('ARTICLE.md',entries,entries[0]?.[1].toLowerCase().includes('overview')?0:1);void enhanceArticle(source,body);}
+async function articleRecord(){const original=site.records.find(r=>r.localPath===pages.article);const revision=(await json('./article-revisions.json'))[original.slug];return {record:{...original,...(revision?{summary:revision.summary,outlineStart:1}: {})},path:revision?.path||pages.article};}
+async function article(){const {record,path}=await articleRecord(),source=await doc(path);main.innerHTML=heading(record.title,'blog / '+record.group,record.summary);const body=extractArticleBody(source);adaptArticle(body,escape,{groupAdjacentImages:record.slug==='technical-art-compute-shaders-in-unity-introduction'});main.append(body);const used=new Set();body.querySelectorAll('h2,h3,h4').forEach((h,i)=>{let id=h.id||'section-'+(i+1);while(used.has(id))id+='-'+(i+1);h.id=id;used.add(id);});const entries=[...body.querySelectorAll('h2[id]')].map(h=>['#'+h.id,h.textContent]);outline('ARTICLE.md',entries,record.outlineStart??(entries[0]?.[1].toLowerCase().includes('overview')?0:1));void enhanceArticle(source,body);}
 async function project(){} // The shared registry renderer below owns all project pages.
 async function restoreArticleElements(){
  const registry=await json('/content/posts/index.json');
- const record=registry.records.find(r=>r.localPath===pages.article);
+ const {record}=await articleRecord();
  const related=registry.records.filter(r=>r.id!==record.id&&r.group===record.group&&r.state==='published'&&r.indexable!==false).sort((a,b)=>(Date.parse(b.siteDate||b.datePublished)||0)-(Date.parse(a.siteDate||a.datePublished)||0));
  right.innerHTML=facts('[RECORD]',[['kind',record.kind],['topic',record.group]])+`<div class="meta-block article-related"><p>[RELATED / ${escape(record.group.toUpperCase())}]</p><ul>${related.map(r=>`<li><a href="${escape(r.localPath||r.publicUrl||r.sourceUrl)}">${escape(r.title)}</a></li>`).join('')}</ul></div>`;
  const head=main.querySelector('.document-head');renderArticlePassport(head,record);
+ if(record.series)main.querySelectorAll('.atlas-series-nav__part').forEach(part=>{
+  const order=Number(part.querySelector('.atlas-series-nav__num')?.textContent),entry=registry.records.find(candidate=>candidate.series?.slug===record.series.slug&&candidate.series.order===order&&candidate.state==='published'&&candidate.indexable!==false);
+  if(!entry)return;
+  const current=entry.id===record.id,status=part.querySelector('.atlas-series-nav__status');
+  part.classList.toggle('atlas-series-nav__part--current',current);part.classList.remove('atlas-series-nav__part--soon');
+  if(status){status.textContent=current?'CURRENT':'LIVE';status.className='atlas-series-nav__status';}
+  if(!current&&!part.querySelector('a')){const link=document.createElement('a');link.href=entry.localPath;link.append(...part.childNodes);part.append(link);}
+ });
  const share=createShareSection(record.publicUrl||record.sourceUrl);
  main.querySelector('.article-body').append(share);
+ const referenceSlugs=[...main.querySelectorAll('.atlas-ref-list a[href]')].map(a=>new URL(a.getAttribute('href'),location.href).pathname.split('/').filter(Boolean).at(-1));
+ const suggestions=selectRelatedArticles(record,registry.records,referenceSlugs);
+ if(suggestions.length)main.insertAdjacentHTML('beforeend',section('related-records','Related articles',relatedRecords(suggestions,escape,{prefix:'article-related'})));
  main.querySelectorAll('.media-caption a').forEach(a=>{if(a.textContent.trim()==='Watch on YouTube'){const after=a.nextSibling;if(after?.nodeType===Node.TEXT_NODE&&after.textContent.trim()==='.')after.remove();a.remove();}});
  main.querySelectorAll('.article-body>h2').forEach((h,index)=>{
   if(index){
@@ -102,7 +115,7 @@ async function restoreArticleElements(){
  const endOfText=main.querySelector('.article-body>.atlas-table-frame:has(.atlas-ref-list)')||main.querySelector('.article-body>.atlas-eof-divider');
  if(endOfText)endOfText.before(lastDivider);
  main.querySelectorAll('.article-body>h3,.article-body>h4').forEach(h=>{
-  const mark=document.createElement('span');mark.className='article-subheading-mark';mark.setAttribute('aria-hidden','true');mark.textContent='> ';h.prepend(mark);
+  const mark=document.createElement('span');mark.className='article-subheading-mark';mark.setAttribute('aria-hidden','true');mark.textContent=h.tagName==='H4'?'+ ':'> ';h.prepend(mark);
  });
  setupArticleNavigation(main);
 }
@@ -141,7 +154,7 @@ async function toolAfterword(){
  main.querySelector('#share>.section-label').remove();
  const feedback=createToolFeedback();feedback.id='tool-feedback';main.querySelector('#share').append(feedback);
  const others=records.filter(r=>r.id!==current.id);
- main.insertAdjacentHTML('beforeend',section('other-tools','Other online tools',`<div class="tool-related-grid">${others.map(r=>`<a class="tool-related-card" href="${escape(r.localPath)}" aria-labelledby="related-${escape(r.id)}"><img src="${escape(r.image)}" alt="${escape(r.imageAlt||r.title)}" loading="lazy"><div><span class="eyebrow">${escape(r.id)}</span><h3 id="related-${escape(r.id)}">${escape(r.title)}</h3><p>${escape(r.summary)}</p><span class="record-arrow" aria-hidden="true">open →</span></div></a>`).join('')}</div>`));
+ main.insertAdjacentHTML('beforeend',section('other-tools','Other online tools',relatedRecords(others,escape,{prefix:'tool-related'})));
 }
 function renderToolSupport(){
  right.querySelectorAll('.meta-block').forEach(block=>{if(block.querySelector('p')?.textContent.trim()==='[SUPPORT]')block.remove();});
@@ -209,7 +222,7 @@ try{
   const version=document.createElement('span');version.className='tool-version';version.textContent=`v${release.version}`;main.querySelector('.tool-titlebar')?.append(version);
  }
  main.querySelectorAll('.tool-related-card>img').forEach(img=>{const frame=document.createElement('span');frame.className='tool-related-preview';img.before(frame);frame.append(img);});
- main.querySelectorAll('.tool-related-card .eyebrow,.tool-catalog-card>p:first-child').forEach(label=>label.append(` · v${release.version}`));
+ main.querySelectorAll('#other-tools .tool-related-card .eyebrow,.tool-catalog-card>p:first-child').forEach(label=>label.append(` · v${release.version}`));
  document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});
  main.querySelectorAll('[role="status"],#status,#noise-status').forEach(el=>el.classList.add('notice'));
  main.querySelectorAll('.browser-tools-nav button').forEach(el=>el.classList.add('button','button--quiet'));
