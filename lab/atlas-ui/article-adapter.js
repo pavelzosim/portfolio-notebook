@@ -1,6 +1,6 @@
 import {mediaSlider} from './artwork-gallery.js?v=review-148';
 import {setupMediaSliders} from './media-slider.js?v=review-148';
-import {adaptArticleStructures} from './article-structures.js?v=review-162';
+import {adaptArticleStructures} from './article-structures.js?v=review-174';
 import {setupCodeFrames} from './code-frame.js?v=review-159';
 import {setupTableFrames} from './table-frame.js?v=review-166';
 // Adapt existing article structures to approved faces, retaining source content.

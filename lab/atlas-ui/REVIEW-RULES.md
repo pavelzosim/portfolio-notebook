@@ -1,5 +1,19 @@
 # Page-by-page canonical review
 
+2026-10-25 user authorized production-design integration in the current branch. Public build now materializes the approved shared shell at existing public routes, preserves static content/SEO, and packages independent content inputs for shared live composition. Review UI/noindex are not copied onto indexable public records. Lab remains isolated/noindex. Build integration is not commit/merge/push/deployment authorization. See MIGRATION-READINESS.md for final verification.
+
+2026-10-25 migration preflight authorized by user. JackPressed Image Tool removed from published/indexable records (archived source retained); old public path maps to Image Compressor in redirects.json. See MIGRATION-READINESS.md for checks and remaining production-build integration gate. Passing legacy production SEO checks does not certify the lab renderer at public routes.
+
+2026-10-25 memory-panel explanation: separate the prose from the bars with a 1 px line-token rule across the inner text width. Keep 16 px before the rule and 16 px between rule and prose. Shared component rule applies to article and catalogue at all widths.
+
+2026-10-25 article sidebar includes the existing Home Online Tools carousel beneath Tool Store. Reuse source markup, shared carousel behaviour and branch tool navigation; no new component face or duplicate product data.
+
+2026-10-25 memory hierarchy: use existing solid panel with authored H3 as its header, inset bars and authored following explanation inside. Retain all labels, values and SVG proportions. Bars use muted token instead of ink; tracks retain line token. No new color or article-local face. Existing mobile rows retained.
+
+2026-10-25 section-marker refinement: shared article/project closing-marker span uses surface #EEE7DF, 1 px radius and line-token border color #C5BDB4. Preserve micro type, existing border width/style and section rhythm. Face consolidated into components.css; applies at all widths.
+
+2026-10-25 article rail: remove redundant RECORD kind/topic block; preserve related links with zero list/item margin and existing link padding. Reuse Home Tool Store carousel beneath related links, populated by shared published-tool registry. Purchase-panel title/summary gap is 4 px instead of 8 px across widths. Shared component rules consolidated from fixtures.
+
 2026-10-25 purchase panel refinement supersedes centered-button-only layout: shared resource panel shows registry title/summary at left and canonical purchase action at right, stacking below 760 px. Keep 22 px padding, existing surface/border/button. No invented prices, lifetime updates or purchase terms. Catalogue Actions specimen documents this layout.
 
 2026-10-25 Gumroad purchase actions: article resource containers retain the canonical blue button and centered panel. Gumroad destinations use Buy on Gumroad, open in a new tab with noopener, and retain their original product URL. Do not invent prices. Actual non-store downloads retain their download wording.

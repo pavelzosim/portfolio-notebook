@@ -15,7 +15,7 @@ export function setupNavigation(page){
   for(const item of outline){if(item===active)item.link.setAttribute('aria-current','location');else item.link.removeAttribute('aria-current');}
   if(page==='home'){
    const matching=[...document.querySelectorAll('.commander a')].find(a=>a.hash==='#'+active.target.id);
-   const fallback=document.querySelector('.commander a[href="?page=home"]');
+   const fallback=document.querySelector('.commander a[href="?page=home"],.commander a[href="/"]');
    for(const a of document.querySelectorAll('.commander a')){a.removeAttribute('aria-current');if(a===(matching||fallback))a.setAttribute('aria-current','location');}
   }
  };

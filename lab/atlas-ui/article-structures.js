@@ -12,6 +12,13 @@ export function adaptArticleStructures(body){
   const svg=doc.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 100 5');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');
   for(const [size,cls]of [[100,'memory-track'],[width,'memory-fill']]){const rect=doc.createElementNS(ns,'rect');rect.setAttribute('width',size);rect.setAttribute('height','5');rect.setAttribute('class',cls);svg.append(rect);}track.replaceChildren(svg);
  });
+ body.querySelectorAll('.mem-bars').forEach(bars=>{
+  const heading=bars.previousElementSibling,description=bars.nextElementSibling;
+  const frame=doc.createElement('div');frame.className='atlas-table-frame atlas-table-frame--solid';
+  const inner=doc.createElement('div');inner.className='atlas-table-body';bars.before(frame);
+  if(heading?.matches('h3')){heading.classList.add('atlas-table-header-solid');frame.append(heading);}
+  frame.append(inner);inner.append(bars);if(description?.matches('p'))inner.append(description);
+ });
  body.querySelectorAll('.atlas-uml-diag__widget').forEach(widget=>{
   widget.classList.add('diagram-widget');
   widget.setAttribute('role','group');widget.setAttribute('aria-label','CPU ownership → GPU compute → HLSL material assembly');

@@ -1,4 +1,8 @@
-/* Local comparison harness. Only source content is imported, never its CSS/scripts. */
+/* Canonical site composition shared by public output and the review harness. */
+import {readSourceDocument} from './source-document.js';
+const publicPage=document.body.dataset.publicPage;
+const routeParams=new URLSearchParams(location.search);
+const routeSlug=document.body.dataset.slug||routeParams.get('slug');
 import {setupNavigation} from './navigation.js?v=review-22';
 import {setupHomeInteractions} from './home.js?v=review-107';
 import {renderTools} from './tools.js?v=review-137';
@@ -18,25 +22,26 @@ import {createToolFeedback} from './tool-feedback.js?v=review-128';
 import {setupArticleNavigation} from './article-navigation.js?v=review-120';
 import {setupSpritePanel} from './sprite-panel.js?v=review-122';
 import {renderArticlePassport} from './article-passport.js?v=review-166';
-import {completeStyleGuide} from './style-guide.js?v=review-166';
+import {completeStyleGuide} from './style-guide.js?v=review-174';
 import {createSiteRoutes} from './site-routes.js?v=review-141';
-import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-170';
+import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-174';
 import {renderSiteReview} from './site-review.js?v=review-145';
 let site;
 async function review(){renderSiteReview({main,left,right,site,heading,section,escape});}
-async function notfound(){main.innerHTML=heading('404 · Path not in this notebook','site / not found','The existing notebook game is preserved in an isolated interactive frame.')+'<div class="article-body"><figure class="media-frame"><iframe src="/404.html" title="404 notebook game" loading="lazy"></iframe><figcaption class="media-caption">Original notebook game · keyboard and pointer controls remain inside the frame.</figcaption></figure><p><a href="?page=home">Return home →</a></p></div>';outline('404.md',[['?page=home','Home']]);right.replaceChildren();}
+async function notfound(){main.innerHTML=heading('404 · Path not in this notebook','site / not found','The existing notebook game is preserved in an isolated interactive frame.')+`<div class="article-body"><figure class="media-frame"><iframe src="${publicPage?'/ui/atlas/notebook-game.html':'/404.html'}" title="404 notebook game" loading="lazy"></iframe><figcaption class="media-caption">Original notebook game · keyboard and pointer controls remain inside the frame.</figcaption></figure><p><a href="?page=home">Return home →</a></p></div>`;outline('404.md',[['?page=home','Home']]);right.replaceChildren();}
 const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
-const page=Object.hasOwn(pages,new URLSearchParams(location.search).get('page'))?new URLSearchParams(location.search).get('page'):'home';
+const page=publicPage||(Object.hasOwn(pages,routeParams.get('page'))?routeParams.get('page'):'home');
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
+const publicFallback=publicPage?main.innerHTML:null;
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const get=async url=>{const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error(`${url}: ${response.status}`);return response;};
-const doc=async url=>new DOMParser().parseFromString(await(await get(url)).text(),'text/html');
+const get=async url=>{const response=await fetch(new URL(url,import.meta.url),{cache:'no-store'});if(!response.ok)throw Error(`${url}: ${response.status}`);return response;};
+const doc=readSourceDocument;
 const json=async url=>(await get(url)).json();
 const heading=(title,context,summary)=>`<header class="document-head"><p class="breadcrumb">${escape(context)}</p><h1>${escape(title)}</h1>${summary?`<p>${escape(summary)}</p>`:''}</header>`;
 const section=(id,title,html)=>`<section class="document-section" id="${id}"><header class="section-label"><span>§</span><h2>${escape(title)}</h2></header>${html}</section>`;
 const facts=(label,entries)=>`<div class="meta-block"><p>${escape(label)}</p><dl>${entries.map(([k,v])=>`<dt>${escape(k)}</dt><dd>${escape(v)}</dd>`).join('')}</dl></div>`;
 const outline=(label,entries,start=0)=>{left.innerHTML=`<p class="rail-title">${escape(label)}</p><nav>${entries.map(([href,title],i)=>`<a href="${href}">${String(i+start).padStart(2,'0')} ${escape(title.replace(/^\d+\s+/,''))}</a>`).join('')}</nav>`;};
-const loadScript=src=>new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src;el.onload=resolve;el.onerror=reject;document.head.append(el);});
+const loadScript=src=>new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=new URL(src,import.meta.url).href;el.onload=resolve;el.onerror=()=>reject(Error('Script unavailable: '+src));document.head.append(el);});
 function clean(element){element.querySelectorAll('script,style,link').forEach(e=>e.remove());element.querySelectorAll('[style]').forEach(e=>e.removeAttribute('style'));return element;}
 function sourceRail(source){const rail=source.querySelector('.meta-rail');if(rail)right.replaceChildren(...clean(rail).childNodes);right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.remove('atlas-btn--quiet');a.classList.add('button--outline');a.textContent='Buy →';});}
 function localToolLinks(root){root.querySelectorAll('a[href="/online-tools/sprite-sheet-assembly/"]').forEach(a=>a.href='?page=tool');}
@@ -82,13 +87,14 @@ async function index(){
  main.querySelector('.section-label em').textContent=`${String(records.length).padStart(2,'0')} LIVE TOOLS`;
 }
 async function articleRecord(){const original=site.records.find(r=>r.localPath===pages.article);const revision=(await json('./article-revisions.json'))[original.slug];return {record:{...original,...(revision?{summary:revision.summary,outlineStart:1}: {})},path:revision?.path||pages.article};}
-async function article(){const {record,path}=await articleRecord(),source=await doc(path);main.innerHTML=heading(record.title,'blog / '+record.group,record.summary);const body=extractArticleBody(source);adaptArticle(body,escape,{record,groupAdjacentImages:record.slug==='technical-art-compute-shaders-in-unity-introduction'});main.append(body);const used=new Set();body.querySelectorAll('h2,h3,h4').forEach((h,i)=>{let id=h.id||'section-'+(i+1);while(used.has(id))id+='-'+(i+1);h.id=id;used.add(id);});const entries=[...body.querySelectorAll('h2[id]')].map(h=>['#'+h.id,h.textContent]);outline('ARTICLE.md',entries,record.outlineStart??(entries[0]?.[1].toLowerCase().includes('overview')?0:1));void enhanceArticle(source,body);}
+async function article(){const {record,path}=await articleRecord(),source=await doc(path);main.innerHTML=heading(record.title,'blog / '+record.group,record.summary);const body=extractArticleBody(source);adaptArticle(body,escape,{record,groupAdjacentImages:record.slug==='technical-art-compute-shaders-in-unity-introduction'});main.append(body);const used=new Set();body.querySelectorAll('h2,h3,h4').forEach((h,i)=>{let id=h.id||'section-'+(i+1);while(used.has(id))id+='-'+(i+1);h.id=id;used.add(id);});const entries=[...body.querySelectorAll('h2[id]')].map(h=>['#'+h.id,h.textContent]);outline('ARTICLE.md',entries,record.outlineStart??(entries[0]?.[1].toLowerCase().includes('overview')?0:1));if(!routeParams.has('static'))void enhanceArticle(source,body);}
 async function project(){} // The shared registry renderer below owns all project pages.
 async function restoreArticleElements(){
  const registry=await json('/content/posts/index.json');
  const {record}=await articleRecord();
  const related=registry.records.filter(r=>r.id!==record.id&&r.group===record.group&&r.state==='published'&&r.indexable!==false).sort((a,b)=>(Date.parse(b.siteDate||b.datePublished)||0)-(Date.parse(a.siteDate||a.datePublished)||0));
- right.innerHTML=facts('[RECORD]',[['kind',record.kind],['topic',record.group]])+`<div class="meta-block article-related"><p>[RELATED / ${escape(record.group.toUpperCase())}]</p><ul>${related.map(r=>`<li><a href="${escape(r.localPath||r.publicUrl||r.sourceUrl)}">${escape(r.title)}</a></li>`).join('')}</ul></div>`;
+right.innerHTML=`<div class="meta-block article-related"><p>[RELATED / ${escape(record.group.toUpperCase())}]</p><ul>${related.map(r=>`<li><a href="${escape(r.localPath||r.publicUrl||r.sourceUrl)}">${escape(r.title)}</a></li>`).join('')}</ul></div>`;
+ const homeSource=await doc('/'),store=homeSource.querySelector('[data-gumroad-shelf]'),online=homeSource.querySelector('[data-online-tools-shelf]');if(store){right.append(clean(store));right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.remove('atlas-btn--quiet');a.classList.add('button--outline');a.textContent='Buy →';});}if(online)right.append(clean(online));localToolLinks(right);shelves();
  const head=main.querySelector('.document-head');renderArticlePassport(head,record);
  if(record.series)main.querySelectorAll('.atlas-series-nav__part').forEach(part=>{
   const order=Number(part.querySelector('.atlas-series-nav__num')?.textContent),entry=registry.records.find(candidate=>candidate.series?.slug===record.series.slug&&candidate.series.order===order&&candidate.state==='published'&&candidate.indexable!==false);
@@ -198,12 +204,12 @@ async function components(){
  outline('STYLE_GUIDE.md',await completeStyleGuide(main),1);
 }
 try{
- document.body.dataset.template=page;document.querySelector('#original').href=pages[page];
+ document.body.dataset.template=page;document.querySelector('#original')?.setAttribute('href',pages[page]);
  site=await createSiteRoutes();
- const slug=new URLSearchParams(location.search).get('slug');
+ const slug=routeSlug;
  if(page==='article'&&slug){const record=site.records.find(r=>r.slug===slug);if(!record)throw Error('Unknown article: '+slug);pages.article=record.localPath;}
  if(page==='project'&&slug)pages.project='/projects/'+slug+'/';
- document.querySelector('#original').href=pages[page];
+ document.querySelector('#original')?.setAttribute('href',pages[page]);
  if(page==='article'||page==='project'||page==='components'||page==='privacy'||page==='notfound')document.body.dataset.detail='';
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
@@ -211,7 +217,7 @@ try{
  if(['tool','compressor','noise'].includes(page))await toolAfterword();
  if(page==='project'){
   const [projectData,postData,layouts]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json'),json('./project-layouts.json')]);
-  const selectedSlug=new URLSearchParams(location.search).get('slug')||'nasa-first-woman';const selected=projectData.projects.find(r=>r.slug===selectedSlug);if(!selected)throw Error('Unknown project: '+selectedSlug);
+  const selectedSlug=routeSlug||'nasa-first-woman';const selected=projectData.projects.find(r=>r.slug===selectedSlug);if(!selected)throw Error('Unknown project: '+selectedSlug);
   renderProject({record:selected,layout:layouts[selectedSlug]||{},projects:projectData.projects,posts:postData.records,main,left,right,escape,heading,section,facts});
  }
  if(page==='article')await restoreArticleElements();
@@ -227,8 +233,9 @@ try{
  main.querySelectorAll('[role="status"],#status,#noise-status').forEach(el=>el.classList.add('notice'));
  main.querySelectorAll('.browser-tools-nav button').forEach(el=>el.classList.add('button','button--quiet'));
  main.querySelectorAll('video').forEach(video=>{video.defaultMuted=true;video.muted=true;video.setAttribute('muted','');});
- site.observe(main);site.observe(left);site.observe(right);
- main.setAttribute('aria-busy','false');document.title=(main.querySelector('h1')?.textContent||'Atlas')+' — branch review';
+ site.observe(document.body);
+ main.setAttribute('aria-busy','false');if(!publicPage)document.title=(main.querySelector('h1')?.textContent||'Atlas')+' — branch review';
  setupNavigation(page);
+ if(publicPage)document.body.dataset.runtimeReady='true';
  if(location.hash)document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
-}catch(error){main.replaceChildren(Object.assign(document.createElement('p'),{className:'notice',textContent:`Preview could not load: ${error.message}`}));main.setAttribute('aria-busy','false');console.error(error);}
+}catch(error){if(publicPage){document.body.dataset.runtimeReady='error';main.innerHTML=publicFallback;main.prepend(Object.assign(document.createElement('p'),{className:'notice',textContent:'Interactive controls are unavailable. Reload this page to try again.'}));}else main.replaceChildren(Object.assign(document.createElement('p'),{className:'notice',textContent:`Preview could not load: ${error.message}`}));main.setAttribute('aria-busy','false');console.error(error);}

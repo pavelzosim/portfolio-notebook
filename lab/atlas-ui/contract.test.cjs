@@ -70,7 +70,7 @@ test('branch site uses registry-selected articles/projects and shared routes',()
  assert(routes.includes('MutationObserver'));
  assert(preview.includes('site.records.find(r=>r.slug===slug)'));
  assert(preview.includes('layouts[selectedSlug]||{}'));
- assert(preview.includes('site.observe(main)'));
+ assert(preview.includes('site.observe(document.body)'));
  assert(read('article-adapter.js').includes('mediaSlider('));
 });
 test('preview is noindex, outside deployment allowlist, and loads only candidate CSS',()=>{

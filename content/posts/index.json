@@ -651,7 +651,7 @@
         "optimization"
       ],
       "sourceUrl": "https://www.pavelzosim.com/post/jackpressed-powerful-image-compression-resizing-tool/",
-      "state": "published",
+      "state": "archived",
       "resource": true,
       "localPath": "/content/posts/atlas-html/jackpressed-powerful-image-compression-resizing-tool.html",
       "image": "/public/media/posts/jackpressed-powerful-image-compression-resizing-tool/asset-6502b4656e14b13b.png",
@@ -660,7 +660,7 @@
       "imageAlt": "JackPressed Image Tool",
       "datePublished": "2025-02-03",
       "dateModified": "2025-02-03",
-      "indexable": true
+      "indexable": false
     },
     {
       "id": "ASSET-001",

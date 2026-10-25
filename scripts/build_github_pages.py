@@ -10,6 +10,10 @@ import posixpath
 import json
 import re
 import shutil
+import subprocess
+import threading
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import urllib.parse
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape as xml_escape
@@ -149,6 +153,7 @@ def materialize_post_routes() -> list[dict]:
         destination = OUTPUT / "post" / slug / "index.html"
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
+        record["sourcePath"] = record["localPath"]
         record["localPath"] = f"/post/{slug}/"
     # Article chrome must not wait for a second request on a cold cache.
     # Embed only public records, with their final routes already resolved.
@@ -360,9 +365,9 @@ def transform_site(base_path: str, noindex: bool) -> None:
         if path.suffix.lower() == ".html":
             text = add_favicon(text)
             text = add_clock(text)
-            if 'data-atlas-redirect' not in text:
-                text = add_analytics(text)
             relative = path.relative_to(OUTPUT).as_posix()
+            if 'data-atlas-redirect' not in text and relative != 'ui/atlas/notebook-game.html':
+                text = add_analytics(text)
             if noindex or relative.startswith("content/templates/") or relative in {"404.html", "blog/style-guide/index.html"}:
                 text = add_noindex(text)
         text = rewrite_root_paths(text, base_path, path.suffix.lower())
@@ -399,7 +404,7 @@ def validate_site(base_path: str, noindex: bool) -> None:
         text = path.read_text(encoding="utf-8")
         if path.suffix.lower() == ".html" and re.search(r"<head(?:\s|>)", text, re.IGNORECASE):
             html_documents += 1
-            if 'data-atlas-analytics' not in text and 'data-atlas-redirect' not in text:
+            if 'data-atlas-analytics' not in text and 'data-atlas-redirect' not in text and path.relative_to(OUTPUT).as_posix() != 'ui/atlas/notebook-game.html':
                 raise RuntimeError(f"Missing analytics loader in {path.relative_to(OUTPUT)}")
             if noindex and 'name="robots" content="noindex, nofollow"' not in text:
                 raise RuntimeError(f"Missing noindex in {path.relative_to(OUTPUT)}")
@@ -430,15 +435,87 @@ def validate_site(base_path: str, noindex: bool) -> None:
     print(f"Validated {html_documents} HTML documents, {len(expected_posts)} canonical post routes, and discovery files")
 
 
+def materialize_canonical_design() -> None:
+    """Share the approved renderer; ship static HTML plus independent content inputs."""
+    owner = ROOT / "lab" / "atlas-ui"
+    assets = OUTPUT / "ui" / "atlas"
+    assets.mkdir(parents=True, exist_ok=True)
+    revision = hashlib.sha256(b"".join(p.read_bytes() for p in sorted(owner.iterdir()) if p.suffix in {".js", ".css", ".json"})).hexdigest()[:12]
+    for source in owner.iterdir():
+        if source.suffix in {".js", ".css", ".json", ".jpg", ".png", ".svg"}:
+            shutil.copy2(source, assets / source.name)
+            if source.suffix == ".js":
+                text = source.read_text(encoding="utf-8")
+                text = re.sub(r'(\.js)\?v=review-\d+', rf'\1?v=release-{revision}', text)
+                text = re.sub(r"(from ['\"]\./[^'\"?]+\.js)(['\"])", rf'\1?v=release-{revision}\2', text)
+                (assets / source.name).write_text(text, encoding="utf-8")
+    (assets / "release.json").write_text(json.dumps({"version": revision}), encoding="utf-8")
+    registry = json.loads((ROOT / "content/posts/index.json").read_text(encoding="utf-8"))
+    records = [r for r in registry["records"] if r.get("state") == "published" and r.get("indexable", True)]
+    projects = json.loads((ROOT / "content/projects/index.json").read_text(encoding="utf-8"))["projects"]
+    revisions = json.loads((owner / "article-revisions.json").read_text(encoding="utf-8"))
+    sources = assets / "sources"
+    sources.mkdir()
+    mapping: dict[str, str] = {}
+
+    def save(route: str, aliases: tuple[str, ...] = ()) -> None:
+        source = (ROOT / route.lstrip("/")).resolve()
+        if not source.is_relative_to(ROOT):
+            raise RuntimeError("Content source outside repository")
+        if source.is_dir():
+            source /= "index.html"
+        name = hashlib.sha256(route.encode()).hexdigest()[:16] + ".json"
+        (sources / name).write_text(json.dumps(source.read_text(encoding="utf-8"), ensure_ascii=False), encoding="utf-8")
+        for key in (route, *aliases):
+            mapping[key.rstrip("/") or "/"] = "sources/" + name
+
+    for route in ("/", "/blog/", "/tools/", "/projects/", "/privacy/", "/blog/style-guide/", "/online-tools/", "/online-tools/sprite-sheet-assembly/", "/online-tools/image-compressor/", "/online-tools/noise-generator/"):
+        save(route)
+    save('/lab/atlas-ui/components.html', ('/ui/atlas/components.html',))
+    for record in records:
+        save(record["localPath"], (urllib.parse.urlsplit(record["publicUrl"]).path,))
+    for project in projects:
+        save("/projects/" + project["slug"] + "/")
+    for revision in revisions.values():
+        save(revision["path"])
+    (assets / "source-map.json").write_text(json.dumps(mapping, indent=2), encoding="utf-8")
+    game = re.sub(r'<link\b[^>]*rel=["\']canonical["\'][^>]*>', '', (ROOT / "404.html").read_text(encoding="utf-8"), flags=re.I)
+    game = re.sub(r'<title>.*?</title>', '<title>Notebook game / Pavel Zosim</title>', game, flags=re.I | re.S)
+    (assets / "notebook-game.html").write_text(add_noindex(game), encoding="utf-8")
+
+    class QuietHandler(SimpleHTTPRequestHandler):
+        def log_message(self, format: str, *args) -> None:
+            pass
+
+        def copyfile(self, source, outputfile) -> None:
+            try:
+                super().copyfile(source, outputfile)
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                pass  # Browser navigation cancels in-flight media downloads.
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), partial(QuietHandler, directory=str(ROOT)))
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        subprocess.run(["node", str(ROOT / "scripts/render_canonical_site.cjs"), f"http://127.0.0.1:{server.server_port}"], cwd=ROOT, check=True)
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-path", default="/")
     parser.add_argument("--noindex", action="store_true")
+    parser.add_argument("--legacy", action="store_true", help="Build the previous design for comparison/rollback verification")
     args = parser.parse_args()
     base_path = normalized_base_path(args.base_path)
     copy_site()
     records = materialize_post_routes()
     prepare_static_loading(records)
+    if not args.legacy:
+        materialize_canonical_design()
     materialize_legacy_redirects()
     reuse_identical_media()
     transform_site(base_path, args.noindex)

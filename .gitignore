@@ -4,6 +4,7 @@ Thumbs.db
 .cache/
 tmp/
 _site/
+node_modules/
 __pycache__/
 *.pyc
 .gh-auth-*.txt

@@ -1,7 +1,7 @@
 export function renderProjectCards(target,records,{sourceHome,prefix='project'}={}){
  target.replaceChildren();
  for(const record of records){
-  const card=document.createElement('a');card.className='highlight-card';card.id=`${prefix}-${record.slug}`;card.href=record.slug==='nasa-first-woman'?'?page=project':`/projects/${record.slug}/`;
+  const card=document.createElement('a');card.className='highlight-card';card.id=`${prefix}-${record.slug}`;card.href=`/projects/${record.slug}/`;
   const image=document.createElement('img');image.src=record.image;image.alt=record.title;image.loading='lazy';
   const meta=document.createElement('div');meta.className='highlight-meta';
   const append=(tag,cls,text)=>{const node=document.createElement(tag);node.className=cls;node.textContent=text;meta.append(node);return node;};

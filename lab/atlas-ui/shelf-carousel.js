@@ -1,4 +1,5 @@
 import {withResourceMedia} from './resource-media.js?v=review-137';
+import {readSourceDocument} from './source-document.js';
 // Published tool registry + each tool's own purchase link are the source of truth.
 let productsPromise;
 export function loadStoreTools(){
@@ -6,8 +7,7 @@ export function loadStoreTools(){
   const response=await fetch('/content/posts/index.json');if(!response.ok)throw Error('Tool registry unavailable');
   const {records}=await response.json();
   const products=await Promise.all(records.filter(r=>r.kind==='tool'&&r.resource&&r.state==='published'&&r.indexable!==false).map(async record=>{
-   const response=await fetch(record.localPath);if(!response.ok)throw Error('Tool page unavailable: '+record.id);
-   const source=new DOMParser().parseFromString(await response.text(),'text/html');
+   const source=await readSourceDocument(record.localPath);
    const link=[...source.querySelectorAll('.atlas-download-btn[href]')].find(a=>{try{const url=new URL(a.getAttribute('href'),location.origin);return url.hostname==='pavelzosim.gumroad.com'&&url.pathname.startsWith('/l/');}catch{return false;}});
    return link?{...withResourceMedia(record),purchaseUrl:link.href}:null;
   }));return products.filter(Boolean);
