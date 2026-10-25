@@ -9,7 +9,7 @@
 .system-status{justify-self:end;color:var(--green);white-space:nowrap;font-size:var(--meta)}
 .review-bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;align-items:center;max-width:var(--shell-width);margin:0 auto;padding:12px 0;font-size:var(--meta);color:var(--muted)}
 .review-bar nav{display:flex;gap:4px;flex-wrap:wrap}.review-bar a{padding:4px 8px;font-size:var(--ui);text-decoration:none}.review-bar a[aria-current]{background:var(--selected);box-shadow:inset 0 -1px var(--blue)}
-.workspace{display:grid;grid-template-columns:var(--left) minmax(0,1fr) var(--right);gap:var(--gutter);align-items:start;width:min(var(--shell-width),calc(100% - 48px));margin:0 auto}
+.workspace{display:grid;grid-template-columns:var(--left) minmax(0,1fr) var(--right);gap:var(--gutter);align-items:start;width:min(var(--shell-width),calc(100% - 48px));margin:var(--space-section) auto 0}
 .workspace>*{min-width:0}
 .rail{position:sticky;top:68px;max-height:calc(100vh - 124px);overflow:auto;font-size:var(--ui);line-height:1.6;padding-bottom:8px}
 .rail-title,.meta-block>p{font-size:var(--label);font-weight:400;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:var(--border-width) solid var(--border-color);padding-bottom:8px;margin-bottom:12px}
@@ -22,7 +22,7 @@
 .meta-block>ul a:hover,.meta-block>ul a:focus-visible{color:var(--blue);background:var(--hover)}
 .rail-links a:where(:hover,:focus-visible){color:var(--blue);background:var(--hover)}
 #content{background:var(--surface);border:var(--border-width) solid var(--border-color);min-height:560px;overflow-wrap:anywhere}
-.page-footer{max-width:var(--shell-width);margin:32px auto 0;padding:16px 0;border-top:var(--border-width) solid var(--border-color);font-size:var(--meta);color:var(--muted)}
+.page-footer{max-width:var(--shell-width);margin:var(--space-section) auto 0;padding:16px 0;border-top:var(--border-width) solid var(--border-color);font-size:var(--meta);color:var(--muted)}
 .commander{position:fixed;bottom:0;left:0;right:0;z-index:6;display:flex;gap:4px;padding:5px 8px;background:#000;overflow-x:auto;font-size:var(--ui)}
 .commander a{position:relative;flex:1;display:flex;align-items:center;gap:8px;min-height:32px;white-space:nowrap;padding:4px 10px;background:var(--command-rest);color:#fff;text-decoration:none}
 .commander kbd{font:inherit;color:inherit}.commander a[aria-current]{box-shadow:inset 0 -2px #7dd3fc}

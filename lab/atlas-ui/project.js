@@ -1,19 +1,21 @@
 /* Complete project candidate, sourced exclusively from the local registry. */
 import {setupMediaSliders} from './media-slider.js?v=review-148';
 import {projectMetrics} from './project-metrics.js?v=review-142';
-import {setupArticleNavigation} from './article-navigation.js?v=review-120';
-import {setupMediaTabs} from './media-tabs.js?v=review-133';
-import {artworkGallery} from './artwork-gallery.js?v=review-148';
+import {setupArticleNavigation} from './article-navigation.js?v=review-177';
+import {setupMediaTabs,renderMediaTabs} from './media-tabs.js?v=review-180';
+import {videoFrame} from './video-frame.js?v=review-180';
+import {artworkGallery} from './artwork-gallery.js?v=review-180';
 import {projectMediaThemes} from './project-media.js?v=review-152';
 import {relatedRecords,selectRelatedProjects} from './related-records.js?v=review-157';
 export function renderProject({record,layout={},projects=[],posts=[],main,left,right,escape,heading,section,facts}){
  const entries=[];
  const add=(id,title,body,label='')=>{main.insertAdjacentHTML('beforeend',section(id,title,body));const header=main.lastElementChild.querySelector('.section-label');header.querySelector('span').textContent=`§ ${String(entries.length+1).padStart(2,'0')}`;if(label)header.insertAdjacentHTML('beforeend',`<em>${escape(label)}</em>`);entries.push([id,title]);};
  const list=values=>`<ul class="project-record-list">${values.map(v=>`<li>${escape(v)}</li>`).join('')}</ul>`;
- const video=v=>`<figure class="project-media"><video controls playsinline preload="none" poster="${escape(v.poster||record.image)}" src="${escape(v.src)}"></video><figcaption>${escape(v.caption||v.title||'')}</figcaption></figure>`;
+ const video=(v,id='project-video')=>videoFrame({...v,poster:v.poster||record.image},escape,{id});
  const field=(key,value)=>`<span class="passport-header-field"><span class="passport-header-key">${escape(key)}:</span> ${escape(value)}</span>`;
  main.innerHTML=`<header class="document-head article-passport"><div class="passport-title-bar"><div class="passport-header-left">${field('log_id',record.id)}</div><div class="passport-header-right">${field('client',record.client)}${field('status',record.status)}${field('role',record.role)}${field('environment',record.environment||'')}</div></div><h1>${escape(record.title)}</h1><p class="passport-summary">Summary: ${escape(record.summary)}</p><div class="passport-tags">${record.tools.map(tool=>`<a href="?page=blog&tag=${encodeURIComponent(tool.toLowerCase())}">${escape(tool)}</a>`).join('')}</div></header>`;
- add('overview','Overview',`<p class="project-overview">${escape(record.overview)}</p><div class="project-opening">${record.video?video(record.video):''}${projectMetrics(record.metrics||[],escape)}</div>`);
+ const openingVideo=record.videos?.length?renderMediaTabs(record.videos.map(v=>({id:v.id,title:v.title,html:video(v,v.id)})),escape,{label:'Project videos'}):(record.video?video(record.video,'opening-video'):'');
+ add('overview','Overview',`<p class="project-overview">${escape(record.overview)}</p><div class="project-opening">${openingVideo}${projectMetrics(record.metrics||[],escape)}</div>`);
  add('context','Scope & constraints',`<div class="project-context"><div><h3>Scope</h3><div class="comp-body"><ul>${(record.scope||[]).map(v=>`<li>${escape(v)}</li>`).join('')}</ul></div></div><div><h3>Constraints</h3><div class="comp-body"><ul>${(record.constraints||[]).map(v=>`<li>${escape(v)}</li>`).join('')}</ul></div></div></div>`);
  const themes=projectMediaThemes(record);
  if(themes.length)add('artwork','Artwork & environments',artworkGallery(themes,escape));
@@ -25,7 +27,7 @@ export function renderProject({record,layout={},projects=[],posts=[],main,left,r
  const issFact=record.externalVideo?(record.results||[]).find(text=>/Frank Rubio|aboard the ISS/i.test(text)):'';
  const recognitionRows=awards+(issFact?`<tr><th scope="row">ISS</th><td>${escape(issFact)}</td></tr>`:'')+(recognitionFacts.length?`<tr><th scope="row">Use & longevity</th><td><ul>${recognitionFacts.map(text=>`<li>${escape(text)}</li>`).join('')}</ul></td></tr>`:'');
  const recognitionTable=recognitionRows?`<div class="atlas-table-frame atlas-table-frame--solid"><div class="atlas-table-header-solid">[ RECOGNITION // PRODUCTION RECORD ]</div><table class="atlas-table" aria-label="Project recognition and use"><tbody>${recognitionRows}</tbody></table></div>`:'';
- add('recognition','Recognition',recognitionTable+(record.externalVideo?video(record.externalVideo):''));
+ add('recognition','Recognition',recognitionTable+(record.externalVideo?video(record.externalVideo,'recognition-video'):''));
  const roleList=main.querySelector('#roleDetails .project-record-list');
  if(roleList&&layout.roleGroups?.length){
   const items=[...roleList.children],used=new Set();

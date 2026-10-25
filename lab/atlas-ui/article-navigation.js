@@ -1,4 +1,10 @@
 export function setupArticleNavigation(root){
+ root.querySelectorAll('.atlas-refs').forEach(frame=>{
+  const list=frame.querySelector(':scope>.atlas-ref-list');if(!list)return;
+  frame.classList.add('atlas-table-frame','atlas-table-frame--solid');
+  if(!frame.querySelector(':scope>.atlas-table-header-solid')){const title=document.createElement('div');title.className='atlas-table-header-solid';title.textContent='[ REFERENCES // EXTERNAL SOURCES ]';frame.prepend(title);}
+  const body=document.createElement('div');body.className='atlas-table-body';list.before(body);body.append(list);
+ });
  root.querySelectorAll('.atlas-toc').forEach(toc=>{
   if(!toc.querySelector('.toc-title')){const title=document.createElement('p');title.className='toc-title';title.textContent='[ TABLE_OF_CONTENTS // NAVIGATION ]';toc.prepend(title);}
   if(toc.dataset.ready)return;toc.dataset.ready='true';

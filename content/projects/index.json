@@ -643,12 +643,22 @@
       "sourceUrl": "https://www.pavelzosim.com/projects/deloitte-virtual-factory",
       "image": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
       "media": [],
-      "video": {
-        "src": "/public/media/projects/deloitte-virtual-factory/Environments/01%20-%20image_023_[0030-0090].mp4",
-        "poster": "/public/media/projects/deloitte-virtual-factory/promo/DF_promo1.png",
-        "caption": "Deloitte Virtual Factory — selected AR digital-twin footage.",
-        "featured": true
-      },
+      "videos": [
+        {
+          "id": "virtual-factory-2-0",
+          "title": "Virtual Factory 2.0",
+          "src": "/public/media/projects/deloitte-virtual-factory/video/virtual-factory-2-0.mp4",
+          "poster": "/public/media/projects/deloitte-virtual-factory/posters/virtual-factory-2-0.jpg",
+          "caption": "Deloitte Virtual Factory 2.0"
+        },
+        {
+          "id": "virtual-factory-3-0",
+          "title": "Virtual Factory 3.0",
+          "src": "/public/media/projects/deloitte-virtual-factory/video/virtual-factory-3-0.mp4",
+          "poster": "/public/media/projects/deloitte-virtual-factory/posters/virtual-factory-3-0.jpg",
+          "caption": "Deloitte Virtual Factory 3.0"
+        }
+      ],
       "awards": [
         {
           "label": "2020 American Advertising Awards Baltimore — Best in Show",
