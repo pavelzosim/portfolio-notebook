@@ -1,0 +1,31 @@
+const fs=require('node:fs'),path=require('node:path');let chromium;try{({chromium}=require('playwright'));}catch{({chromium}=require('C:/Users/pavel/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright'));}
+const root=path.resolve(__dirname,'..'),origin=process.argv[2]||'http://127.0.0.1:8767';
+const read=file=>JSON.parse(fs.readFileSync(path.join(root,'_site',file),'utf8'));
+const posts=read('content/posts/index.json').records.filter(r=>r.state==='published'&&r.indexable!==false),projects=read('content/projects/index.json').projects;
+const routes=['/','/blog/','/tools/','/projects/','/online-tools/','/online-tools/sprite-sheet-assembly/','/online-tools/image-compressor/','/online-tools/noise-generator/','/privacy/','/blog/style-guide/','/404.html',...posts.map(r=>new URL(r.publicUrl).pathname),...projects.map(r=>'/projects/'+r.slug+'/')];
+(async()=>{const browser=await chromium.launch({headless:true,...(process.platform==='win32'?{executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'}:{})});const failures=[];
+try{let p;let errors=[];
+const configure=async page=>{page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(15000);await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());};
+for(const route of routes){errors=[];const staticPage=await browser.newPage({javaScriptEnabled:false});p=await browser.newPage({viewport:{width:1440,height:1000}});p.on('pageerror',e=>errors.push(e.message));await configure(staticPage);await configure(p);await staticPage.goto(origin+route,{waitUntil:'domcontentloaded'});const staticData=await staticPage.evaluate(()=>({h1:document.querySelectorAll('main h1').length,text:document.querySelector('main')?.textContent.length,review:!!document.querySelector('.review-bar'),queryLinks:[...document.querySelectorAll('a[href]')].filter(a=>a.origin===location.origin&&new URL(a.href).searchParams.has('page')).length}));
+if(staticData.h1!==1||staticData.text<50||staticData.review||staticData.queryLinks)errors.push('Invalid static output '+JSON.stringify(staticData));
+await p.goto(origin+route,{waitUntil:'domcontentloaded'});try{await p.waitForFunction(()=>document.body.dataset.runtimeReady);}catch{errors.push('Runtime readiness timeout: '+route);}if(await p.getAttribute('body','data-runtime-ready')!=='true')errors.push('Public runtime failed');await p.waitForTimeout(200);
+const data=await p.evaluate(()=>{const body=document.querySelector('main');const sliders=[...body.querySelectorAll('.project-slider')];let broken=0;for(const slider of sliders){const next=slider.querySelector('[data-next]'),prev=slider.querySelector('[data-prev]');const count=slider.querySelectorAll('.project-media').length;if(next&&!next.disabled){next.click();if(slider.querySelector('output').textContent!==`2 / ${count}`)broken++;prev.click();}}
+return{h1:body.querySelectorAll('h1').length,loadError:body.textContent.includes('Preview could not load:'),broken,queryLinks:[...document.querySelectorAll('a[href]')].filter(a=>a.origin===location.origin&&new URL(a.href).searchParams.has('page')).length,overflow:document.documentElement.scrollWidth>innerWidth};});
+if(data.h1!==1||data.loadError||data.broken||data.queryLinks||data.overflow)errors.push(JSON.stringify(data));
+await p.setViewportSize({width:390,height:900});if(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth))errors.push('Mobile overflow');await p.setViewportSize({width:1440,height:1000});
+if(errors.length)failures.push({route,errors:[...errors]});console.log((errors.length?'FAIL ':'PASS ')+route+(errors.length?' '+errors.join('; '):''));
+await staticPage.close();await p.close();
+}
+// Exercise exports through the public DOM, beyond pure engine tests.
+p=await browser.newPage();await configure(p);
+const png=await p.evaluate(()=>{const canvas=document.createElement('canvas');canvas.width=4;canvas.height=4;const ctx=canvas.getContext('2d');ctx.fillStyle='#668877';ctx.fillRect(0,0,4,4);return canvas.toDataURL().split(',')[1];});
+const input=name=>({name,mimeType:'image/png',buffer:Buffer.from(png,'base64')});
+const download=async selector=>{const pending=p.waitForEvent('download');await p.locator(selector).click();const file=await pending;if(await file.failure())throw Error('Export failed: '+selector);console.log('EXPORT '+file.suggestedFilename());};
+for(const [route,type]of [['/online-tools/sprite-sheet-assembly/','sprite'],['/online-tools/image-compressor/','compressor'],['/online-tools/noise-generator/','noise']]){
+ await p.goto(origin+route,{waitUntil:'domcontentloaded'});await p.waitForFunction(()=>document.body.dataset.runtimeReady==='true');
+ if(type==='sprite'){await p.locator('#files').setInputFiles([input('frame-01.png'),input('frame-02.png')]);await p.locator('#download:not([disabled])').waitFor();await download('#download');}
+ if(type==='compressor'){await p.locator('#files').setInputFiles([input('source.png')]);await p.locator('#format').selectOption('image/png');await p.locator('#process').click();await p.locator('#download:not([disabled])').waitFor();await download('#download');}
+ if(type==='noise'){await p.locator('#noise-resolution').selectOption('512');await p.locator('#noise-download:not([disabled])').waitFor();await download('#noise-download');}
+}
+console.log(JSON.stringify({routes:routes.length,exports:3,failures},null,2));if(failures.length)process.exitCode=1;
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

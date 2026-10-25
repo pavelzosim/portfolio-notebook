@@ -12,8 +12,8 @@ body{padding-bottom:38px}
 .command label span{color:var(--red);font-weight:700}
 .command input{min-width:0;padding:3px 6px;border:0;border-bottom:1px solid var(--line);outline:0;background:transparent;color:var(--ink);font:10px var(--mono)}
 .command input:focus{border-color:var(--vc);background:var(--paper2)}
-.command kbd{padding:1px 5px;border:1px solid var(--line);color:var(--muted);font:9px var(--mono)}
-.command output{min-width:68px;text-align:right;color:var(--muted);font-size:9px}
+.command kbd{padding:1px 5px;border:1px solid var(--line);color:var(--muted);font:10px var(--mono)}
+.command output{min-width:68px;text-align:right;color:var(--muted);font-size:10px}
 .meta-block li a{text-decoration:none}.meta-block li a:hover,.meta-block li a:focus-visible{color:var(--atlas-nav-active);background:var(--atlas-nav-active-bg);text-decoration:none}
 .tag-cloud a{padding:2px 4px;border:1px solid var(--line);text-decoration:none}
 dialog{width:min(480px,calc(100vw - 32px));padding:0;border:1px solid #000;background:var(--paper2);color:var(--ink);box-shadow:8px 8px 0 transparent;font:11px/1.5 var(--mono)}

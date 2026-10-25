@@ -58,6 +58,9 @@ def main() -> None:
     document = INDEX.read_text(encoding="utf-8")
     matches = list(SLIDE_RE.finditer(document))
     if not matches:
+        if '<article class="gumroad-shelf__slide"' in document:
+            print("Canonical tool shelf uses registry-backed Buy cards; legacy price refresh is not applicable.")
+            return
         raise RuntimeError("No Gumroad shelf slides found in index.html")
 
     slides = []

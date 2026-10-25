@@ -107,7 +107,7 @@
   margin-bottom: 15px;
 }
 .atlas-container .atlas-uml-diag__scope-label {
-  font-size: 8px;
+  font-size:10px;
   color: var(--atlas-ink-muted);
   margin-bottom: 5px;
   text-transform: uppercase;
@@ -134,7 +134,7 @@
 }
 .atlas-container .atlas-uml-diag__node-body {
   padding: 6px 10px;
-  font-size: 9px;
+  font-size:10px;
   line-height: 1.4;
   text-align: left;
 }
@@ -186,7 +186,7 @@
 .atlas-container .atlas-uml-diag__legend {
   border-top: 1px solid var(--atlas-ink);
   padding: 8px;
-  font-size: 9px;
+  font-size:10px;
   display: flex;
   gap: 15px;
   color: var(--atlas-ink-muted);
@@ -222,7 +222,7 @@
 .atlas-container .atlas-schematic__secondary { stroke: var(--atlas-ink-muted); stroke-dasharray: 3 2; }
 .atlas-container .atlas-schematic__critical { stroke: var(--atlas-crit); }
 .atlas-container .atlas-schematic__leader { stroke: var(--atlas-ink-muted); }
-.atlas-container .atlas-schematic__label { fill: var(--atlas-ink); font: 700 6px var(--atlas-font-mono); }
+.atlas-container .atlas-schematic__label { fill: var(--atlas-ink); font: 700 10px var(--atlas-font-mono); }
 .atlas-container .atlas-schematic__label--critical { fill: var(--atlas-crit); }
 .atlas-container .atlas-schematic__legend {
   display: grid;

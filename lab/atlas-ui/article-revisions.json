@@ -1,0 +1,6 @@
+{
+  "enemy-system-progress-player-camera-integration": {
+    "path": "/lab/atlas-ui/articles/enemy-system-progress-player-camera-integration.html",
+    "summary": "Unity development update: modular enemies, NavMesh-based spawning, player controls and camera integration."
+  }
+}

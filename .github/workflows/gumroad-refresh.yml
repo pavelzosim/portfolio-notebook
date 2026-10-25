@@ -21,6 +21,15 @@ jobs:
       - name: Refresh Gumroad shelf
         run: python scripts/update_gumroad_shelf.py
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install canonical renderer
+        run: |
+          npm install --no-save --no-package-lock --ignore-scripts playwright@1.62.1
+          npx playwright install --with-deps chromium
+
       - name: Validate build
         run: python scripts/build_github_pages.py --base-path "/"
 

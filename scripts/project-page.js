@@ -245,15 +245,12 @@
         return item;
       }));
       metrics.hidden = metricValues.length === 0;
-      const metaReach = document.querySelector('[data-meta-reach]');
-      const reachValues = project.reach && typeof project.reach === 'object' ? Object.entries(project.reach) : [];
-      metaReach.replaceChildren(...reachValues.flatMap(([labelText, valueText]) => {
-        const label = document.createElement('dt');
-        const value = document.createElement('dd');
-        label.textContent = labelText;
-        value.textContent = valueText;
-        return [label, value];
-      }));
+      const awardBlock = document.querySelector('[data-meta-awards]');
+      if (awardBlock) {
+        const awards = project.awards || [];
+        awardBlock.hidden = !awards.length;
+        document.querySelector('[data-meta-awards-text]').textContent = awards.map(a => a.label).join(' · ');
+      }
       text('[data-project-footer]', `project · ${project.slug}`);
 
       const previous = projects[(index - 1 + projects.length) % projects.length];

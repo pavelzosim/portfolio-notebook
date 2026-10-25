@@ -6,6 +6,8 @@ Revision: 2026.10
 
 Visual reference: `/blog/style-guide/`
 
+Approved design authority (2026-10-23): `/lab/atlas-ui/?page=components` until explicitly migrated to the public Style Guide. Inspect it before writing or editing an article. Reuse its components and shared styles; do not create article-local variants. Missing elements require user review first, then registration in the Style Guide and shared implementation before use. Legacy public examples do not override the approved catalogue.
+
 Rules index: `/content/guides/README.md`
 
 UI and UX contract: `/content/guides/ui-ux-design-system.md`
@@ -66,7 +68,9 @@ Use this optional registry shape for ordered lessons, chapters, or connected R&D
 - `h2` defines major article sections and populates the left navigation.
 - `h3` defines subsections.
 - `h4` is a small local label; do not use it to skip hierarchy.
+- Keep short progress notes compact: do not create a numbered section for each paragraph. Use a titled data table for repeated field/value facts and keep explanations of media inside that media's caption. After a section's closing rule, leave three inherited text line-heights before the next section; keep 22 px before the rule.
 - Keep paragraphs focused. Prefer concrete implementation language over promotional claims.
+- Visible article passport metadata is log ID, project/topic and one current date: use dateModified when present, otherwise datePublished. Do not repeat visible author and creation-date fields; retain authorship and dates in the registry and structured metadata.
 - Use `.atlas-code-inline` for identifiers, file names, API calls, and short expressions.
 
 ## Components
@@ -116,6 +120,7 @@ Use this optional registry shape for ordered lessons, chapters, or connected R&D
 - Place the generated Share and Related/Latest afterword after the authored record and before the shared site footer. Do not copy this markup into individual articles.
 - Keep the generated article-end marker between authored content and the afterword. It is the visual boundary between the record and discovery/navigation UI.
 - Keep Related/Latest compact: two horizontal cards per row on desktop and one per row on narrow screens.
+- Every article and project detail must end with exactly two distinct other-record cards after EOF and Share (where present), outside numbered content. Reuse the approved shared renderer; exclude the current record and fall back to the closest available records instead of omitting this block when exact matches are absent. In branch review the owner is `lab/atlas-ui/related-records.js`.
 - Do not hand-author footer link groups or the global command bar inside individual articles.
 - Rank related records by shared tags, group, and content kind; use the latest registry records as fallback when the relationship is weak.
 - Build social-share URLs from the article's canonical production URL, never from a local or GitHub Pages preview URL.

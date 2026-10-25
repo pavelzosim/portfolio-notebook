@@ -1,0 +1,17 @@
+{
+  "nasa-first-woman": {
+    "roleGroups": [
+      {"title":"Interface & realtime","items":["Screen-space and world-space UI design","UI shaders and partial environment rendering"]},
+      {"title":"Art direction & delivery","items":["Visual design and art direction: color, composition, and spatial consistency","UX and UI design for the website and mobile application","Marketing renders, print design, lighting, and selected interior-space detailing","Ownership of visual and technical decisions, initiated and approved collaboratively"]},
+      {"title":"Motion & character","items":["Motion graphics for video intros, achievements, and narrative elements","Facial-expression animation system for the robot assistant"]}
+    ],
+    "solutionHeadings": {
+      "Designed UI systems that operate consistently across screen-space and world-space contexts":"UI across spaces",
+      "Developed UI shaders that rank and position elements through UV offsets":"Shader-driven control",
+      "Built an automated Houdini system that packs screens with different aspect ratios into a unified texture atlas for efficient reuse and shader-driven control":"Screen atlas automation",
+      "Used After Effects for robot facial expressions, motion graphics, intro sequences, and rapid web prototyping":"Motion & prototyping",
+      "Created a procedural animation system for robot eyes and eyelids to produce expressive emotional states efficiently":"Robot expression system",
+      "Maintained scientific plausibility and visual coherence across interface, environment, video, web, and print":"Visual consistency"
+    }
+  }
+}

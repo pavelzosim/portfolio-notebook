@@ -6,16 +6,16 @@
   <meta name="description" content="Atlas article component catalogue and authoring contract for Pavel Zosim's technical notebook.">
   <title>Article Style Guide / Pavel Zosim</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
-  <link rel="stylesheet" href="/styles/atlas.css?v=85">
-  <link rel="stylesheet" href="/styles/records.css?v=17">
-  <link rel="stylesheet" href="/styles/style-guide.css?v=8">
+  <link rel="stylesheet" href="/styles/atlas.css?v=20261020-ux1">
+  <link rel="stylesheet" href="/styles/records.css?v=20261020-ux1">
+  <link rel="stylesheet" href="/styles/style-guide.css?v=20261020-ux1">
   <script src="/scripts/site-navigation.js?v=1" defer></script>
   <script src="/scripts/style-guide.js?v=2" defer></script>
 </head>
 <body class="style-guide-page">
   <a class="skip" href="#content">Skip to content</a>
   <header class="shellbar">
-    <a class="shell-id" href="/"><b>pavelzosim</b><span>:~/atlas/style-guide</span><i>_</i></a>
+    <a class="shell-id shell-slogan" href="/" aria-label="pavel-zosim: code × art → automate — home"><b>pavel-zosim:</b> <b>code</b> <span class="slogan-symbol" aria-hidden="true"><span>×</span><span>+</span></span> <b>art</b> <span class="slogan-symbol" aria-hidden="true"><span>→</span><span>⇒</span></span> <b>automate</b></a>
     <nav aria-label="Primary">
       <a href="/projects/">Projects</a><span class="nav-divider" aria-hidden="true">/</span>
       <a href="/#notes">Notes</a><span class="nav-divider" aria-hidden="true">/</span>
@@ -55,7 +55,7 @@
           </section>
 
           <section class="guide-section" id="tokens">
-            <h2>02 Design tokens</h2>
+            <h2>02 Design tokens</h2><p>Navigation, both rails and Commander commands use 12 px text. Rail labels use 11 px uppercase; captions, tags and metadata never fall below 10 px. Reading text uses 14 px with a 1.6 line-height. Desktop rails are 220 / 200 px.</p>
             <p>Use variables instead of introducing isolated color or spacing values. Content emphasis uses ink and semantic status colors; interactive controls use Commander blue.</p>
             <div class="guide-table-wrap">
               <table class="guide-role-table">
@@ -204,7 +204,7 @@ float3 ApplyExposure(float3 color, float exposure)
           <section class="guide-section" id="actions">
             <h2>09 Actions and references</h2>
             <p class="guide-component-rule"><b>Canonical interaction palette — Grok reference</b>: light navigation uses ink #0A0A0A, blue #0000AA with a 6% blue hover surface and 8% selected surface. The dark Commander footer uses #2A2A2A hover and #7DD3FC key/scan-line accents. Primary actions brighten to #0000CC; quiet actions retain their light surface and dither shadow. Hover never adds a text underline to block navigation. Keyboard focus remains visible; reduced motion disables transitions.</p>
-            <p>Use filled blue only for the primary action. The quiet white dither action is the default for index navigation and supporting links: visible as part of the interface, but subordinate to the article. Bracket buttons are compact secondary commands.</p>
+            <p>Standard actions share a 32 px minimum height, 12 px labels and centered content. Supporting actions use the same geometry as the primary action.</p><p>Use filled blue only for the primary action. The quiet white dither action is the default for index navigation and supporting links: visible as part of the interface, but subordinate to the article. Bracket buttons are compact secondary commands.</p>
             <p class="guide-component-rule"><b>Canonical button component</b> — every dithered action uses <code>.atlas-btn-shadow &gt; .atlas-btn</code> from the shared framework. Page CSS may position the component, but must not redraw its face, hover state, or shadow. A section has at most one filled blue primary action.</p>
             <div class="atlas-btn-group guide-actions"><span class="atlas-btn-shadow"><a class="atlas-btn" href="#contract">Primary action</a></span><button class="atlas-btn atlas-btn--active" type="button">Active</button><button class="atlas-btn atlas-btn--ok" type="button">Validated</button><button class="atlas-btn atlas-btn--danger" type="button">Reset</button></div>
             <p><span class="atlas-btn-shadow"><a class="atlas-btn atlas-btn--quiet" href="/blog/">open blog index →</a></span></p>
@@ -284,7 +284,7 @@ float3 ApplyExposure(float3 color, float exposure)
     </main>
 
     <aside class="meta-rail" aria-label="Style guide metadata">
-      <div class="meta-block"><p>[DOCUMENT]</p><dl><dt>TYPE</dt><dd>STYLE GUIDE</dd><dt>STATE</dt><dd>CANONICAL</dd><dt>LANG</dt><dd>EN</dd><dt>REV</dt><dd>2026.08</dd></dl></div>
+      <div class="meta-block"><p>[DOCUMENT]</p><dl><dt>TYPE</dt><dd>STYLE GUIDE</dd><dt>STATE</dt><dd>CANONICAL</dd><dt>LANG</dt><dd>EN</dd><dt>REV</dt><dd>2026.10</dd></dl></div>
       <div class="meta-block"><p>[CANONICAL CSS]</p><ul><li>atlas.css</li><li>records.css</li><li>style-guide.css</li></ul></div>
       <div class="meta-block"><p>[RULES]</p><ul><li><a href="/content/guides/README.md">Rules index</a></li><li><a href="/content/guides/ui-ux-design-system.md">UI / UX</a></li><li><a href="/content/guides/article-authoring.md">Authoring</a></li><li><a href="/content/guides/seo-indexing-analytics.md">SEO / analytics</a></li></ul></div>
     </aside>

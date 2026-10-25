@@ -26,6 +26,15 @@ jobs:
         with:
           enablement: true
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install canonical renderer
+        run: |
+          npm install --no-save --no-package-lock --ignore-scripts playwright@1.62.1
+          npx playwright install --with-deps chromium
+
       - name: Build production
         run: python scripts/build_github_pages.py --base-path "/"
 
@@ -41,8 +50,18 @@ jobs:
       - name: Check image-compressor export algorithms
         run: node --test scripts/image-compressor-core.test.cjs
 
+      - name: Check noise maps and canonical components
+        run: node --test scripts/noise-generator-core.test.cjs lab/atlas-ui/contract.test.cjs lab/atlas-ui/project-media.test.cjs lab/atlas-ui/related-records.test.cjs
+
       - name: Audit production SEO and internal links
         run: python scripts/audit_site.py
+
+      - name: Check canonical public pages and tool exports
+        run: |
+          python -m http.server 8767 --bind 127.0.0.1 --directory _site >/tmp/atlas-site.log 2>&1 &
+          ATLAS_SERVER_PID=$!
+          trap 'kill "$ATLAS_SERVER_PID"' EXIT
+          node scripts/audit_canonical_browser.cjs
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

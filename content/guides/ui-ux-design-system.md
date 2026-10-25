@@ -73,9 +73,19 @@ The dotted background remains visible around the document. Content surfaces may 
 - Use the configured serif only for an intentional editorial role; never allow it to appear accidentally through missing font inheritance.
 - One `h1` names the document.
 - `h2` defines major sections; `h3` and `h4` provide sequential substructure.
-- Interface labels are compact and quiet; body text remains comfortably readable.
+- Navigation, both rails and Commander commands use 12 px. Rail block headings use 11 px uppercase. Tags, captions and footer metadata use at least 10 px. Body text uses 14 px with a 1.6 line-height.
+- Desktop rail widths are 220 px left and 200 px right. Reduce columns or wrap navigation before reducing font size.
 - Do not imitate hierarchy with arbitrary font-size changes when a semantic heading or component exists.
 - Avoid all-uppercase paragraphs. Uppercase is reserved for short system labels, states, and metadata.
+
+### Sidebar responsibilities
+
+- Home: section contents and four contact links on the left; stack and working tags on the right. Product shelves and tool carousels belong in the main document.
+- Indexes: global sections and functional type filters on the left; series or groups with record counts on the right, without repeating individual cards.
+- Projects: document outline on the left; client, status, engine, role and available record facts on the right. Awards are a compact factual line.
+- Articles: global navigation followed by the heading outline on the left; record facts, tags and one to three read-next links on the right.
+- Guides: guide contents on the left; document type, revision and canonical rule links on the right.
+- Online tools: local tool directory on the left; processing facts, limits and secondary links on the right.
 
 ## Color
 
@@ -107,6 +117,8 @@ The dotted background remains visible around the document. Content surfaces may 
 - Repeated destination actions use the quiet white button with black outline, lowercase label, dither shadow, and right-aligned arrow.
 - Use one list/index action per section. Remove duplicate links that lead to the same destination.
 - Filled blue is reserved for the primary action in a local decision context, such as a download.
+- Standard buttons share a 32 px minimum height, 12 px labels, centered content and consistent padding. The primary and quiet variants have identical face geometry.
+- Range inputs use the shared `.atlas-sp-slider-wrap` and `.atlas-sp-slider` engineering scale from the Style Guide.
 - Buttons must use real `<a>` links for navigation and `<button>` for actions.
 - Focus states must remain visible for keyboard users.
 

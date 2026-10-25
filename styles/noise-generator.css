@@ -1,0 +1,26 @@
+.noise-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}
+.noise-controls label{display:block;min-width:0;font-size:var(--atlas-ui-size);color:var(--atlas-ink-soft)}
+.noise-controls input,.noise-controls select{display:block;margin-top:4px}
+.noise-controls .noise-toggle{display:flex;align-items:center;gap:8px;color:var(--atlas-ink)}
+.noise-controls input[type=checkbox]{width:16px;height:16px;margin:0;flex:none;accent-color:var(--atlas-accent)}
+.noise-generator-page .noise-note{font-size:var(--fs-meta);color:var(--atlas-ink-muted);line-height:1.6}
+.noise-views{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.noise-views figure{margin:0;min-width:0;border:1px solid var(--atlas-border)}
+.noise-views canvas{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;background:var(--atlas-bg-raised)}
+.noise-views figcaption{padding:8px 10px;font-size:var(--fs-meta);border-top:1px solid var(--atlas-border)}
+.noise-generator-page #noise-status{padding:10px 12px;border-left:2px solid var(--atlas-accent);background:var(--atlas-accent-soft);font-size:var(--fs-meta)}
+.noise-generator-page progress{display:block;width:100%;height:6px;margin:8px 0;accent-color:var(--atlas-accent)}
+.noise-generator-page [hidden]{display:none}
+.noise-generator-page .noise-export{display:flex;align-items:end;gap:12px;flex-wrap:wrap}
+.noise-export label{flex:1 1 150px;font-size:var(--fs-meta)}
+.noise-export button{flex:none}
+.noise-generator-page .noise-light{margin-top:16px}
+.noise-generator-page .content-index-head{padding-bottom:22px}
+@media(max-width:700px){.noise-controls{grid-template-columns:repeat(2,minmax(0,1fr))}.noise-views{grid-template-columns:1fr}}
+@media(max-width:360px){.noise-controls{grid-template-columns:1fr}}
+.noise-generator-page fieldset{min-width:0;margin:0;padding:0;border:0}
+.noise-generator-page #noise-material{touch-action:none;cursor:crosshair}
+.noise-map-settings{margin:16px 0;border:1px solid var(--atlas-border);padding:12px}
+.noise-map-settings summary{color:var(--atlas-ink-soft);cursor:pointer;font-size:var(--fs-meta)}
+.noise-map-settings[open] summary{margin-bottom:12px}
+.noise-controls input[type=color]{width:100%;height:34px;padding:2px;border-radius:0;cursor:pointer}

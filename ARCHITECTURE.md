@@ -1,5 +1,13 @@
 # Repository architecture
 
+## Canonical public design (2026-10-25)
+
+The approved component owners in `lab/atlas-ui/` now supply the production build as well as the isolated review harness. `scripts/build_github_pages.py` renders the public shell with `scripts/render_canonical_site.cjs`, retaining the existing canonical URLs and SEO metadata. Public HTML contains complete static content; JavaScript reuses the same composition/behaviour modules to enable controls. The browser audit checks both static and interactive output.
+
+Build assets live under `_site/ui/atlas/` with a content-derived release version. Authoring HTML is packaged as per-document JSON inputs with a source map, avoiding recursive requests to the rendered public routes. Approved editorial revisions are applied through the same adapter used in review. Legacy source styles are not imported into the canonical shell. The legacy templates described below remain authoring inputs during this transition; use `--legacy` only for comparison builds.
+
+Build requires Python, Node.js and Playwright Chromium (the Windows local workflow also supports installed Edge). CI installs the pinned renderer before building and audits canonical public routes and all three tool exports before uploading an artifact. The lab itself stays noindex and is not copied as a public route. Deployment remains a separate workflow action.
+
 ## Styles
 
 `styles/atlas.css` orchestrates the shared Atlas framework and homepage composition styles. Section and record entry points (`indexes.css`, `projects.css`, `posts.css`, and `legacy-posts.css`) load only their specialised modules.

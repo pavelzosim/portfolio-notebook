@@ -1,6 +1,6 @@
 /* Legacy Atlas post stylesheet orchestrator. */
-@import url("./posts/navigation.css?v=4");
-@import url("./posts/legacy-shell.css?v=4");
-@import url("./records.css?v=18");
-@import url("./notebook-layout.css?v=10");
-@import url("./framework/accessibility.css?v=1");
+@import url("./posts/navigation.css?v=20261020-ux1");
+@import url("./posts/legacy-shell.css?v=20261020-ux1");
+@import url("./records.css?v=20261020-ux1");
+@import url("./notebook-layout.css?v=20261020-ux1");
+@import url("./framework/accessibility.css?v=20261020-ux1");

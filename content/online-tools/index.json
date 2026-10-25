@@ -39,6 +39,29 @@
       "image": "/public/media/online-tools/image-compressor.png",
       "imageAlt": "Image Compressor interface diagram showing source and encoded texture panels with local processing and channel inspection",
       "datePublished": "2026-10-06"
+    },
+    {
+      "id": "TOOL-003",
+      "title": "Noise Generator",
+      "slug": "noise-generator",
+      "kind": "tool",
+      "summary": "Generate tileable Perlin, Simplex, Value, Worley and White noise with height, normal, albedo, roughness and specular outputs, a lit preview and PNG export up to 4K.",
+      "localPath": "/online-tools/noise-generator/index.html",
+      "publicUrl": "https://www.pavelzosim.com/online-tools/noise-generator/",
+      "image": "/public/media/online-tools/noise-generator.svg",
+      "imageAlt": "Procedural noise waves and a material sphere with height, normal and roughness outputs",
+      "tags": [
+        "noise",
+        "normal-maps",
+        "procedural",
+        "textures",
+        "albedo",
+        "specular"
+      ],
+      "datePublished": "2026-10-20",
+      "dateModified": "2026-10-20",
+      "state": "published",
+      "indexable": true
     }
   ]
 }
