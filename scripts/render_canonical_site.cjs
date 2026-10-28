@@ -7,7 +7,7 @@ const assetVersion=JSON.parse(fs.readFileSync(path.join(output,'ui/atlas/release
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));
 const posts=read('content/posts/index.json').records.filter(r=>r.state==='published'&&r.indexable!==false);
 const projects=read('content/projects/index.json').projects,revisions=read('lab/atlas-ui/article-revisions.json');
-const entries=[['/','home'],['/blog/','blog'],['/projects/','projects'],['/tools/','tools'],['/online-tools/','index'],['/online-tools/sprite-sheet-assembly/','tool'],['/online-tools/image-compressor/','compressor'],['/online-tools/noise-generator/','noise'],['/privacy/','privacy'],['/blog/style-guide/','components'],['/404.html','notfound'],...posts.map(r=>[new URL(r.publicUrl).pathname,'article',r.slug]),...projects.map(r=>['/projects/'+r.slug+'/','project',r.slug])];
+const entries=[['/','home'],['/blog/','blog'],['/projects/','projects'],['/tools/','tools'],['/online-tools/','index'],['/online-tools/sprite-sheet-assembly/','tool'],['/online-tools/image-compressor/','compressor'],['/online-tools/noise-generator/','noise'],['/online-tools/pbr-channel-packer/','packer'],['/privacy/','privacy'],['/blog/style-guide/','components'],['/404.html','notfound'],...posts.map(r=>[new URL(r.publicUrl).pathname,'article',r.slug]),...projects.map(r=>['/projects/'+r.slug+'/','project',r.slug])];
 const routes=Object.fromEntries(entries.map(([url,page,slug])=>[page+(slug?':'+slug:''),url]));
 routes.article='/post/procedural-travel-resolution/';routes.project='/projects/nasa-first-woman/';
 for(const r of posts)routes[r.localPath]=new URL(r.publicUrl).pathname;

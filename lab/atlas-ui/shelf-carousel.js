@@ -2,6 +2,13 @@ import {withResourceMedia} from './resource-media.js?v=review-137';
 import {readSourceDocument} from './source-document.js';
 // Published tool registry + each tool's own purchase link are the source of truth.
 let productsPromise;
+let onlinePromise;
+async function populateOnline(root){
+ const shelves=[...root.querySelectorAll('[data-online-tools-shelf]')];if(!shelves.length)return;
+ onlinePromise??=fetch('/content/online-tools/index.json').then(response=>response.json()).then(data=>data.records.filter(record=>record.state==='published'&&record.indexable!==false));
+ const records=await onlinePromise;
+ for(const shelf of shelves){if(shelf.dataset.onlinePopulated)continue;shelf.dataset.onlinePopulated='true';const viewport=shelf.querySelector('.gumroad-shelf__viewport'),limit=Number(shelf.dataset.catalogueLimit)||records.length;viewport.replaceChildren();for(const record of records.slice(0,limit)){const slide=document.createElement('a');slide.className='gumroad-shelf__slide';slide.href=record.publicUrl;const image=document.createElement('img');image.src=record.image;image.alt=record.imageAlt;image.loading='lazy';const title=document.createElement('strong');title.textContent=record.title;const text=document.createElement('span');text.textContent=record.summary;const availability=document.createElement('em');availability.innerHTML='<b>FREE</b><i>LOCAL</i>';slide.append(image,title,text,availability);viewport.append(slide);}}
+}
 export function loadStoreTools(){
  return productsPromise??=(async()=>{
   const response=await fetch('/content/posts/index.json');if(!response.ok)throw Error('Tool registry unavailable');
@@ -28,6 +35,7 @@ async function populateStore(root){
  }
 }
 export async function setupShelfCarousels(root){
+ try{await populateOnline(root);}catch(error){console.error(error);}
  try{await populateStore(root);}catch(error){root.querySelectorAll('[data-gumroad-shelf]').forEach(shelf=>{shelf.hidden=true;});console.error(error);}
  root.querySelectorAll('[data-gumroad-shelf],[data-online-tools-shelf]').forEach(shelf=>{
   if(shelf.dataset.carouselReady)return;shelf.dataset.carouselReady='true';

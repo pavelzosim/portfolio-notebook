@@ -50,6 +50,9 @@ jobs:
       - name: Check image-compressor export algorithms
         run: node --test scripts/image-compressor-core.test.cjs
 
+      - name: Check PBR channel data and PNG encoding
+        run: node --test scripts/pbr-channel-core.test.cjs
+
       - name: Check noise maps and canonical components
         run: node --test scripts/noise-generator-core.test.cjs lab/atlas-ui/contract.test.cjs lab/atlas-ui/project-media.test.cjs lab/atlas-ui/related-records.test.cjs
 
@@ -62,6 +65,7 @@ jobs:
           ATLAS_SERVER_PID=$!
           trap 'kill "$ATLAS_SERVER_PID"' EXIT
           node scripts/audit_canonical_browser.cjs
+          node scripts/pbr-channel.browser.cjs http://127.0.0.1:8767/online-tools/pbr-channel-packer/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

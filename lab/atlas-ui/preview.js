@@ -1,10 +1,12 @@
+import {setupPackerPanel} from './packer-panel.js?v=review-187';
+import {setupToolSidebar} from './tool-sidebar.js?v=review-191';
 /* Canonical site composition shared by public output and the review harness. */
 import {readSourceDocument} from './source-document.js';
 const publicPage=document.body.dataset.publicPage;
 const routeParams=new URLSearchParams(location.search);
 const routeSlug=document.body.dataset.slug||routeParams.get('slug');
 import {setupNavigation} from './navigation.js?v=review-22';
-import {setupHomeInteractions} from './home.js?v=review-107';
+import {setupHomeInteractions} from './home.js?v=review-184';
 import {renderTools} from './tools.js?v=review-137';
 import {renderBlog} from './blog.js?v=review-118';
 import {renderProject} from './project.js?v=review-180';
@@ -12,24 +14,24 @@ import {relatedRecords,selectRelatedArticles} from './related-records.js?v=revie
 import {setupCompressorPanel} from './compressor-panel.js?v=review-126';
 import {setupNoisePanel,setupNoisePresets} from './noise-panel.js?v=review-131';
 import {createControlDisclosure} from './control-disclosure.js?v=review-84';
-import {setupShelfCarousels} from './shelf-carousel.js?v=review-137';
-import {renderRecordPreviews} from './record-preview.js?v=review-148';
+import {setupShelfCarousels} from './shelf-carousel.js?v=review-184';
+import {renderRecordPreviews} from './record-preview.js?v=review-184';
 import {setupProductLists} from './product-list.js?v=review-108';
-import {setupToolCatalog} from './tool-catalog.js?v=review-111';
+import {setupToolCatalog,toolRoutes} from './tool-catalog.js?v=review-192';
 import {renderProjectCards} from './project-card.js?v=review-114';
 import {createShareSection} from './share-controls.js?v=review-119';
 import {createToolFeedback} from './tool-feedback.js?v=review-128';
 import {setupArticleNavigation} from './article-navigation.js?v=review-177';
 import {setupSpritePanel} from './sprite-panel.js?v=review-122';
 import {renderArticlePassport} from './article-passport.js?v=review-166';
-import {completeStyleGuide} from './style-guide.js?v=review-180';
-import {createSiteRoutes} from './site-routes.js?v=review-141';
+import {completeStyleGuide} from './style-guide.js?v=review-192';
+import {createSiteRoutes} from './site-routes.js?v=review-184';
 import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-174';
 import {renderSiteReview} from './site-review.js?v=review-145';
 let site;
 async function review(){renderSiteReview({main,left,right,site,heading,section,escape});}
 async function notfound(){main.innerHTML=heading('404 · Path not in this notebook','site / not found','The existing notebook game is preserved in an isolated interactive frame.')+`<div class="article-body"><figure class="media-frame"><iframe src="${publicPage?'/ui/atlas/notebook-game.html':'/404.html'}" title="404 notebook game" loading="lazy"></iframe><figcaption class="media-caption">Original notebook game · keyboard and pointer controls remain inside the frame.</figcaption></figure><p><a href="?page=home">Return home →</a></p></div>`;outline('404.md',[['?page=home','Home']]);right.replaceChildren();}
-const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',packer:'/online-tools/pbr-channel-packer/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
 const page=publicPage||(Object.hasOwn(pages,routeParams.get('page'))?routeParams.get('page'):'home');
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const publicFallback=publicPage?main.innerHTML:null;
@@ -68,7 +70,7 @@ async function home(){
  await rendered;
  renderRecordPreviews(main.querySelector('[data-home-highlights]'),registry.records.filter(r=>r.homepage?.highlight).sort((a,b)=>(a.homepage.rank??0)-(b.homepage.rank??0)));
  await loadScript('./wireframe-shape.js?v=review-104');
- setupHomeInteractions(main,registry.records);
+ await setupHomeInteractions(main,registry.records);
 }
 async function index(){
  const [source,registry]=await Promise.all([doc(pages.index),json('/content/online-tools/index.json')]);
@@ -76,7 +78,7 @@ async function index(){
  main.replaceChildren(...clean(source.querySelector('main')).childNodes);
  setupToolCatalog(main,records);
  localToolLinks(main);
- outline('ONLINE_TOOLS.md',[['?page=index','Index'],...records.map(record=>[`?page=${({'sprite-sheet-assembly':'tool','image-compressor':'compressor','noise-generator':'noise'})[record.slug]}`,record.title.replace(/ Tool$| for Technical Artists$/g,'')])]);
+ outline('ONLINE_TOOLS.md',[['?page=index','Index'],...records.map(record=>[`?page=${toolRoutes[record.slug]}`,record.title.replace(/ Tool$| for Technical Artists$/g,'')])]);
  const links=[...left.querySelectorAll('nav a')];records.forEach((record,i)=>{links[i+1].textContent=`${record.id.split('-').at(-1).replace(/^0/,'')} ${record.title.replace(/ Tool$| for Technical Artists$/g,'')}`;});
  const homeSource=await doc('/');
  const store=homeSource.querySelector('[data-gumroad-shelf]');
@@ -85,6 +87,7 @@ async function index(){
  right.querySelectorAll('.gumroad-shelf__action').forEach(a=>{a.classList.remove('atlas-btn--quiet');a.classList.add('button--outline');a.textContent='Buy →';});
  shelves();
  main.querySelector('.section-label em').textContent=`${String(records.length).padStart(2,'0')} LIVE TOOLS`;
+ main.querySelector('.section-label h2').textContent='Browser tools';
 }
 async function articleRecord(){const original=site.records.find(r=>r.localPath===pages.article);const revision=(await json('./article-revisions.json'))[original.slug];return {record:{...original,...(revision?{summary:revision.summary,outlineStart:1}: {})},path:revision?.path||pages.article};}
 async function article(){const {record,path}=await articleRecord(),source=await doc(path);main.innerHTML=heading(record.title,'blog / '+record.group,record.summary);const body=extractArticleBody(source);adaptArticle(body,escape,{record,groupAdjacentImages:record.slug==='technical-art-compute-shaders-in-unity-introduction'});main.append(body);const used=new Set();body.querySelectorAll('h2,h3,h4').forEach((h,i)=>{let id=h.id||'section-'+(i+1);while(used.has(id))id+='-'+(i+1);h.id=id;used.add(id);});const entries=[...body.querySelectorAll('h2[id]')].map(h=>['#'+h.id,h.textContent]);outline('ARTICLE.md',entries,record.outlineStart??(entries[0]?.[1].toLowerCase().includes('overview')?0:1));if(!routeParams.has('static'))void enhanceArticle(source,body);}
@@ -125,14 +128,16 @@ right.innerHTML=`<div class="meta-block article-related"><p>[RELATED / ${escape(
  });
  setupArticleNavigation(main);
 }
-async function tool(){const source=await doc(pages.tool);main.replaceChildren(...clean(source.querySelector('main')).childNodes);setupSpritePanel(main);outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['?page=compressor','Image Compressor'],['?page=noise','Noise Generator']]);sourceRail(source);await loadScript('/scripts/sprite-sheet-core.js?v=1');await loadScript('/scripts/sprite-sheet-tool.js?v=10');}
+async function toolOutline(){const {records}=await json('/content/online-tools/index.json');outline('ONLINE_TOOLS.md',[['?page=index','Index'],...records.filter(r=>r.state==='published'&&r.indexable!==false).map(r=>['?page='+toolRoutes[r.slug],r.title])]);}
+async function packer(){const source=await doc(pages.packer);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupPackerPanel(main);await toolOutline();}
+async function tool(){const source=await doc(pages.tool);main.replaceChildren(...clean(source.querySelector('main')).childNodes);setupSpritePanel(main);await toolOutline();sourceRail(source);await loadScript('/scripts/sprite-sheet-core.js?v=1');await loadScript('/scripts/sprite-sheet-tool.js?v=10');}
 async function privacy(){
  const source=await doc(pages.privacy),content=clean(source.querySelector('main'));const title=content.querySelector('h1')?.textContent||'Privacy';content.querySelector('h1')?.remove();main.innerHTML=heading(title,'site / privacy','');const body=document.createElement('div');body.className='article-body';body.append(...content.childNodes);main.append(body);outline('PRIVACY.md',[['?page=home','Home']]);right.replaceChildren();
 }
 async function compressor(){
  const source=await doc(pages.compressor);main.replaceChildren(...clean(source.querySelector('main')).childNodes);
  setupCompressorPanel(main);
- outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['?page=compressor','Image Compressor'],['?page=noise','Noise Generator']]);sourceRail(source);
+ await toolOutline();sourceRail(source);
  renderToolInstructions(['Add up to 10 images.','Choose a preset or set format, quality and dimensions.','Process the batch.','Compare source and output; inspect channels and alpha.','Download the selected image or batch ZIP.']);
  main.querySelector('.tool-workflow')?.remove();main.querySelector('.tool-support')?.remove();
  await loadScript('/scripts/image-compressor-core.js?v=1');await loadScript('/scripts/image-compressor-tool.js?v=3');
@@ -143,7 +148,7 @@ async function noise(){
  renderToolInstructions(['Choose a surface preset.','Tune the structure and normal settings.','Generate the preview.','Inspect the texture on the sphere or tiled plane; adjust the light.','Choose a resolution and download a PNG or all maps as ZIP.']);
  const explanation=[...main.querySelectorAll('.tool-section>p')].find(p=>p.textContent.startsWith('Choose a preset, tune the structure,'));
  if(explanation)explanation.textContent=explanation.textContent.replace(/^Choose a preset, tune the structure, then inspect it on the sphere or tiled plane\.\s*/,'');
- outline('ONLINE_TOOLS.md',[['?page=index','Index'],['?page=tool','Sprite Sheet Assembly'],['?page=compressor','Image Compressor'],['?page=noise','Noise Generator']]);
+ await toolOutline();
  main.querySelectorAll('.noise-note').forEach(p=>{const note=document.createElement('aside');note.className='atlas-callout atlas-callout--note';p.before(note);note.append(p);});
  await loadScript('/scripts/noise-generator-core.js?v=2');setupNoisePresets(window.NoiseGeneratorCore,main);await loadScript('/scripts/image-compressor-core.js?v=1');await loadScript('/scripts/noise-material-preview.js?v=2');await loadScript('/scripts/noise-generator-tool.js?v=3');
 }
@@ -153,8 +158,9 @@ function renderToolInstructions(steps){
  for(const text of steps){const item=document.createElement('li');item.textContent=text;list.append(item);}help.append(heading,list);right.append(help);
 }
 async function toolAfterword(){
+ setupToolSidebar(right);
  renderToolSupport();
- const records=(await json('/content/online-tools/index.json')).records.filter(r=>r.state==='published'&&r.indexable!==false),current=records.find(r=>r.slug===({compressor:'image-compressor',noise:'noise-generator',tool:'sprite-sheet-assembly'}[page]));
+ const records=(await json('/content/online-tools/index.json')).records.filter(r=>r.state==='published'&&r.indexable!==false),current=records.find(r=>r.slug===Object.keys(toolRoutes).find(slug=>toolRoutes[slug]===page));
  const url=encodeURIComponent(current.publicUrl),title=encodeURIComponent(current.title);
  main.insertAdjacentHTML('beforeend',section('share','Share',`<div class="article-share tool-share"><div class="article-share-header">[SHARE]</div><div class="article-share-body"><nav aria-label="Share tool"><a href="https://www.linkedin.com/sharing/share-offsite/?url=${url}" target="_blank" rel="noopener noreferrer">[linkedin]</a><a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" rel="noopener noreferrer">[facebook]</a><a href="https://twitter.com/intent/tweet?url=${url}&amp;text=${title}" target="_blank" rel="noopener noreferrer">[twitter]</a></nav></div></div>`));
  main.querySelector('#share>.section-label').remove();
@@ -213,8 +219,8 @@ try{
  if(page==='article'||page==='project'||page==='components'||page==='privacy'||page==='notfound')document.body.dataset.detail='';
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,tools,projects,blog,article,project,tool,compressor,noise,components,privacy,review,notfound}[page])();
- if(['tool','compressor','noise'].includes(page))await toolAfterword();
+ await({home,index,tools,projects,blog,article,project,tool,compressor,noise,packer,components,privacy,review,notfound}[page])();
+ if(['tool','compressor','noise','packer'].includes(page))await toolAfterword();
  if(page==='project'){
   const [projectData,postData,layouts]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json'),json('./project-layouts.json')]);
   const selectedSlug=routeSlug||'nasa-first-woman';const selected=projectData.projects.find(r=>r.slug===selectedSlug);if(!selected)throw Error('Unknown project: '+selectedSlug);
@@ -222,14 +228,15 @@ try{
  }
  if(page==='article')await restoreArticleElements();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
- const commandPage=['tool','compressor','noise'].includes(page)?'index':({article:'blog',project:'projects'}[page]||page);
+ const commandPage=['tool','compressor','noise','packer'].includes(page)?'index':({article:'blog',project:'projects'}[page]||page);
  const release=await json('./tool-release.json');
- if(['tool','compressor','noise'].includes(page)){
+ if(['tool','compressor','noise','packer'].includes(page)){
   const version=document.createElement('span');version.className='tool-version';version.textContent=`v${release.version}`;main.querySelector('.tool-titlebar')?.append(version);
  }
  main.querySelectorAll('.tool-related-card>img').forEach(img=>{const frame=document.createElement('span');frame.className='tool-related-preview';img.before(frame);frame.append(img);});
- main.querySelectorAll('#other-tools .tool-related-card .eyebrow,.tool-catalog-card>p:first-child').forEach(label=>label.append(` · v${release.version}`));
- document.querySelectorAll('.commander a').forEach(a=>{if(a.search===`?page=${commandPage}`&&!a.hash)a.setAttribute('aria-current','page');});
+main.querySelectorAll('#other-tools .tool-related-card .eyebrow,a.tool-catalog-card>p:first-child').forEach(label=>label.append(` · v${release.version}`));
+ const commandPath={home:'/',projects:'/projects/',tools:'/tools/',index:'/online-tools/',blog:'/blog/'}[commandPage];
+ document.querySelectorAll('.commander a').forEach(a=>{a.removeAttribute('aria-current');if(!a.hash&&(a.search===`?page=${commandPage}`||(publicPage&&a.pathname===commandPath)))a.setAttribute('aria-current','page');});
  main.querySelectorAll('[role="status"],#status,#noise-status').forEach(el=>el.classList.add('notice'));
  main.querySelectorAll('.browser-tools-nav button').forEach(el=>el.classList.add('button','button--quiet'));
  main.querySelectorAll('video').forEach(video=>{video.defaultMuted=true;video.muted=true;video.setAttribute('muted','');});
