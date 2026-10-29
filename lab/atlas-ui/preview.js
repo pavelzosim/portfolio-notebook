@@ -31,7 +31,8 @@ import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.
 import {renderSiteReview} from './site-review.js?v=review-145';
 let site;
 async function review(){renderSiteReview({main,left,right,site,heading,section,escape});}
-async function notfound(){main.innerHTML=heading('404 · Path not in this notebook','site / not found','The existing notebook game is preserved in an isolated interactive frame.')+`<div class="article-body"><figure class="media-frame"><iframe src="${publicPage?'/ui/atlas/notebook-game.html':'/404.html'}" title="404 notebook game" loading="lazy"></iframe><figcaption class="media-caption">Original notebook game · keyboard and pointer controls remain inside the frame.</figcaption></figure><p><a href="?page=home">Return home →</a></p></div>`;outline('404.md',[['?page=home','Home']]);right.replaceChildren();}
+async function notfound(){location.replace('/404.html');}
+
 const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',packer:'/online-tools/pbr-channel-packer/',material:'/online-tools/normal-map-generator/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
 const page=publicPage||(Object.hasOwn(pages,routeParams.get('page'))?routeParams.get('page'):'home');
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');

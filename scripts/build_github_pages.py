@@ -499,10 +499,6 @@ def materialize_canonical_design() -> None:
     for revision in revisions.values():
         save(revision["path"])
     (assets / "source-map.json").write_text(json.dumps(mapping, indent=2), encoding="utf-8")
-    game = re.sub(r'<link\b[^>]*rel=["\']canonical["\'][^>]*>', '', (ROOT / "404.html").read_text(encoding="utf-8"), flags=re.I)
-    game = re.sub(r'<title>.*?</title>', '<title>Notebook game / Pavel Zosim</title>', game, flags=re.I | re.S)
-    (assets / "notebook-game.html").write_text(add_noindex(game), encoding="utf-8")
-
     class QuietHandler(SimpleHTTPRequestHandler):
         def log_message(self, format: str, *args) -> None:
             pass

@@ -278,7 +278,7 @@
     const dt = previousTime === null ? 1 / 60 : Math.min(0.05, (time - previousTime) / 1000);
     previousTime = time;
     // Slow axial drift continues alongside pointer-controlled orientation.
-    if (!reducedMotion.matches && !document.hidden) idleSpin = (idleSpin + 0.12 * dt) % (Math.PI * 2);
+    if (!document.hidden) idleSpin = (idleSpin + 0.18 * dt) % (Math.PI * 2);
     const ease = reducedMotion.matches ? 1 : 1 - Math.exp(-5.7 * dt);
     rotX += (targetRotX - rotX) * ease;
     rotY += (targetRotY - rotY) * ease;
@@ -357,7 +357,7 @@
       return;
     }
 
-    const projected = current.verts.map((v) => project(rotate(v, rotX, rotY + idleSpin)));
+    const projected = current.verts.map((v) => project(rotate(rotate(v, 0, idleSpin), rotX, rotY)));
 
     current.edges.forEach(([a, b]) => {
       const pa = projected[a], pb = projected[b];

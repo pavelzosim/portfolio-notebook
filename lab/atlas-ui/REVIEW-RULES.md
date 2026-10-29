@@ -1,5 +1,11 @@
 # Page-by-page canonical review
 
+2026-10-29 user reaffirms constant sidebar rotation, including when reduced-motion is enabled. Compose the independent model spin then pointer orientation as two sequential transforms (matrix composition), instead of adding angles on the same axis. Spin is 0.18 rad/s (~35 seconds/turn), paused only while the document is hidden. Reduced-motion still removes pointer easing. This explicit preference supersedes the automatic-spin suppression below.
+
+2026-10-29 user requires a standalone full-page 404. Preserve the existing root 404.html/game as its own document; do not wrap it in the canonical workspace or iframe. Lab notfound navigates to that page. Public build excludes 404 from shell materialization and removes the duplicate notebook-game frame document. Keep noindex, home link and original game interactions.
+
+2026-10-29 Online Tool feature state/intro text uses the normal ink token, not green. Shared browser-tool-state rule applies to Home features and catalogue specimens; semantic success indicators elsewhere remain unchanged.
+
 2026-10-29 sidebar geometry has an independent slow axial phase (0.12 radians/second, about 52 seconds/turn) added to pointer-controlled orientation. Pointer updates must not reset or cancel idle rotation. Pause automatic motion for reduced-motion preference and hidden documents; preserve shape changes by click. Canonical owner: wireframe-shape.js.
 
 2026-10-29 Online Tool imagery has one registry owner: image/imageAlt now point to each canonical catalogue pictogram. Catalogue, related cards, Home tool features and sidebar carousel use the same asset. Remove duplicate catalogDiagram fields. Related Online Tool thumbnails contain the whole pictogram within the existing square cell; article/project photography retains cover cropping.
