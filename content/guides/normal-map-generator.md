@@ -1,6 +1,6 @@
 # Normal Map Generator — implementation and QA
 
-TOOL-012 is independent from PBR Channel Packer. Existing roadmap IDs 005–011 remain unchanged and private. Entry point: `/online-tools/normal-map-generator/`. Shared shell, registry catalogue/carousels, input groups, disclosures, noise preview pair, notices and export buttons are reused without additional CSS or dependencies.
+TOOL-007 is independent from PBR Channel Packer. Published tools use consecutive registry IDs; private roadmap entries follow them. Entry point: `/online-tools/normal-map-generator/`. Shared shell, registry catalogue/carousels, input groups, disclosures, noise preview pair, notices and export buttons are reused without additional CSS or dependencies.
 
 ## Input and interpretation
 

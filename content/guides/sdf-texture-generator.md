@@ -1,6 +1,6 @@
 # SDF Texture Generator v1.0
 
-Entry: `/online-tools/sdf-texture-generator/`. Registry: `content/online-tools/index.json`, TOOL-008. All files remain in the browser; processing uses a disposable module Worker. No upload endpoint or external rendering service is used.
+Entry: `/online-tools/sdf-texture-generator/`. Registry: `content/online-tools/index.json`, TOOL-006. All files remain in the browser; processing uses a disposable module Worker. No upload endpoint or external rendering service is used.
 
 ## Workflow
 

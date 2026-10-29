@@ -1,5 +1,7 @@
 # Page-by-page canonical review
 
+2026-10-29 Published Online Tools use consecutive TOOL-001–007 IDs in catalogue order; private planned records follow published entries. The registry owns numbering. Shared catalogue and tool-header rendering read the registry, and source fallback labels remain aligned. This supersedes earlier preservation of roadmap ID gaps.
+
 2026-10-29 Online Tools feature pictograms have shared internal padding of var(--space-group) (22px) on all sides, at every responsive width. Keep the 16:10 preview frame and contain scaling; the header/caption remain unchanged. Owner: components.css .browser-tool-preview img; applies to Home and Style Guide.
 
 2026-10-29 Flow Map Generator TOOL-005 reuses shared compact fieldsets, tool actions, paired canvas previews and collapsed informational rail. No new visual component or local CSS. Registry owns its route/pictogram. Preserve non-destructive procedural/paint/import layers, exact byte-128 neutral encoding, explicit UV orientation and bounded undo/project storage. Mathematical, export and shader contracts: content/guides/flow-map-generator.md.

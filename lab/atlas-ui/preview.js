@@ -168,6 +168,7 @@ async function toolAfterword(){
  setupToolSidebar(right);
  renderToolSupport();
  const records=(await json('/content/online-tools/index.json')).records.filter(r=>r.state==='published'&&r.indexable!==false),current=records.find(r=>r.slug===Object.keys(toolRoutes).find(slug=>toolRoutes[slug]===page));
+ const number=current.id.split('-').at(-1);for(const label of main.querySelectorAll('.tool-titlebar>span:first-child,.document-head>.breadcrumb,.tool-meta'))label.textContent=label.textContent.replace(/TOOL\s*\/\s*\d+/,`TOOL / ${number}`);
  const url=encodeURIComponent(current.publicUrl),title=encodeURIComponent(current.title);
  main.insertAdjacentHTML('beforeend',section('share','Share',`<div class="article-share tool-share"><div class="article-share-header">[SHARE]</div><div class="article-share-body"><nav aria-label="Share tool"><a href="https://www.linkedin.com/sharing/share-offsite/?url=${url}" target="_blank" rel="noopener noreferrer">[linkedin]</a><a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" rel="noopener noreferrer">[facebook]</a><a href="https://twitter.com/intent/tweet?url=${url}&amp;text=${title}" target="_blank" rel="noopener noreferrer">[twitter]</a></nav></div></div>`));
  main.querySelector('#share>.section-label').remove();

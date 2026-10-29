@@ -122,50 +122,6 @@
     },
     {
       "id": "TOOL-006",
-      "title": "Texture Memory Analyzer",
-      "slug": "texture-memory-analyzer",
-      "kind": "tool",
-      "summary": "Estimate texture memory budgets from dimensions, channels and mipmaps. Planned: NPOT checks and comparisons of BC1, BC3, BC5, BC7 and ASTC formats.",
-      "localPath": null,
-      "publicUrl": null,
-      "image": null,
-      "imageAlt": "",
-      "tags": [
-        "textures",
-        "memory",
-        "optimization"
-      ],
-      "datePublished": null,
-      "dateModified": "2026-10-25",
-      "state": "planned",
-      "indexable": false,
-      "planPath": "content/online-tools/plans/texture-memory-analyzer.md"
-    },
-    {
-      "id": "TOOL-007",
-      "title": "Shader Math Playground",
-      "slug": "shader-math-playground",
-      "kind": "tool",
-      "summary": "Explore shader functions through interactive graphs, textures and 3D previews. Planned: lerp, smoothstep, clamp, dot product, Fresnel, triplanar mapping and HLSL/GLSL/VEX examples.",
-      "localPath": null,
-      "publicUrl": null,
-      "image": null,
-      "imageAlt": "",
-      "tags": [
-        "shader-math",
-        "education",
-        "hlsl",
-        "glsl",
-        "vex"
-      ],
-      "datePublished": null,
-      "dateModified": "2026-10-25",
-      "state": "planned",
-      "indexable": false,
-      "planPath": "content/online-tools/plans/shader-math-playground.md"
-    },
-    {
-      "id": "TOOL-008",
       "title": "SDF Texture Generator",
       "slug": "sdf-texture-generator",
       "kind": "tool",
@@ -193,73 +149,7 @@
       ]
     },
     {
-      "id": "TOOL-009",
-      "title": "glTF Asset Inspector",
-      "slug": "gltf-asset-inspector",
-      "kind": "tool",
-      "summary": "Inspect GLB/glTF assets for technical-art validation. Planned: geometry counts, materials, hierarchy, UV sets, vertex colors, normals, tangents, textures and naming checks.",
-      "localPath": null,
-      "publicUrl": null,
-      "image": null,
-      "imageAlt": "",
-      "tags": [
-        "gltf",
-        "glb",
-        "asset-validation",
-        "technical-art"
-      ],
-      "datePublished": null,
-      "dateModified": "2026-10-25",
-      "state": "planned",
-      "indexable": false,
-      "planPath": "content/online-tools/plans/gltf-asset-inspector.md"
-    },
-    {
-      "id": "TOOL-010",
-      "title": "UV & Texel Density Toolkit",
-      "slug": "uv-texel-density-toolkit",
-      "kind": "tool",
-      "summary": "Generate UV checker maps and plan texel density. Planned: target px/m, texture-resolution estimates and UV/stretch inspection for uploaded meshes.",
-      "localPath": null,
-      "publicUrl": null,
-      "image": null,
-      "imageAlt": "",
-      "tags": [
-        "uv",
-        "texel-density",
-        "textures",
-        "asset-validation"
-      ],
-      "datePublished": null,
-      "dateModified": "2026-10-25",
-      "state": "planned",
-      "indexable": false,
-      "planPath": "content/online-tools/plans/uv-texel-density-toolkit.md"
-    },
-    {
-      "id": "TOOL-011",
-      "title": "VAT Texture Inspector",
-      "slug": "vat-texture-inspector",
-      "kind": "tool",
-      "summary": "Inspect vertex-animation textures with a mesh preview. Planned: position/rotation textures, animation playback and checks for ranges, precision and coordinate conventions.",
-      "localPath": null,
-      "publicUrl": null,
-      "image": null,
-      "imageAlt": "",
-      "tags": [
-        "vat",
-        "houdini",
-        "animation",
-        "textures"
-      ],
-      "datePublished": null,
-      "dateModified": "2026-10-25",
-      "state": "planned",
-      "indexable": false,
-      "planPath": "content/online-tools/plans/vat-texture-inspector.md"
-    },
-    {
-      "id": "TOOL-012",
+      "id": "TOOL-007",
       "title": "Normal Map Generator",
       "slug": "normal-map-generator",
       "kind": "tool",
@@ -284,6 +174,116 @@
         "Tune maps and inspect the material",
         "Export aligned PNG maps"
       ]
+    },
+    {
+      "id": "TOOL-008",
+      "title": "Texture Memory Analyzer",
+      "slug": "texture-memory-analyzer",
+      "kind": "tool",
+      "summary": "Estimate texture memory budgets from dimensions, channels and mipmaps. Planned: NPOT checks and comparisons of BC1, BC3, BC5, BC7 and ASTC formats.",
+      "localPath": null,
+      "publicUrl": null,
+      "image": null,
+      "imageAlt": "",
+      "tags": [
+        "textures",
+        "memory",
+        "optimization"
+      ],
+      "datePublished": null,
+      "dateModified": "2026-10-25",
+      "state": "planned",
+      "indexable": false,
+      "planPath": "content/online-tools/plans/texture-memory-analyzer.md"
+    },
+    {
+      "id": "TOOL-009",
+      "title": "Shader Math Playground",
+      "slug": "shader-math-playground",
+      "kind": "tool",
+      "summary": "Explore shader functions through interactive graphs, textures and 3D previews. Planned: lerp, smoothstep, clamp, dot product, Fresnel, triplanar mapping and HLSL/GLSL/VEX examples.",
+      "localPath": null,
+      "publicUrl": null,
+      "image": null,
+      "imageAlt": "",
+      "tags": [
+        "shader-math",
+        "education",
+        "hlsl",
+        "glsl",
+        "vex"
+      ],
+      "datePublished": null,
+      "dateModified": "2026-10-25",
+      "state": "planned",
+      "indexable": false,
+      "planPath": "content/online-tools/plans/shader-math-playground.md"
+    },
+    {
+      "id": "TOOL-010",
+      "title": "glTF Asset Inspector",
+      "slug": "gltf-asset-inspector",
+      "kind": "tool",
+      "summary": "Inspect GLB/glTF assets for technical-art validation. Planned: geometry counts, materials, hierarchy, UV sets, vertex colors, normals, tangents, textures and naming checks.",
+      "localPath": null,
+      "publicUrl": null,
+      "image": null,
+      "imageAlt": "",
+      "tags": [
+        "gltf",
+        "glb",
+        "asset-validation",
+        "technical-art"
+      ],
+      "datePublished": null,
+      "dateModified": "2026-10-25",
+      "state": "planned",
+      "indexable": false,
+      "planPath": "content/online-tools/plans/gltf-asset-inspector.md"
+    },
+    {
+      "id": "TOOL-011",
+      "title": "UV & Texel Density Toolkit",
+      "slug": "uv-texel-density-toolkit",
+      "kind": "tool",
+      "summary": "Generate UV checker maps and plan texel density. Planned: target px/m, texture-resolution estimates and UV/stretch inspection for uploaded meshes.",
+      "localPath": null,
+      "publicUrl": null,
+      "image": null,
+      "imageAlt": "",
+      "tags": [
+        "uv",
+        "texel-density",
+        "textures",
+        "asset-validation"
+      ],
+      "datePublished": null,
+      "dateModified": "2026-10-25",
+      "state": "planned",
+      "indexable": false,
+      "planPath": "content/online-tools/plans/uv-texel-density-toolkit.md"
+    },
+    {
+      "id": "TOOL-012",
+      "title": "VAT Texture Inspector",
+      "slug": "vat-texture-inspector",
+      "kind": "tool",
+      "summary": "Inspect vertex-animation textures with a mesh preview. Planned: position/rotation textures, animation playback and checks for ranges, precision and coordinate conventions.",
+      "localPath": null,
+      "publicUrl": null,
+      "image": null,
+      "imageAlt": "",
+      "tags": [
+        "vat",
+        "houdini",
+        "animation",
+        "textures"
+      ],
+      "datePublished": null,
+      "dateModified": "2026-10-25",
+      "state": "planned",
+      "indexable": false,
+      "planPath": "content/online-tools/plans/vat-texture-inspector.md"
     }
   ]
 }
