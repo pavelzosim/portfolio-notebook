@@ -96,23 +96,29 @@
       "title": "Flow Map Generator",
       "slug": "flow-map-generator",
       "kind": "tool",
-      "summary": "Create and paint vector fields for VFX. Planned: vortex, radial, directional, turbulence and curl-noise fields, particle preview, seamless mode, seed and RGB flow-map export.",
-      "localPath": null,
-      "publicUrl": null,
-      "image": null,
-      "imageAlt": "",
+      "summary": "Generate, layer and paint VFX vector fields locally. Directional, radial, vortex, turbulence and curl noise, particles, UV preview and PNG export up to 4K.",
+      "localPath": "/online-tools/flow-map-generator/index.html",
+      "publicUrl": "https://www.pavelzosim.com/online-tools/flow-map-generator/",
+      "image": "/public/media/online-tools/flow-map-generator-mark.svg",
+      "imageAlt": "Vector arrows forming a vortex and a packed flow texture",
       "tags": [
         "flow-maps",
         "vector-fields",
         "vfx",
         "shaders"
       ],
-      "datePublished": null,
-      "dateModified": "2026-10-25",
-      "state": "planned",
-      "indexable": false,
+      "datePublished": "2026-10-29",
+      "dateModified": "2026-10-29",
+      "state": "published",
+      "indexable": true,
       "planPath": "content/online-tools/plans/flow-map-generator.md",
-      "priority": "preferred"
+      "priority": "preferred",
+      "version": "1.0",
+      "steps": [
+        "Generate and combine vector fields",
+        "Paint corrections on a separate layer",
+        "Inspect motion and export linear PNG"
+      ]
     },
     {
       "id": "TOOL-006",

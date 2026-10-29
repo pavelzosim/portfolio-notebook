@@ -489,7 +489,7 @@ def materialize_canonical_design() -> None:
         for key in (route, *aliases):
             mapping[key.rstrip("/") or "/"] = "sources/" + name
 
-    for route in ("/", "/blog/", "/tools/", "/projects/", "/privacy/", "/blog/style-guide/", "/online-tools/", "/online-tools/sprite-sheet-assembly/", "/online-tools/image-compressor/", "/online-tools/noise-generator/", "/online-tools/pbr-channel-packer/", "/online-tools/normal-map-generator/", "/online-tools/sdf-texture-generator/"):
+    for route in ("/", "/blog/", "/tools/", "/projects/", "/privacy/", "/blog/style-guide/", "/online-tools/", "/online-tools/sprite-sheet-assembly/", "/online-tools/image-compressor/", "/online-tools/noise-generator/", "/online-tools/pbr-channel-packer/", "/online-tools/normal-map-generator/", "/online-tools/sdf-texture-generator/", "/online-tools/flow-map-generator/"):
         save(route)
     save('/lab/atlas-ui/components.html', ('/ui/atlas/components.html',))
     for record in records:

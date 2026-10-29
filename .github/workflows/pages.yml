@@ -54,7 +54,7 @@ jobs:
         run: node --test scripts/pbr-channel-core.test.cjs
 
       - name: Check material-map numerical contracts
-        run: node --test scripts/material-map-core.test.cjs scripts/sdf-core.test.cjs
+        run: node --test scripts/material-map-core.test.cjs scripts/sdf-core.test.cjs scripts/flow-core.test.cjs
 
       - name: Check noise maps and canonical components
         run: node --test scripts/noise-generator-core.test.cjs lab/atlas-ui/contract.test.cjs lab/atlas-ui/project-media.test.cjs lab/atlas-ui/related-records.test.cjs
@@ -68,6 +68,7 @@ jobs:
           ATLAS_SERVER_PID=$!
           trap 'kill "$ATLAS_SERVER_PID"' EXIT
           node scripts/audit_canonical_browser.cjs
+          node scripts/flow.browser.cjs http://127.0.0.1:8767 /online-tools/flow-map-generator/
           node scripts/sdf.browser.cjs http://127.0.0.1:8767 /online-tools/sdf-texture-generator/
           node scripts/pbr-channel.browser.cjs http://127.0.0.1:8767/online-tools/pbr-channel-packer/
           node scripts/material-map.browser.cjs http://127.0.0.1:8767 /online-tools/normal-map-generator/

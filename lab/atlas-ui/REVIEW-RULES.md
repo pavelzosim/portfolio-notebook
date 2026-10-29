@@ -1,5 +1,9 @@
 # Page-by-page canonical review
 
+2026-10-29 Online Tools feature pictograms have shared internal padding of var(--space-group) (22px) on all sides, at every responsive width. Keep the 16:10 preview frame and contain scaling; the header/caption remain unchanged. Owner: components.css .browser-tool-preview img; applies to Home and Style Guide.
+
+2026-10-29 Flow Map Generator TOOL-005 reuses shared compact fieldsets, tool actions, paired canvas previews and collapsed informational rail. No new visual component or local CSS. Registry owns its route/pictogram. Preserve non-destructive procedural/paint/import layers, exact byte-128 neutral encoding, explicit UV orientation and bounded undo/project storage. Mathematical, export and shader contracts: content/guides/flow-map-generator.md.
+
 2026-10-29 SDF Texture Generator v1.0 uses existing Atlas compact controls, stable-height effect tabs, paired checker previews and collapsed informational sidebar. TOOL-008 registry owns route and pictogram. Exact signed Euclidean distance is to thresholded raster cell boundaries; PNG is linear RGB grayscale through 4096. Four shader modes: Outline, Glow, Dissolve, Soft edge. No new visual variant. MSDF is reserved for v1.1 as a separate edge-coloring algorithm, never a renamed RGB SDF. Numerical/encoding/limits and integration rules: content/guides/sdf-texture-generator.md.
 
 2026-10-29 user reaffirms constant sidebar rotation, including when reduced-motion is enabled. Compose the independent model spin then pointer orientation as two sequential transforms (matrix composition), instead of adding angles on the same axis. Spin is 0.18 rad/s (~35 seconds/turn), paused only while the document is hidden. Reduced-motion still removes pointer easing. This explicit preference supersedes the automatic-spin suppression below.

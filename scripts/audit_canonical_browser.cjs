@@ -2,7 +2,7 @@ const fs=require('node:fs'),path=require('node:path');let chromium;try{({chromiu
 const root=path.resolve(__dirname,'..'),origin=process.argv[2]||'http://127.0.0.1:8767';
 const read=file=>JSON.parse(fs.readFileSync(path.join(root,'_site',file),'utf8'));
 const posts=read('content/posts/index.json').records.filter(r=>r.state==='published'&&r.indexable!==false),projects=read('content/projects/index.json').projects;
-const routes=['/','/blog/','/tools/','/projects/','/online-tools/','/online-tools/sprite-sheet-assembly/','/online-tools/image-compressor/','/online-tools/noise-generator/','/online-tools/pbr-channel-packer/','/online-tools/normal-map-generator/','/online-tools/sdf-texture-generator/','/privacy/','/blog/style-guide/','/404.html',...posts.map(r=>new URL(r.publicUrl).pathname),...projects.map(r=>'/projects/'+r.slug+'/')];
+const routes=['/','/blog/','/tools/','/projects/','/online-tools/','/online-tools/sprite-sheet-assembly/','/online-tools/image-compressor/','/online-tools/noise-generator/','/online-tools/pbr-channel-packer/','/online-tools/normal-map-generator/','/online-tools/sdf-texture-generator/','/online-tools/flow-map-generator/','/privacy/','/blog/style-guide/','/404.html',...posts.map(r=>new URL(r.publicUrl).pathname),...projects.map(r=>'/projects/'+r.slug+'/')];
 (async()=>{const browser=await chromium.launch({headless:true,...(process.platform==='win32'?{executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'}:{})});const failures=[];
 try{let p;let errors=[];
 const configure=async page=>{page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(15000);await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());};

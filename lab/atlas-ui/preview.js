@@ -1,3 +1,4 @@
+import {setupFlowPanel} from './flow-panel.js';
 import {setupSDFPanel} from './sdf-panel.js';
 import {setupMaterialPanel} from './material-panel.js?v=review-193';
 import {setupPackerPanel} from './packer-panel.js?v=review-187';
@@ -34,7 +35,7 @@ let site;
 async function review(){renderSiteReview({main,left,right,site,heading,section,escape});}
 async function notfound(){location.replace('/404.html');}
 
-const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',packer:'/online-tools/pbr-channel-packer/',material:'/online-tools/normal-map-generator/',sdf:'/online-tools/sdf-texture-generator/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',packer:'/online-tools/pbr-channel-packer/',material:'/online-tools/normal-map-generator/',sdf:'/online-tools/sdf-texture-generator/',flow:'/online-tools/flow-map-generator/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
 const page=publicPage||(Object.hasOwn(pages,routeParams.get('page'))?routeParams.get('page'):'home');
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const publicFallback=publicPage?main.innerHTML:null;
@@ -146,6 +147,7 @@ async function compressor(){
  main.querySelector('.tool-workflow')?.remove();main.querySelector('.tool-support')?.remove();
  await loadScript('/scripts/image-compressor-core.js?v=1');await loadScript('/scripts/image-compressor-tool.js?v=3');
 }
+async function flow(){const source=await doc(pages.flow);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupFlowPanel(main);await toolOutline();}
 async function sdf(){const source=await doc(pages.sdf);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupSDFPanel(main);await toolOutline();}
 async function noise(){
  const source=await doc(pages.noise);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);
@@ -224,8 +226,8 @@ try{
  if(page==='article'||page==='project'||page==='components'||page==='privacy'||page==='notfound')document.body.dataset.detail='';
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,tools,projects,blog,article,project,tool,compressor,noise,packer,material,sdf,components,privacy,review,notfound}[page])();
- if(['tool','compressor','noise','packer','material','sdf'].includes(page))await toolAfterword();
+ await({home,index,tools,projects,blog,article,project,tool,compressor,noise,packer,material,sdf,flow,components,privacy,review,notfound}[page])();
+ if(['tool','compressor','noise','packer','material','sdf','flow'].includes(page))await toolAfterword();
  if(page==='project'){
   const [projectData,postData,layouts]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json'),json('./project-layouts.json')]);
   const selectedSlug=routeSlug||'nasa-first-woman';const selected=projectData.projects.find(r=>r.slug===selectedSlug);if(!selected)throw Error('Unknown project: '+selectedSlug);
@@ -233,9 +235,9 @@ try{
  }
  if(page==='article')await restoreArticleElements();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
- const commandPage=['tool','compressor','noise','packer','material','sdf'].includes(page)?'index':({article:'blog',project:'projects'}[page]||page);
+ const commandPage=['tool','compressor','noise','packer','material','sdf','flow'].includes(page)?'index':({article:'blog',project:'projects'}[page]||page);
  const release=await json('./tool-release.json');
- if(['tool','compressor','noise','packer','material','sdf'].includes(page)){
+ if(['tool','compressor','noise','packer','material','sdf','flow'].includes(page)){
   const version=document.createElement('span');version.className='tool-version';version.textContent=`v${release.version}`;main.querySelector('.tool-titlebar')?.append(version);
  }
  main.querySelectorAll('.tool-related-card>img').forEach(img=>{const frame=document.createElement('span');frame.className='tool-related-preview';img.before(frame);frame.append(img);});

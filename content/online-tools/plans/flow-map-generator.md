@@ -15,3 +15,7 @@ Define coordinate convention, signed-vector encoding, strength/speed and use of 
 ## Shared product rules
 
 Use local browser processing and the approved Style Guide/shared component owners. This entry records scope, not a delivery date, release or compatibility guarantee. Define file/pixel limits, expected inputs and export contract before coding. Validate representative fixtures and error states, then review the UI before release. Planned tools have no working launch link, publication date, sitemap entry or live-carousel position.
+
+## Implemented v1.0 — 2026-10-29
+
+Directional/Radial/Vortex/Turbulence/Curl, ordered layers, painted/imported fields, five visualizations, local project JSON and PNG through 4K. Detailed contracts, limits and tests: `content/guides/flow-map-generator.md`.
