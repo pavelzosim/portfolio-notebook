@@ -1,3 +1,4 @@
+import {setupMaterialPanel} from './material-panel.js?v=review-193';
 import {setupPackerPanel} from './packer-panel.js?v=review-187';
 import {setupToolSidebar} from './tool-sidebar.js?v=review-191';
 /* Canonical site composition shared by public output and the review harness. */
@@ -6,7 +7,7 @@ const publicPage=document.body.dataset.publicPage;
 const routeParams=new URLSearchParams(location.search);
 const routeSlug=document.body.dataset.slug||routeParams.get('slug');
 import {setupNavigation} from './navigation.js?v=review-22';
-import {setupHomeInteractions} from './home.js?v=review-184';
+import {setupHomeInteractions} from './home.js?v=review-193';
 import {renderTools} from './tools.js?v=review-137';
 import {renderBlog} from './blog.js?v=review-118';
 import {renderProject} from './project.js?v=review-180';
@@ -17,21 +18,21 @@ import {createControlDisclosure} from './control-disclosure.js?v=review-84';
 import {setupShelfCarousels} from './shelf-carousel.js?v=review-184';
 import {renderRecordPreviews} from './record-preview.js?v=review-184';
 import {setupProductLists} from './product-list.js?v=review-108';
-import {setupToolCatalog,toolRoutes} from './tool-catalog.js?v=review-192';
+import {setupToolCatalog,toolRoutes} from './tool-catalog.js?v=review-193';
 import {renderProjectCards} from './project-card.js?v=review-114';
 import {createShareSection} from './share-controls.js?v=review-119';
 import {createToolFeedback} from './tool-feedback.js?v=review-128';
 import {setupArticleNavigation} from './article-navigation.js?v=review-177';
 import {setupSpritePanel} from './sprite-panel.js?v=review-122';
 import {renderArticlePassport} from './article-passport.js?v=review-166';
-import {completeStyleGuide} from './style-guide.js?v=review-192';
-import {createSiteRoutes} from './site-routes.js?v=review-184';
+import {completeStyleGuide} from './style-guide.js?v=review-193';
+import {createSiteRoutes} from './site-routes.js?v=review-193';
 import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-174';
 import {renderSiteReview} from './site-review.js?v=review-145';
 let site;
 async function review(){renderSiteReview({main,left,right,site,heading,section,escape});}
 async function notfound(){main.innerHTML=heading('404 · Path not in this notebook','site / not found','The existing notebook game is preserved in an isolated interactive frame.')+`<div class="article-body"><figure class="media-frame"><iframe src="${publicPage?'/ui/atlas/notebook-game.html':'/404.html'}" title="404 notebook game" loading="lazy"></iframe><figcaption class="media-caption">Original notebook game · keyboard and pointer controls remain inside the frame.</figcaption></figure><p><a href="?page=home">Return home →</a></p></div>`;outline('404.md',[['?page=home','Home']]);right.replaceChildren();}
-const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',packer:'/online-tools/pbr-channel-packer/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
+const pages={home:'/',index:'/online-tools/',tools:'/tools/',projects:'/projects/',blog:'/blog/',article:'/content/posts/atlas-html/procedural-travel-resolution.html',project:'/projects/nasa-first-woman/',tool:'/online-tools/sprite-sheet-assembly/',compressor:'/online-tools/image-compressor/',noise:'/online-tools/noise-generator/',packer:'/online-tools/pbr-channel-packer/',material:'/online-tools/normal-map-generator/',components:'/blog/style-guide/',privacy:'/privacy/',notfound:'/404.html',review:'/'};
 const page=publicPage||(Object.hasOwn(pages,routeParams.get('page'))?routeParams.get('page'):'home');
 const main=document.querySelector('#content'),left=document.querySelector('#outline'),right=document.querySelector('#passport');
 const publicFallback=publicPage?main.innerHTML:null;
@@ -129,6 +130,7 @@ right.innerHTML=`<div class="meta-block article-related"><p>[RELATED / ${escape(
  setupArticleNavigation(main);
 }
 async function toolOutline(){const {records}=await json('/content/online-tools/index.json');outline('ONLINE_TOOLS.md',[['?page=index','Index'],...records.filter(r=>r.state==='published'&&r.indexable!==false).map(r=>['?page='+toolRoutes[r.slug],r.title])]);}
+async function material(){const source=await doc(pages.material);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupMaterialPanel(main);await toolOutline();}
 async function packer(){const source=await doc(pages.packer);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupPackerPanel(main);await toolOutline();}
 async function tool(){const source=await doc(pages.tool);main.replaceChildren(...clean(source.querySelector('main')).childNodes);setupSpritePanel(main);await toolOutline();sourceRail(source);await loadScript('/scripts/sprite-sheet-core.js?v=1');await loadScript('/scripts/sprite-sheet-tool.js?v=10');}
 async function privacy(){
@@ -219,8 +221,8 @@ try{
  if(page==='article'||page==='project'||page==='components'||page==='privacy'||page==='notfound')document.body.dataset.detail='';
  document.querySelectorAll('.review-bar nav a').forEach(a=>{if(a.search===`?page=${page}`)a.setAttribute('aria-current','page');});
  document.querySelectorAll('[data-section]').forEach(a=>{if(a.dataset.section.split(' ').includes(page))a.setAttribute('aria-current','page');});
- await({home,index,tools,projects,blog,article,project,tool,compressor,noise,packer,components,privacy,review,notfound}[page])();
- if(['tool','compressor','noise','packer'].includes(page))await toolAfterword();
+ await({home,index,tools,projects,blog,article,project,tool,compressor,noise,packer,material,components,privacy,review,notfound}[page])();
+ if(['tool','compressor','noise','packer','material'].includes(page))await toolAfterword();
  if(page==='project'){
   const [projectData,postData,layouts]=await Promise.all([json('/content/projects/index.json'),json('/content/posts/index.json'),json('./project-layouts.json')]);
   const selectedSlug=routeSlug||'nasa-first-woman';const selected=projectData.projects.find(r=>r.slug===selectedSlug);if(!selected)throw Error('Unknown project: '+selectedSlug);
@@ -228,9 +230,9 @@ try{
  }
  if(page==='article')await restoreArticleElements();
  const current=left.querySelector(`a[href="?page=${page}"]`);if(current)current.setAttribute('aria-current','page');
- const commandPage=['tool','compressor','noise','packer'].includes(page)?'index':({article:'blog',project:'projects'}[page]||page);
+ const commandPage=['tool','compressor','noise','packer','material'].includes(page)?'index':({article:'blog',project:'projects'}[page]||page);
  const release=await json('./tool-release.json');
- if(['tool','compressor','noise','packer'].includes(page)){
+ if(['tool','compressor','noise','packer','material'].includes(page)){
   const version=document.createElement('span');version.className='tool-version';version.textContent=`v${release.version}`;main.querySelector('.tool-titlebar')?.append(version);
  }
  main.querySelectorAll('.tool-related-card>img').forEach(img=>{const frame=document.createElement('span');frame.className='tool-related-preview';img.before(frame);frame.append(img);});

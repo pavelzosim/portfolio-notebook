@@ -227,7 +227,7 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let rotX = 0.35, rotY = 0.4;
   let targetRotX = rotX, targetRotY = rotY;
-  let mouseActive = false;
+  let idleSpin = 0;
 
   function pickShape() {
     // Every activation changes the shape, even when random picks repeat.
@@ -256,10 +256,7 @@
     const angle = 0.4 + mx * 2;
     targetRotY = rotY + Math.atan2(Math.sin(angle - rotY), Math.cos(angle - rotY));
     targetRotX = 0.35 + my * 1.2;
-    mouseActive = true;
   }, { passive: true });
-  document.documentElement.addEventListener('pointerleave', () => { mouseActive = false; });
-  window.addEventListener('blur', () => { mouseActive = false; });
 
   function rotate(v, ax, ay) {
     const [x, y, z] = v;
@@ -281,7 +278,7 @@
     const dt = previousTime === null ? 1 / 60 : Math.min(0.05, (time - previousTime) / 1000);
     previousTime = time;
     // Slow axial drift continues alongside pointer-controlled orientation.
-    if (!reducedMotion.matches && !document.hidden) targetRotY += 0.12 * dt;
+    if (!reducedMotion.matches && !document.hidden) idleSpin = (idleSpin + 0.12 * dt) % (Math.PI * 2);
     const ease = reducedMotion.matches ? 1 : 1 - Math.exp(-5.7 * dt);
     rotX += (targetRotX - rotX) * ease;
     rotY += (targetRotY - rotY) * ease;
@@ -360,7 +357,7 @@
       return;
     }
 
-    const projected = current.verts.map((v) => project(rotate(v, rotX, rotY)));
+    const projected = current.verts.map((v) => project(rotate(v, rotX, rotY + idleSpin)));
 
     current.edges.forEach(([a, b]) => {
       const pa = projected[a], pb = projected[b];

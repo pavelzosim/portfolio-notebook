@@ -7,15 +7,17 @@ const assetVersion=JSON.parse(fs.readFileSync(path.join(output,'ui/atlas/release
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));
 const posts=read('content/posts/index.json').records.filter(r=>r.state==='published'&&r.indexable!==false);
 const projects=read('content/projects/index.json').projects,revisions=read('lab/atlas-ui/article-revisions.json');
-const entries=[['/','home'],['/blog/','blog'],['/projects/','projects'],['/tools/','tools'],['/online-tools/','index'],['/online-tools/sprite-sheet-assembly/','tool'],['/online-tools/image-compressor/','compressor'],['/online-tools/noise-generator/','noise'],['/online-tools/pbr-channel-packer/','packer'],['/privacy/','privacy'],['/blog/style-guide/','components'],['/404.html','notfound'],...posts.map(r=>[new URL(r.publicUrl).pathname,'article',r.slug]),...projects.map(r=>['/projects/'+r.slug+'/','project',r.slug])];
+const entries=[['/','home'],['/blog/','blog'],['/projects/','projects'],['/tools/','tools'],['/online-tools/','index'],['/online-tools/sprite-sheet-assembly/','tool'],['/online-tools/image-compressor/','compressor'],['/online-tools/noise-generator/','noise'],['/online-tools/pbr-channel-packer/','packer'],['/online-tools/normal-map-generator/','material'],['/privacy/','privacy'],['/blog/style-guide/','components'],['/404.html','notfound'],...posts.map(r=>[new URL(r.publicUrl).pathname,'article',r.slug]),...projects.map(r=>['/projects/'+r.slug+'/','project',r.slug])];
 const routes=Object.fromEntries(entries.map(([url,page,slug])=>[page+(slug?':'+slug:''),url]));
 routes.article='/post/procedural-travel-resolution/';routes.project='/projects/nasa-first-woman/';
 for(const r of posts)routes[r.localPath]=new URL(r.publicUrl).pathname;
 (async()=>{const executablePath=process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||(process.platform==='win32'?'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe':undefined);const browser=await chromium.launch({headless:true,...(executablePath?{executablePath}:{})});
-try{const p=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+try{let p=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'}),renderCount=0;
 // Optional third-party embeds/fonts never gate a deterministic local build.
 await p.route('**/*',route=>{const u=new URL(route.request().url());if(u.origin!==origin)return route.abort();return route.continue();});
 for(const [url,page,slug]of entries){
+ // Release accumulated embedded media/GPU contexts during a full-site render.
+ if(renderCount++>0&&renderCount%12===0){await p.close();p=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});await p.route('**/*',route=>{const u=new URL(route.request().url());return u.origin===origin?route.continue():route.abort();});}
  const file=path.join(output,url.endsWith('/')?url.slice(1)+'index.html':url.slice(1));
  const legacy=fs.readFileSync(file,'utf8');
  await p.goto(origin+'/lab/atlas-ui/?page='+page+'&static=1'+(slug?'&slug='+encodeURIComponent(slug):''),{waitUntil:'domcontentloaded'});

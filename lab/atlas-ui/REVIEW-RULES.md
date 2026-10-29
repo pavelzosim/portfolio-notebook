@@ -1,5 +1,39 @@
 # Page-by-page canonical review
 
+2026-10-29 sidebar geometry has an independent slow axial phase (0.12 radians/second, about 52 seconds/turn) added to pointer-controlled orientation. Pointer updates must not reset or cancel idle rotation. Pause automatic motion for reduced-motion preference and hidden documents; preserve shape changes by click. Canonical owner: wireframe-shape.js.
+
+2026-10-29 Online Tool imagery has one registry owner: image/imageAlt now point to each canonical catalogue pictogram. Catalogue, related cards, Home tool features and sidebar carousel use the same asset. Remove duplicate catalogDiagram fields. Related Online Tool thumbnails contain the whole pictogram within the existing square cell; article/project photography retains cover cropping.
+
+2026-10-29 approved catalogue pictograms share the existing 180x40 blue SVG face: Normal Map Generator flat square to relief grid; Compressor dense pixels to a simpler pixel object; Noise intersecting sine/cosine waves. Registry catalogDiagram/catalogDiagramAlt owns each illustration. Shared catalogue renderer replaces legacy inline diagrams from this source without tool-specific styles.
+
+2026-10-29 user approved the pre-publication rename to Normal Map Generator at /online-tools/normal-map-generator/. Registry, source directory, metadata, diagrams, catalogue routes and build/tests use this URL. Shared processing module names remain stable. No legacy public redirect is needed for this unreleased route.
+
+2026-10-29 compact control groups use four columns above 760px (supersedes the three-column rule below), two at 421–760px and one at <=420px. Stable tab height remains based on the tallest intrinsic panel.
+
+2026-10-29 approved compact, stable-height settings tabs. Shared media-tabs--stable overlaps panels in a grid, reserving the tallest intrinsic panel; inactive panels remain invisible/inert. Shared control-group--compact uses three columns above 760px, two at 421–760px, one at <=420px. Height recalculates with responsive width/font size; no fixed pixel height or clipping. Catalogue has two small example groups. Normal Map Generator applies these modifiers to all four settings tabs.
+
+2026-10-29 Material Inspection supports wheel zoom (0.5x–4x) on its canvas for Sphere, Plane and Cube; normalize pixel/line/page wheel deltas. Keep zoom independent of map/export resolution and retain it across shape/view changes. Capture scrolling only over a loaded material canvas, preserve browser Ctrl+wheel. No slider or reset button is added; existing cube drag rotation remains.
+
+2026-10-28 user-approved material header shape links replace the Shape select: Sphere / Plane / Cube with current selection underlined. Shared preview-shapes face in components.css. Below the inspectors, Compare and Map share the left toolbar, Surface view occupies the right. Map remains available as the independent 3D-map/export selection when Compare shows the original source. Native links are keyboard accessible and do not navigate on activation.
+
+2026-10-28 Material preview control alignment: Map sits above the left inspector, Surface view above the right; Compare sits below the left inspector and Shape below the right. Reuse the existing two-column control toolbar and its single-column mobile breakpoint.
+
+2026-10-28 rectangular Material Generator inputs use a centered square crop without stretching. One shared centeredCrop calculation supplies both processing previews and full-resolution exports; full source comparison remains aspect-fitted and centered.
+
+2026-10-28 Material inspection simplification: remove Zoom, Split position, Reset pan/zoom and Tiled 3x3 controls and their behavior. Remove split comparison and 2D panning. Fit the complete source/result image preserving aspect ratio, with a simple Source/Processed selector. Cube rotation and separate lighting remain.
+
+2026-10-28 user requested removal of excess Material Generator functionality. Visitor UI now has four tabs: Height, Normal, Roughness, AO. Remove Curvature/Cavity, normal-input conversion, RNM detail layer, manual crop, duplicate normal frequency weights, secondary levels and advanced roughness controls from the UI. Keep one five-band relief control set, noise/light cleanup, normal strength/smoothing, basic roughness/AO, seamless boundaries and material inspection. Export contains Height, Normal DX/GL, Roughness and AO. Internal processing contracts remain reusable; no hidden duplicate UI.
+
+2026-10-28 CrazyBump is the user-approved functional reference, while Atlas remains the visual owner. Material generation now separates five spatial frequency bands with independent normal weights, edge-preserving noise removal and optional broad-illumination subtraction for color inputs. Use existing numeric controls and tab groups; no new component face. Unity gains preserve the input, cleanup defaults off. Broad-light subtraction is an artistic operation and can remove real relief. Do not claim proprietary shape reconstruction or CrazyBump-equivalent output without comparative evidence.
+
+2026-10-28 Material map settings use the approved shared tab component instead of seven disclosures. One panel is visible; settings persist across tabs. Reuse media-tabs.js accessibility and arrow/Home/End navigation, with the existing wrapping tab-list face at narrow widths. Lighting remains a separate disclosure.
+
+2026-10-28 Material inspection follows the selected map on every shape, with a separate Lit material mode. Cube supports captured mouse/touch rotation; lighting uses the existing closed disclosure face. Diffuse/Albedo and Normal are initial selections; DirectX/OpenGL output is visible in basic settings. Shared interactive-canvas behavior prevents touch scrolling during rotation; no viewport-specific styling.
+
+2026-10-28 Normal Map Generator preview includes Cube alongside Sphere/Plane. Shared material-surface-preview.js delegates rasterized cube geometry to material-cube-preview.js, retaining per-face UV/tangent frames and the same supplied GGX shading body. Reuse the existing Shape select; no new visual component or processing/export changes.
+
+2026-10-28 user requested Normal Map Generator from the attached implementation specification. TOOL-012 is independent from Channel Packer and preserves roadmap IDs. Reuse existing source upload, shared control groups/disclosures, noise preview pair, messages and export faces; no new visual component/CSS. Shared WebGL modules own image filtering and material evaluation, and raw PNG/ZIP utilities are reused. Source interpretation, independent map controls, before/after, pan/zoom, tiled preview and full-resolution export are registered through the published registry. Documentation: content/guides/normal-map-generator.md. This implementation is not commit/push/deployment authorization.
+
 2026-10-28 user removed Planned tools from visitor-facing UI. Catalogue, outline and counts show published tools only; catalogue specimen no longer demonstrates Planned. Keep all seven roadmap entries and specifications in source, but omit planned records and plan files from the public build. No fabricated release routes.
 
 2026-10-28 user extended the sidebar policy to every Online Tool: informational meta blocks become native disclosures, initially closed; HOW TO USE and SUPPORT remain visible. Shared tool-sidebar.js owns this transformation for all published tool routes. Existing zero closed-summary padding, 4 px closed-block gap and 22 px Support top margin apply without tool-specific variants.

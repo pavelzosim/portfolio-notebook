@@ -116,6 +116,12 @@ def rewrite_root_paths(text: str, base_path: str, suffix: str) -> str:
     return text
 
 
+def canonical_revision() -> str:
+    owners = [p for p in (ROOT / "lab" / "atlas-ui").iterdir() if p.suffix in {".js", ".css", ".json"}]
+    processing = list((ROOT / "scripts").glob("*.js"))
+    return hashlib.sha256(b"".join(p.read_bytes() for p in sorted(owners + processing))).hexdigest()[:12]
+
+
 def copy_site() -> None:
     if OUTPUT.exists():
         shutil.rmtree(OUTPUT)
@@ -140,8 +146,11 @@ def copy_site() -> None:
     tool_registry_path.write_text(json.dumps(tool_registry, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     scripts_output = OUTPUT / "scripts"
     scripts_output.mkdir()
+    revision = canonical_revision()
     for source in (ROOT / "scripts").glob("*.js"):
-        shutil.copy2(source, scripts_output / source.name)
+        text = source.read_text(encoding="utf-8")
+        text = re.sub(r"((?:from|import) ['\"]\./[^'\"?]+\.js)(['\"])", rf'\1?v=release-{revision}\2', text)
+        (scripts_output / source.name).write_text(text, encoding="utf-8")
 
 
 def materialize_post_routes() -> list[dict]:
@@ -450,7 +459,7 @@ def materialize_canonical_design() -> None:
     owner = ROOT / "lab" / "atlas-ui"
     assets = OUTPUT / "ui" / "atlas"
     assets.mkdir(parents=True, exist_ok=True)
-    revision = hashlib.sha256(b"".join(p.read_bytes() for p in sorted(owner.iterdir()) if p.suffix in {".js", ".css", ".json"})).hexdigest()[:12]
+    revision = canonical_revision()
     for source in owner.iterdir():
         if source.suffix in {".js", ".css", ".json", ".jpg", ".png", ".svg"}:
             shutil.copy2(source, assets / source.name)
@@ -458,6 +467,7 @@ def materialize_canonical_design() -> None:
                 text = source.read_text(encoding="utf-8")
                 text = re.sub(r'(\.js)\?v=review-\d+', rf'\1?v=release-{revision}', text)
                 text = re.sub(r"(from ['\"]\./[^'\"?]+\.js)(['\"])", rf'\1?v=release-{revision}\2', text)
+                text = re.sub(r"(from ['\"]/scripts/[^'\"?]+\.js)(['\"])", rf'\1?v=release-{revision}\2', text)
                 (assets / source.name).write_text(text, encoding="utf-8")
     (assets / "release.json").write_text(json.dumps({"version": revision}), encoding="utf-8")
     registry = json.loads((ROOT / "content/posts/index.json").read_text(encoding="utf-8"))
@@ -479,7 +489,7 @@ def materialize_canonical_design() -> None:
         for key in (route, *aliases):
             mapping[key.rstrip("/") or "/"] = "sources/" + name
 
-    for route in ("/", "/blog/", "/tools/", "/projects/", "/privacy/", "/blog/style-guide/", "/online-tools/", "/online-tools/sprite-sheet-assembly/", "/online-tools/image-compressor/", "/online-tools/noise-generator/", "/online-tools/pbr-channel-packer/"):
+    for route in ("/", "/blog/", "/tools/", "/projects/", "/privacy/", "/blog/style-guide/", "/online-tools/", "/online-tools/sprite-sheet-assembly/", "/online-tools/image-compressor/", "/online-tools/noise-generator/", "/online-tools/pbr-channel-packer/", "/online-tools/normal-map-generator/"):
         save(route)
     save('/lab/atlas-ui/components.html', ('/ui/atlas/components.html',))
     for record in records:

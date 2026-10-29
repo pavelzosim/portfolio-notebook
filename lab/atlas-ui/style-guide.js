@@ -8,17 +8,17 @@ import {setupMediaSliders} from './media-slider.js?v=review-148';
 import {setupShelfCarousels} from './shelf-carousel.js?v=review-184';
 import {renderRecordPreviews} from './record-preview.js?v=review-184';
 import {setupProductLists} from './product-list.js?v=review-108';
-import {setupToolCatalog} from './tool-catalog.js?v=review-192';
+import {setupToolCatalog} from './tool-catalog.js?v=review-193';
 import {renderTools} from './tools.js?v=review-137';
 import {renderProjectCards} from './project-card.js?v=review-114';
 import {projectMetrics} from './project-metrics.js?v=review-116';
 import {blogChapterHeading} from './blog.js?v=review-118';
 import {setupArticleNavigation} from './article-navigation.js?v=review-177';
 import {setupVfxGallery} from './vfx-gallery.js?v=review-113';
-import {setupOnlineToolCards} from './online-tool-card.js?v=review-184';
+import {setupOnlineToolCards} from './online-tool-card.js?v=review-193';
 import {renderNoisePreviewSpecimen} from './noise-preview-specimen.js?v=review-132';
 import {artworkGallery} from './artwork-gallery.js?v=review-180';
-import {setupMediaTabs} from './media-tabs.js?v=review-180';
+import {renderMediaTabs,setupMediaTabs} from './media-tabs.js?v=review-180';
 import {setupCodeFrames} from './code-frame.js?v=review-159';
 import {setupTableFrames} from './table-frame.js?v=review-166';
 
@@ -70,6 +70,7 @@ const catalogSection=add('tool-catalog','Tool catalog card','<p>Use for Online T
  const articleSource=await readSourceDocument('/content/posts/atlas-html/procedural-travel-resolution.html');
  const tocSection=add('article-navigation','Article contents','<p>Use for in-document contents. Native links focus their targets; retain the full outline on real pages.</p><div class="article-body"></div>');const tocExample=articleSource.querySelector('.atlas-toc').cloneNode(true);keepExamples(tocExample,'.atlas-toc__item');tocExample.querySelectorAll('a').forEach((link,i)=>{const id='guide-toc-target-'+(i+1);link.href='#'+id;const heading=document.createElement('h3');heading.id=id;heading.textContent=link.querySelector('.atlas-toc__title').textContent.trim();tocSection.querySelector('.article-body').append(heading);});tocSection.querySelector('.article-body').prepend(tocExample);setupArticleNavigation(tocSection);
  const refsSection=add('article-references','Reference list','<p>Use for references and related implementation records. Numbered rows keep the original destinations.</p><div class="article-body"></div>');const referenceList=articleSource.querySelector('.atlas-ref-list').cloneNode(true);keepExamples(referenceList,'.atlas-ref-item');const referenceFrame=document.createElement('div');referenceFrame.className='atlas-refs';referenceFrame.append(referenceList);refsSection.querySelector('.article-body').append(referenceFrame);setupArticleNavigation(refsSection);
+ const stableSettings=add('stable-settings-tabs','Stable settings tabs','<p>Use for alternative parameter groups above a persistent preview. Reserve the tallest panel at the current width; four columns on desktop, two below 760 px, one below 420 px.</p>'+renderMediaTabs([{id:'guide-settings-relief',title:'Relief',html:'<fieldset class="control-group control-group--compact"><legend>Relief</legend><label>Strength<input type="number" value="2"></label><label>Detail<input type="number" value="1"></label><label>Smoothing<input type="number" value="0"></label><label>Contrast<input type="number" value="1"></label></fieldset>'},{id:'guide-settings-ao',title:'AO',html:'<fieldset class="control-group control-group--compact"><legend>Ambient occlusion</legend><label>Radius<input type="number" value="12"></label><label>Strength<input type="number" value="2"></label><label>Quality<select><option>16 samples</option><option>32 samples</option></select></label></fieldset>'}],safe,{label:'Settings example'}));stableSettings.querySelector('.media-tabs').classList.add('media-tabs--stable');setupMediaTabs(stableSettings);
  const spriteSource=await readSourceDocument('/online-tools/sprite-sheet-assembly/');
  const uploadSection=add('tool-upload','File upload zone','<p>Use for local files or folders. State formats and limits; never imply an upload to a server.</p>');const uploadExample=spriteSource.querySelector('.tool-dropzone').cloneNode(true);uploadExample.querySelectorAll('[id]').forEach(el=>el.id='guide-upload-'+el.id);uploadExample.id='guide-upload-zone';uploadSection.append(uploadExample);
  const previewSectionTool=add('tool-preview','Transparency preview','<p>Use for transparent output previews. Keep the title strip, checkerboard and caption.</p>');const previewExample=spriteSource.querySelector('.tool-previews figure').cloneNode(true);previewExample.querySelectorAll('[id]').forEach(el=>el.id='guide-preview-'+el.id);previewSectionTool.append(previewExample);

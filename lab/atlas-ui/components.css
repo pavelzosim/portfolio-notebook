@@ -323,3 +323,20 @@ select option{background:var(--surface);color:var(--ink)}select option:checked{b
 .texture-pool-preview{display:block;width:48px;height:48px;object-fit:contain}
 @media(max-width:760px){.channel-row{grid-template-columns:72px minmax(0,1fr)}.channel-row__controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:420px){.channel-row{grid-template-columns:1fr}.channel-row__preview{width:72px}}
+
+/* Pointer-owned inspection surfaces keep touch drags within the preview. */
+.preview-canvas--interactive{touch-action:none;cursor:grab}.preview-canvas--interactive:active{cursor:grabbing}
+
+/* Shape links share the inspection header and remain compact at narrow widths. */
+.preview-shapes{white-space:nowrap}.preview-shapes a{color:inherit;text-decoration:none}.preview-shapes a:hover,.preview-shapes a:focus-visible,.preview-shapes a[aria-current=true]{text-decoration:underline}
+
+/* Stable settings tabs reserve the tallest panel at the current responsive width. */
+.media-tabs--stable{display:grid;grid-template-columns:minmax(0,1fr);align-items:start}
+.media-tabs--stable>.media-tabs-list{grid-area:1/1}
+.media-tabs--stable>[role=tabpanel]{grid-area:2/1;min-width:0;align-self:start}
+.media-tabs--stable>[role=tabpanel][hidden]{display:block;visibility:hidden;pointer-events:none}
+.control-group--compact{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:760px){.control-group--compact{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.control-group--compact{grid-template-columns:1fr}}
+
+.tool-related-preview--diagram>img{object-fit:contain;padding:var(--space-sm);box-sizing:border-box}

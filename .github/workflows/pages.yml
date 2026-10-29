@@ -53,6 +53,9 @@ jobs:
       - name: Check PBR channel data and PNG encoding
         run: node --test scripts/pbr-channel-core.test.cjs
 
+      - name: Check material-map numerical contracts
+        run: node --test scripts/material-map-core.test.cjs
+
       - name: Check noise maps and canonical components
         run: node --test scripts/noise-generator-core.test.cjs lab/atlas-ui/contract.test.cjs lab/atlas-ui/project-media.test.cjs lab/atlas-ui/related-records.test.cjs
 
@@ -66,6 +69,8 @@ jobs:
           trap 'kill "$ATLAS_SERVER_PID"' EXIT
           node scripts/audit_canonical_browser.cjs
           node scripts/pbr-channel.browser.cjs http://127.0.0.1:8767/online-tools/pbr-channel-packer/
+          node scripts/material-map.browser.cjs http://127.0.0.1:8767 /online-tools/normal-map-generator/
+          node scripts/material-map-quality.browser.cjs http://127.0.0.1:8767 /online-tools/normal-map-generator/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

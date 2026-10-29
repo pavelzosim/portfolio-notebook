@@ -2,7 +2,7 @@ const {chromium}=require('C:/Users/pavel/.cache/codex-runtimes/codex-primary-run
 (async()=>{const b=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true});try{
  const p=await b.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:8766/lab/atlas-ui/?page=components');
  const inventory=await p.evaluate(async()=>({posts:(await(await fetch('/content/posts/index.json')).json()).records.filter(r=>r.state==='published'&&r.indexable!==false),projects:(await(await fetch('/content/projects/index.json')).json()).projects}));
- const routes=[...['review','home','index','tools','projects','blog','components','tool','compressor','noise','packer','privacy','notfound'].map(page=>'?page='+page),...inventory.posts.map(r=>'?page=article&slug='+encodeURIComponent(r.slug)),...inventory.projects.map(r=>'?page=project&slug='+encodeURIComponent(r.slug))];
+ const routes=[...['review','home','index','tools','projects','blog','components','tool','compressor','noise','packer','material','privacy','notfound'].map(page=>'?page='+page),...inventory.posts.map(r=>'?page=article&slug='+encodeURIComponent(r.slug)),...inventory.projects.map(r=>'?page=project&slug='+encodeURIComponent(r.slug))];
  const results=[];
  for(const route of routes){const start=errors.length;await p.goto('http://127.0.0.1:8766/lab/atlas-ui/'+route,{waitUntil:'domcontentloaded'});await p.waitForSelector('#content[aria-busy=false]');const data={route,h1:await p.locator('main h1').count(),loadError:(await p.locator('main').textContent()).includes('Preview could not load:'),overflow:[],errors:errors.slice(start)};
  if(route.startsWith('?page=article&')){
