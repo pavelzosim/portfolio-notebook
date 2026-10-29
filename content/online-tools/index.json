@@ -163,22 +163,28 @@
       "title": "SDF Texture Generator",
       "slug": "sdf-texture-generator",
       "kind": "tool",
-      "summary": "Generate signed distance fields from transparent PNG and SVG. Planned: distance range, threshold, padding, inversion and previews for outline, glow, dissolve and soft masks.",
-      "localPath": null,
-      "publicUrl": null,
-      "image": null,
-      "imageAlt": "",
+      "summary": "Create exact signed distance fields from PNG, SVG and WebP. Preview outline, glow, dissolve and soft masks, then export linear PNG up to 4K.",
+      "localPath": "/online-tools/sdf-texture-generator/index.html",
+      "publicUrl": "https://www.pavelzosim.com/online-tools/sdf-texture-generator/",
+      "image": "/public/media/online-tools/sdf-texture-generator-mark.svg",
+      "imageAlt": "A silhouette converted into concentric signed distance contours",
       "tags": [
         "sdf",
         "textures",
         "vfx",
         "ui"
       ],
-      "datePublished": null,
-      "dateModified": "2026-10-25",
-      "state": "planned",
-      "indexable": false,
-      "planPath": "content/online-tools/plans/sdf-texture-generator.md"
+      "datePublished": "2026-10-29",
+      "dateModified": "2026-10-29",
+      "state": "published",
+      "indexable": true,
+      "planPath": "content/online-tools/plans/sdf-texture-generator.md",
+      "version": "1.0",
+      "steps": [
+        "Load an image or SVG",
+        "Tune the signed distance field",
+        "Preview shader effects and export PNG"
+      ]
     },
     {
       "id": "TOOL-009",

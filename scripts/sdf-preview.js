@@ -1,0 +1,19 @@
+/* Four real-time effects sample the same quantized, linear SDF as PNG export. */
+export class SDFPreview{
+ constructor(canvas){this.canvas=canvas;const g=this.gl=canvas.getContext('webgl2',{alpha:true,antialias:false,premultipliedAlpha:false,preserveDrawingBuffer:true});if(!g)throw Error('WebGL 2 is unavailable. SDF generation and export still work.');const vertex=`#version 300 es
+ out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,0,1);}`;const fragment=`#version 300 es
+ precision highp float;in vec2 uv;out vec4 color;uniform sampler2D field;uniform int effect,side;uniform float range,width,offset,softness,intensity,falloff,threshold,noiseAmount,noiseScale,seed,opacity,zoom;uniform vec2 pan;uniform vec3 tint;
+ float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7))+seed*13.71)*43758.5453);}
+ float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1)),f.x),f.y);}
+ void main(){vec2 st=(vec2(uv.x,1.-uv.y)-.5-pan)/zoom+.5;if(any(lessThan(st,vec2(0)))||any(greaterThan(st,vec2(1)))){color=vec4(0);return;}float d=(texture(field,st).r-.5)*2.*range,aa=max(softness,max(fwidth(d),.001)),mask=smoothstep(-aa,aa,d),alpha=mask;vec3 rgb=vec3(.85);
+ if(effect==0){float q=d-offset;float band=1.-smoothstep(width*.5,width*.5+aa,abs(q));if(side==1)band*=mask;if(side==2)band*=1.-mask;alpha=max(mask,band);rgb=mix(rgb,tint,band);}
+ else if(effect==1){float distance=side==1?max(d,0.):max(-d,0.);float glow=pow(clamp(1.-distance/max(width,.001),0.,1.),falloff)*intensity;glow*=side==1?mask:1.-mask;alpha=clamp(mask+glow,0.,1.);rgb=mix(rgb,tint,clamp(glow,0.,1.));}
+ else if(effect==2){float n=(noise(st*noiseScale)-.5)*2.*noiseAmount;float cut=d+n-threshold;alpha=smoothstep(-aa,aa,cut);float rim=(1.-smoothstep(0.,max(width,.001),cut))*alpha;rgb=mix(rgb,tint,rim);}
+ else{float q=d-threshold;alpha=pow(smoothstep(-max(width+softness,.001),max(width+softness,.001),q),falloff)*opacity;rgb=tint;}color=vec4(rgb,alpha);}`;
+ this.program=g.createProgram();for(const [type,text]of [[g.VERTEX_SHADER,vertex],[g.FRAGMENT_SHADER,fragment]]){const s=g.createShader(type);g.shaderSource(s,text);g.compileShader(s);if(!g.getShaderParameter(s,g.COMPILE_STATUS))throw Error(g.getShaderInfoLog(s));g.attachShader(this.program,s);g.deleteShader(s);}g.linkProgram(this.program);if(!g.getProgramParameter(this.program,g.LINK_STATUS))throw Error(g.getProgramInfoLog(this.program));this.texture=g.createTexture();this.lost=false;this.onLoss=e=>{e.preventDefault();this.lost=true;};canvas.addEventListener('webglcontextlost',this.onLoss);
+ }
+ update(values,size){const g=this.gl;g.bindTexture(g.TEXTURE_2D,this.texture);g.pixelStorei(g.UNPACK_ALIGNMENT,1);g.texImage2D(g.TEXTURE_2D,0,g.R8,size,size,0,g.RED,g.UNSIGNED_BYTE,values);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_MIN_FILTER,g.LINEAR);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_MAG_FILTER,g.LINEAR);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_S,g.CLAMP_TO_EDGE);g.texParameteri(g.TEXTURE_2D,g.TEXTURE_WRAP_T,g.CLAMP_TO_EDGE);this.ready=true;}
+ draw(params){if(!this.ready||this.lost)return;const g=this.gl,p=this.program;g.useProgram(p);g.viewport(0,0,this.canvas.width,this.canvas.height);g.activeTexture(g.TEXTURE0);g.bindTexture(g.TEXTURE_2D,this.texture);g.uniform1i(g.getUniformLocation(p,'field'),0);for(const [key,value]of Object.entries(params)){const loc=g.getUniformLocation(p,key);if(Array.isArray(value))g['uniform'+value.length+'fv'](loc,value);else if(['effect','side'].includes(key))g.uniform1i(loc,value);else g.uniform1f(loc,value);}g.drawArrays(g.TRIANGLES,0,3);if(g.getError()!==g.NO_ERROR)throw Error('Shader preview draw failed.');}
+ dispose(){const g=this.gl;this.canvas.removeEventListener('webglcontextlost',this.onLoss);g.deleteTexture(this.texture);g.deleteProgram(this.program);}
+}
+

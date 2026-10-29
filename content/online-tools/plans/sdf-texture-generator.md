@@ -15,3 +15,6 @@ Define inside/outside sign, pixel-distance units, alpha threshold, padding and e
 ## Shared product rules
 
 Use local browser processing and the approved Style Guide/shared component owners. This entry records scope, not a delivery date, release or compatibility guarantee. Define file/pixel limits, expected inputs and export contract before coding. Validate representative fixtures and error states, then review the UI before release. Planned tools have no working launch link, publication date, sitemap entry or live-carousel position.
+
+## Implemented v1.0 (2026-10-29)
+Exact raster-boundary SDF, four shader previews and 4K PNG. See content/guides/sdf-texture-generator.md. MSDF is explicitly deferred to v1.1 and requires a separate vector edge-coloring algorithm and tests; RGB replication of scalar SDF does not qualify.

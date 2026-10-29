@@ -1,5 +1,7 @@
 # Page-by-page canonical review
 
+2026-10-29 SDF Texture Generator v1.0 uses existing Atlas compact controls, stable-height effect tabs, paired checker previews and collapsed informational sidebar. TOOL-008 registry owns route and pictogram. Exact signed Euclidean distance is to thresholded raster cell boundaries; PNG is linear RGB grayscale through 4096. Four shader modes: Outline, Glow, Dissolve, Soft edge. No new visual variant. MSDF is reserved for v1.1 as a separate edge-coloring algorithm, never a renamed RGB SDF. Numerical/encoding/limits and integration rules: content/guides/sdf-texture-generator.md.
+
 2026-10-29 user reaffirms constant sidebar rotation, including when reduced-motion is enabled. Compose the independent model spin then pointer orientation as two sequential transforms (matrix composition), instead of adding angles on the same axis. Spin is 0.18 rad/s (~35 seconds/turn), paused only while the document is hidden. Reduced-motion still removes pointer easing. This explicit preference supersedes the automatic-spin suppression below.
 
 2026-10-29 user requires a standalone full-page 404. Preserve the existing root 404.html/game as its own document; do not wrap it in the canonical workspace or iframe. Lab notfound navigates to that page. Public build excludes 404 from shell materialization and removes the duplicate notebook-game frame document. Keep noindex, home link and original game interactions.
