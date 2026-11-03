@@ -129,9 +129,14 @@ def copy_site() -> None:
     for name in SITE_DIRECTORIES:
         source = ROOT / name
         if source.exists():
-            def private_plans(directory, names):
-                return ["plans"] if Path(directory).resolve() == (ROOT / "content" / "online-tools").resolve() and "plans" in names else []
-            shutil.copytree(source, OUTPUT / name, ignore=private_plans)
+            def private_authoring(directory, names):
+                private = {
+                    (ROOT / "content" / "online-tools").resolve(): "plans",
+                    (ROOT / "content" / "posts").resolve(): "drafts",
+                }
+                excluded = private.get(Path(directory).resolve())
+                return [excluded] if excluded in names else []
+            shutil.copytree(source, OUTPUT / name, ignore=private_authoring)
     for name in SITE_FILES:
         shutil.copy2(ROOT / name, OUTPUT / name)
     # Authoring scratch record, not the live registry; contains placeholder URLs.
@@ -489,7 +494,7 @@ def materialize_canonical_design() -> None:
         for key in (route, *aliases):
             mapping[key.rstrip("/") or "/"] = "sources/" + name
 
-    for route in ("/", "/blog/", "/tools/", "/projects/", "/privacy/", "/blog/style-guide/", "/online-tools/", "/online-tools/sprite-sheet-assembly/", "/online-tools/image-compressor/", "/online-tools/noise-generator/", "/online-tools/pbr-channel-packer/", "/online-tools/normal-map-generator/", "/online-tools/sdf-texture-generator/", "/online-tools/flow-map-generator/"):
+    for route in ("/", "/blog/", "/tools/", "/projects/", "/privacy/", "/blog/style-guide/", "/online-tools/", "/online-tools/sprite-sheet-assembly/", "/online-tools/image-compressor/", "/online-tools/noise-generator/", "/online-tools/pbr-channel-packer/", "/online-tools/normal-map-generator/", "/online-tools/sdf-texture-generator/", "/online-tools/flow-map-generator/", "/online-tools/shader-memory-layout/"):
         save(route)
     save('/lab/atlas-ui/components.html', ('/ui/atlas/components.html',))
     for record in records:

@@ -1,0 +1,27 @@
+{
+  "records": [
+    {
+      "id": "DRAFT-FACADE",
+      "slug": "procedural-facade-modules",
+      "title": "Procedural Facade Modules \u2014 Houdini Geometry, Surface Aging & Window States",
+      "summary": "Preparing facade assets for 9 PASSAGE: VDB damage and vertex masks, Substance surfaces, layered glass, and Vellum-authored curtains controlled with WPO in Unreal.",
+      "kind": "breakdown",
+      "group": "procedural",
+      "tags": [
+        "houdini",
+        "substance",
+        "unreal",
+        "procedural-environments",
+        "materials",
+        "technical-art"
+      ],
+      "image": "/content/posts/drafts/media/procedural-facade-modules/facade-result.svg",
+      "imageAlt": "Screenshot pending: facade module in 9 PASSAGE",
+      "localPath": "/content/posts/drafts/procedural-facade-modules.html",
+      "state": "draft",
+      "indexable": false,
+      "dateModified": "2026-11-02",
+      "outlineStart": 1
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # Page-by-page canonical review
 
+2026-11-03 user requests color-coded byte occupancy. Shared memory-layout-view.js uses existing note-success/note-warning/note-important fills for dense ≥75%, mixed 50–<75%, sparse <50%; numbered cells, hatching, text legend and numeric inspection remain. Selected fields retain blue while offset labels retain occupancy tint. Count only actual bytes in a partial structured display row. Colors describe density, not shader speed or removable padding; verified top-level reorder savings have a separate report. The single compact catalogue specimen now contains three rows to demonstrate all states. No new CSS face or color token.
+
+2026-11-03 Shader Memory Layout reuses the approved field, tab, table and engineering-diagram faces. The shared byte-map renderer uses 16 display cells per row, existing selected tint and hatched padding; numeric byte inspection provides a keyboard alternative. Catalogue fixture is one row. Multiline declarations inherit the standard input face. TOOL-008 joins the consecutive live registry; planned IDs follow it. DXC packing contracts, supported grammar and limits: content/guides/shader-memory-layout.md. No deployment authorization.
+
 2026-10-29 Published Online Tools use consecutive TOOL-001–007 IDs in catalogue order; private planned records follow published entries. The registry owns numbering. Shared catalogue and tool-header rendering read the registry, and source fallback labels remain aligned. This supersedes earlier preservation of roadmap ID gaps.
 
 2026-10-29 Online Tools feature pictograms have shared internal padding of var(--space-group) (22px) on all sides, at every responsive width. Keep the 16:10 preview frame and contain scaling; the header/caption remain unchanged. Owner: components.css .browser-tool-preview img; applies to Home and Style Guide.

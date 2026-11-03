@@ -177,6 +177,36 @@
     },
     {
       "id": "TOOL-008",
+      "title": "Shader Memory Layout",
+      "slug": "shader-memory-layout",
+      "kind": "tool",
+      "category": "SHADER DATA",
+      "summary": "Calculate HLSL buffer offsets, alignment, array and matrix strides. Inspect bytes and padding, compare field orders and export a layout report.",
+      "localPath": "/online-tools/shader-memory-layout/index.html",
+      "publicUrl": "https://www.pavelzosim.com/online-tools/shader-memory-layout/",
+      "image": "/public/media/online-tools/shader-memory-layout-mark.svg",
+      "imageAlt": "Shader data fields rearranged into fewer memory rows",
+      "tags": [
+        "hlsl",
+        "memory",
+        "alignment",
+        "shaders",
+        "education"
+      ],
+      "datePublished": "2026-11-03",
+      "dateModified": "2026-11-03",
+      "state": "published",
+      "indexable": true,
+      "version": "1.0",
+      "exportLabel": "JSON / HLSL",
+      "steps": [
+        "Define typed shader data",
+        "Inspect byte offsets and padding",
+        "Compare order and export the layout"
+      ]
+    },
+    {
+      "id": "TOOL-009",
       "title": "Texture Memory Analyzer",
       "slug": "texture-memory-analyzer",
       "kind": "tool",
@@ -197,7 +227,7 @@
       "planPath": "content/online-tools/plans/texture-memory-analyzer.md"
     },
     {
-      "id": "TOOL-009",
+      "id": "TOOL-010",
       "title": "Shader Math Playground",
       "slug": "shader-math-playground",
       "kind": "tool",
@@ -220,7 +250,7 @@
       "planPath": "content/online-tools/plans/shader-math-playground.md"
     },
     {
-      "id": "TOOL-010",
+      "id": "TOOL-011",
       "title": "glTF Asset Inspector",
       "slug": "gltf-asset-inspector",
       "kind": "tool",
@@ -242,7 +272,7 @@
       "planPath": "content/online-tools/plans/gltf-asset-inspector.md"
     },
     {
-      "id": "TOOL-011",
+      "id": "TOOL-012",
       "title": "UV & Texel Density Toolkit",
       "slug": "uv-texel-density-toolkit",
       "kind": "tool",
@@ -264,7 +294,7 @@
       "planPath": "content/online-tools/plans/uv-texel-density-toolkit.md"
     },
     {
-      "id": "TOOL-012",
+      "id": "TOOL-013",
       "title": "VAT Texture Inspector",
       "slug": "vat-texture-inspector",
       "kind": "tool",

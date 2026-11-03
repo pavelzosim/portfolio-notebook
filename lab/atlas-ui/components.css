@@ -46,7 +46,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--blue)}
 .card:has(a:focus-visible),.tool-catalog-card:has(a:focus-visible),a.tool-catalog-card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .record-list{list-style:none;padding:0;margin:0;border-top:var(--border-width) solid var(--border-color)}.record-list li{border-bottom:var(--border-width) solid var(--border-color);margin:0}.record-list a{display:grid;grid-template-columns:74px 1fr;gap:12px;padding:12px 4px;color:var(--ink);text-decoration:none}.record-list a:hover{background:var(--hover)}
 .eyebrow,figcaption{font-size:var(--meta);color:var(--muted)}figcaption{margin-top:8px}
-input,select{min-height:36px;max-width:100%;padding:8px;border:var(--border-width) solid var(--border-color);background:var(--surface);color:var(--ink);font-size:var(--ui)}
+input,select,textarea{min-height:36px;max-width:100%;padding:8px;border:var(--border-width) solid var(--border-color);background:var(--surface);color:var(--ink);font-size:var(--ui)}
 input[type=file]{width:100%}label{display:flex;flex-direction:column;gap:6px;font-size:var(--ui)}
 .checker{background:repeating-conic-gradient(#d4cec7 0 25%,#eee7df 0 50%) 0/20px 20px;min-height:240px;display:grid;place-items:center;overflow:auto}.checker canvas{object-fit:contain;width:auto;height:auto;max-height:400px}.checker:has(canvas[width="1"])::before{content:'Awaiting source frames';font-size:var(--meta);color:var(--muted)}
 .notice,#status{padding:var(--space-md);border-left:2px solid var(--blue);background:#00000004;font-size:var(--ui)}
