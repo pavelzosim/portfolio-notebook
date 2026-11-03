@@ -1,5 +1,5 @@
 import {parseDeclarations,calculateLayout,suggestOrder,formatDeclarations,EXAMPLES,LIMITS} from '/scripts/shader-memory-core.js';
-import {renderMediaTabs,setupMediaTabs} from './media-tabs.js';
+import {renderMediaTabs,setupMediaTabs} from './media-tabs.js?v=review-198';
 import {memoryDiagram,occupancy} from './memory-layout-view.js?v=review-197';
 import {FUNCTION_PRESETS,MEMORY_PRESETS,matchesMemoryPreset} from './memory-presets.js';
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -96,4 +96,8 @@ export function setupMemoryPanel(root){
   const url=URL.createObjectURL(new Blob([JSON.stringify(result,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='Shader_Memory_Layout.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);tell('JSON report downloaded.');
  };
  source.value=EXAMPLES.padding.source;calculate({syncFields:true});
+ return {loadBuffer(declarations,field=''){
+  selectedExample='custom';source.value=declarations;$('profile').value='cbuffer';$('native16').checked=false;calculate({syncFields:true});
+  if(original&&original.rows.some(f=>f.name===field)){$('inspect-field').value=field;$('byte').value=original.rows.find(f=>f.name===field).offset;draw();}
+ }};
 }

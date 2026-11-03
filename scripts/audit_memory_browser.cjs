@@ -5,7 +5,8 @@ const origin=process.argv[2]||'http://127.0.0.1:8766',publicMode=process.argv.in
 (async()=>{
  const browser=await chromium.launch({headless:true,...(process.platform==='win32'?{executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'}:{})});
  const page=await browser.newPage({viewport:{width:1573,height:1000},acceptDownloads:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
- const ready=async()=>publicMode?page.waitForFunction(()=>document.body.dataset.runtimeReady==='true'):page.locator('#content[aria-busy="false"]').waitFor();
+ await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());
+ const ready=async()=>{if(publicMode){await page.waitForFunction(()=>['true','error'].includes(document.body.dataset.runtimeReady));assert.equal(await page.getAttribute('body','data-runtime-ready'),'true',(await page.locator('main').innerText()).slice(0,500));}else await page.locator('#content[aria-busy="false"]').waitFor();};
  const text=id=>page.locator('#layout-'+id).innerText();
  const span=async n=>assert.match(await text('summary'),new RegExp('Layout span / stride\\s+'+n.toLocaleString('en-US')+' B'));
  const source=async code=>{await page.getByRole('tab',{name:'HLSL declarations',exact:true}).click();await page.locator('#layout-source').fill(code);await page.locator('#layout-calculate').click();};

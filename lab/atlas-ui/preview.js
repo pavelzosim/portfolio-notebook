@@ -1,4 +1,4 @@
-import {setupMemoryPanel} from './memory-panel.js?v=review-197';
+import {setupMemoryWorkspace} from './memory-workspace.js?v=review-199';
 import {setupFlowPanel} from './flow-panel.js';
 import {setupSDFPanel} from './sdf-panel.js';
 import {setupMaterialPanel} from './material-panel.js?v=review-193';
@@ -28,7 +28,7 @@ import {createToolFeedback} from './tool-feedback.js?v=review-128';
 import {setupArticleNavigation} from './article-navigation.js?v=review-177';
 import {setupSpritePanel} from './sprite-panel.js?v=review-122';
 import {renderArticlePassport} from './article-passport.js?v=review-166';
-import {completeStyleGuide} from './style-guide.js?v=review-197';
+import {completeStyleGuide} from './style-guide.js?v=review-198';
 import {createSiteRoutes} from './site-routes.js?v=review-195';
 import {adaptArticle,extractArticleBody,enhanceArticle} from './article-adapter.js?v=review-174';
 import {renderSiteReview} from './site-review.js?v=review-145';
@@ -147,7 +147,7 @@ async function compressor(){
  main.querySelector('.tool-workflow')?.remove();main.querySelector('.tool-support')?.remove();
  await loadScript('/scripts/image-compressor-core.js?v=1');await loadScript('/scripts/image-compressor-tool.js?v=3');
 }
-async function memory(){const source=await doc(pages.memory);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupMemoryPanel(main);await toolOutline();}
+async function memory(){const source=await doc(pages.memory);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupMemoryWorkspace(main);await toolOutline();}
 async function flow(){const source=await doc(pages.flow);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupFlowPanel(main);await toolOutline();}
 async function sdf(){const source=await doc(pages.sdf);main.replaceChildren(...clean(source.querySelector('main')).childNodes);sourceRail(source);setupSDFPanel(main);await toolOutline();}
 async function noise(){
