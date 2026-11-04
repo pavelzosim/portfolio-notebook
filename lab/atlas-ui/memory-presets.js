@@ -1,7 +1,8 @@
 import {EXAMPLES,parseDeclarations} from '../../scripts/shader-memory-core.js';
 const reference=name=>'https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-'+name;
 // Each preset is one concrete overload, with a hypothetical buffer of inputs.
-// Calls are educational text; they never enter the declaration parser or execute.
+// Call strings never enter the declaration parser or execute as source code.
+// Fixed numerical models live separately in scripts/shader-function-study.js.
 export const FUNCTION_PRESETS=Object.freeze({
  lerp:{title:'lerp · blend float3 colors',source:'float3 colorA;\nfloat3 colorB;\nfloat blend;',description:'Blend between two colors. A blend outside 0–1 extrapolates; lerp does not clamp it.',call:'float3 result = lerp(colorA, colorB, blend);',resultType:'float3',reference:reference('lerp')},
  saturate:{title:'saturate · clamp float4 to 0–1',source:'float4 value;',description:'Clamp each component to the 0–1 range. The result keeps the input type and component count.',call:'float4 result = saturate(value);',resultType:'float4',reference:reference('saturate')},

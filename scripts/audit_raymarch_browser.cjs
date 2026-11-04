@@ -8,6 +8,7 @@ const origin=process.argv[2]||'http://127.0.0.1:8766',publicMode=process.argv.in
  const coord=async(x,y)=>{await page.locator('#ray-x').fill(String(x));await page.locator('#ray-y').fill(String(y));await page.locator('#ray-y').dispatchEvent('change');};
  try{
   await page.goto(origin+(publicMode?'/online-tools/shader-memory-layout/':'/lab/atlas-ui/?page=memory')+'#function-to-pixel');await ready();
+  assert.equal(await page.locator('#layout-examples').inputValue(),'raymarch');assert.equal(await page.locator('#tab-function-to-pixel').count(),0);
   assert.equal(await page.locator('#function-to-pixel [id^="ray-download"]').count(),0);assert.equal(await page.locator('#function-to-pixel a[download]').count(),0);assert.match(await page.locator('#function-to-pixel').innerText(),/Float32 prediction/);
   assert.match(await page.locator('#ray-result').innerText(),/hit · 2 march SDF calls \+ 6 normal calls = 8/);
   await page.locator('#ray-next').click();assert.equal(await page.locator('#ray-step').inputValue(),'1');assert(await page.locator('#ray-next').isDisabled());
@@ -29,9 +30,9 @@ const origin=process.argv[2]||'http://127.0.0.1:8766',publicMode=process.argv.in
   await page.getByRole('tab',{name:'Parameter buffer',exact:true}).click();assert.match(await page.locator('#ray-buffer').innerText(),/84 B of fields, 96 B rounded layout span/);assert.match(await page.locator('#ray-buffer-values').innerText(),/maxSteps · 24/);
   const hlsl=await page.locator('#ray-full-source').textContent();assert.match(hlsl,/float4 VSMain/);assert.match(hlsl,/float4 PSMain/);
   await page.locator('[data-ray-param="sphereRadius"]').click();assert.equal(await page.locator('#ray-buffer-map [fill="var(--selected)"]').count(),4);
-  await page.locator('#ray-open-buffer').click();assert.equal(await page.locator('#tab-buffer-layout').getAttribute('aria-selected'),'true');assert.match(await page.locator('#layout-summary').innerText(),/96 B/);assert.equal(await page.locator('#layout-inspect-field').inputValue(),'sphereRadius');
-  await page.locator('#tab-buffer-layout').press('ArrowRight');assert.equal(await page.locator('#tab-function-to-pixel').getAttribute('aria-selected'),'true');
-  await page.getByRole('tab',{name:'Values & lifetimes',exact:true}).click();await page.getByRole('tab',{name:'Values & lifetimes',exact:true}).press('ArrowRight');assert.equal(await page.locator('#tab-function-to-pixel').getAttribute('aria-selected'),'true');assert.equal(await page.locator('#tab-ray-code-panel').getAttribute('aria-selected'),'true');
+  await page.locator('#ray-open-buffer').click();assert.equal(await page.locator('#layout-examples').inputValue(),'custom');assert(await page.locator('#buffer-layout').isVisible());assert.match(await page.locator('#layout-summary').innerText(),/96 B/);assert.equal(await page.locator('#layout-inspect-field').inputValue(),'sphereRadius');
+  await page.locator('#layout-examples').selectOption('raymarch');assert(await page.locator('#function-to-pixel').isVisible());
+  await page.getByRole('tab',{name:'Values & lifetimes',exact:true}).click();await page.getByRole('tab',{name:'Values & lifetimes',exact:true}).press('ArrowRight');assert.equal(await page.locator('#layout-examples').inputValue(),'raymarch');assert.equal(await page.locator('#tab-ray-code-panel').getAttribute('aria-selected'),'true');
   await page.setViewportSize({width:390,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.locator('#ray-pixel-inspection').scrollIntoViewIfNeeded();await page.screenshot({path:'tmp/raymarch-mobile.png'});
   await page.getByRole('tab',{name:'Parameter buffer',exact:true}).click();assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   assert.deepEqual(errors,[]);console.log('PASS raymarch: float32 prediction, no study exports, input/color response, pixel picking, keyboard, exits, invalid settings, linked views, parameter layout and mobile.');

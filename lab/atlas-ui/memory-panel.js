@@ -5,7 +5,7 @@ import {FUNCTION_PRESETS,MEMORY_PRESETS,matchesMemoryPreset} from './memory-pres
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const bytes=value=>Number(value).toLocaleString('en-US')+' B';
 const baseTypes=['float','float2','float3','float4','int','int2','int3','int4','uint','uint2','uint3','uint4','bool','half','half2','half3','half4','float16_t','int16_t','uint16_t','min16float','min16float2','min16float3','min16float4','min16int','min16uint','double','double2','double3','double4','int64_t','uint64_t',...Array.from({length:4},(_,r)=>Array.from({length:4},(_,c)=>`float${r+1}x${c+1}`)).flat()];
-export function setupMemoryPanel(root){
+export function setupMemoryPanel(root,{onExampleChange=()=>{}}={}){
  const $=id=>root.querySelector('#layout-'+id),source=$('source'),status=$('status');let model=parseDeclarations(EXAMPLES.padding.source),original=null,suggestion=null,page=0,timer=null,selectedExample='padding';
  const options=()=>({profile:$('profile').value,major:$('major').value,native16:$('native16').checked});
  const active=()=>suggestion&&$('view').value==='suggested'?suggestion.layout:original;
@@ -16,11 +16,12 @@ export function setupMemoryPanel(root){
  tabsHost.querySelector('#layout-code-tab').append($('source-label'));
  setupMediaTabs(tabsHost);
  const presetOptions=presets=>Object.entries(presets).map(([key,e])=>`<option value="${key}">${escape(e.title)}</option>`).join('');
- $('examples').innerHTML='<option value="custom" disabled>Custom layout</option><optgroup label="Buffer layout examples">'+presetOptions(EXAMPLES)+'</optgroup><optgroup label="Common HLSL functions · input buffers">'+presetOptions(FUNCTION_PRESETS)+'</optgroup>';
+ $('examples').innerHTML='<option value="custom">Custom data layout</option><optgroup label="Buffer layout examples">'+presetOptions(EXAMPLES)+'</optgroup><optgroup label="Functions · numerical prediction">'+presetOptions(FUNCTION_PRESETS)+'</optgroup><optgroup label="Full shader · pixel prediction"><option value="raymarch">Raymarch · SDF sphere → pixel</option></optgroup>';
  function functionExample(){return FUNCTION_PRESETS[selectedExample]||null;}
  function example(){
   if(!matchesMemoryPreset(selectedExample,model))selectedExample='custom';
   $('examples').value=selectedExample;const preset=functionExample();$('function').hidden=!preset;
+  onExampleChange(preset?selectedExample:'custom',selectedExample);
   if(!preset)return;
   $('function-description').textContent=preset.title+' — '+preset.description;
   $('function-code').textContent=preset.call;
@@ -33,7 +34,7 @@ export function setupMemoryPanel(root){
   $('add').disabled=model.fields.length>=LIMITS.fields;
  }
  function invalidate(){suggestion=null;$('view').value='original';$('view').options[1].disabled=true;$('use').disabled=true;$('comparison').replaceChildren();}
- function clearResults(message){original=null;invalidate();$('function').hidden=true;$('packing').hidden=true;for(const id of ['summary','map','packing','offsets','detail'])$(id).replaceChildren();$('suggest').disabled=$('export').disabled=$('copy').disabled=true;tell(message,true);}
+ function clearResults(message){original=null;invalidate();$('function').hidden=true;$('packing').hidden=true;onExampleChange('custom',selectedExample);for(const id of ['summary','map','packing','offsets','detail'])$(id).replaceChildren();$('suggest').disabled=$('export').disabled=$('copy').disabled=true;tell(message,true);}
  function table(title,head,rows){return `<div class="atlas-table-frame atlas-table-frame--solid"><div class="atlas-table-header-solid">[ ${escape(title)} ]</div><div class="atlas-table-body"><table class="atlas-table"><thead><tr>${head.map(h=>`<th scope="col">${escape(h)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div></div>`;}
  function summary(){
   const r=active(),count=Number($('count').value);if(!r)return;
@@ -80,7 +81,7 @@ export function setupMemoryPanel(root){
  source.addEventListener('input',()=>{clearTimeout(timer);clearResults('Updating declarations…');tell('Updating declarations…');timer=setTimeout(()=>calculate({syncFields:true}),220);});
  for(const id of ['profile','major','native16'])$(id).addEventListener('change',()=>calculate());
  $('count').oninput=()=>{if(summary())tell('Repeated data budget updated. GPU resource-allocation alignment is outside this calculation.');};
- $('examples').onchange=()=>{selectedExample=$('examples').value;source.value=MEMORY_PRESETS[selectedExample].source;calculate({syncFields:true});};
+ $('examples').onchange=()=>{clearTimeout(timer);const key=$('examples').value;if(key==='raymarch'){onExampleChange('raymarch',key);return;}selectedExample=key;if(key==='custom'){example();return;}source.value=MEMORY_PRESETS[key].source;calculate({syncFields:true});};
  $('calculate').onclick=()=>calculate({syncFields:true});
  $('suggest').onclick=()=>{
   if(!original)return;try{suggestion=suggestOrder(model,options());$('comparison').innerHTML=table(suggestion.method,['Order','Span','Padding'],[['Original',original],['Suggested',suggestion.layout]].map(([name,r])=>`<tr><th scope="row">${name}</th><td>${bytes(r.span)}</td><td>${bytes(r.padding)}</td></tr>`))+`<p class="control-hint">${bytes(suggestion.saved)} saved per block / element. ${escape(suggestion.method)}; ${suggestion.evaluated.toLocaleString()} orders checked. Nested structures and field types are unchanged. ${suggestion.saved?'Update the CPU-side writer and all consumers before using a reordered layout.':'No smaller arrangement was found; the original order is retained.'}</p>`;$('view').options[1].disabled=false;$('view').value='suggested';$('use').disabled=suggestion.saved===0;page=0;render();tell('Comparison ready. Original declarations are preserved until you apply the suggested order.');}catch(error){tell(error.message,true);}

@@ -14,7 +14,7 @@ The selected profile is authoritative even if the source has a different buffer 
 - Multi-vector matrices align storage vectors to rows in cbuffer mode. Matrix orientation determines physical vectors. Single-storage-vector matrices follow vector rules.
 - Default bool storage is four bytes; default half is float32. Native 16-bit mode maps half and minimum precision types to two-byte scalars.
 - Default minimum precision values have four-byte storage and separate cbuffer rows from fixed-precision values. Native mode removes that separation.
-- Field values are not evaluated. Source is never executed, fetched from includes or uploaded.
+- The declaration parser does not evaluate field values. Source is never executed, fetched from includes or uploaded. Fixed function examples have a separate numerical evaluator.
 
 Payload is the sum of scalar storage. Extent reaches the end of an occupied field, including internal gaps. Span is the rounded block / element size. Padding is span minus payload. Repetitions multiply span and payload only: API allocation granularity, CBV alignment, descriptors, registers, cache, upload heaps, GPU timing and physical VRAM usage are excluded.
 
@@ -38,9 +38,11 @@ Source and settings edits invalidate suggestions and exports. Invalid source cle
 
 ## Function presets
 
-The Preset menu groups buffer-layout examples separately from seven common HLSL functions: lerp, saturate, smoothstep, dot, normalize, reflect and mul. The shared data owner is lab/atlas-ui/memory-presets.js. Each is a concrete overload with input declarations, a sample call, return type, short explanation and a link to the Microsoft HLSL reference.
+One Example dropdown groups buffer layouts, seven common HLSL functions (lerp, saturate, smoothstep, dot, normalize, reflect and mul), and the full raymarch shader. There are no separate top-level mode tabs. The shared data owner is lab/atlas-ui/memory-presets.js. Each function is a concrete overload with input declarations, a sample call, return type, short explanation and a link to the Microsoft HLSL reference.
 
-These presets demonstrate hypothetical input buffers. Calls are displayed as text and never executed or fed to the data parser. Results and temporaries are excluded from the byte map and budget; operator choice is not a register/VRAM estimate. A lerp float3/float3/float example has 28 B of input data, a 32 B legacy cbuffer span and a 28 B structured-element stride. The float3 return is not added to any of those totals.
+These presets demonstrate hypothetical input buffers. Call strings are never executed or fed to the declaration parser. scripts/shader-function-study.js separately models the seven fixed formulas with editable numeric inputs, intermediate steps and scalar/vector results; function-study-panel.js renders them with existing Atlas components. Round inputs and modeled operations to float32, with a fixed non-fused ordering. Compiler reassociation, fused operations and intrinsic approximations may differ. Reject incomplete/nonfinite inputs, magnitudes above 1,000,000, nonfinite intermediates, zero-length normalize and smoothstep ranges that are reversed or collapse after float32 rounding. Reflect computes its algebraic formula for nonunit normals with an explicit note. Mul accepts logical matrix rows and a column vector, independently of storage orientation. A function result alone does not define a screen pixel; raymarch supplies a complete drawing context.
+
+Results and temporaries are excluded from the byte map and budget; operator choice is not a register/VRAM estimate. A lerp float3/float3/float example has 28 B of input data, a 32 B legacy cbuffer span and a 28 B structured-element stride. The float3 return is not added to any of those totals.
 
 Selection preserves profile, matrix orientation, native precision and repetitions. Calls remain valid after top-level reordering; editing a field name/type/array/qualifier switches the selection to Custom layout and hides the sample call. Invalid source hides it immediately. JSON exports include matched preset context separately from calculated declarations. Copy HLSL declarations continues to copy data declarations only.
 
@@ -69,7 +71,7 @@ Learning context: From File to Pixel, Part 01 (Memory Hierarchy) and Part 03 (Me
 
 ## Function → pixel / raymarch study
 
-The second workspace tab is a bounded educational model of a fixed SDF sphere shader. Deep link: /online-tools/shader-memory-layout/#function-to-pixel. Owners: scripts/raymarch-study-core.js and raymarch-study-worker.js; shared lab/atlas-ui/memory-workspace.js, raymarch-study-panel.js and raymarch-study-view.js. No tool CSS is added. Source/math and controls describe the same fixed example; arbitrary HLSL editing/execution is deliberately outside this version.
+Raymarch is the full-shader example in the common Example dropdown: a bounded educational model of a fixed SDF sphere shader. Deep link: /online-tools/shader-memory-layout/#function-to-pixel. Owners: scripts/raymarch-study-core.js and raymarch-study-worker.js; shared lab/atlas-ui/memory-workspace.js, raymarch-study-panel.js and raymarch-study-view.js. No tool CSS is added. Source/math and controls describe the same fixed example; arbitrary HLSL editing/execution is deliberately outside this version.
 
 VSMain generates three clip-space vertices from SV_VertexID. The documented reference draw is Draw(3,0), fullscreen viewport, culling/depth/blending disabled and one sample. CPU pixel centers correspond to top-left (x+0.5,y+0.5). RayDirection applies aspect ratio and vertical FOV. Raymarch checks maximum distance before each SDF call, then hit epsilon, and advances by signed sphere distance. Maximum samples are 1–128. A hit adds six central-difference SDF calls for the normal; a miss takes a sky-color branch without normal probes. Lighting yields linear RGB, followed by exposure, Reinhard tone mapping, explicit sRGB encoding and 8-bit quantization. The HLSL reference requires an R8G8B8A8_UNORM target, not an sRGB target, to avoid double encoding.
 
@@ -84,3 +86,5 @@ This mode has no file exports: the purpose is observing a predicted path under e
 Checks: node --test scripts/raymarch-study-core.test.cjs; node scripts/audit_raymarch_dxc.cjs (DXC_PATH or installed Windows SDK / PATH); node scripts/audit_raymarch_browser.cjs (8766 source) or node scripts/audit_raymarch_browser.cjs http://127.0.0.1:8767 --public. Tests cover analytic sphere hits, misses and independent exits, aspect/pixel-center mapping, normals, transfer function, preview/trace agreement, binary packing, keyboard/nested tabs, invalid settings, rectangular-frame picking, mobile containment, input/color response and absence of export actions.
 
 Float32 model reference: https://learn.microsoft.com/en-us/windows/win32/direct3d11/floating-point-rules. GPU latitude is wider than this chosen ideal operation ordering.
+
+Unified example checks: node --test scripts/shader-function-study.test.cjs; node scripts/audit_shader_examples_browser.cjs (source) or node scripts/audit_shader_examples_browser.cjs http://127.0.0.1:8767 --public. Cover all seven default functions, edited inputs, intermediate-step navigation, invalid-input recovery, full-shader switching/deep links, layout-only examples and mobile containment.
